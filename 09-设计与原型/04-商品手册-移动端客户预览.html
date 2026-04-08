@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商品手册移动端客户预览</title>
+  <style>
+    :root {
+      --bg: #f3ebdf;
+      --paper: #fbf6ee;
+      --card: rgba(255, 251, 246, 0.92);
+      --ink: #211410;
+      --muted: #81685c;
+      --line: rgba(76, 41, 23, 0.12);
+      --brand: #b63b1d;
+      --brand-deep: #701d12;
+      --gold: #db9f4a;
+      --shadow: 0 30px 60px rgba(72, 32, 15, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Source Han Sans SC", "Microsoft YaHei UI", "PingFang SC", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top center, rgba(219, 159, 74, 0.22), transparent 24%),
+        linear-gradient(180deg, #f1e7d9 0%, #f8f2e9 100%);
+    }
+
+    .page {
+      width: min(100%, 430px);
+      min-height: 100vh;
+      margin: 0 auto;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      padding: 14px 18px 12px;
+      background: rgba(251, 246, 238, 0.86);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(76, 41, 23, 0.08);
+    }
+
+    .topline, .brandline, .section-head, .catalog-item, .product-card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topline {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .brandline strong {
+      display: block;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .brandline span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .edition, .hero-pill, .tag, .scene-tag, .jumpbar a {
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .edition {
+      padding: 7px 11px;
+      background: rgba(182, 59, 29, 0.08);
+      color: var(--brand-deep);
+      white-space: nowrap;
+    }
+
+    .content {
+      padding: 14px 16px 36px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero {
+      padding: 24px 20px 26px;
+      border-radius: 30px;
+      color: #fff9f2;
+      background: linear-gradient(160deg, #4f1d15 0%, #a83219 58%, #e1903f 100%);
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 210px;
+      height: 210px;
+      border-radius: 50%;
+      right: -70px;
+      bottom: -80px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .hero small {
+      display: block;
+      font-size: 12px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      opacity: 0.78;
+    }
+
+    .hero h1 {
+      margin: 14px 0 10px;
+      font-size: 35px;
+      line-height: 1.02;
+      font-weight: 900;
+    }
+
+    .hero p,
+    .section-copy,
+    .intro-copy,
+    .metric-label,
+    .detail-copy,
+    .closing p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      font-size: 13px;
+    }
+
+    .hero p {
+      max-width: 78%;
+      color: rgba(255, 249, 242, 0.92);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .hero-meta, .jumpbar, .tag-row, .scene-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta { margin-top: 18px; }
+
+    .hero-pill {
+      padding: 7px 11px;
+      background: rgba(255, 250, 242, 0.15);
+      color: #fffaf4;
+    }
+
+    .card, .detail-card, .closing {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 12px 28px rgba(69, 37, 19, 0.05);
+    }
+
+    .card {
+      padding: 18px;
+    }
+
+    .section-head strong, .catalog-item strong, .metric-value, .detail-body h3, .product-main strong {
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .section-head strong {
+      font-size: 18px;
+    }
+
+    .section-head {
+      align-items: flex-end;
+      margin-bottom: 14px;
+    }
+
+    .jumpbar {
+      margin-top: 14px;
+    }
+
+    .jumpbar a {
+      text-decoration: none;
+      color: var(--brand-deep);
+      background: rgba(182, 59, 29, 0.08);
+      border: 1px solid rgba(182, 59, 29, 0.14);
+      padding: 9px 12px;
+    }
+
+    .catalog, .summary, .detail-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .catalog-item, .summary-item, .metric, .spec {
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(76, 41, 23, 0.08);
+      border-radius: 18px;
+    }
+
+    .catalog-item, .summary-item {
+      display: block;
+    }
+
+    .catalog-item strong, .summary-item strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 15px;
+    }
+
+    .section-title {
+      padding: 18px 4px 2px;
+    }
+
+    .section-title small {
+      display: block;
+      color: var(--brand);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 11px;
+      margin-bottom: 8px;
+      font-weight: 800;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.06;
+      font-weight: 900;
+    }
+
+    .intro-copy {
+      margin-top: 10px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric-value {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 4px;
+      color: var(--brand-deep);
+    }
+
+    .products {
+      display: grid;
+      gap: 14px;
+    }
+
+    .product-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: var(--card);
+      border-radius: 24px;
+      align-items: flex-start;
+    }
+
+    .product-thumb, .detail-image {
+      background-size: cover;
+      background-position: center;
+      border-radius: 20px;
+      flex: 0 0 auto;
+    }
+
+    .product-thumb {
+      width: 96px;
+      height: 96px;
+    }
+
+    .product-main {
+      min-width: 0;
+    }
+
+    .product-main strong {
+      display: block;
+      font-size: 17px;
+      line-height: 1.35;
+      margin-bottom: 8px;
+    }
+
+    .tag {
+      padding: 6px 10px;
+      color: var(--brand-deep);
+      background: rgba(36, 22, 17, 0.06);
+    }
+
+    .detail-card {
+      overflow: hidden;
+    }
+
+    .detail-image {
+      width: 100%;
+      height: 220px;
+    }
+
+    .detail-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .detail-body h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.18;
+    }
+
+    .scene-tag {
+      padding: 7px 11px;
+      color: #fff8f1;
+      background: linear-gradient(135deg, var(--brand) 0%, #d26a2e 100%);
+    }
+
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .spec strong {
+      display: block;
+      font-size: 20px;
+      color: var(--brand-deep);
+      margin-bottom: 4px;
+    }
+
+    .closing {
+      background: linear-gradient(165deg, #512015 0%, #9f3118 60%, #de8d3d 100%);
+      color: #fff9f2;
+      border: 0;
+      padding: 22px 20px 28px;
+    }
+
+    .closing h3 {
+      margin: 0 0 10px;
+      font-size: 26px;
+      line-height: 1.08;
+      font-weight: 900;
+    }
+
+    .closing p {
+      color: rgba(255, 249, 242, 0.9);
+      max-width: 82%;
+    }
+
+    .closing-meta {
+      margin-top: 16px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .closing-meta span {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      font-size: 12px;
+      font-weight: 800;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="topline">
+        <span>客户预览版</span>
+        <span>2026 春季商品手册</span>
+      </div>
+      <div class="brandline">
+        <div>
+          <strong>脱骨侠商品手册</strong>
+          <span>PC 端生成后的移动端展示页</span>
+        </div>
+        <div class="edition">V1.0</div>
+      </div>
+    </header>
+
+    <div class="content">
+      <section class="hero" id="cover">
+        <small>Boneless Product Brochure</small>
+        <h1>脱骨侠<br />渠道产品手册</h1>
+        <p>从标准库同步商品后自动生成的移动端手册，用于客户直观查看品牌实力、产品矩阵和重点商品信息。</p>
+        <div class="hero-meta">
+          <span class="hero-pill">线上渠道</span>
+          <span class="hero-pill">线下渠道</span>
+          <span class="hero-pill">餐饮冷冻</span>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="section-head">
+          <div>
+            <strong>手册目录</strong>
+            <p class="section-copy">打开即看内容，不展示小程序功能入口，只保留阅读路径。</p>
+          </div>
+        </div>
+        <div class="catalog">
+          <div class="catalog-item">
+            <strong>01 品牌与供应链背书</strong>
+            <span class="section-copy">品牌地位、产能能力、工厂配置、研发与物流支撑。</span>
+          </div>
+          <div class="catalog-item">
+            <strong>02 产品系列总览</strong>
+            <span class="section-copy">按线上、常温休食、冻品休食、餐饮冷冻展示产品结构。</span>
+          </div>
+          <div class="catalog-item">
+            <strong>03 重点商品详情</strong>
+            <span class="section-copy">展示卖点、规格、适用场景和渠道建议。</span>
+          </div>
+        </div>
+        <div class="jumpbar">
+          <a href="#brand">品牌背书</a>
+          <a href="#matrix">产品总览</a>
+          <a href="#detail">重点商品</a>
+          <a href="#channel">渠道建议</a>
+        </div>
+      </section>
+
+      <section class="section-title" id="brand">
+        <small>Part 01</small>
+        <h2>品牌与供应链背书</h2>
+        <p class="intro-copy">把原大篇幅品牌介绍压缩成适合手机阅读的摘要结构，先建立客户信任感。</p>
+      </section>
+
+      <section class="card">
+        <div class="metrics">
+          <div class="metric">
+            <span class="metric-value">20亿+</span>
+            <span class="metric-label">年 GMV 规模</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">1亿+</span>
+            <span class="metric-label">累计热销罐数</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">14万吨</span>
+            <span class="metric-label">年产能</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">5000+</span>
+            <span class="metric-label">拆骨工人规模</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary">
+        <article class="summary-item">
+          <strong>原料质检过硬</strong>
+          <span class="section-copy">自建原料集采中心，货源稳定，层层把关，严控品质。</span>
+        </article>
+        <article class="summary-item">
+          <strong>研发团队过硬</strong>
+          <span class="section-copy">大师级调味研发能力，兼顾线上爆款和线下渠道适配。</span>
+        </article>
+        <article class="summary-item">
+          <strong>工厂配置过硬</strong>
+          <span class="section-copy">智能化数字车间，覆盖加工、成品、物流一体化能力。</span>
+        </article>
+      </section>
+
+      <section class="section-title" id="matrix">
+        <small>Part 02</small>
+        <h2>产品系列总览</h2>
+        <p class="intro-copy">直接展示代表性商品，让客户用最短时间理解产品层次和渠道匹配关系。</p>
+      </section>
+
+      <section class="products">
+        <article class="product-card">
+          <div class="product-thumb" style="background-image:url('https://img.zhuoxi.group/c27623e34e25aa71de2ccc20bc1910ad4045dcd1436092ff202cceb703ccc8a6570.png')"></div>
+          <div class="product-main">
+            <strong>无骨鸡爪 200g 尝鲜装</strong>
+            <p class="section-copy">轻量尝鲜，适合线上转化首单，突出冷藏即食和爆款口味。</p>
+            <div class="tag-row">
+              <span class="tag">线上</span>
+              <span class="tag">冷藏即食</span>
+              <span class="tag">酸辣柠檬</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-thumb" style="background-image:url('https://img.zhuoxi.group/33fa894f4197e32a097a1d4ae85102f40dad21f9659938bed552618b8ec4f0d7260.png')"></div>
+          <div class="product-main">
+            <strong>无骨鸡爪 72g 定量装</strong>
+            <p class="section-copy">9.9 元价格带，适合常温休食货架、便利店和社区团购快速铺货。</p>
+            <div class="tag-row">
+              <span class="tag">常温休食</span>
+              <span class="tag">泡椒</span>
+              <span class="tag">72g</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <div class="product-thumb" style="background-image:url('https://img.zhuoxi.group/c27623e34e25aa71de2ccc20bc1910ad4045dcd1436092ff202cceb703ccc8a6570.png')"></div>
+          <div class="product-main">
+            <strong>虎皮凤爪 208g 盒装</strong>
+            <p class="section-copy">先炸后卤，肉厚筋多，适合冻品休食中的主推陈列款。</p>
+            <div class="tag-row">
+              <span class="tag">冻品休食</span>
+              <span class="tag">香辣</span>
+              <span class="tag">208g</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section-title" id="detail">
+        <small>Part 03</small>
+        <h2>重点商品详情</h2>
+        <p class="intro-copy">只保留客户要看的完整信息，不出现筛选、切换、分享等操作按钮。</p>
+      </section>
+
+      <section class="detail-list">
+        <article class="detail-card">
+          <div class="detail-image" style="background-image:url('https://img.zhuoxi.group/33fa894f4197e32a097a1d4ae85102f40dad21f9659938bed552618b8ec4f0d7260.png')"></div>
+          <div class="detail-body">
+            <h3>无骨鸡爪 72g 定量装</h3>
+            <div class="tag-row">
+              <span class="tag">常温休食</span>
+              <span class="tag">泡椒</span>
+              <span class="tag">建议零售价 ￥9.90</span>
+            </div>
+            <p class="detail-copy">9.9 元专区核心规格，聚焦高频零售场景，卖点明确，便于快速动销。</p>
+            <div class="scene-row">
+              <span class="scene-tag">BC超</span>
+              <span class="scene-tag">社会便利</span>
+              <span class="scene-tag">社区团购</span>
+            </div>
+            <div class="spec-grid">
+              <div class="spec">
+                <strong>72g</strong>
+                <span class="metric-label">净含量</span>
+              </div>
+              <div class="spec">
+                <strong>9个月</strong>
+                <span class="metric-label">保质期</span>
+              </div>
+              <div class="spec">
+                <strong>性价比强</strong>
+                <span class="metric-label">核心卖点</span>
+              </div>
+              <div class="spec">
+                <strong>整支脱骨</strong>
+                <span class="metric-label">产品特征</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="detail-card">
+          <div class="detail-image" style="background-image:url('https://img.zhuoxi.group/c27623e34e25aa71de2ccc20bc1910ad4045dcd1436092ff202cceb703ccc8a6570.png')"></div>
+          <div class="detail-body">
+            <h3>虎皮凤爪 208g 盒装</h3>
+            <div class="tag-row">
+              <span class="tag">冻品休食</span>
+              <span class="tag">香辣</span>
+              <span class="tag">建议零售价 ￥24.90</span>
+            </div>
+            <p class="detail-copy">先炸后卤，肉厚筋多，适合主视觉陈列，强调口感和更高客单的尝鲜需求。</p>
+            <div class="scene-row">
+              <span class="scene-tag">BC超</span>
+              <span class="scene-tag">水果</span>
+              <span class="scene-tag">即时新零售</span>
+            </div>
+            <div class="spec-grid">
+              <div class="spec">
+                <strong>208g</strong>
+                <span class="metric-label">净含量</span>
+              </div>
+              <div class="spec">
+                <strong>9个月</strong>
+                <span class="metric-label">保质期</span>
+              </div>
+              <div class="spec">
+                <strong>先炸后卤</strong>
+                <span class="metric-label">工艺卖点</span>
+              </div>
+              <div class="spec">
+                <strong>香辣口味</strong>
+                <span class="metric-label">适销口味</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="section-title" id="channel">
+        <small>Part 04</small>
+        <h2>渠道建议</h2>
+        <p class="intro-copy">把 PC 端维护的销售适用场景和产品开发原因压缩成客户能快速读懂的移动摘要。</p>
+      </section>
+
+      <section class="summary">
+        <article class="summary-item">
+          <strong>线上渠道</strong>
+          <span class="section-copy">优先推尝鲜装、罐装与拼盘类商品，突出爆款口味和传播属性。</span>
+        </article>
+        <article class="summary-item">
+          <strong>线下常温休食</strong>
+          <span class="section-copy">优先推 72g、108g 等定量装，适合 9.9 元价格带与便利零售场景。</span>
+        </article>
+        <article class="summary-item">
+          <strong>冻品休食</strong>
+          <span class="section-copy">优先推 208g 盒装、700g 拼盘，适合做主推陈列和更高客单转化。</span>
+        </article>
+      </section>
+
+      <section class="closing">
+        <h3>无骨鸡爪第一品牌<br />移动端客户预览版</h3>
+        <p>该页面用于承接 PC 端生成后的手册内容，面向客户直接展示，重点是内容完整、版式清晰、手机阅读顺畅。</p>
+        <div class="closing-meta">
+          <span>品牌背书</span>
+          <span>产品矩阵</span>
+          <span>重点商品</span>
+          <span>渠道建议</span>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

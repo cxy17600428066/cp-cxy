@@ -1,0 +1,2027 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>产品手册生成流程 - PC端</title>
+<style>
+:root{--bg:#f6efe7;--card:#fffaf5;--line:#eadfd1;--txt:#1f2937;--muted:#6b7280;--brand:#d2601e;--brand2:#a54412;--soft:#fff0e1;--blue:#1d4ed8;--bsoft:#eef4ff;--green:#166534;--gsoft:#ecfdf3;--shadow:0 24px 60px rgba(17,24,39,.08)}
+*{box-sizing:border-box}body{margin:0;color:var(--txt);font-family:"Segoe UI Variable","PingFang SC","Microsoft YaHei",sans-serif;background:linear-gradient(180deg,#fbf7f2,#f6efe7 48%,#efe4d8)}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:1500px;margin:0 auto;padding:20px;display:grid;gap:16px}.hero,.panel,.drawer{background:rgba(255,250,245,.94);border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow)}
+.hero{padding:24px;background:linear-gradient(135deg,#8f3810,#d2601e 44%,#f0a33d);color:#fff}.hero h1{margin:12px 0 8px;font:900 40px/1.04 "Bahnschrift","Segoe UI Variable","PingFang SC",sans-serif}.hero p{margin:0;max-width:900px;line-height:1.8;color:#fff7ef}.badge{display:inline-flex;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.14);font-size:12px;font-weight:800}
+.stats{margin-top:16px;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.16)}.stat span{display:block;font-size:12px;color:#ffe9d4}.stat strong{display:block;margin-top:6px;font-size:24px}
+.panel{padding:18px}.topbar{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:14px}.topbar h2{margin:0;font-size:22px}.topbar p{margin:6px 0 0;line-height:1.7;color:var(--muted)}.hint{color:var(--muted);font-size:13px}
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}.step{padding:14px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#fffdf9,#fff8f0);cursor:pointer}.step.active{border-color:#f0b37e;background:#fff4ea}.step.done{border-color:#bde2c6;background:#f4fff7}.step b{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--brand2),var(--brand));color:#fff;margin-bottom:10px}.step.done b{background:linear-gradient(135deg,#1c7c43,#22a35b)}.step strong{display:block;font-size:14px}.step small{display:block;margin-top:6px;line-height:1.55;color:var(--muted)}
+.layout{display:grid;grid-template-columns:1fr 310px;gap:16px}.main{display:grid;gap:14px}.side{display:grid;gap:14px}.view{display:none}.view.active{display:grid;gap:14px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.card{padding:14px;border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,#fffdf9,#fff8f2)}
+.dish.sel,.scene.sel{border-color:#f0b37e;background:#fff4ea}.dish h3,.scene h3{margin:0;font-size:16px}.dish p,.scene p,.preview p,.line,.mini,.list small,.cap small{color:var(--muted)}.dish p,.scene p,.preview p{line-height:1.7}
+.meta{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}.chip{padding:6px 10px;border-radius:999px;background:#f7efe5;color:#6c4f3a;font-size:12px;font-weight:700}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.btn{border:0;padding:10px 14px;border-radius:999px;font-weight:800}.btn.p{background:linear-gradient(135deg,var(--brand2),var(--brand),#f0a038);color:#fff}.btn.s{background:var(--bsoft);color:var(--blue)}.btn.g{background:#fff;border:1px solid var(--line)}.btn.d{background:#fff0f0;color:#b91c1c;border:1px solid #f4cccc}
+.sceneGrid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field{display:grid;gap:8px}.field.full{grid-column:1/-1}.field label{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:800}.field label span:last-child{color:var(--muted)}.field input,.field textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;color:var(--txt)}.field textarea{min-height:96px;resize:vertical;line-height:1.7}
+.filterPanel{display:grid;gap:18px;padding:20px 22px;border:1px solid #e8d9c8;border-radius:24px;background:linear-gradient(180deg,rgba(255,253,249,.98),rgba(255,247,238,.94));box-shadow:inset 0 1px 0 rgba(255,255,255,.6)}.filterTop{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid rgba(232,217,200,.8)}.filterTop>div:first-child{display:grid;gap:4px}.filterTop strong{display:block;font-size:20px;line-height:1.2;color:#162033}.filterTop .hint,#productFilterSummary{margin:0;font-size:13px;line-height:1.65;color:#7a6d61}.filterMeta{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}.filterMeta .chip{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 14px;border:1px solid #ead9c6;background:linear-gradient(180deg,#fbf4ea,#f4ebdf);color:#7a573b;font-size:12px;font-weight:700}.filterMeta .chip strong{font-size:28px;line-height:1;color:#8f4a1d}.filterMeta .btn.g{min-height:42px;padding:0 18px;border-color:#dfd1c2;background:rgba(255,255,255,.9);color:#7a6d61}.filterMeta .btn.g:hover{border-color:#cfb59a;color:#8f4a1d}.filterGroup{display:grid;grid-template-columns:126px minmax(0,1fr);gap:12px;align-items:start}.filterLabel{display:flex;align-items:center;min-height:36px;font-size:14px;line-height:1.5;font-weight:800;color:#3f2d21}.filterOptions{display:flex;gap:10px;row-gap:10px;flex-wrap:wrap;align-items:center}.filterChip{display:inline-flex;align-items:center;justify-content:center;min-height:30px;padding:0 14px;border-radius:999px;border:1px solid #dccfbe;background:#fff;color:#556274;font-size:12px;line-height:1;font-weight:700;letter-spacing:.01em;cursor:pointer;transition:all .2s ease}.filterChip:hover{border-color:#ccb295;background:#fff8f1;color:#8f4a1d}.filterChip.active{border-color:#e5bf91;background:linear-gradient(180deg,#fff7ed,#ffe9d2);color:#a24b16;box-shadow:0 8px 20px rgba(210,96,30,.12)}#productFilters{display:grid;gap:10px}.emptyState{padding:24px;border:1px dashed #e8d6c2;border-radius:20px;background:#fff;text-align:center;color:var(--muted);line-height:1.8}
+.preview{padding:0;overflow:hidden}.module{padding:14px;border:1px solid var(--line);border-radius:20px;background:#fff}.module h4{margin:0 0 10px;font-size:16px}.list,.caps{display:grid;gap:10px}.item,.cap,.summary{padding:12px;border:1px solid var(--line);border-radius:18px;background:#fffdf9}.item strong,.cap strong,.summary strong{display:block;font-size:14px}.capHead{display:flex;justify-content:space-between;gap:10px;align-items:start}.pill{padding:6px 9px;border-radius:999px;background:var(--gsoft);color:var(--green);font-size:11px;font-weight:800;white-space:nowrap}
+.deckShell{padding:16px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:14px}.deckSidebar{display:grid;gap:10px;max-height:980px;overflow:auto;padding-right:4px}.thumb{padding:12px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#fffdf9,#fff8f0);text-align:left;cursor:pointer}.thumb.active{border-color:#f0b37e;background:#fff4ea}.thumb strong{display:block;font-size:13px}.thumb small{display:block;margin-top:6px;line-height:1.55;color:var(--muted)}.deckStage{display:grid;gap:12px;min-width:0}.deckTools{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:18px;background:#fffdf9}.deckNav{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.deckPageWrap{padding:18px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(180deg,#fffdf9,#fff6ef);overflow:auto}
+.ppt{width:100%;min-height:0;border-radius:24px;overflow:visible;background:#fff;border:1px solid #f1ddc8;box-shadow:0 18px 40px rgba(17,24,39,.08);display:grid;grid-template-rows:auto 1fr}.pptTop{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:16px 22px;background:linear-gradient(90deg,#8f3810,#d2601e 50%,#f0a33d);color:#fff}.pptBrand{font:900 14px/1 "Bahnschrift","Segoe UI Variable","PingFang SC",sans-serif;letter-spacing:.08em}.pptNo{padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.16);font-size:12px;font-weight:800}
+.pptBody{padding:clamp(16px,2vw,26px);display:grid;gap:18px;align-content:start}.ppt.cover .pptBody,.ppt.divider .pptBody{align-content:center;justify-items:start;background:
+radial-gradient(circle at right top, rgba(210,96,30,.10), transparent 26%),
+linear-gradient(180deg,#fffaf6,#fff)}
+.pptTitle{margin:0;font:900 clamp(28px,3vw,38px)/1.08 "Bahnschrift","Segoe UI Variable","PingFang SC",sans-serif;color:#162033;word-break:break-word}.pptSub{margin:0;font-size:clamp(15px,2vw,18px);color:#9a4a20;font-weight:800}.pptDesc{margin:0;max-width:900px;font-size:14px;line-height:1.85;color:#445065;word-break:break-word}
+.pptCols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start}.pptBox{padding:16px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(180deg,#fffdf9,#fff8f2);min-width:0}.pptBox h5{margin:0 0 10px;font-size:16px}.pptBox ul{margin:0;padding-left:18px}.pptBox li{margin:6px 0;line-height:1.75;color:#4b5563;word-break:break-word}
+.pptStats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}.pptStat{padding:14px;border:1px solid var(--line);border-radius:18px;background:#fff;min-width:0}.pptStat span{display:block;font-size:12px;color:var(--muted)}.pptStat strong{display:block;margin-top:5px;font-size:clamp(18px,2vw,20px);color:#162033;word-break:break-word}
+.pptTags{display:flex;flex-wrap:wrap;gap:8px}.pptTag{padding:7px 10px;border-radius:999px;background:#f7efe5;color:#6c4f3a;font-size:12px;font-weight:700}.pptTable{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}.pptCell{padding:12px;border:1px solid var(--line);border-radius:16px;background:#fff;min-width:0}.pptCell span{display:block;font-size:12px;color:var(--muted)}.pptCell strong{display:block;margin-top:5px;font-size:14px;word-break:break-word}
+.pptClosing{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.pptChannel{padding:16px;border:1px dashed #efc89b;border-radius:20px;background:#fff8ef;text-align:center}.pptChannel strong{display:block;font-size:15px;word-break:break-word}.pptChannel small{display:block;margin-top:8px;color:var(--muted);line-height:1.7}
+.nav{display:flex;justify-content:space-between;gap:10px;align-items:center}.drawer{position:fixed;inset:0;padding:24px;display:none;place-items:center;background:rgba(15,23,42,.34);backdrop-filter:blur(6px);z-index:50}.drawer.open{display:grid}.drawerPanel{width:min(980px,calc(100vw - 32px));max-height:calc(100vh - 48px);overflow:auto;padding:20px;background:rgba(255,250,245,.98);border:1px solid var(--line);border-radius:28px;box-shadow:0 30px 80px rgba(17,24,39,.22);display:grid;gap:14px}.drawerCloseRow{display:flex;justify-content:flex-end}.drawerTitle{margin:0;font-size:24px;line-height:1.25;color:#162033}.drawerHeader{display:grid;gap:6px}.drawerMain{display:grid;grid-template-columns:280px minmax(0,1fr);gap:16px;align-items:start}.drawerVisual{display:grid;gap:12px}.drawerInfo{display:grid;gap:12px}
+.qr{width:146px;height:146px;padding:10px;border-radius:16px;background:#fff;border:1px solid var(--line);display:grid;grid-template-columns:repeat(9,1fr);gap:3px}.qr i{background:#111;border-radius:2px}.qr i:nth-child(2n){opacity:.12}.shareGrid{display:grid;grid-template-columns:1fr 220px;gap:14px}.linkbox{padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:#fff;word-break:break-all}.devicePreview{display:grid;gap:12px;margin-top:14px}.deviceSwitch{display:flex;gap:8px;flex-wrap:wrap}.switchBtn{border:1px solid var(--line);background:#fff;padding:9px 12px;border-radius:999px;font-weight:800}.switchBtn.active{background:#fff4ea;border-color:#f0b37e;color:#a54412}.previewStage{padding:16px;border:1px solid var(--line);border-radius:22px;background:#fffdf9;overflow:auto}.previewViewport{margin:0 auto;transition:width .2s ease}.previewViewport.desktop{width:100%;max-width:1180px}.previewViewport.tablet{width:820px;max-width:100%}.previewViewport.mobile{width:390px;max-width:100%;border:10px solid #0f172a;border-radius:28px;overflow:hidden;background:#0f172a}.previewViewport iframe{display:block;width:100%;height:760px;border:0;background:#fff}.previewViewport.mobile iframe{height:740px}
+.dishMedia,.drawerCover,.pptVisual{position:relative;overflow:hidden;border:1px solid #efdac4;background:radial-gradient(circle at top right,rgba(240,163,61,.34),transparent 38%),linear-gradient(180deg,#fffaf4,#fff2e3)}
+.dishMedia{margin:-4px -4px 12px;border-radius:18px;aspect-ratio:16/10;display:grid;place-items:center;padding:12px}
+.dishMedia img,.drawerCover img,.pptVisual img{display:block;width:100%;height:100%;object-fit:contain}
+.dishBadge,.pptVisualBadge{position:absolute;left:12px;top:12px;background:rgba(143,56,16,.88);color:#fff}
+.drawerCover{border-radius:20px;aspect-ratio:4/3;display:grid;place-items:center;padding:14px;max-width:280px;min-height:220px;margin:0 auto}
+.drawerGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.drawerDetailPanel{display:grid;gap:12px}
+.drawerDetailGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+.drawerDetailItem{padding:10px 12px;border:1px solid rgba(234,223,209,.9);border-radius:14px;background:rgba(255,255,255,.72)}
+.drawerDetailItem span{display:block;font-size:12px;line-height:1.4;color:#8a7867}
+.drawerDetailItem strong{display:block;margin-top:6px;font-size:14px;line-height:1.7;color:#162033;word-break:break-word}
+.miniCard{padding:12px;border:1px solid var(--line);border-radius:16px;background:#fffdf9}
+.miniCard strong{display:block;font-size:13px}
+.miniCard div{margin-top:6px;color:var(--muted);line-height:1.7;word-break:break-word}
+.pptProductPage .pptBody{background:radial-gradient(circle at right top,rgba(240,163,61,.18),transparent 24%),linear-gradient(180deg,#fffaf6,#fff)}
+.pptHero{display:grid;grid-template-columns:minmax(280px,360px) minmax(0,1fr);gap:18px;align-items:stretch}
+.pptVisual{min-height:360px;border-radius:28px;padding:26px}
+.pptHeroCard{display:grid;gap:14px;padding:4px 0;min-width:0}
+.pptLead{padding:14px 16px;border-radius:18px;background:#fff7ee;border:1px solid #efd9c1;color:#4b5563;line-height:1.8}
+.pptFocus{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.pptFocusItem{padding:12px;border-radius:16px;background:#fff;border:1px solid var(--line)}
+.pptFocusItem span{display:block;font-size:12px;color:var(--muted)}
+.pptFocusItem strong{display:block;margin-top:5px;font-size:14px;word-break:break-word}
+@media (max-width:1280px){.pptHero{grid-template-columns:1fr}.drawerMain,.drawerGrid,.drawerDetailGrid{grid-template-columns:1fr 1fr}.drawerPanel{width:min(900px,calc(100vw - 28px))}.drawerCover{max-width:240px;min-height:190px}}
+@media (max-width:1280px){.cards{grid-template-columns:repeat(2,1fr)}.sceneGrid{grid-template-columns:repeat(3,1fr)}.layout,.shareGrid,.stepper,.stats,.deckShell,.pptCols,.pptStats,.pptClosing,.pptTable{grid-template-columns:1fr}.filterGroup{grid-template-columns:110px minmax(0,1fr)}.previewViewport.tablet{width:100%}}@media (max-width:760px){.app{padding:14px}.hero h1{font-size:34px}.cards,.grid,.sceneGrid,.filterGroup,.drawerMain,.drawerDetailGrid,.drawerGrid{grid-template-columns:1fr}.filterPanel{padding:16px}.filterTop{display:grid;gap:12px;padding-bottom:12px}.filterMeta{justify-content:flex-start}.filterMeta .chip strong{font-size:24px}.filterLabel{min-height:auto}.drawer{padding:12px}.drawerPanel{width:min(100%,calc(100vw - 16px));max-height:calc(100vh - 24px);padding:16px}.drawerCover{max-width:220px;min-height:170px}.previewViewport.mobile{width:100%;border-width:8px}}
+</style>
+<style>
+:root{
+  --bg:#f2e8db;
+  --panel-bg:rgba(255,250,244,.82);
+  --panel-strong:rgba(255,252,248,.94);
+  --line:#e6d4c1;
+  --line-strong:rgba(131,93,66,.2);
+  --txt:#1f1714;
+  --muted:#716155;
+  --brand:#bc5520;
+  --brand2:#7b2c18;
+  --brand3:#deaf69;
+  --soft:#fff1e2;
+  --blue:#1c5dd8;
+  --bsoft:#eef4ff;
+  --green:#1f7a45;
+  --gsoft:#ecf7ef;
+  --shadow:0 24px 68px rgba(38,20,13,.12);
+  --shadow-soft:0 14px 36px rgba(38,20,13,.08)
+}
+body{
+  position:relative;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(222,175,105,.28), transparent 18%),
+    radial-gradient(circle at 88% 6%, rgba(188,85,32,.16), transparent 22%),
+    linear-gradient(180deg,#e9decf 0%,#f5eee5 40%,#f7f2ea 100%);
+  color:var(--txt)
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px);
+  background-size:100% 40px,40px 100%;
+  mask-image:linear-gradient(180deg, rgba(0,0,0,.24), transparent 82%);
+  opacity:.32
+}
+.app{
+  position:relative;
+  max-width:1580px;
+  padding:28px;
+  gap:20px
+}
+.hero,.panel,.drawerPanel,.summary,.card,.module,.item,.cap{
+  background:
+    linear-gradient(180deg, rgba(255,252,248,.95), rgba(250,245,238,.86));
+  border:1px solid rgba(121,83,58,.11);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(16px)
+}
+.hero{
+  position:relative;
+  overflow:hidden;
+  min-height:298px;
+  padding:32px 34px 30px;
+  border-radius:36px;
+  background:
+    radial-gradient(circle at 88% 14%, rgba(255,229,192,.34), transparent 18%),
+    radial-gradient(circle at 74% 84%, rgba(255,255,255,.1), transparent 20%),
+    linear-gradient(145deg,#29140f 0%,#792716 34%,#bc5520 66%,#deaf69 100%);
+  color:#fff8f1;
+  box-shadow:0 28px 72px rgba(64,28,17,.18)
+}
+.hero::before,.hero::after{
+  content:"";
+  position:absolute;
+  border-radius:999px;
+  pointer-events:none
+}
+.hero::before{
+  width:320px;
+  height:320px;
+  top:-148px;
+  right:-88px;
+  background:radial-gradient(circle, rgba(255,255,255,.24), rgba(255,255,255,.02) 72%);
+  border:1px solid rgba(255,255,255,.08)
+}
+.hero::after{
+  width:220px;
+  height:220px;
+  bottom:-112px;
+  right:88px;
+  background:radial-gradient(circle, rgba(255,221,177,.26), rgba(255,221,177,.03) 70%)
+}
+.hero h1{
+  position:relative;
+  margin:14px 0 10px;
+  max-width:12ch;
+  font:900 clamp(38px,4.4vw,54px)/.98 "Bahnschrift","Segoe UI Variable","PingFang SC",sans-serif;
+  letter-spacing:-.03em
+}
+.hero p{
+  position:relative;
+  max-width:840px;
+  font-size:15px;
+  line-height:1.88;
+  color:rgba(255,245,233,.88)
+}
+.badge{
+  position:relative;
+  padding:8px 13px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.12);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12)
+}
+.stats{
+  position:relative;
+  margin-top:24px;
+  gap:12px
+}
+.stat{
+  padding:14px 16px;
+  border-radius:22px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1)
+}
+.stat span{color:rgba(255,237,214,.8);letter-spacing:.03em}
+.stat strong{margin-top:8px;font-size:25px}
+.panel{
+  position:relative;
+  overflow:hidden;
+  padding:22px;
+  border-radius:32px
+}
+.panel::before,.summary::before,.card::before,.module::before,.item::before,.cap::before,.drawerPanel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(145deg, rgba(255,255,255,.34), transparent 34%)
+}
+.topbar{
+  align-items:flex-start;
+  gap:18px;
+  margin-bottom:16px
+}
+.topbar h2{
+  font-size:24px;
+  line-height:1.12;
+  letter-spacing:-.02em
+}
+.topbar p{
+  max-width:920px;
+  line-height:1.78;
+  color:var(--muted)
+}
+.hint{
+  max-width:320px;
+  color:#7a6659;
+  line-height:1.7
+}
+.stepper{
+  gap:12px
+}
+.step{
+  min-height:126px;
+  padding:16px;
+  border-radius:22px;
+  border:1px solid rgba(121,83,58,.1);
+  background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,247,238,.86));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72);
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease
+}
+.step:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(52,25,16,.08)}
+.step.active{
+  border-color:rgba(188,85,32,.2);
+  background:linear-gradient(180deg, #fff8ef, #fff0df);
+  box-shadow:0 18px 34px rgba(188,85,32,.12)
+}
+.step.done{
+  border-color:rgba(31,122,69,.18);
+  background:linear-gradient(180deg,#f6fff9,#edf9f1)
+}
+.step b{
+  width:30px;
+  height:30px;
+  background:linear-gradient(135deg,var(--brand2),var(--brand),var(--brand3));
+  box-shadow:0 10px 22px rgba(123,44,24,.18)
+}
+.layout{
+  grid-template-columns:minmax(0,1fr) 336px;
+  align-items:start;
+  gap:18px
+}
+.main,.side,.view{gap:16px}
+.side{
+  position:sticky;
+  top:28px
+}
+.cards{gap:14px}
+.card{
+  position:relative;
+  overflow:hidden;
+  padding:16px;
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,248,240,.92));
+  box-shadow:var(--shadow-soft)
+}
+.dish.sel,.scene.sel{
+  border-color:rgba(188,85,32,.22);
+  background:linear-gradient(180deg,#fff7ef,#ffeedf);
+  box-shadow:0 18px 34px rgba(188,85,32,.12)
+}
+.dish h3,.scene h3{
+  font-size:17px;
+  line-height:1.28
+}
+.dish p,.scene p,.preview p,.line,.mini,.list small,.cap small{
+  color:var(--muted)
+}
+.meta{gap:9px}
+.chip,.pill,.pptTag,.hero-pill,.filterMeta .chip{
+  border-radius:999px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.5)
+}
+.chip{
+  padding:6px 11px;
+  background:#f9f0e6;
+  color:#724b32;
+  border:1px solid rgba(150,108,78,.08)
+}
+.actions{gap:10px;margin-top:14px}
+.btn{
+  min-height:42px;
+  padding:0 16px;
+  border-radius:999px;
+  font-weight:800;
+  letter-spacing:.01em;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease
+}
+.btn:hover{transform:translateY(-1px)}
+.btn.p{
+  background:linear-gradient(135deg,var(--brand2),var(--brand),var(--brand3));
+  color:#fff;
+  box-shadow:0 14px 28px rgba(123,44,24,.18)
+}
+.btn.s{background:linear-gradient(180deg,#f4f8ff,#eaf0ff);color:var(--blue)}
+.btn.g{
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(121,83,58,.11);
+  color:var(--txt)
+}
+.btn.d{
+  background:#fff3f1;
+  color:#b43122;
+  border:1px solid rgba(180,49,34,.16)
+}
+.filterPanel{
+  gap:20px;
+  padding:22px 24px;
+  border:1px solid rgba(121,83,58,.1);
+  border-radius:28px;
+  background:
+    radial-gradient(circle at top right, rgba(222,175,105,.14), transparent 20%),
+    linear-gradient(180deg, rgba(255,253,249,.98), rgba(255,246,236,.94));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)
+}
+.filterTop{
+  align-items:center;
+  padding-bottom:16px;
+  border-bottom:1px solid rgba(223,208,192,.8)
+}
+.filterTop strong{font-size:21px;color:#1f1714}
+.filterMeta{
+  gap:12px;
+  align-items:center
+}
+.filterMeta .chip{
+  min-height:44px;
+  padding:0 15px;
+  background:linear-gradient(180deg,#fbf4ea,#f5ecdf);
+  color:#7a573b
+}
+.filterMeta .chip strong{color:#8f4a1d}
+.filterGroup{
+  grid-template-columns:134px minmax(0,1fr);
+  gap:14px
+}
+.filterLabel{
+  font-size:14px;
+  color:#3c281c
+}
+.filterOptions{
+  gap:10px
+}
+.filterChip{
+  min-height:34px;
+  padding:0 15px;
+  border:1px solid rgba(141,109,82,.14);
+  background:rgba(255,255,255,.88);
+  color:#5a6371;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72)
+}
+.filterChip:hover{
+  border-color:rgba(188,85,32,.18);
+  background:#fff7ef;
+  color:#8f4a1d
+}
+.filterChip.active{
+  border-color:rgba(188,85,32,.24);
+  background:linear-gradient(180deg,#fff6eb,#ffe8cf);
+  color:#a24b16;
+  box-shadow:0 10px 22px rgba(188,85,32,.12)
+}
+.emptyState{
+  border-radius:22px;
+  background:rgba(255,255,255,.88)
+}
+.sceneGrid,.grid,.shareGrid,.drawerGrid,.drawerDetailGrid,.pptFocus,.pptTable,.pptClosing,.pptStats,.pptCols{
+  gap:14px
+}
+.module,.summary,.item,.cap{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,248,240,.9))
+}
+.summary{
+  padding:16px
+}
+.summary strong,.module h4,.drawerTitle,.pptBox h5{
+  color:#1f1714
+}
+.deckShell{
+  gap:16px;
+  grid-template-columns:230px minmax(0,1fr)
+}
+.deckSidebar{
+  gap:12px;
+  padding-right:6px
+}
+.thumb{
+  border-radius:20px;
+  border:1px solid rgba(121,83,58,.1);
+  background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,247,238,.9));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.72);
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease
+}
+.thumb:hover{transform:translateY(-1px)}
+.thumb.active{
+  border-color:rgba(188,85,32,.24);
+  background:linear-gradient(180deg,#fff7ef,#ffeede);
+  box-shadow:0 14px 28px rgba(188,85,32,.12)
+}
+.deckTools,.deckPageWrap,.previewStage{
+  border-radius:24px;
+  border:1px solid rgba(121,83,58,.1);
+  background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,248,240,.9))
+}
+.deckTools{
+  padding:14px 16px
+}
+.deckPageWrap,.previewStage{
+  padding:18px
+}
+.ppt{
+  border-radius:28px;
+  border:1px solid #ecd9c3;
+  box-shadow:0 20px 44px rgba(30,17,12,.1)
+}
+.pptTop{
+  padding:18px 24px;
+  background:linear-gradient(90deg,#2c150f 0%, #7b2c18 32%, #bc5520 66%, #deaf69 100%)
+}
+.pptBrand{
+  letter-spacing:.12em
+}
+.pptNo{
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.12)
+}
+.pptBody{
+  gap:20px;
+  padding:clamp(18px,2vw,30px)
+}
+.ppt.cover .pptBody,.ppt.divider .pptBody,.pptProductPage .pptBody{
+  background:
+    radial-gradient(circle at top right, rgba(222,175,105,.16), transparent 24%),
+    linear-gradient(180deg,#fffaf5,#fff)
+}
+.pptTitle{
+  color:#1d1613;
+  font:900 clamp(30px,3vw,42px)/1.05 "Bahnschrift","Segoe UI Variable","PingFang SC",sans-serif
+}
+.pptSub{
+  color:#9a4a20;
+  letter-spacing:.04em
+}
+.pptDesc,.pptBox li,.pptLead,.drawerDetailItem strong{
+  color:#4f5a68
+}
+.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel{
+  border-radius:20px;
+  border:1px solid rgba(121,83,58,.1);
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(255,248,240,.9))
+}
+.pptChannel{
+  border-style:solid;
+  background:linear-gradient(180deg,#fff8ef,#fff1e2)
+}
+.pptHero{
+  grid-template-columns:minmax(300px,380px) minmax(0,1fr);
+  gap:20px
+}
+.pptVisual,.drawerCover,.dishMedia{
+  border:1px solid rgba(234,218,196,.96);
+  background:
+    radial-gradient(circle at top right, rgba(222,175,105,.28), transparent 32%),
+    linear-gradient(180deg,#fffaf4,#fff1e4)
+}
+.dishMedia{
+  margin:-4px -4px 14px;
+  border-radius:20px;
+  padding:14px
+}
+.dishMedia img,.drawerCover img,.pptVisual img{
+  object-fit:contain
+}
+.dishBadge,.pptVisualBadge{
+  background:rgba(123,44,24,.9);
+  border:1px solid rgba(255,255,255,.08)
+}
+.drawer{
+  padding:24px;
+  background:rgba(27,14,10,.42);
+  backdrop-filter:blur(12px)
+}
+.drawerPanel{
+  width:min(1080px,calc(100vw - 40px));
+  max-height:calc(100vh - 48px);
+  padding:24px;
+  border-radius:32px;
+  box-shadow:0 30px 90px rgba(22,12,9,.24)
+}
+.drawerMain{
+  grid-template-columns:300px minmax(0,1fr);
+  gap:18px
+}
+.drawerCover{
+  max-width:300px;
+  min-height:240px;
+  padding:18px;
+  border-radius:24px
+}
+.drawerDetailItem{
+  border-radius:16px;
+  background:rgba(255,255,255,.74)
+}
+.drawerDetailItem span{
+  color:#8a7867
+}
+.nav{
+  padding-top:2px
+}
+.linkbox{
+  border-radius:18px;
+  background:rgba(255,255,255,.9)
+}
+.previewViewport.mobile{
+  border-width:12px;
+  border-radius:32px
+}
+.previewViewport iframe{
+  border-radius:18px
+}
+@media (max-width:1360px){
+  .layout{grid-template-columns:1fr}
+  .side{position:static}
+  .shareGrid{grid-template-columns:1fr}
+  .deckShell{grid-template-columns:1fr}
+  .stepper{grid-template-columns:repeat(5,minmax(0,1fr))}
+}
+@media (max-width:1180px){
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sceneGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stepper{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .drawerMain,.drawerGrid,.drawerDetailGrid,.pptHero,.pptCols,.pptStats,.pptClosing,.pptTable{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .app{padding:16px}
+  .hero{padding:24px 20px 22px;min-height:280px}
+  .hero h1{font-size:34px}
+  .stats,.cards,.grid,.sceneGrid,.filterGroup,.drawerMain,.drawerDetailGrid,.drawerGrid,.stepper{grid-template-columns:1fr}
+  .filterPanel{padding:18px}
+  .filterTop{display:grid;gap:12px;align-items:start}
+  .filterMeta{justify-content:flex-start}
+  .filterGroup{gap:8px}
+  .filterLabel{min-height:auto}
+  .drawer{padding:12px}
+  .drawerPanel{width:min(100%,calc(100vw - 16px));max-height:calc(100vh - 24px);padding:16px}
+  .drawerCover{max-width:220px;min-height:170px}
+  .previewViewport.mobile{width:100%;border-width:8px}
+}
+</style>
+<style>
+:root{
+  --bg:#f3efe8;
+  --panel-bg:rgba(255,255,255,.78);
+  --panel-strong:rgba(255,255,255,.92);
+  --line:rgba(24,20,16,.08);
+  --line-strong:rgba(24,20,16,.14);
+  --txt:#171411;
+  --muted:#6f6961;
+  --brand:#9d4b26;
+  --brand2:#241711;
+  --brand3:#ceb083;
+  --soft:#f5efe7;
+  --blue:#1c5dd8;
+  --bsoft:#edf3ff;
+  --green:#217347;
+  --gsoft:#eef7f0;
+  --shadow:0 24px 64px rgba(24,18,14,.09);
+  --shadow-soft:0 12px 30px rgba(24,18,14,.05)
+}
+body{
+  background:
+    radial-gradient(circle at 14% 10%, rgba(206,176,131,.12), transparent 18%),
+    linear-gradient(180deg,#ece7df 0%,#f4f0e8 42%,#f7f4ee 100%)
+}
+body::before{
+  background-image:
+    linear-gradient(rgba(23,20,17,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(23,20,17,.03) 1px, transparent 1px);
+  background-size:100% 44px,44px 100%;
+  opacity:.22
+}
+.app{
+  max-width:1560px;
+  padding:26px
+}
+.hero{
+  min-height:320px;
+  padding:34px 36px 32px;
+  border-radius:34px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.03)),
+    linear-gradient(140deg,#17120f 0%, #241712 28%, #603521 60%, #ca9f68 100%);
+  box-shadow:0 28px 72px rgba(24,18,14,.14)
+}
+.hero::before{
+  width:360px;
+  height:360px;
+  top:-172px;
+  right:-120px;
+  background:radial-gradient(circle, rgba(255,255,255,.14), rgba(255,255,255,.01) 72%);
+  border-color:rgba(255,255,255,.06)
+}
+.hero::after{
+  width:auto;
+  height:auto;
+  inset:18px;
+  border-radius:28px;
+  background:none;
+  border:1px solid rgba(255,255,255,.08)
+}
+.hero h1{
+  max-width:11ch;
+  font:900 clamp(42px,4.3vw,60px)/.94 "Bahnschrift","Segoe UI Variable","PingFang SC",sans-serif;
+  letter-spacing:-.045em
+}
+.hero p{
+  max-width:820px;
+  color:rgba(255,245,233,.78)
+}
+.badge{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:none
+}
+.stats{
+  gap:12px
+}
+.stat{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:none
+}
+.hero,.panel,.drawerPanel,.summary,.card,.module,.item,.cap,.deckTools,.deckPageWrap,.previewStage,.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel,.thumb,.step{
+  box-shadow:0 12px 28px rgba(24,18,14,.05)
+}
+.panel,.summary,.card,.module,.item,.cap,.deckTools,.deckPageWrap,.previewStage,.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel,.thumb,.step,.filterPanel,.drawerPanel,.drawerDetailItem{
+  border-color:rgba(24,20,16,.08)
+}
+.panel,.summary,.card,.module,.item,.cap,.deckTools,.deckPageWrap,.previewStage,.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel,.thumb,.drawerPanel,.filterPanel{
+  background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(248,244,238,.92))
+}
+.panel::before,.summary::before,.card::before,.module::before,.item::before,.cap::before,.drawerPanel::before{
+  background:linear-gradient(180deg, rgba(255,255,255,.16), transparent 28%)
+}
+.topbar h2,.drawerTitle,.pptTitle{
+  color:var(--txt);
+  letter-spacing:-.03em
+}
+.topbar p,.hint,.dish p,.scene p,.preview p,.line,.mini,.list small,.cap small,.pptDesc,.pptBox li,.pptLead,.drawerDetailItem strong{
+  color:var(--muted)
+}
+.stepper{
+  gap:12px
+}
+.step{
+  min-height:132px;
+  background:linear-gradient(180deg, rgba(255,255,255,.78), rgba(248,244,238,.92));
+  box-shadow:none
+}
+.step.active{
+  background:linear-gradient(180deg,#fffaf4,#f8ecdf);
+  box-shadow:0 14px 30px rgba(157,75,38,.08)
+}
+.step.done{
+  background:linear-gradient(180deg,#f8fcf8,#eef6f0)
+}
+.step b{
+  background:linear-gradient(135deg,#1f1612 0%, #6c3921 52%, #ca9f68 100%);
+  box-shadow:none
+}
+.layout{
+  grid-template-columns:minmax(0,1fr) 320px
+}
+.side{
+  top:26px
+}
+.summary{
+  border-radius:24px
+}
+.card,.module,.item,.cap{
+  border-radius:24px
+}
+.chip,.pill,.pptTag,.filterMeta .chip{
+  background:#f3ede5;
+  color:#5d4838;
+  border:1px solid rgba(24,20,16,.06);
+  box-shadow:none
+}
+.btn{
+  box-shadow:none
+}
+.btn.p{
+  background:linear-gradient(135deg,#1f1612 0%, #6c3921 52%, #ca9f68 100%)
+}
+.btn.g{
+  background:rgba(255,255,255,.72);
+  border-color:rgba(24,20,16,.08)
+}
+.btn.s{
+  background:linear-gradient(180deg,#f4f7ff,#edf2fd)
+}
+.btn.d{
+  background:#fff2f0
+}
+.filterPanel{
+  background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(247,243,236,.94));
+  box-shadow:none
+}
+.filterTop{
+  border-bottom-color:rgba(24,20,16,.08)
+}
+.filterMeta .chip{
+  background:#f2ede6
+}
+.filterChip{
+  background:rgba(255,255,255,.72);
+  border-color:rgba(24,20,16,.08);
+  box-shadow:none
+}
+.filterChip:hover{
+  background:#f7f1e9;
+  border-color:rgba(157,75,38,.14)
+}
+.filterChip.active{
+  background:linear-gradient(180deg,#faf3e8,#efdfc8);
+  border-color:rgba(157,75,38,.18);
+  box-shadow:none
+}
+.dish.sel,.scene.sel,.thumb.active{
+  background:linear-gradient(180deg,#fff9f2,#f5e8d8);
+  border-color:rgba(157,75,38,.16);
+  box-shadow:0 14px 28px rgba(157,75,38,.06)
+}
+.deckTools,.deckPageWrap,.previewStage{
+  background:linear-gradient(180deg, rgba(255,255,255,.82), rgba(248,244,238,.92))
+}
+.ppt{
+  border-color:rgba(24,20,16,.08);
+  box-shadow:0 20px 46px rgba(24,18,14,.08)
+}
+.pptTop{
+  background:linear-gradient(90deg,#17120f 0%, #2b1b15 24%, #6b3821 58%, #ca9f68 100%)
+}
+.ppt.cover .pptBody,.ppt.divider .pptBody,.pptProductPage .pptBody{
+  background:
+    radial-gradient(circle at top right, rgba(206,176,131,.12), transparent 20%),
+    linear-gradient(180deg,#fffdf9,#fff)
+}
+.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel{
+  background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(248,244,238,.94))
+}
+.pptChannel{
+  background:linear-gradient(180deg,#fbf7f0,#f3eadf)
+}
+.pptVisual,.drawerCover,.dishMedia{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.84), rgba(242,237,229,.98));
+  border-color:rgba(24,20,16,.06)
+}
+.dishBadge,.pptVisualBadge{
+  background:rgba(31,22,18,.88)
+}
+.drawer{
+  background:rgba(17,13,10,.48)
+}
+.drawerPanel{
+  background:linear-gradient(180deg, rgba(255,255,255,.9), rgba(245,240,233,.98));
+  box-shadow:0 30px 84px rgba(24,18,14,.16)
+}
+.drawerDetailItem{
+  background:rgba(255,255,255,.66)
+}
+.previewViewport.mobile{
+  border-color:#171411;
+  background:#171411
+}
+@media (max-width:1360px){
+  .layout{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .app{padding:16px}
+  .hero{padding:24px 20px 22px;min-height:286px}
+  .hero h1{font-size:36px}
+}
+</style>
+<style>
+:root{
+  --bg:#f6f4f1;
+  --panel-bg:rgba(255,255,255,.9);
+  --panel-strong:rgba(255,255,255,.96);
+  --line:rgba(29,18,10,.07);
+  --line-strong:rgba(29,18,10,.12);
+  --txt:#191512;
+  --muted:#6b625b;
+  --brand:#f26a21;
+  --brand2:#d94f10;
+  --brand3:#ffb27b;
+  --soft:#fff4ed;
+  --blue:#1c5dd8;
+  --bsoft:#edf3ff;
+  --green:#217347;
+  --gsoft:#eef7f0;
+  --shadow:0 22px 58px rgba(39,22,10,.08);
+  --shadow-soft:0 12px 28px rgba(39,22,10,.05)
+}
+body{
+  background:
+    radial-gradient(circle at 12% 8%, rgba(242,106,33,.08), transparent 18%),
+    radial-gradient(circle at 88% 0%, rgba(255,178,123,.12), transparent 20%),
+    linear-gradient(180deg,#fbfaf8 0%,#f6f4f1 44%,#f3f1ee 100%)
+}
+body::before{
+  background-image:
+    linear-gradient(rgba(242,106,33,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(242,106,33,.025) 1px, transparent 1px);
+  opacity:.18
+}
+.hero{
+  background:
+    radial-gradient(circle at 84% 16%, rgba(255,255,255,.24), transparent 16%),
+    linear-gradient(135deg,#fff8f3 0%, #ffe4d2 20%, #ffb380 54%, #f26a21 100%);
+  color:#251710;
+  box-shadow:0 24px 60px rgba(242,106,33,.16)
+}
+.hero::before{
+  background:radial-gradient(circle, rgba(255,255,255,.28), rgba(255,255,255,.03) 72%);
+  border-color:rgba(255,255,255,.16)
+}
+.hero::after{
+  border-color:rgba(255,255,255,.24)
+}
+.hero p{
+  color:rgba(58,29,14,.72)
+}
+.badge,.stat{
+  background:rgba(255,255,255,.34);
+  border-color:rgba(255,255,255,.24);
+  color:#49250f
+}
+.stat span{
+  color:rgba(86,43,18,.64)
+}
+.hero,.panel,.drawerPanel,.summary,.card,.module,.item,.cap,.deckTools,.deckPageWrap,.previewStage,.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel,.thumb,.step,.filterPanel{
+  box-shadow:0 12px 28px rgba(39,22,10,.05)
+}
+.panel,.summary,.card,.module,.item,.cap,.deckTools,.deckPageWrap,.previewStage,.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel,.thumb,.step,.filterPanel,.drawerPanel,.drawerDetailItem{
+  border-color:rgba(29,18,10,.07)
+}
+.panel,.summary,.card,.module,.item,.cap,.deckTools,.deckPageWrap,.previewStage,.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel,.thumb,.filterPanel,.drawerPanel{
+  background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(249,247,244,.98))
+}
+.chip,.pill,.pptTag,.filterMeta .chip{
+  background:rgba(242,106,33,.08);
+  border-color:rgba(242,106,33,.1);
+  color:#a54210
+}
+.btn.p,.step b{
+  background:linear-gradient(135deg,#d94f10 0%, #f26a21 56%, #ffb27b 100%)
+}
+.btn.g{
+  background:rgba(255,255,255,.96)
+}
+.step.active,.dish.sel,.scene.sel,.thumb.active{
+  background:linear-gradient(180deg,#fff9f3,#fff0e7);
+  border-color:rgba(242,106,33,.16);
+  box-shadow:0 14px 30px rgba(242,106,33,.08)
+}
+.filterPanel{
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(249,247,244,.98))
+}
+.filterMeta .chip{
+  background:rgba(242,106,33,.08)
+}
+.filterChip{
+  background:rgba(255,255,255,.96)
+}
+.filterChip:hover{
+  border-color:rgba(242,106,33,.16);
+  color:#b9470d;
+  background:#fff6f0
+}
+.filterChip.active{
+  background:linear-gradient(180deg,#fff6ef,#ffe5d5);
+  border-color:rgba(242,106,33,.18)
+}
+.pptTop{
+  background:linear-gradient(90deg,#fff8f3 0%, #ffd8c0 22%, #ffab73 58%, #f26a21 100%);
+  color:#2b180e
+}
+.pptNo{
+  background:rgba(255,255,255,.4);
+  border-color:rgba(255,255,255,.24)
+}
+.pptSub{
+  color:#c24d12
+}
+.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel{
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(249,247,244,.98))
+}
+.pptChannel{
+  background:linear-gradient(180deg,#fff8f3,#fff0e5)
+}
+.pptVisual,.drawerCover,.dishMedia{
+  background:linear-gradient(180deg, rgba(255,255,255,.96), rgba(250,244,238,.98));
+  border-color:rgba(242,106,33,.08)
+}
+.dishBadge,.pptVisualBadge{
+  background:rgba(217,79,16,.9)
+}
+.drawer{
+  background:rgba(28,18,10,.32)
+}
+.drawerPanel{
+  background:linear-gradient(180deg, rgba(255,255,255,.97), rgba(248,245,240,.99))
+}
+.previewViewport.mobile{
+  border-color:#f26a21;
+  background:#f26a21
+}
+@media (max-width:760px){
+  .hero{
+    background:
+      radial-gradient(circle at 84% 16%, rgba(255,255,255,.24), transparent 16%),
+      linear-gradient(135deg,#fff8f3 0%, #ffe4d2 20%, #ffb380 54%, #f26a21 100%)
+  }
+}
+</style>
+<style>
+:root{
+  --brand:#f26a21;
+  --brand2:#d75614;
+  --brand3:#ffb78a;
+  --brand-soft:#fff0e6;
+  --brand-mist:rgba(242,106,33,.08);
+  --brand-line:rgba(242,106,33,.16)
+}
+body{
+  background:
+    radial-gradient(circle at 12% 8%, rgba(242,106,33,.06), transparent 18%),
+    radial-gradient(circle at 88% 0%, rgba(242,106,33,.1), transparent 20%),
+    linear-gradient(180deg,#fbfaf8 0%,#f6f4f1 44%,#f3f1ee 100%)
+}
+.hero{
+  background:
+    radial-gradient(circle at 84% 16%, rgba(255,255,255,.24), transparent 16%),
+    linear-gradient(135deg,#fff8f3 0%, #ffe8dc 24%, #ffc29d 58%, var(--brand) 100%)
+}
+.badge,.stat{
+  color:#4b250f
+}
+.chip,.pill,.pptTag,.filterMeta .chip{
+  background:var(--brand-mist);
+  border-color:var(--brand-line);
+  color:var(--brand2)
+}
+.btn.p,.step b{
+  background:linear-gradient(135deg,var(--brand2) 0%, var(--brand) 58%, var(--brand3) 100%)
+}
+.step.active,.dish.sel,.scene.sel,.thumb.active{
+  border-color:var(--brand-line);
+  box-shadow:0 14px 30px rgba(242,106,33,.08)
+}
+.filterMeta .chip{
+  background:var(--brand-mist)
+}
+.filterChip:hover{
+  border-color:var(--brand-line);
+  color:var(--brand2)
+}
+.filterChip.active{
+  background:linear-gradient(180deg,#fff6ef,#ffe6d7);
+  border-color:var(--brand-line)
+}
+.pptTop{
+  background:linear-gradient(90deg,#fff8f3 0%, #ffe3d1 24%, #ffb886 60%, var(--brand) 100%)
+}
+.pptSub{
+  color:var(--brand2)
+}
+.dishBadge,.pptVisualBadge{
+  background:rgba(215,86,20,.92)
+}
+.previewViewport.mobile{
+  border-color:var(--brand);
+  background:var(--brand)
+}
+</style>
+<style>
+:root{
+  --color-bg:#f6f4f1;
+  --color-surface:rgba(255,255,255,.94);
+  --color-surface-strong:rgba(255,255,255,.98);
+  --color-text:#191512;
+  --color-muted:#6b625b;
+  --color-primary:#f26a21;
+  --color-primary-strong:#d75614;
+  --color-primary-soft:#fff0e6;
+  --color-primary-line:rgba(242,106,33,.16)
+}
+body{
+  background-color:var(--color-bg);
+  color:var(--color-text)
+}
+.panel,.summary,.card,.module,.item,.cap,.deckTools,.deckPageWrap,.previewStage,.pptBox,.pptCell,.pptStat,.pptFocusItem,.pptChannel,.thumb,.filterPanel,.drawerPanel{
+  background-color:var(--color-surface)
+}
+.hero,.ppt,.drawerPanel,.previewViewport.mobile{
+  color:var(--color-text)
+}
+.topbar p,.hint,.dish p,.scene p,.preview p,.line,.mini,.list small,.cap small,.pptDesc,.pptBox li,.pptLead,.drawerDetailItem strong{
+  color:var(--color-muted)
+}
+.chip,.pill,.pptTag,.filterMeta .chip{
+  background:var(--color-primary-soft);
+  border-color:var(--color-primary-line);
+  color:var(--color-primary-strong)
+}
+.btn.p,.step b{
+  background:linear-gradient(135deg,var(--color-primary-strong) 0%, var(--color-primary) 58%, #ffb78a 100%)
+}
+.filterChip:hover,.filterChip.active,.dish.sel,.scene.sel,.thumb.active,.step.active{
+  border-color:var(--color-primary-line)
+}
+.filterChip:hover{
+  color:var(--color-primary-strong)
+}
+.pptSub{
+  color:var(--color-primary-strong)
+}
+.dishBadge,.pptVisualBadge{
+  background:rgba(215,86,20,.92)
+}
+.mt12{margin-top:12px}
+.qrSummary{display:grid;justify-items:center;gap:12px}
+.textCenter{text-align:center}
+</style>
+<style id="ui-refactor-20260407-pc">
+:root{
+  --bg:#eef2f8;
+  --bg-deep:#e6ebf4;
+  --panel-bg:rgba(255,255,255,.78);
+  --panel-strong:rgba(255,255,255,.92);
+  --line:rgba(22,36,61,.10);
+  --line-strong:rgba(44,85,180,.18);
+  --txt:#172033;
+  --muted:#5f6c82;
+  --brand:#f26a21;
+  --brand2:#d75614;
+  --brand3:#ffb078;
+  --accent:#ffc57a;
+  --green:#1f7a45;
+  --shadow:0 28px 72px rgba(16,24,40,.12);
+  --shadow-soft:0 16px 36px rgba(16,24,40,.08);
+}
+
+body{
+  color:var(--txt);
+  background:
+    radial-gradient(circle at 10% 8%, rgba(132,163,255,.22), transparent 18%),
+    radial-gradient(circle at 88% 8%, rgba(212,109,44,.15), transparent 18%),
+    linear-gradient(180deg,#edf2fb 0%,#f6f8fc 42%,#eef2f8 100%);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.34) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.22) 1px, transparent 1px);
+  background-size:100% 44px,44px 100%;
+  mask-image:linear-gradient(180deg, rgba(0,0,0,.24), transparent 80%);
+  opacity:.4;
+}
+
+.app{
+  position:relative;
+  max-width:1600px;
+  padding:30px;
+  gap:22px;
+}
+
+.hero{
+  position:relative;
+  overflow:hidden;
+  min-height:318px;
+  padding:34px 36px 30px;
+  border-radius:38px;
+  border:1px solid rgba(255,255,255,.16);
+  background:
+    radial-gradient(circle at 82% 18%, rgba(255,255,255,.24), transparent 16%),
+    radial-gradient(circle at 76% 84%, rgba(255,197,122,.20), transparent 22%),
+    linear-gradient(138deg,#111936 0%,#243b82 34%,#3766c8 66%,#d46d2c 100%);
+  color:#fdfaf7;
+  box-shadow:0 32px 90px rgba(20,35,74,.22);
+}
+
+.hero::before,
+.hero::after{
+  content:"";
+  position:absolute;
+  border-radius:999px;
+  pointer-events:none;
+}
+
+.hero::before{
+  width:340px;
+  height:340px;
+  right:-90px;
+  top:-150px;
+  background:radial-gradient(circle, rgba(255,255,255,.24), rgba(255,255,255,.02) 72%);
+}
+
+.hero::after{
+  width:260px;
+  height:260px;
+  right:120px;
+  bottom:-140px;
+  background:radial-gradient(circle, rgba(255,197,122,.26), rgba(255,197,122,.04) 72%);
+}
+
+.badge{
+  padding:8px 14px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.14);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.hero h1{
+  position:relative;
+  max-width:12ch;
+  margin:16px 0 10px;
+  font:900 clamp(42px,4.6vw,58px)/.96 "Bahnschrift","Segoe UI Variable","PingFang SC",sans-serif;
+  letter-spacing:-.04em;
+}
+
+.hero p{
+  position:relative;
+  max-width:860px;
+  font-size:15px;
+  line-height:1.9;
+  color:rgba(255,247,239,.88);
+}
+
+.stats{
+  position:relative;
+  margin-top:24px;
+  gap:12px;
+}
+
+.stat{
+  padding:16px 18px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.12);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+.stat span{
+  color:rgba(255,241,226,.82);
+  letter-spacing:.02em;
+}
+
+.stat strong{
+  margin-top:8px;
+  font-size:26px;
+}
+
+.hero,
+.panel,
+.summary,
+.card,
+.module,
+.item,
+.cap,
+.drawerPanel,
+.deckTools,
+.deckPageWrap,
+.previewStage,
+.pptBox,
+.pptCell,
+.pptStat,
+.pptFocusItem,
+.pptChannel,
+.thumb,
+.step,
+.filterPanel{
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(18px);
+}
+
+.panel,
+.summary,
+.card,
+.module,
+.item,
+.cap,
+.drawerPanel,
+.deckTools,
+.deckPageWrap,
+.previewStage,
+.pptBox,
+.pptCell,
+.pptStat,
+.pptFocusItem,
+.pptChannel,
+.thumb,
+.step,
+.filterPanel,
+.drawerDetailItem{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.94), rgba(249,251,255,.86));
+}
+
+.panel,
+.summary,
+.card,
+.module,
+.item,
+.cap,
+.deckTools,
+.deckPageWrap,
+.previewStage,
+.pptBox,
+.pptCell,
+.pptStat,
+.pptFocusItem,
+.pptChannel,
+.thumb,
+.filterPanel,
+.drawerPanel{
+  box-shadow:var(--shadow-soft);
+}
+
+.panel::before,
+.summary::before,
+.card::before,
+.module::before,
+.item::before,
+.cap::before,
+.drawerPanel::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:linear-gradient(145deg, rgba(255,255,255,.46), transparent 36%);
+}
+
+.panel{
+  padding:22px;
+  border-radius:34px;
+}
+
+.topbar{
+  align-items:flex-start;
+  gap:18px;
+  margin-bottom:18px;
+}
+
+.topbar h2{
+  font-size:26px;
+  line-height:1.12;
+  letter-spacing:-.02em;
+}
+
+.topbar p,
+.hint,
+.line,
+.mini,
+.dish p,
+.scene p,
+.preview p{
+  color:var(--muted);
+}
+
+.hint{
+  line-height:1.7;
+}
+
+.layout{
+  grid-template-columns:minmax(0,1fr) 348px;
+  align-items:start;
+  gap:20px;
+}
+
+.side{
+  position:sticky;
+  top:30px;
+  gap:16px;
+}
+
+.stepper{
+  gap:12px;
+}
+
+.step{
+  min-height:134px;
+  padding:18px 16px;
+  border-radius:24px;
+  background:linear-gradient(180deg, rgba(255,255,255,.94), rgba(243,247,255,.88));
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.step:hover{
+  transform:translateY(-2px);
+}
+
+.step.active{
+  border-color:rgba(242,106,33,.22);
+  background:linear-gradient(180deg, #fff8f1, #ffefe1);
+  box-shadow:0 20px 40px rgba(242,106,33,.12);
+}
+
+.step.done{
+  border-color:rgba(31,122,69,.18);
+  background:linear-gradient(180deg,#f7fff9,#edf9f1);
+}
+
+.step b{
+  width:32px;
+  height:32px;
+  background:linear-gradient(135deg,#b73f08,var(--brand2),var(--brand));
+  box-shadow:0 12px 24px rgba(242,106,33,.18);
+}
+
+.step strong{
+  font-size:15px;
+}
+
+.cards{
+  gap:14px;
+}
+
+.card{
+  padding:16px;
+  border-radius:24px;
+}
+
+.dish.sel,
+.scene.sel{
+  border-color:rgba(212,109,44,.20);
+  background:linear-gradient(180deg,#fffaf4,#fff1e2);
+  box-shadow:0 22px 38px rgba(212,109,44,.12);
+}
+
+.dish h3,
+.scene h3{
+  font-size:17px;
+  line-height:1.26;
+  color:#172033;
+}
+
+.chip,
+.pill,
+.pptTag,
+.hero-pill,
+.filterMeta .chip{
+  border-radius:999px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.54);
+}
+
+.chip{
+  background:#fff1e4;
+  color:#995126;
+  border:1px solid rgba(242,106,33,.08);
+}
+
+.actions{
+  gap:10px;
+  margin-top:14px;
+}
+
+.btn{
+  min-height:42px;
+  padding:0 16px;
+  border-radius:999px;
+  font-weight:800;
+  transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn.p{
+  background:linear-gradient(135deg,#b73f08 0%, #f26a21 54%, #ffb078 100%);
+  color:#fff;
+  box-shadow:0 16px 30px rgba(242,106,33,.18);
+}
+
+.btn.s{
+  background:linear-gradient(180deg,#fff8f1,#ffefe1);
+  color:#b7511c;
+}
+
+.btn.g{
+  background:rgba(255,255,255,.86);
+  border:1px solid rgba(22,36,61,.10);
+  color:var(--txt);
+}
+
+.btn.d{
+  background:#fff2f0;
+  color:#b83a2b;
+  border:1px solid rgba(184,58,43,.14);
+}
+
+.switchBtn.active{
+  background:linear-gradient(180deg,#fff8f1,#ffefe1);
+  border-color:rgba(242,106,33,.24);
+  color:#b7511c;
+}
+
+.filterPanel{
+  padding:24px;
+  border-radius:30px;
+  gap:20px;
+  background:
+    radial-gradient(circle at right top, rgba(132,163,255,.12), transparent 22%),
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,249,255,.92));
+}
+
+.filterTop{
+  align-items:flex-start;
+  gap:20px;
+  padding-bottom:16px;
+  border-bottom:1px solid rgba(22,36,61,.08);
+}
+
+.filterTop strong{
+  font-size:22px;
+  color:#172033;
+}
+
+.filterMeta .chip{
+  min-height:44px;
+  padding:0 14px;
+  background:linear-gradient(180deg,#fff8f1,#ffefe1);
+  color:#995126;
+  border:1px solid rgba(242,106,33,.10);
+}
+
+.filterMeta .chip strong{
+  color:#d75614;
+}
+
+.filterChip{
+  min-height:34px;
+  padding:0 14px;
+  border:1px solid rgba(22,36,61,.10);
+  background:#fff;
+  color:#51607b;
+}
+
+.filterChip:hover{
+  border-color:rgba(242,106,33,.18);
+  background:#fff7ee;
+  color:#d75614;
+}
+
+.filterChip.active{
+  border-color:rgba(212,109,44,.24);
+  background:linear-gradient(180deg,#fffaf3,#ffe9d3);
+  color:#b75b1f;
+  box-shadow:0 10px 20px rgba(212,109,44,.10);
+}
+
+.sceneGrid,
+.grid,
+.shareGrid,
+.drawerGrid,
+.drawerDetailGrid,
+.pptFocus,
+.pptTable,
+.pptClosing,
+.pptStats,
+.pptCols{
+  gap:14px;
+}
+
+.module,
+.summary,
+.item,
+.cap{
+  padding:16px;
+  border-radius:24px;
+}
+
+.summary{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,250,255,.90));
+}
+
+.summary strong,
+.module h4,
+.drawerTitle,
+.pptBox h5{
+  color:#172033;
+}
+
+.deckShell{
+  padding:18px;
+  grid-template-columns:250px minmax(0,1fr);
+  gap:16px;
+}
+
+.deckSidebar{
+  gap:12px;
+  padding-right:6px;
+}
+
+.thumb{
+  padding:14px;
+  border-radius:22px;
+  background:linear-gradient(180deg,#ffffff,#f4f7ff);
+}
+
+.thumb.active{
+  border-color:rgba(242,106,33,.20);
+  background:linear-gradient(180deg,#fff8f1,#ffefe1);
+  box-shadow:0 16px 30px rgba(242,106,33,.10);
+}
+
+.deckTools{
+  padding:14px 16px;
+  border-radius:22px;
+}
+
+.deckPageWrap{
+  padding:20px;
+  border-radius:28px;
+  background:linear-gradient(180deg,#ffffff,#f5f8fe);
+}
+
+.ppt{
+  border-radius:28px;
+  border:1px solid rgba(22,36,61,.08);
+  box-shadow:0 20px 44px rgba(16,24,40,.08);
+}
+
+.pptTop{
+  padding:16px 22px;
+  background:linear-gradient(90deg,#b73f08 0%,#f26a21 52%,#ffb078 100%);
+}
+
+.pptBrand{
+  letter-spacing:.08em;
+}
+
+.ppt.cover .pptBody,
+.ppt.divider .pptBody,
+.pptProductPage .pptBody{
+  background:
+    radial-gradient(circle at right top, rgba(132,163,255,.16), transparent 24%),
+    linear-gradient(180deg,#fffefe,#f7f9ff);
+}
+
+.pptTitle{
+  color:#172033;
+  letter-spacing:-.03em;
+}
+
+.pptSub{
+  color:#c46529;
+}
+
+.pptDesc{
+  color:#52627e;
+}
+
+.pptVisual{
+  border-radius:30px;
+  border:1px solid rgba(44,85,180,.10);
+  background:
+    radial-gradient(circle at top right, rgba(212,109,44,.18), transparent 30%),
+    linear-gradient(180deg,#fefefe,#f5f8ff);
+}
+
+.pptLead{
+  border-radius:20px;
+  border:1px solid rgba(44,85,180,.08);
+  background:#f4f8ff;
+  color:#49607f;
+}
+
+.drawer{
+  background:rgba(15,23,42,.36);
+  backdrop-filter:blur(8px);
+}
+
+.drawerPanel{
+  width:min(1020px,calc(100vw - 32px));
+  padding:22px;
+  border-radius:32px;
+}
+
+.drawerCover{
+  border-radius:24px;
+  border:1px solid rgba(44,85,180,.10);
+  background:
+    radial-gradient(circle at top right, rgba(212,109,44,.20), transparent 32%),
+    linear-gradient(180deg,#fff,#f6f8fe);
+}
+
+.drawerDetailItem{
+  border-radius:18px;
+  border:1px solid rgba(22,36,61,.08);
+}
+
+.nav{
+  position:sticky;
+  bottom:16px;
+  z-index:10;
+  padding:14px 16px;
+  border-radius:24px;
+  background:rgba(255,255,255,.76);
+  border:1px solid rgba(22,36,61,.08);
+  box-shadow:0 18px 36px rgba(16,24,40,.12);
+  backdrop-filter:blur(18px);
+}
+
+.previewViewport.mobile{
+  border:12px solid #15203a;
+  box-shadow:0 24px 48px rgba(21,32,58,.18);
+}
+
+.previewViewport iframe{
+  background:#fff;
+}
+
+.qrSummary{
+  display:grid;
+  justify-items:center;
+  gap:12px;
+}
+
+@media (max-width: 1280px){
+  .deckShell{grid-template-columns:1fr}
+  .layout{grid-template-columns:1fr}
+  .side{position:static}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .sceneGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+
+@media (max-width: 760px){
+  .app{padding:16px}
+  .hero{padding:24px 20px 22px;min-height:286px}
+  .hero h1{font-size:36px}
+  .stats,
+  .cards,
+  .grid,
+  .sceneGrid,
+  .filterGroup,
+  .drawerMain,
+  .drawerDetailGrid,
+  .drawerGrid,
+  .stepper{
+    grid-template-columns:1fr
+  }
+  .filterPanel{padding:18px}
+  .drawerPanel{width:min(100%,calc(100vw - 16px));max-height:calc(100vh - 24px);padding:16px}
+  .previewViewport.mobile{width:100%;border-width:8px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<section class="hero">
+  <span class="badge">Wizard Flow</span>
+  <h1>脱骨侠产品手册生成流程原型</h1>
+  <p>按业务流程分 5 步推进：选商品、选场景、编辑内容、预览确认、导出或分享。数据来源为 `外包商品列表.xls`，结构参考 `脱骨侠产品手册.pdf`，最终输出清晰的脱骨侠产品手册预览和移动端分享页。</p>
+  <div class="stats">
+    <div class="stat"><span>流程步骤</span><strong>5 步</strong></div>
+    <div class="stat"><span>选品方式</span><strong>像点菜一样多选</strong></div>
+    <div class="stat"><span>预览方式</span><strong>成册预览</strong></div>
+    <div class="stat"><span>最终结果</span><strong>导出 + 分享</strong></div>
+  </div>
+</section>
+
+<section class="panel">
+  <div class="topbar">
+    <div><h2>向导式业务流程</h2><p>流程按顺序推进，但支持返回上一步修改。商品字段来自商品表，成册结构参考脱骨侠现有产品手册。</p></div>
+        <div class="hint">预览文件：<code>商品手册移动端预览-弹窗详情.html</code></div>
+  </div>
+  <div class="stepper" id="stepper"></div>
+</section>
+
+<section class="layout">
+  <div class="main">
+    <section class="panel view active" data-step="1">
+      <div class="topbar">
+        <div><h2>第 1 步：选择商品</h2><p>像点菜一样选商品，可以查看详情、口味、规格、适用场景和保存方式，支持多选。</p></div>
+        <div class="hint">已选择 <strong id="productCount">0</strong> 个商品</div>
+      </div>
+      <div class="filterPanel">
+        <div class="filterTop">
+          <div>
+            <strong>筛选条件</strong>
+            <div class="hint" id="productFilterSummary">未启用筛选，当前展示全部商品</div>
+          </div>
+          <div class="filterMeta">
+            <span class="chip">匹配商品 <strong id="productMatchCount">0</strong></span>
+            <button class="btn g" type="button" id="clearProductFilters">清空筛选</button>
+          </div>
+        </div>
+        <div id="productFilters"></div>
+      </div>
+      <div class="cards" id="productGrid"></div>
+    </section>
+
+    <section class="panel view" data-step="2">
+      <div class="topbar">
+        <div><h2>第 2 步：选择用户场景</h2><p>经销商、KA、电商详情、餐饮、内部培训。系统会按场景加载手册默认结构。</p></div>
+        <div class="hint">当前场景：<strong id="sceneName">未选择</strong></div>
+      </div>
+      <div class="sceneGrid" id="sceneGrid"></div>
+    </section>
+
+    <section class="panel view" data-step="3">
+      <div class="topbar">
+        <div><h2>第 3 步：编辑文档内容</h2><p>系统先带出脱骨侠默认内容，再补充本次产品手册需要强调的信息，例如品牌背书、渠道策略和服务能力。</p></div>
+        <div class="hint">这里模拟“收集信息 -> 生成内容”的编辑过程。</div>
+      </div>
+      <div class="grid">
+        <div class="field full"><label><span>手册标题</span><span>用于封面和分享页</span></label><input id="manualTitle"></div>
+        <div class="field full"><label><span>手册摘要</span><span>概述本次资料用途</span></label><textarea id="manualSummary"></textarea></div>
+        <div class="field"><label><span>重点指标一</span><span>SKU / 合作门店</span></label><input id="stat1"></div>
+        <div class="field"><label><span>重点指标二</span><span>物流 / 销量</span></label><input id="stat2"></div>
+        <div class="field"><label><span>重点指标三</span><span>服务 / 培训</span></label><input id="stat3"></div>
+        <div class="field"><label><span>分享方式</span><span>导出页展示</span></label><input id="shareMode"></div>
+        <div class="field full"><label><span>标签组</span><span>逗号分隔</span></label><input id="tags"></div>
+        <div class="field full"><label><span>服务能力</span><span>每行：标题 | 描述 | 标签</span></label><textarea id="caps"></textarea></div>
+      </div>
+    </section>
+
+    <section class="panel view" data-step="4">
+      <div class="topbar">
+        <div><h2>第 4 步：预览生成的产品手册</h2><p>按 PPT 多页形式在线预览。脱骨侠手册第 1-12 页保留，第 32 页保留，所选商品自动生成插入页并融合在中间。</p></div>
+        <div class="hint">支持多页切换、缩略页定位和生成页预览。</div>
+      </div>
+      <div class="preview">
+        <div class="deckShell">
+          <div class="deckSidebar" id="deckThumbs"></div>
+          <div class="deckStage">
+            <div class="deckTools">
+              <div>
+                <strong id="deckTitle">脱骨侠产品手册在线预览</strong>
+                <div class="hint" id="deckSub">固定页 + 自动插入商品页</div>
+              </div>
+              <div class="deckNav">
+                <button class="btn g" id="deckPrevBtn">上一页</button>
+                <div class="hint" id="deckIndicator">1 / 1</div>
+                <button class="btn g" id="deckNextBtn">下一页</button>
+              </div>
+            </div>
+            <div class="deckPageWrap">
+              <div id="deckPage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel view" data-step="5">
+      <div class="topbar">
+        <div><h2>第 5 步：导出产品手册或生成分享链接</h2><p>支持导出手册、复制链接、生成二维码，并可直接预览产品手册在 PC、iPad、手机上的展示效果。</p></div>
+        <div class="hint">本页演示交付结果与分发方式。</div>
+      </div>
+      <div class="shareGrid">
+        <div class="card">
+          <div class="summary"><strong>导出与分享</strong><div class="line">导出格式：PDF / 长图 / H5 分享页</div><div class="line">版本：<span id="versionText">V1.0</span></div></div>
+          <div class="summary mt12"><strong>生成分享链接</strong><div class="linkbox" id="shareLink"></div></div>
+          <div class="actions mt12">
+            <button class="btn p" id="exportBtn">导出 PDF</button>
+            <button class="btn s" id="copyLinkBtn">复制分享链接</button>
+            <button class="btn g" id="openMobileBtn">打开最终预览页</button>
+          </div>
+        </div>
+        <div class="summary qrSummary">
+          <strong>扫码查看手册</strong>
+          <div class="qr" id="qr"></div>
+          <div class="line textCenter">正式开发可接真实二维码服务。</div>
+        </div>
+      </div>
+      <div class="devicePreview">
+        <div class="summary">
+          <strong>终端预览</strong>
+          <div class="line">同一份 H5 查看页，支持 PC、iPad、手机三种展示宽度预览。</div>
+        </div>
+        <div class="deviceSwitch">
+          <button class="switchBtn active" data-device="desktop">PC端</button>
+          <button class="switchBtn" data-device="tablet">iPad</button>
+          <button class="switchBtn" data-device="mobile">手机端</button>
+        </div>
+        <div class="previewStage">
+          <div class="previewViewport desktop" id="previewViewport">
+            <iframe id="previewFrame" src="/商品手册移动端预览-弹窗详情.html" title="产品手册终端预览"></iframe>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <button class="btn g" id="prevBtn">上一步</button>
+      <div class="hint" id="navHint">请选择商品后继续</div>
+      <button class="btn p" id="nextBtn">下一步</button>
+    </div>
+  </div>
+
+  <aside class="side">
+    <div class="summary"><strong>流程摘要</strong><div class="line">1. 多选商品并查看详情</div><div class="line">2. 选择用户场景</div><div class="line">3. 编辑手册内容</div><div class="line">4. 预览生成结果</div><div class="line">5. 导出或分享</div></div>
+    <div class="summary"><strong>当前选择</strong><div class="line">商品：<span id="sideProducts">未选择</span></div><div class="line">场景：<span id="sideScene">未选择</span></div><div class="line">分享：<span id="sideShare">未生成</span></div></div>
+    <div class="summary"><strong>原型目标</strong><div class="line">突出“按流程生成”。</div><div class="line">每一步都可返回修改。</div><div class="line">最终有明确的脱骨侠产品手册预览。</div></div>
+  </aside>
+</section>
+</div>
+
+<div class="drawer" id="drawer" role="dialog" aria-modal="true">
+  <div class="drawerPanel">
+    <div class="drawerCloseRow">
+      <button class="btn g" id="closeDrawer" type="button">关闭</button>
+    </div>
+    <div class="drawerHeader">
+      <h3 class="drawerTitle" id="drawerTitle"></h3>
+      <div class="mini" id="drawerMeta"></div>
+    </div>
+    <div class="drawerMain">
+      <div class="drawerVisual">
+        <div class="drawerCover" id="drawerCover"></div>
+      </div>
+      <div class="drawerInfo">
+        <div class="summary">
+          <strong id="drawerPrice">价格面议</strong>
+          <div class="line" id="drawerFlavor">风味信息</div>
+        </div>
+        <div class="mini" id="drawerDesc"></div>
+        <div class="drawerGrid">
+          <div class="miniCard"><strong>商品分类</strong><div id="drawerCategory"></div></div>
+          <div class="miniCard"><strong>适用渠道</strong><div id="drawerChannel"></div></div>
+          <div class="miniCard"><strong>适用场景</strong><div id="drawerScene"></div></div>
+          <div class="miniCard"><strong>保存方式</strong><div id="drawerStore"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="summary drawerDetailPanel">
+      <strong>商品详情</strong>
+      <div class="drawerDetailGrid" id="drawerDetails"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<script>
+const KEY="channel-content-platform-demo";
+const MOBILE_PREVIEW_PATH="/商品手册移动端预览-弹窗详情.html";
+const MOBILE_SYNC_EVENT="channel-content-platform-sync";
+const productFilterDefs=[
+{key:"solidContent",label:"固形物含量",options:["60%","70%","80%","85%","100%"]},
+{key:"taste",label:"商品口味",options:["蒜香","酸辣柠檬","泡椒","卤香","香辣","红油","藤椒","韩式"]},
+{key:"unit",label:"商品单位",options:["袋","盒","罐","瓶","个","串","张","包"]},
+{key:"shelfLife",label:"保质期",options:["270天","300天","60天","10天","180天","45天","90天","360天"]},
+{key:"weight",label:"克重",options:["165g*10","180g*10","200g","208g","318g","330g","338g","398g"]},
+{key:"boneType",label:"含骨",options:["无骨","半去骨","虎皮","非虎皮有骨","其他"]},
+{key:"temperature",label:"温层",options:["冷冻","常温","冷藏"]},
+{key:"channels",label:"渠道",options:["大客","休食","餐饮","线下"]}
+];
+const products=[
+{id:"p1",name:"老卤鸭掌 散称单只 秘制潮卤",desc:"商品分类：老卤系列，渠道：常温休食，建议零售价 0.00 元。",spec:"散称单只 / 袋",scene:"经销商、KA、线下零售",store:"常温 · 9个月",category:"老卤系列",channel:"常温休食",price:"0.00",flavor:"秘制潮卤",image:"https://img.zhuoxi.group/19a63eeb7ca2360d8b7000998cf7b06ed15bb73856940a9df6a1ace86d1947f0438.png",tags:["脱骨侠","常温休食","老卤系列"],highlights:["散称灵活订货","适合渠道端陈列补货","卤香浓郁、即开即售"],detail:"标准名称：老卤鸭掌-脱骨侠-散称单只-秘制潮卤-9个月（100%-带骨鸭掌-常温-袋）。口味：秘制潮卤，含骨：带骨鸭掌。"},
+{id:"p2",name:"椒麻三角骨 450g",desc:"商品分类：椒麻系列，渠道：冻品休食，建议零售价 19.90 元。",spec:"450g / 盒",scene:"电商、KA、经销商",store:"冷冻 · 9个月",category:"椒麻系列",channel:"冻品休食",price:"19.90",flavor:"椒麻",image:"https://img.zhuoxi.group/267933c6458e3919828bec5a877893220f7dd004b556cb7707decd2eefba5372241.png",tags:["脱骨侠","椒麻系列","冷冻"],highlights:["椒麻味型辨识度高","适合电商组合购","450g 规格便于家庭分享"],detail:"标准名称：椒麻三角骨-脱骨侠-450克-椒麻-9个月-60%（椒麻鸡胸骨系列-冷冻-盒）。口味：椒麻，固形物含量：60%。"},
+{id:"p3",name:"无骨鸭掌 900g 藤椒",desc:"商品分类：无骨鸭掌，渠道：冻品休食，建议零售价 43.80 元。",spec:"900g / 罐",scene:"电商、餐饮、KA",store:"冷冻 · 9个月",category:"无骨鸭掌",channel:"冻品休食",price:"43.80",flavor:"藤椒",image:"https://img.zhuoxi.group/2c3194c82d8a154fe2c6d95897410e9eb4d91f8108343bb5823d6308df7aa302542.png",tags:["脱骨侠","无骨","藤椒"],highlights:["无骨食用便捷","大规格适合餐饮后厨","藤椒风味适合线上爆品表达"],detail:"标准名称：无骨鸭掌-脱骨侠-900克-藤椒-9个月-60%（无骨-冷冻-罐）。口味：藤椒，含骨：无骨。"},
+{id:"p4",name:"虎皮凤爪 2.5kg 卤香",desc:"商品分类：虎皮凤爪，渠道：餐饮，建议零售价 180.00 元。",spec:"2.5kg / 袋",scene:"餐饮、KA",store:"冷冻 · 12个月",category:"虎皮凤爪",channel:"餐饮",price:"180.00",flavor:"卤香",image:"https://img.zhuoxi.group/d9be86a9d3893575afadf602ae543463a12efa1c32da574caf7c89362511e9d6856.png",tags:["脱骨侠","餐饮","商用装"],highlights:["大包装适配后厨备货","适合卤味、小吃、佐餐","冷冻保供周期稳定"],detail:"标准名称：虎皮凤爪-脱骨侠-2.5千克-卤香-12个月-M号(LT)。口味：卤香，含骨：虎皮。"},
+{id:"p5",name:"佤味鸡爪 200g",desc:"商品分类：云南佤味，渠道：常温休食，建议零售价 23.90 元。",spec:"200g / 盒",scene:"电商、经销商、培训",store:"冷藏 · 10天",category:"云南佤味",channel:"常温休食",price:"23.90",flavor:"佤味",image:"https://img.zhuoxi.group/bebbc5587d25d4d5473b12f896727b79942c2d1ae7961047b2c26ea24869fdc8163.png",tags:["脱骨侠","冷藏","特色风味"],highlights:["区域特色风味突出","适合电商内容种草","可作为培训版重点讲解 SKU"],detail:"标准名称：佤味鸡爪-脱骨侠-200克-佤味-10天（100%-非虎皮有骨-冷藏-盒）。口味：佤味，含骨：非虎皮有骨。"},
+{id:"p6",name:"虎皮凤爪 105g 鲍汁味",desc:"商品分类：虎皮凤爪，渠道：常温休食，建议零售价 11.90 元。",spec:"105g / 袋",scene:"经销商、KA、电商",store:"常温 · 10个月",category:"虎皮凤爪",channel:"常温休食",price:"11.90",flavor:"鲍汁味",image:"https://img.zhuoxi.group/10094cfe12b5e138597a2d83ea6ed86a70f932eb0cb410b5c4874a4a5a564b83757.png",tags:["脱骨侠","虎皮凤爪","便携装"],highlights:["单袋便携适合卖场上架","鲍汁口味适合电商详情页转化","适合经销商铺货铺市"],detail:"标准名称：虎皮凤爪-脱骨侠-105克-鲍汁味-10个月(JX)（100%-虎皮-常温-袋）。口味：鲍汁，含骨：虎皮。"}
+];
+const productFilterData={
+  p1:{solidContent:"100%",taste:"卤香",unit:"袋",shelfLife:"270天",weight:"165g*10",boneType:"其他",temperature:"常温",channels:["休食","线下"]},
+  p2:{solidContent:"60%",taste:"香辣",unit:"盒",shelfLife:"270天",weight:"180g*10",boneType:"半去骨",temperature:"冷冻",channels:["休食","线下"]},
+  p3:{solidContent:"60%",taste:"藤椒",unit:"罐",shelfLife:"270天",weight:"398g",boneType:"无骨",temperature:"冷冻",channels:["休食","餐饮","线下"]},
+  p4:{solidContent:"85%",taste:"卤香",unit:"袋",shelfLife:"360天",weight:"338g",boneType:"虎皮",temperature:"冷冻",channels:["餐饮","线下"]},
+  p5:{solidContent:"100%",taste:"韩式",unit:"盒",shelfLife:"10天",weight:"200g",boneType:"非虎皮有骨",temperature:"冷藏",channels:["休食","线下"]},
+  p6:{solidContent:"100%",taste:"红油",unit:"袋",shelfLife:"300天",weight:"208g",boneType:"虎皮",temperature:"常温",channels:["大客","休食","线下"]}
+};
+products.forEach(p=>Object.assign(p,productFilterData[p.id]||{}));
+const productDetailData={
+  p1:{standardName:"老卤鸭掌-脱骨侠-28克-秘制潮卤-9个月（100%-带骨鸭掌-常温-袋）",jointCode:"TGX-LLYZ-MZCL28G-CW-N-9M",version:"v1",status:"运行中",brand:"脱骨侠",tasteLabel:"秘制潮卤",unitLabel:"袋",weightLabel:"28g",boneLabel:"带骨鸭掌",temperatureLabel:"常温",solidContentLabel:"100%",shelfLifeLabel:"9个月",spicyLevel:"无区分",salesChannelLabel:"常温休食",barcode69:"6977656954404"},
+  p2:{standardName:"椒麻三角骨-脱骨侠-450克-椒麻-9个月（60%-半去骨-冷冻-盒）",jointCode:"TGX-JMSJG-450G-LD-H-9M",version:"v1",status:"运行中",brand:"脱骨侠",tasteLabel:"椒麻",unitLabel:"盒",weightLabel:"450g",boneLabel:"半去骨",temperatureLabel:"冷冻",solidContentLabel:"60%",shelfLifeLabel:"9个月",spicyLevel:"中辣",salesChannelLabel:"冻品休食",barcode69:"6977656954411"},
+  p3:{standardName:"无骨鸭掌-脱骨侠-900克-藤椒-9个月（60%-无骨-冷冻-罐）",jointCode:"TGX-WGYZ-TJ900G-LD-G-9M",version:"v1",status:"运行中",brand:"脱骨侠",tasteLabel:"藤椒",unitLabel:"罐",weightLabel:"900g",boneLabel:"无骨",temperatureLabel:"冷冻",solidContentLabel:"60%",shelfLifeLabel:"9个月",spicyLevel:"微辣",salesChannelLabel:"冻品休食",barcode69:"6977656954428"},
+  p4:{standardName:"虎皮凤爪-脱骨侠-2.5kg-卤香-12个月（85%-虎皮-冷冻-袋）",jointCode:"TGX-HPFZ-LX25KG-LD-D-12M",version:"v1",status:"运行中",brand:"脱骨侠",tasteLabel:"卤香",unitLabel:"袋",weightLabel:"2.5kg",boneLabel:"虎皮",temperatureLabel:"冷冻",solidContentLabel:"85%",shelfLifeLabel:"12个月",spicyLevel:"无区分",salesChannelLabel:"餐饮",barcode69:"6977656954435"},
+  p5:{standardName:"佤味鸡爪-脱骨侠-200克-佤味-10天（100%-非虎皮有骨-冷藏-盒）",jointCode:"TGX-WWJZ-200G-LC-H-10D",version:"v1",status:"运行中",brand:"脱骨侠",tasteLabel:"佤味",unitLabel:"盒",weightLabel:"200g",boneLabel:"非虎皮有骨",temperatureLabel:"冷藏",solidContentLabel:"100%",shelfLifeLabel:"10天",spicyLevel:"特辣",salesChannelLabel:"休食",barcode69:"6977656954442"},
+  p6:{standardName:"虎皮凤爪-脱骨侠-105克-鲍汁味-10个月（100%-虎皮-常温-袋）",jointCode:"TGX-HPFZ-BZW105G-CW-D-10M",version:"v1",status:"运行中",brand:"脱骨侠",tasteLabel:"鲍汁味",unitLabel:"袋",weightLabel:"105g",boneLabel:"虎皮",temperatureLabel:"常温",solidContentLabel:"100%",shelfLifeLabel:"10个月",spicyLevel:"无区分",salesChannelLabel:"常温休食",barcode69:"6977656954459"}
+};
+products.forEach(p=>Object.assign(p,productDetailData[p.id]||{}));
+const productPriceData={
+  p1:{factoryPrice:"0.78",retailPrice:"1.00"},
+  p2:{factoryPrice:"13.80",retailPrice:"19.90"},
+  p3:{factoryPrice:"31.60",retailPrice:"43.80"},
+  p4:{factoryPrice:"138.00",retailPrice:"180.00"},
+  p5:{factoryPrice:"16.90",retailPrice:"23.90"},
+  p6:{factoryPrice:"8.60",retailPrice:"11.90"}
+};
+products.forEach(p=>Object.assign(p,productPriceData[p.id]||{}));
+const scenes={distributor:{name:"经销商订货版",audience:"经销商 / 渠道客户",output:"订货手册 / 价目表",title:"脱骨侠经销商订货版产品手册",summary:"参考脱骨侠线下渠道手册结构，突出商品丰富度、规格箱规、供货规则、动销建议和物流时效，帮助渠道客户快速选品下单。",stats:["外包表 800+ 商品","24 小时发货","18 个区域仓配"],tags:"脱骨侠,热销,可整箱,利润友好",caps:[["品牌与系列","结合脱骨侠产品系列和渠道分层，帮助客户快速看懂商品矩阵。","品牌"],["订货规则","支持整箱订货、混拼与起订量说明。","订货规则"],["物流履约","支持区域仓配、补货时效和运输说明。","物流服务"]]},ka:{name:"KA卖场版",audience:"商超采购 / 招商经理",output:"KA提案 / 客户资料",title:"脱骨侠KA卖场合作产品手册",summary:"参考脱骨侠产品手册中的集团介绍、供应链、线下渠道结构，突出企业资质、合作伙伴、销量势能、主推商品、陈列服务和物流能力。",stats:["集团背书","年GMV 20亿+","11 个商超系统"],tags:"脱骨侠,资质齐全,品牌背书,陈列支持",caps:[["集团与供应链","展示集团介绍、工厂配置、原料质检和产能能力。","品牌背书"],["卖场服务","支持物料、巡店、陈列和档期活动。","服务"],["交付能力","支持常温/冷链和区域履约覆盖。","物流"]]},ecommerce:{name:"电商详情版",audience:"消费者 / 电商运营",output:"详情页 / 长图 / 活动页",title:"脱骨侠电商详情版产品手册",summary:"参考脱骨侠线上渠道页结构，突出风味卖点、口感、场景、参数表、配料营养与 FAQ，多商品时支持矩阵和组合装展示。",stats:["线上渠道结构","3 类多商品样式","视频 + 图文"],tags:"脱骨侠,高转化,组合购,详情长图",caps:[["详情模板","支持单品、同系列和组合装三类模板。","页面"],["运营联动","支持 FAQ、加购推荐和评价摘录。","转化"],["素材支持","统一管理封面图、详情图和视频。","内容"]]},catering:{name:"餐饮销售版",audience:"餐饮客户 / 渠道业务",output:"解决方案页 / 客户提案",title:"脱骨侠餐饮销售版产品手册",summary:"参考脱骨侠餐饮冷冻页结构，突出可做菜系、出品方式、定制支持、稳定供货、样品服务和冷链配送能力，传达解决方案。",stats:["餐饮冷冻品线","48 小时打样","可定制规格"],tags:"脱骨侠,菜系适配,可定制,稳定供货",caps:[["餐饮品线","基于餐饮冷冻品结构展示商用装和原料型商品。","品线"],["定制服务","支持口味、规格和包装打样。","定制"],["供应保障","支持配送周期说明和保供机制。","交付"]]},training:{name:"内部培训版",audience:"销售 / 导购 / 新员工",output:"培训页 / 知识库 / 视频页",title:"脱骨侠内部培训版产品手册",summary:"结合脱骨侠品牌介绍、产品系列和渠道页，突出产品清单、卖点拆解、讲解视频、FAQ 和标准话术，帮助新人快速上手。",stats:["32 页参考手册","89% 完成率","FAQ 120 条"],tags:"脱骨侠,产品知识,视频培训,标准话术",caps:[["品牌知识","沉淀脱骨侠品牌、集团、工厂和供应链基础介绍。","品牌"],["销售话术","沉淀标准介绍话术和答疑。","话术"],["学习追踪","支持完成率和后续考核扩展。","运营"]]}};
+const fixedDeckPages=[
+{pageNo:"P01",kind:"cover",thumb:"封面",title:"BONELESS MAN PRODUCT BROCHURE",subtitle:"脱骨侠产品手册 · Feb 2025",desc:"保留原手册封面样式，作为整份产品手册首页。"},
+{pageNo:"P02",kind:"content",thumb:"目录",title:"目录 CONTENTS",desc:"保留原目录结构：01 集团介绍，02 供应链介绍，03 产品系列总览。",bullets:["集团介绍：卓希集团 / 卓希食品 / 马商食品","供应链介绍：产业链布局、原料质检、研发团队、工厂配置、产品品质、物流系统","产品系列总览：线上渠道、线下渠道、餐饮渠道"]},
+{pageNo:"P03",kind:"divider",thumb:"集团介绍",title:"集团介绍",subtitle:"GROUP INTRODUCTION",desc:"保留原手册章节分隔页。"},
+{pageNo:"P04",kind:"content",thumb:"集团介绍",title:"卓希集团与脱骨侠品牌",desc:"保留原第 4 页品牌与集团背书内容。",bullets:["国内首家无骨鸡爪全链路食品集团","孵化脱骨侠等头部品牌","脱骨侠：无骨鸡爪全网第一品牌","年 GMV 超 20 亿，累计热销 1 亿+ 罐","年产能 14 万吨，具备 ISO22000 / HACCP 体系认证"]},
+{pageNo:"P05",kind:"content",thumb:"渠道矩阵",title:"渠道与产品矩阵",desc:"保留原渠道结构页，展示常温、冷藏、冷冻及线下餐饮/卖场/超市/便利店等渠道矩阵。",bullets:["常温休食 / 冷藏即食 / 冷冻餐饮多温层布局","线下餐饮、小吃、卖场、广式蒸凤爪等多场景覆盖","超市、便利店、卤味店、佐餐等终端触点覆盖"]},
+{pageNo:"P06",kind:"divider",thumb:"供应链介绍",title:"供应链介绍",subtitle:"SUPPLY CHAIN INTRODUCTION",desc:"保留原供应链章节分隔页。"},
+{pageNo:"P07",kind:"content",thumb:"产业链",title:"全产业链布局",desc:"保留原两大中心与全产业链布局结构。",bullets:["原料集采中心","研发中心","加工 / 生产","物流系统","杭州管理中心与马鞍山生产中心协同"]},
+{pageNo:"P08",kind:"content",thumb:"原料质检",title:"原料质检与认证",desc:"保留原原料质检页。",bullets:["自建原料集采中心，确保货源充足稳定","层层把关，严控品质","HACCP 体系认证","质量管理体系认证","食品安全体系认证"]},
+{pageNo:"P09",kind:"content",thumb:"研发团队",title:"大师级研发团队",desc:"保留原研发顾问页。",bullets:["大师级调味，回味无穷","中国烹饪大师参与产品研发顾问","非遗传承人与新派川菜掌门人等外部顾问加持"]},
+{pageNo:"P10",kind:"content",thumb:"工厂配置",title:"工厂配置过硬",desc:"保留原工厂配置页。",bullets:["鸡爪食品生产工厂规模全球第一","采用智能化数字车间","保证安全、高效、专业的生产体系"]},
+{pageNo:"P11",kind:"content",thumb:"品质与产能",title:"产品品质与生产能力",desc:"保留原品质页。",bullets:["优选品质大爪","人工去骨率 98%","累计销量 1 亿+","5000+ 脱骨工人手工剔骨","年产能 14 万吨"]},
+{pageNo:"P12",kind:"content",thumb:"物流系统",title:"物流系统过硬",desc:"保留原物流系统页。",bullets:["定制顺丰分拣系统","厂仓一体生产基地","真正实现现做现发"]},
+{pageNo:"P32",kind:"closing",thumb:"封底",title:"脱骨侠全渠道触点",desc:"保留原第 32 页封底和渠道触点信息。"}
+];
+const createEmptyProductFilters=()=>Object.fromEntries(productFilterDefs.map(def=>[def.key,[]]));
+let state={step:1,selected:[],filters:createEmptyProductFilters(),scene:"",manualTitle:"",manualSummary:"",stat1:"",stat2:"",stat3:"",shareMode:"分享链接",tags:"",caps:"",version:"V1.0",deckIndex:0};
+const $=id=>document.getElementById(id);
+const descs=["多选并查看详情","加载业务模板","补充手册信息","确认生成结果","导出或扫码查看"];
+function stepTitle(n){return["选择商品","选择场景","编辑内容","预览确认","导出/分享"][n-1]}
+function maxStep(){if(!state.selected.length)return 1;if(!state.scene)return 2;return 5}
+function go(n){state.step=n;if(n===4&&picked().length)state.deckIndex=12;document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",+v.dataset.step===n));renderStepper();renderNav();if(n===4)renderDeck()}
+function renderStepper(){$("stepper").innerHTML="";[1,2,3,4,5].forEach(n=>{const b=document.createElement("button");b.type="button";b.className="step"+(state.step===n?" active":"")+(state.step>n?" done":"");b.innerHTML=`<b>${n}</b><strong>${stepTitle(n)}</strong><small>${descs[n-1]}</small>`;if(n<=maxStep())b.onclick=()=>go(n);$("stepper").appendChild(b)})}
+function formatPrice(price){return price&&price!=="0.00"?`建议零售价 ${price} 元`:"价格面议"}
+function formatFactoryPrice(price){return price?`出厂价 ${price} 元`:"出厂价待定"}
+function productFocus(p){return[p.flavor||"主打风味",p.channel||"多渠道",p.store||"标准保存"]}
+function uniqueTags(list){return [...new Set(list.filter(Boolean))]}
+function getFilterValues(value){return Array.isArray(value)?value:[value].filter(Boolean)}
+function filteredProducts(){return products.filter(p=>productFilterDefs.every(def=>{const active=state.filters[def.key]||[];if(!active.length)return true;const values=getFilterValues(p[def.key]);return active.some(item=>values.includes(item))}))}
+function activeFilterCount(){return productFilterDefs.reduce((sum,def)=>sum+(state.filters[def.key]||[]).length,0)}
+function toggleProductFilter(key,value){const current=state.filters[key]||[];state.filters[key]=current.includes(value)?current.filter(item=>item!==value):[...current,value];renderProductFilters();renderProducts()}
+function clearProductFilters(){state.filters=createEmptyProductFilters();renderProductFilters();renderProducts()}
+function renderProductFilters(){const activeCount=activeFilterCount();const matched=filteredProducts().length;$("productFilterSummary").textContent=activeCount?`已启用 ${activeCount} 个筛选项，当前匹配 ${matched} 个商品`:"未启用筛选，当前展示全部商品";$("productMatchCount").textContent=matched;const wrap=$("productFilters");wrap.innerHTML=productFilterDefs.map(def=>`<div class="filterGroup"><div class="filterLabel">${def.label}</div><div class="filterOptions">${def.options.map(option=>`<button type="button" class="filterChip${(state.filters[def.key]||[]).includes(option)?" active":""}" data-key="${def.key}" data-value="${option}">${option}</button>`).join("")}</div></div>`).join("");Array.from(wrap.querySelectorAll(".filterChip")).forEach(btn=>btn.onclick=()=>toggleProductFilter(btn.dataset.key,btn.dataset.value));$("clearProductFilters").disabled=!activeCount}
+function renderProducts(){const list=filteredProducts();$("productGrid").innerHTML="";if(!list.length){$("productGrid").innerHTML='<div class="emptyState">当前筛选条件下没有匹配商品。<br>可以减少筛选项，或点击“清空筛选”恢复全部商品。</div>'}else{list.forEach(p=>{const sel=state.selected.includes(p.id);const d=document.createElement("div");d.className="card dish"+(sel?" sel":"");d.innerHTML=`<div class="dishMedia"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="chip dishBadge">${formatPrice(p.price)}</span></div><h3>${p.name}</h3><div class="meta">${p.tags.map(t=>`<span class="chip">${t}</span>`).join("")}</div><p>${p.desc}</p><div class="mini">${p.spec} · ${p.store} · ${p.channel}</div><div class="mini">69码：${p.barcode69||"-"}</div><div class="actions"><button class="btn ${sel?"d":"p"}">${sel?"移除":"加入手册"}</button><button class="btn g">查看详情</button></div>`;d.querySelectorAll("button")[0].onclick=()=>{state.selected=sel?state.selected.filter(x=>x!==p.id):[...state.selected,p.id];renderProducts();renderNav();renderPreview()};d.querySelectorAll("button")[1].onclick=()=>openDrawer(p);$("productGrid").appendChild(d)})}$("productCount").textContent=state.selected.length}
+function productDetailItems(p){return[["商品标准名称",p.standardName||p.name],["联合编码",p.jointCode||"-"],["商品品牌",p.brand||"脱骨侠"],["商品分类",p.category],["版本信息",p.version||"v1"],["商品口味",p.tasteLabel||p.flavor||"-"],["运行状态",p.status||"运行中"],["商品单位",p.unitLabel||p.unit||"-"],["出厂价",p.factoryPrice?`${p.factoryPrice} 元`:"-"],["建议零售价",p.retailPrice?`${p.retailPrice} 元`:(p.price&&p.price!=="0.00"?`${p.price} 元`:"-")],["克重",p.weightLabel||p.weight||"-"],["含骨",p.boneLabel||p.boneType||"-"],["温层",p.temperatureLabel||p.temperature||"-"],["固形物含量",p.solidContentLabel||p.solidContent||"-"],["保质期",p.shelfLifeLabel||p.shelfLife||"-"],["辣度",p.spicyLevel||"无区分"],["销售渠道",p.salesChannelLabel||p.channel||"-"],["69码",p.barcode69||"-"]]}
+function closeDrawer(){$("drawer").classList.remove("open");document.body.style.overflow=""}
+function openDrawer(p){$("drawerTitle").textContent=p.name;$("drawerMeta").textContent=`${p.spec} · ${p.scene}`;$("drawerCover").innerHTML=`<img src="${p.image}" alt="${p.name}" loading="lazy">`;$("drawerPrice").textContent=formatPrice(p.retailPrice||p.price);$("drawerFlavor").textContent=`${formatFactoryPrice(p.factoryPrice)} · ${p.category} · ${p.flavor}`;$("drawerDesc").textContent=p.detail;$("drawerDetails").innerHTML=productDetailItems(p).map(item=>`<div class="drawerDetailItem"><span>${item[0]}</span><strong>${item[1]}</strong></div>`).join("");$("drawerCategory").textContent=p.category;$("drawerChannel").textContent=p.channel;$("drawerScene").textContent=p.scene;$("drawerStore").textContent=p.store;$("drawer").classList.add("open");document.body.style.overflow="hidden"}
+$("closeDrawer").onclick=closeDrawer;
+$("drawer").onclick=e=>{if(e.target===$("drawer"))closeDrawer()};
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("drawer").classList.contains("open"))closeDrawer()});
+$("clearProductFilters").onclick=clearProductFilters;
+function renderScenes(){$("sceneGrid").innerHTML="";Object.entries(scenes).forEach(([k,s])=>{const d=document.createElement("button");d.type="button";d.className="card scene"+(state.scene===k?" sel":"");d.innerHTML=`<h3>${s.name}</h3><div class="meta"><span class="chip">${s.output}</span></div><p>${s.summary}</p>`;d.onclick=()=>{state.scene=k;$("sceneName").textContent=s.name;state.manualTitle=s.title;state.manualSummary=s.summary;state.stat1=s.stats[0];state.stat2=s.stats[1];state.stat3=s.stats[2];state.shareMode="分享链接";state.tags=s.tags;state.caps=s.caps.map(i=>`${i[0]} | ${i[1]} | ${i[2]}`).join("\n");fillForm();renderScenes();renderNav();renderPreview()};$("sceneGrid").appendChild(d)})}
+function fillForm(){$("manualTitle").value=state.manualTitle;$("manualSummary").value=state.manualSummary;$("stat1").value=state.stat1;$("stat2").value=state.stat2;$("stat3").value=state.stat3;$("shareMode").value=state.shareMode;$("tags").value=state.tags;$("caps").value=state.caps}
+function syncForm(){state.manualTitle=$("manualTitle").value.trim();state.manualSummary=$("manualSummary").value.trim();state.stat1=$("stat1").value.trim();state.stat2=$("stat2").value.trim();state.stat3=$("stat3").value.trim();state.shareMode=$("shareMode").value.trim();state.tags=$("tags").value.trim();state.caps=$("caps").value}
+function picked(){return products.filter(p=>state.selected.includes(p.id))}
+function parseCaps(){return state.caps.split("\n").map(x=>x.trim()).filter(Boolean).map(x=>{const [a,b,c]=x.split("|").map(y=>y.trim());return[a||"未命名能力",b||"请补充说明",c||"能力"]})}
+function buildDeckPages(){
+  syncForm();
+  const s=scenes[state.scene]||{name:"未选择场景",audience:"未选择",output:"未生成"};
+  const selectedProducts=picked();
+  const generatedPages=selectedProducts.map((p,idx)=>({
+    pageNo:`P${13+idx}`,
+    kind:"product",
+    thumb:`商品页 ${idx+1}`,
+    title:p.name,
+    subtitle:`${s.name} · ${p.spec}`,
+    desc:p.detail,
+    product:p,
+    scene:s,
+    stats:[formatPrice(p.price),p.store,p.channel],
+    tags:uniqueTags([...(state.tags||"").split(",").map(x=>x.trim()).filter(Boolean),...p.tags]),
+    focus:productFocus(p),
+    caps:parseCaps()
+  }));
+  return [...fixedDeckPages.slice(0,12), ...generatedPages, fixedDeckPages[12]];
+}
+function renderDeckPage(page){
+  if(page.kind==="cover"){
+    return `<div class="ppt cover"><div class="pptTop"><span class="pptBrand">BONELESS MAN · 脱骨侠</span><span class="pptNo">${page.pageNo}</span></div><div class="pptBody"><p class="pptSub">${page.subtitle}</p><h3 class="pptTitle">${page.title}</h3><p class="pptDesc">${page.desc}</p><div class="pptStats"><div class="pptStat"><span>品牌名称</span><strong>脱骨侠</strong></div><div class="pptStat"><span>数据来源</span><strong>外包商品列表.xls</strong></div><div class="pptStat"><span>参考结构</span><strong>脱骨侠产品手册</strong></div></div></div></div>`;
+  }
+  if(page.kind==="divider"){
+    return `<div class="ppt divider"><div class="pptTop"><span class="pptBrand">BONELESS MAN · 脱骨侠</span><span class="pptNo">${page.pageNo}</span></div><div class="pptBody"><p class="pptSub">${page.subtitle||""}</p><h3 class="pptTitle">${page.title}</h3><p class="pptDesc">${page.desc}</p></div></div>`;
+  }
+  if(page.kind==="closing"){
+    return `<div class="ppt"><div class="pptTop"><span class="pptBrand">BONELESS MAN · 脱骨侠</span><span class="pptNo">${page.pageNo}</span></div><div class="pptBody"><p class="pptSub">封底保留页</p><h3 class="pptTitle">${page.title}</h3><p class="pptDesc">${page.desc}</p><div class="pptClosing"><div class="pptChannel"><strong>天猫旗舰店</strong><small>保留原封底扫码渠道位</small></div><div class="pptChannel"><strong>抖音旗舰店</strong><small>保留原封底扫码渠道位</small></div><div class="pptChannel"><strong>小红书</strong><small>保留原封底品牌触点展示</small></div></div></div></div>`;
+  }
+  if(page.kind==="product"){
+    return `<div class="ppt pptProductPage"><div class="pptTop"><span class="pptBrand">BONELESS MAN · 脱骨侠</span><span class="pptNo">${page.pageNo}</span></div><div class="pptBody"><div class="pptHero"><div class="pptVisual"><span class="chip pptVisualBadge">独立商品宣传页</span><img src="${page.product.image}" alt="${page.title}" loading="lazy"></div><div class="pptHeroCard"><p class="pptSub">自动插入商品页 · ${page.scene.name}</p><h3 class="pptTitle">${page.title}</h3><p class="pptDesc">${page.desc}</p><div class="pptTags">${page.tags.map(tag=>`<span class="pptTag">${tag}</span>`).join("")}</div><div class="pptStats">${page.stats.map((item,idx)=>`<div class="pptStat"><span>重点信息 ${idx+1}</span><strong>${item}</strong></div>`).join("")}</div><div class="pptFocus">${page.focus.map((item,idx)=>`<div class="pptFocusItem"><span>核心卖点 ${idx+1}</span><strong>${item}</strong></div>`).join("")}</div></div></div><div class="pptCols"><div class="pptBox"><h5>商品基础信息</h5><div class="pptTable"><div class="pptCell"><span>商品分类</span><strong>${page.product.category}</strong></div><div class="pptCell"><span>商品规格</span><strong>${page.product.spec}</strong></div><div class="pptCell"><span>主打口味</span><strong>${page.product.flavor}</strong></div><div class="pptCell"><span>适用渠道</span><strong>${page.product.channel}</strong></div><div class="pptCell"><span>保存方式</span><strong>${page.product.store}</strong></div><div class="pptCell"><span>业务版本</span><strong>${page.scene.name}</strong></div><div class="pptCell"><span>商品69码</span><strong>${page.product.barcode69||"-"}</strong></div></div></div><div class="pptBox"><h5>场景表达与服务能力</h5><ul>${[...page.product.highlights,...page.caps.map(cap=>`${cap[0]}：${cap[1]}`)].slice(0,6).map(item=>`<li>${item}</li>`).join("")}</ul><div class="pptLead">${state.manualSummary || page.scene.summary}</div></div></div></div></div>`;
+  }
+  return `<div class="ppt"><div class="pptTop"><span class="pptBrand">BONELESS MAN · 脱骨侠</span><span class="pptNo">${page.pageNo}</span></div><div class="pptBody"><h3 class="pptTitle">${page.title}</h3><p class="pptDesc">${page.desc}</p><div class="pptBox"><h5>保留内容要点</h5><ul>${(page.bullets||[]).map(item=>`<li>${item}</li>`).join("")}</ul></div></div></div>`;
+}
+function renderDeck(){
+  const pages=buildDeckPages();
+  if(state.deckIndex>=pages.length)state.deckIndex=pages.length-1;
+  if(state.deckIndex<0)state.deckIndex=0;
+  $("deckTitle").textContent=state.manualTitle||"脱骨侠产品手册在线预览";
+  $("deckSub").textContent=`固定页 1-12、32 保留；中间自动插入 ${Math.max(0,pages.length-13)} 个商品页`;
+  $("deckThumbs").innerHTML=pages.map((page,idx)=>`<button type="button" class="thumb${idx===state.deckIndex?" active":""}" data-idx="${idx}"><strong>${page.pageNo} · ${page.thumb}</strong><small>${page.title}</small></button>`).join("");
+  $("deckPage").innerHTML=renderDeckPage(pages[state.deckIndex]);
+  $("deckIndicator").textContent=`${state.deckIndex+1} / ${pages.length}`;
+  Array.from($("deckThumbs").querySelectorAll(".thumb")).forEach(btn=>btn.onclick=()=>{state.deckIndex=+btn.dataset.idx;renderDeck()});
+  $("deckPrevBtn").disabled=state.deckIndex===0;
+  $("deckNextBtn").disabled=state.deckIndex===pages.length-1;
+}
+function renderPreview(){renderDeck();renderSide();persist()}
+function renderSide(){$("sideProducts").textContent=picked().map(p=>p.name).join("、")||"未选择";$("sideScene").textContent=state.scene?scenes[state.scene].name:"未选择";$("sideShare").textContent=state.shareMode||"未生成"}
+function renderNav(){const map={1:"请选择商品后继续",2:"请选择用户场景后继续",3:"补充手册内容后进入预览",4:"确认预览后进入导出/分享",5:"可以导出或打开移动端查看"};$("navHint").textContent=map[state.step];$("prevBtn").disabled=state.step===1;$("nextBtn").disabled=(state.step===1&&!state.selected.length)||(state.step===2&&!state.scene)||state.step===5;$("nextBtn").textContent=state.step===5?"已完成":"下一步"}
+function persist(){const s=scenes[state.scene]||null;const selected=picked();const mobile={brand:"脱骨侠",activeScene:"manual",scenes:{manual:{sceneKey:state.scene||"",sceneName:s?s.name:"未选择场景",audience:s?s.audience:"未选择",output:s?s.output:"未生成",title:state.manualTitle||"产品手册",summary:state.manualSummary||"",s1:state.stat1||"-",s2:state.stat2||"-",s3:state.stat3||"-",share:state.shareMode||"分享链接",tags:state.tags||"",insertedCount:selected.length,totalPages:13+selected.length,products:selected.map(p=>({...p,priceLabel:formatPrice(p.price),focus:productFocus(p)})),services:parseCaps().map(cap=>({title:cap[0],desc:cap[1],label:cap[2]}))}},lastSyncAt:new Date().toLocaleString("zh-CN",{hour12:false})};localStorage.setItem(KEY,JSON.stringify(mobile));const frame=$("previewFrame");if(frame&&frame.contentWindow)frame.contentWindow.postMessage({type:MOBILE_SYNC_EVENT,payload:mobile},"*");$("shareLink").textContent=`https://manual.demo/share/${encodeURIComponent((state.manualTitle||"产品手册").replace(/\s+/g,"-"))}`;$("versionText").textContent=state.version}
+function qr(){for(let i=0;i<81;i++){const c=document.createElement("i");if(Math.random()>.58||[0,1,2,9,18,10,20,27,28,29,53,54,55,60,61,62,69,78,70,80].includes(i))c.style.opacity="1";$("qr").appendChild(c)}}
+["manualTitle","manualSummary","stat1","stat2","stat3","shareMode","tags","caps"].forEach(id=>$(id).addEventListener("input",renderPreview));
+$("deckPrevBtn").onclick=()=>{if(state.deckIndex>0){state.deckIndex-=1;renderDeck()}};$("deckNextBtn").onclick=()=>{const total=buildDeckPages().length;if(state.deckIndex<total-1){state.deckIndex+=1;renderDeck()}};
+$("prevBtn").onclick=()=>state.step>1&&go(state.step-1);$("nextBtn").onclick=()=>state.step<5&&go(state.step+1);$("exportBtn").onclick=()=>alert("这里模拟导出 PDF。正式开发可接导出服务。");$("copyLinkBtn").onclick=async()=>{try{await navigator.clipboard.writeText($("shareLink").textContent);$("copyLinkBtn").textContent="链接已复制"}catch(e){$("copyLinkBtn").textContent="请手动复制"}setTimeout(()=>$("copyLinkBtn").textContent="复制分享链接",1400)};$("openMobileBtn").onclick=()=>location.href=MOBILE_PREVIEW_PATH;Array.from(document.querySelectorAll(".switchBtn")).forEach(btn=>btn.onclick=()=>{Array.from(document.querySelectorAll(".switchBtn")).forEach(x=>x.classList.remove("active"));btn.classList.add("active");$("previewViewport").className="previewViewport "+btn.dataset.device});
+qr();renderStepper();renderProductFilters();renderProducts();renderScenes();fillForm();renderPreview();go(1);
+</script>
+</body>
+</html>

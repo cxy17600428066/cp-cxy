@@ -1,0 +1,4 @@
+node_modules/
+.DS_Store
+Thumbs.db
+portfolio-build/figma-svg/portfolio-long-scroll-hires.svg

@@ -2,3 +2,5 @@ node_modules/
 .DS_Store
 Thumbs.db
 portfolio-build/figma-svg/portfolio-long-scroll-hires.svg
+.git-auto-sync.pid
+.git-auto-sync.log

@@ -1,0 +1,195 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>03-05 设备巡检 - 交互优化原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f8fc;--card:#fff;--ink:#1d2f40;--muted:#61758a;--line:#d7e3ef;--brand:#0e63ab;--mint:#11a58f;--warn:#b85a00;--ok:#12724f;--danger:#b42318;--r:14px;--shadow:0 10px 26px rgba(12,43,71,.12)}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans SC",sans-serif;color:var(--ink);background:radial-gradient(900px 450px at -10% -20%,rgba(17,165,143,.18),transparent 56%),radial-gradient(900px 450px at 120% 0%,rgba(14,99,171,.2),transparent 58%),var(--bg)}
+.app{width:min(1280px,94vw);margin:22px auto}
+.hero{background:linear-gradient(122deg,#0d4f87,#0e63ab 55%,#129883);color:#fff;padding:22px;border-radius:18px;box-shadow:var(--shadow)}
+h1{font-family:"Space Grotesk","Noto Sans SC",sans-serif;margin:0 0 8px;font-size:clamp(24px,3vw,34px)}
+.sub{margin:0 0 14px;opacity:.92}
+.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.k{background:rgba(255,255,255,.16);padding:10px;border-radius:11px;border:1px solid rgba(255,255,255,.25)}.k b{display:block;font-family:"Space Grotesk";font-size:22px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.tab{border:1px solid #bfd3e7;background:#fff;padding:8px 13px;border-radius:999px;font-weight:700;cursor:pointer}.tab.on{color:#fff;border-color:transparent;background:linear-gradient(120deg,#0e63ab,#11a58f)}
+.panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px}.panel.on{display:block}
+.h2{margin:0 0 10px;font-family:"Space Grotesk","Noto Sans SC",sans-serif;font-size:22px}.muted{color:var(--muted)}
+.row2{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.btn{border:0;border-radius:9px;padding:8px 11px;font-weight:700;cursor:pointer}.btn.p{color:#fff;background:linear-gradient(120deg,#0e63ab,#11a58f)}.btn.s{background:#e7f2fc;color:#17486f}.btn.g{background:#fff;border:1px solid #c7d8ea;color:#173b5b}
+input,select,textarea,button{font:inherit}.in{border:1px solid #c4d5e7;border-radius:9px;padding:8px 10px;min-height:38px;background:#fff}.bar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:10px}
+.table{overflow:auto;border:1px solid #deebf7;border-radius:10px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 7px;border-bottom:1px solid #e5eef7;text-align:left;vertical-align:top}th{background:#f6fbff;color:#4a627a}
+.pill{display:inline-block;padding:2px 7px;border-radius:999px;border:1px solid #c4d8eb;font-size:12px}.off{background:#fff4ea;border-color:#f2cfb2;color:#8d3f16}.wait{background:#fff6ea;border-color:#f5d9b2;color:#915000}.ok{background:#ebfff5;border-color:#bde9cf;color:#136242}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:8px;margin:7px 0;font-size:14px}.kv b{color:#52697f}
+.flow-item{border:1px solid #bad1e8;border-radius:12px;padding:10px;background:linear-gradient(120deg,#f8fbff,#f3fffc);cursor:pointer}.flow-item.on{border-color:#2b84cd;box-shadow:0 8px 18px rgba(43,132,205,.2)}
+.fields{display:grid;gap:8px}.f{border:1px solid #d9e6f3;border-radius:10px;padding:9px;background:#fbfdff}.tiny{font-size:12px;color:#60758b}
+.phone{width:min(360px,100%);margin:0 auto;border:9px solid #1d2f40;border-radius:26px;overflow:hidden;box-shadow:0 10px 28px rgba(17,34,52,.35)}.ph{background:linear-gradient(120deg,#0e63ab,#11a58f);color:#fff;padding:9px 12px;font-weight:700}.pb{padding:10px;max-height:520px;overflow:auto}
+.msg{position:fixed;right:18px;bottom:18px;background:#173e62;color:#fff;padding:9px 12px;border-radius:9px;opacity:0;transform:translateY(8px);transition:.2s}.msg.on{opacity:1;transform:none}
+@media (max-width:1080px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.row2{grid-template-columns:1fr}}
+@media (max-width:680px){.app{width:96vw}.kpi{grid-template-columns:1fr}.kv{grid-template-columns:86px 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <h1>03-05 设备巡检 · 可交互优化稿</h1>
+    <p class="sub">整合原型链路：设备建档 → 任务编排 → 表单配置 → 移动巡检 → 记录确认</p>
+    <div class="kpi">
+      <div class="k"><b id="k1">0</b>进行中任务</div>
+      <div class="k"><b id="k2">0%</b>月度完成率</div>
+      <div class="k"><b id="k3">0</b>待确认记录</div>
+      <div class="k"><b id="k4">0</b>巡检字段数</div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-p="flow">流程梳理</button>
+    <button class="tab" data-p="tasks">巡检任务台</button>
+    <button class="tab" data-p="form">表单配置</button>
+    <button class="tab" data-p="mobile">移动巡检</button>
+    <button class="tab" data-p="records">巡检记录</button>
+  </nav>
+
+  <section class="panel on" id="p-flow">
+    <h2 class="h2">流程梳理与优化动作</h2>
+    <div class="row2">
+      <div class="card" id="flowList"></div>
+      <div class="card">
+        <h3 id="fd1" style="margin:0 0 8px;">-</h3>
+        <p id="fd2" class="muted" style="margin:0 0 8px;"></p>
+        <div class="kv"><b>当前痛点</b><span id="fd3"></span></div>
+        <div class="kv"><b>优化动作</b><span id="fd4"></span></div>
+        <div class="kv"><b>关键结果</b><span id="fd5"></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-tasks">
+    <h2 class="h2">巡检任务台</h2>
+    <div class="bar">
+      <input id="qs" class="in" placeholder="搜索任务编号/设备名称">
+      <select id="qst" class="in"><option value="all">状态：全部</option><option>开启</option><option>关闭</option></select>
+      <select id="qtp" class="in"><option value="all">类型：全部</option><option>生产设备</option><option>包装设备</option><option>存储设备</option></select>
+      <button class="btn s" id="newTask">新建演示任务</button>
+    </div>
+    <div class="row2">
+      <div class="card"><div class="table"><table><thead><tr><th>任务编号</th><th>设备</th><th>状态</th><th>频率</th><th>完成度</th><th>操作</th></tr></thead><tbody id="taskRows"></tbody></table></div></div>
+      <div class="card"><h3 style="margin:0 0 8px;">任务详情</h3><div id="taskDetail" class="muted">请选择任务。</div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-form">
+    <h2 class="h2">巡检任务表单配置</h2>
+    <div class="row2">
+      <div class="card">
+        <div class="bar">
+          <input id="fname" class="in" placeholder="字段名称，如：机温(°C)">
+          <select id="ftype" class="in"><option value="text">文本</option><option value="number">数值</option><option value="select">下拉</option><option value="photo">图片</option><option value="location">定位</option><option value="time">时间</option></select>
+          <select id="fsrc" class="in"><option value="manual">手动输入</option><option value="device">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select>
+          <input id="fops" class="in" placeholder="下拉选项(逗号分隔，可选)">
+          <button class="btn p" id="addField">添加字段</button>
+        </div>
+        <div class="tiny">固定字段（设备名称、设备型号）不可删除，可调整必填和来源。</div>
+        <div id="fieldList" class="fields" style="margin-top:8px;"></div>
+        <div class="bar" style="margin-top:8px;"><button class="btn p" id="saveField">配置完成</button><button class="btn g" id="resetField">重置自定义字段</button></div>
+      </div>
+      <div class="card"><h3 style="margin:0 0 8px;">移动端预览</h3><div class="phone"><div class="ph">巡检提交表单预览</div><div class="pb" id="preview"></div></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-mobile">
+    <h2 class="h2">移动端发起巡检</h2>
+    <div class="row2">
+      <div class="card">
+        <div class="bar">
+          <select id="mtask" class="in"></select>
+          <label class="tiny"><input type="checkbox" id="inrange" checked> 模拟在打卡范围内</label>
+        </div>
+        <div id="mInfo"></div>
+        <div class="phone" style="margin-top:10px;"><div class="ph">发起巡检</div><div class="pb"><div id="mForm"></div><button class="btn p" id="submitCheck" style="width:100%;margin-top:8px;">确认提交</button></div></div>
+      </div>
+      <div class="card">
+        <div class="kv"><b>校验逻辑</b><span>任务开启 + 设备可用 + 在打卡范围内 + 必填项完整。</span></div>
+        <div class="kv"><b>联动结果</b><span>提交成功后自动生成待确认记录，并更新任务完成度。</span></div>
+        <div class="kv"><b>流程价值</b><span>把“发起巡检”和“确认闭环”打通，减少跨模块跳转。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-records">
+    <h2 class="h2">巡检记录确认</h2>
+    <div class="bar"><input id="rs" class="in" placeholder="搜索设备/巡检人/任务编号"><select id="rst" class="in"><option value="all">确认状态：全部</option><option>待确认</option><option>已确认</option></select></div>
+    <div class="card"><div class="table"><table><thead><tr><th>任务编号</th><th>设备</th><th>巡检人</th><th>打卡位置</th><th>巡检时间</th><th>确认状态</th><th>操作</th></tr></thead><tbody id="recordRows"></tbody></table></div></div>
+  </section>
+</div>
+<div class="msg" id="msg"></div>
+<script>
+const s={flowId:"device",taskId:"XJRWB-2026-03-06-000001",mobileTask:"XJRWB-2026-03-06-000001",inRange:true,vals:{},flow:[
+{id:"device",t:"1. 设备建档",d:"设备管理维护基础信息、状态和二维码。",p:"停用设备仍可能进入巡检链路。",o:"把设备状态设为任务创建与提交前置校验。",r:"阻断无效巡检，减少脏数据。"},
+{id:"task",t:"2. 任务编排",d:"配置巡检频率、负责人、打卡范围和要求。",p:"任务筛选和进度查看分散。",o:"统一任务台筛选 + 完成度可视化。",r:"调度效率提升。"},
+{id:"form",t:"3. 表单配置",d:"固定字段 + 自定义字段统一配置并预览。",p:"字段来源语义混乱。",o:"字段模型统一为 类型/来源/必填。",r:"录入一致性更高。"},
+{id:"mobile",t:"4. 移动巡检",d:"扫码后自动填充并提交表单。",p:"越界打卡与停用设备缺少阻断。",o:"提交前强校验。",r:"合规性提升。"},
+{id:"record",t:"5. 记录确认",d:"后台一键确认并查看详情。",p:"确认动作分散。",o:"列表确认 + 详情回看。",r:"形成完整闭环。"}
+],tasks:[
+{id:"XJRWB-2026-03-06-000001",name:"鸡爪自动化机器",model:"AHGC-000001",type:"生产设备",owner:"安徽工厂",loc:"1号厂房1楼",device:"正常",person:"王班长",freq:"5次/月",target:5,done:2,radius:10,need:"每月巡检5次，温控波动不超过±2°C。",status:"开启"},
+{id:"XJRWB-2026-03-08-000014",name:"速冻线包装机",model:"SDX-918",type:"包装设备",owner:"越南工厂",loc:"园区2号楼2层",device:"正常",person:"Tran Minh",freq:"3次/月",target:3,done:1,radius:12,need:"检查封膜压力与切刀状态。",status:"开启"},
+{id:"XJRWB-2026-03-10-000022",name:"冷藏库货架",model:"CCSB-102",type:"存储设备",owner:"安徽工厂",loc:"冷藏区B库",device:"停用",person:"赵质检",freq:"2次/月",target:2,done:0,radius:10,need:"检查承重与锈蚀。",status:"关闭"}
+],fields:[
+{id:"f1",label:"设备名称",type:"text",req:true,src:"device",fix:true,key:"name"},
+{id:"f2",label:"设备型号",type:"text",req:true,src:"device",fix:true,key:"model"},
+{id:"f3",label:"设备状态",type:"select",ops:["正常","维修","停用"],req:true,src:"manual",fix:false},
+{id:"f4",label:"机温(°C)",type:"number",req:true,src:"manual",fix:false},
+{id:"f5",label:"巡检时间",type:"time",req:true,src:"system",fix:false},
+{id:"f6",label:"巡检定位",type:"location",req:true,src:"geo",fix:false},
+{id:"f7",label:"巡检照片",type:"photo",req:true,src:"manual",fix:false},
+{id:"f8",label:"异常说明",type:"text",req:false,src:"manual",fix:false}
+],records:[
+{id:"R-20260408-001",task:"XJRWB-2026-03-06-000001",name:"鸡爪自动化机器",checker:"王班长",loc:"31.234,117.118",time:"2026-04-08 10:22:17",status:"待确认",detail:{"设备状态":"正常","机温(°C)":"3","异常说明":"无","巡检照片":"1张"}},
+{id:"R-20260407-004",task:"XJRWB-2026-03-08-000014",name:"速冻线包装机",checker:"Tran Minh",loc:"21.028,105.853",time:"2026-04-07 16:05:42",status:"已确认",detail:{"设备状态":"正常","异常说明":"无","巡检照片":"2张"}}
+]};
+const $=id=>document.getElementById(id),msg=$("msg");
+const now=()=>{const d=new Date(),p=n=>String(n).padStart(2,"0");return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`};
+const toast=t=>{msg.textContent=t;msg.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>msg.classList.remove("on"),1700)};
+const findTask=id=>s.tasks.find(v=>v.id===id);
+function kpi(){const a=s.tasks.filter(t=>t.status==="开启").length;const sum=s.tasks.reduce((m,t)=>({d:m.d+t.done,t:m.t+t.target}),{d:0,t:0});$("k1").textContent=a;$("k2").textContent=(sum.t?Math.round(sum.d*100/sum.t):0)+"%";$("k3").textContent=s.records.filter(r=>r.status==="待确认").length;$("k4").textContent=s.fields.length}
+function tab(p){document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("on",b.dataset.p===p));document.querySelectorAll(".panel").forEach(x=>x.classList.toggle("on",x.id===`p-${p}`))}
+function flow(){const box=$("flowList");box.innerHTML=s.flow.map(f=>`<div class="flow-item ${f.id===s.flowId?"on":""}" data-id="${f.id}"><b>${f.t}</b><div class="tiny">${f.d}</div></div>`).join("");const f=s.flow.find(v=>v.id===s.flowId)||s.flow[0];$("fd1").textContent=f.t;$("fd2").textContent=f.d;$("fd3").textContent=f.p;$("fd4").textContent=f.o;$("fd5").textContent=f.r}
+function taskRows(){const q=$("qs").value.trim().toLowerCase(),st=$("qst").value,tp=$("qtp").value;const arr=s.tasks.filter(t=>(!q||t.id.toLowerCase().includes(q)||t.name.toLowerCase().includes(q))&&(st==="all"||t.status===st)&&(tp==="all"||t.type===tp));$("taskRows").innerHTML=arr.length?arr.map(t=>{const p=Math.round(t.done*100/t.target);return `<tr data-id="${t.id}"><td>${t.id}</td><td>${t.name}<div class="tiny">${t.type} · ${t.owner}</div></td><td><span class="pill ${t.status==="关闭"?"off":""}">${t.status}</span></td><td>${t.freq}</td><td>${t.done}/${t.target}</td><td><button class="btn g" data-a="view" data-id="${t.id}">查看</button> <button class="btn g" data-a="toggle" data-id="${t.id}">${t.status==="开启"?"关闭":"开启"}</button></td></tr><tr><td colspan="6"><div class="tiny">进度 ${p}%</div><div style="height:7px;background:#e7eef6;border-radius:999px;overflow:hidden"><div style="height:100%;width:${p}%;background:linear-gradient(90deg,#0e63ab,#11a58f)"></div></div></td></tr>`}).join(""):`<tr><td colspan="6" class="muted">没有匹配任务</td></tr>`;taskDetail()}
+function taskDetail(){const t=findTask(s.taskId);if(!t){$("taskDetail").textContent="请选择任务";return}const p=Math.round(t.done*100/t.target);$("taskDetail").innerHTML=`<div class="kv"><b>任务编号</b><span>${t.id}</span></div><div class="kv"><b>设备</b><span>${t.name}/${t.model}</span></div><div class="kv"><b>设备状态</b><span>${t.device}</span></div><div class="kv"><b>负责人</b><span>${t.person}</span></div><div class="kv"><b>打卡范围</b><span>${t.radius}米</span></div><div class="kv"><b>巡检要求</b><span>${t.need}</span></div><div class="kv"><b>本月进度</b><span>${t.done}/${t.target} (${p}%)</span></div><div class="bar"><button class="btn s" id="toMobile">去移动端发起</button><button class="btn g" id="copyTask">复制任务编号</button></div>`;$("toMobile").onclick=()=>{s.mobileTask=t.id;s.vals={};mobile();tab("mobile")};$("copyTask").onclick=()=>{navigator.clipboard?.writeText(t.id);toast("任务编号已复制")}}
+function addTask(){const i=s.tasks.length+1,id=`XJRWB-2026-04-13-00${String(i).padStart(2,"0")}`;s.tasks.unshift({id,name:`新增设备-${i}`,model:`MODEL-${i}`,type:["生产设备","包装设备","存储设备"][i%3],owner:i%2?"安徽工厂":"越南工厂",loc:i%2?"A区1层":"B区2层",device:"正常",person:"新负责人",freq:"4次/月",target:4,done:0,radius:10,need:"按标准流程执行巡检并上传照片。",status:"开启"});s.taskId=id;s.mobileTask=id;all();toast("已新增演示任务")}
+const srcLabel=v=>({manual:"手动输入",device:"设备带入",system:"系统获取",geo:"定位获取"}[v]||v);
+function form(){const list=$("fieldList");list.innerHTML=s.fields.map(f=>`<div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>${f.label}</b> <span class="pill">${f.type}</span> ${f.fix?"<span class='pill'>固定</span>":""}</div>${f.fix?"":`<button class="btn g" data-f="del" data-id="${f.id}">删除</button>`}</div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="${f.id}" ${f.req?"checked":""}> 必填</label><select class="in" data-f="src" data-id="${f.id}"><option value="manual" ${f.src==="manual"?"selected":""}>手动输入</option><option value="device" ${f.src==="device"?"selected":""}>设备带入</option><option value="system" ${f.src==="system"?"selected":""}>系统获取</option><option value="geo" ${f.src==="geo"?"selected":""}>定位获取</option></select>${f.type==="select"?`<input class="in" data-f="ops" data-id="${f.id}" value="${(f.ops||[]).join(",")}" placeholder="下拉选项">`:""}</div><div class="tiny">规则：${f.req?"必填":"选填"} / ${srcLabel(f.src)}</div></div>`).join("");
+const t=findTask(s.mobileTask)||s.tasks[0];$("preview").innerHTML=s.fields.map(f=>{const req=f.req?"*":"";const val=f.src==="device"?(t[f.key]||""):(f.src==="system"?now():"");if(f.type==="select")return `<div class="tiny" style="margin:6px 0">${req}${f.label}</div><select class="in" style="width:100%"><option>请选择</option>${(f.ops||[]).map(v=>`<option>${v}</option>`).join("")}</select>`;if(f.type==="photo")return `<div class="tiny" style="margin:6px 0">${req}${f.label}</div><div class="in">点击上传图片</div>`;return `<div class="tiny" style="margin:6px 0">${req}${f.label}</div><input class="in" style="width:100%" value="${val}" ${f.src!=="manual"?"readonly":""}>`}).join("")}
+function mobile(){const t=findTask(s.mobileTask)||s.tasks[0];$("mtask").innerHTML=s.tasks.map(v=>`<option value="${v.id}" ${v.id===s.mobileTask?"selected":""}>${v.id} · ${v.name}</option>`).join("");$("mInfo").innerHTML=`<div class="kv"><b>设备</b><span>${t.name}/${t.model}</span></div><div class="kv"><b>任务状态</b><span class="pill ${t.status==="关闭"?"off":""}">${t.status}</span></div><div class="kv"><b>设备状态</b><span class="pill ${t.device==="停用"?"off":""}">${t.device}</span></div><div class="kv"><b>打卡范围</b><span>${t.radius}米</span></div>`;
+s.fields.forEach(f=>{if(s.vals[f.id]===undefined)s.vals[f.id]=f.src==="device"?(t[f.key]||t.name||""):(f.type==="time"||f.src==="system"?now():(f.type==="location"&&s.inRange?"31.234,117.118":""))});
+$("mForm").innerHTML=s.fields.map(f=>{const req=f.req?"*":"";const ro=f.src!=="manual"&&f.type!=="location"&&f.type!=="photo";const v=s.vals[f.id]||"";if(f.type==="select")return `<div class="tiny" style="margin:6px 0">${req}${f.label} <span class="pill">${srcLabel(f.src)}</span></div><select class="in" data-m="in" data-id="${f.id}" style="width:100%" ${ro?"disabled":""}><option value="">请选择</option>${(f.ops||[]).map(o=>`<option value="${o}" ${v===o?"selected":""}>${o}</option>`).join("")}</select>`;if(f.type==="photo")return `<div class="tiny" style="margin:6px 0">${req}${f.label} <span class="pill">${srcLabel(f.src)}</span></div><input class="in" type="file" accept="image/*" data-m="photo" data-id="${f.id}" style="width:100%"><div class="tiny">${v?`已选择：${v}`:"未上传图片"}</div>`;if(f.type==="location")return `<div class="tiny" style="margin:6px 0">${req}${f.label} <span class="pill">${srcLabel(f.src)}</span></div><div class="bar"><input class="in" data-m="in" data-id="${f.id}" value="${v}" placeholder="点击获取定位"><button class="btn g" data-m="loc" data-id="${f.id}">获取</button></div>`;return `<div class="tiny" style="margin:6px 0">${req}${f.label} <span class="pill">${srcLabel(f.src)}</span></div><input class="in" data-m="in" data-id="${f.id}" value="${v}" style="width:100%" ${ro?"readonly":""}>`}).join("")}
+function submit(){const t=findTask(s.mobileTask);if(!t){toast("请选择任务");return}if(t.status==="关闭"||t.device==="停用"){toast("当前任务或设备不可巡检");return}if(!s.inRange){toast("不在打卡范围内，禁止提交");return}for(const f of s.fields){const v=s.vals[f.id];if(f.req&&(!v||String(v).trim()==="")){toast(`请完善必填项：${f.label}`);return}}
+t.done=Math.min(t.target,t.done+1);const locField=s.fields.find(x=>x.type==="location");const detail={};s.fields.forEach(f=>detail[f.label]=s.vals[f.id]||"");s.records.unshift({id:`R-${Date.now()}`,task:t.id,name:t.name,checker:t.person||"巡检员",loc:locField?(s.vals[locField.id]||"未知"):"未知",time:now(),status:"待确认",detail});s.vals={};all();tab("records");toast("巡检提交成功，已进入待确认")}
+function records(){const q=$("rs").value.trim().toLowerCase(),st=$("rst").value;const arr=s.records.filter(r=>(!q||r.task.toLowerCase().includes(q)||r.name.toLowerCase().includes(q)||r.checker.toLowerCase().includes(q))&&(st==="all"||r.status===st));$("recordRows").innerHTML=arr.length?arr.map(r=>`<tr><td>${r.task}</td><td>${r.name}</td><td>${r.checker}</td><td>${r.loc}</td><td>${r.time}</td><td><span class="pill ${r.status==="待确认"?"wait":"ok"}">${r.status}</span></td><td><button class="btn g" data-r="view" data-id="${r.id}">查看</button> ${r.status==="待确认"?`<button class="btn s" data-r="ok" data-id="${r.id}">确认</button>`:""}</td></tr>`).join(""):`<tr><td colspan="7" class="muted">没有匹配记录</td></tr>`}
+function all(){kpi();flow();taskRows();form();mobile();records()}
+
+$("tabs").onclick=e=>{const b=e.target.closest(".tab");if(!b)return;tab(b.dataset.p)};
+$("flowList").onclick=e=>{const n=e.target.closest("[data-id]");if(!n)return;s.flowId=n.dataset.id;flow()};
+["qs","qst","qtp"].forEach(id=>$(id).addEventListener("input",taskRows));
+$("taskRows").onclick=e=>{const a=e.target.dataset.a,id=e.target.dataset.id||e.target.closest("tr")?.dataset.id;if(!id)return;if(a==="toggle"){const t=findTask(id);t.status=t.status==="开启"?"关闭":"开启";all();toast(`任务已${t.status}`);return}s.taskId=id;taskRows()};
+$("newTask").onclick=addTask;
+$("addField").onclick=()=>{const label=$("fname").value.trim();if(!label){toast("请先输入字段名称");return}const type=$("ftype").value,src=$("fsrc").value,ops=$("fops").value.trim();const f={id:`f_${Math.random().toString(36).slice(2,8)}`,label,type,req:true,src,fix:false};if(type==="select")f.ops=ops?ops.split(",").map(v=>v.trim()).filter(Boolean):["正常","异常"];s.fields.push(f);$("fname").value="";$("fops").value="";all();toast("字段已添加")};
+$("saveField").onclick=()=>toast("表单配置已保存");
+$("resetField").onclick=()=>{s.fields=s.fields.filter(f=>f.fix);all();toast("已清空自定义字段")};
+$("fieldList").onchange=e=>{const id=e.target.dataset.id,a=e.target.dataset.f;if(!id||!a)return;const f=s.fields.find(v=>v.id===id);if(!f)return;if(a==="req")f.req=e.target.checked;if(a==="src")f.src=e.target.value;if(a==="ops")f.ops=e.target.value.split(",").map(v=>v.trim()).filter(Boolean);all()};
+$("fieldList").onclick=e=>{if(e.target.dataset.f!=="del")return;const id=e.target.dataset.id;s.fields=s.fields.filter(v=>v.id!==id);all();toast("字段已删除")};
+$("mtask").onchange=()=>{s.mobileTask=$("mtask").value;s.vals={};mobile()};
+$("inrange").onchange=()=>{s.inRange=$("inrange").checked;mobile()};
+$("mForm").oninput=e=>{const id=e.target.dataset.id;if(!id)return;s.vals[id]=e.target.value};
+$("mForm").onchange=e=>{if(e.target.dataset.m!=="photo")return;const id=e.target.dataset.id,file=e.target.files?.[0];s.vals[id]=file?file.name:"";mobile()};
+$("mForm").onclick=e=>{if(e.target.dataset.m!=="loc")return;const id=e.target.dataset.id;s.vals[id]=s.inRange?"31.234,117.118":"31.268,117.198";mobile()};
+$("submitCheck").onclick=submit;
+["rs","rst"].forEach(id=>$(id).addEventListener("input",records));
+$("recordRows").onclick=e=>{const a=e.target.dataset.r,id=e.target.dataset.id;if(!a||!id)return;const r=s.records.find(v=>v.id===id);if(!r)return;if(a==="ok"){r.status="已确认";all();toast("记录已确认");return}if(a==="view"){const text=[`记录ID: ${r.id}`,`任务编号: ${r.task}`,`设备: ${r.name}`,`巡检人: ${r.checker}`,`巡检时间: ${r.time}`,...Object.entries(r.detail).map(([k,v])=>`${k}: ${v||"-"}`)].join("\n");alert(text)}};
+all();
+</script>
+</body>
+</html>

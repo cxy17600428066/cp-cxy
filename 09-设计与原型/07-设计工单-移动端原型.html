@@ -191,5 +191,245 @@
       </section>
     </div>
   </main>
+  <script>
+    const statusMap = {
+      pending_confirm: "待设计确认",
+      confirming_time: "待确认完成时间",
+      designing: "设计中",
+      waiting_acceptance: "待确认设计文件",
+      closed: "已关闭"
+    };
+
+    const initialMobileTickets = [
+      {
+        id: "DES-001",
+        title: "五一活动海报设计",
+        status: "waiting_acceptance",
+        applicant: "市场部 / 李晓",
+        designer: "品牌设计组 / 陈可",
+        due: "2026-04-22 18:00",
+        desc: "公众号主海报 + 朋友圈长图，要求体现节日促销氛围。",
+        files: [
+          { name: "五一活动海报_预览.jpg", note: "可直接查看预览效果" },
+          { name: "五一活动海报_源文件.psd", note: "如确认无误可归档" }
+        ],
+        timeline: [
+          { title: "提交需求", detail: "已提交活动背景、尺寸和文案。", time: "04-19 09:30" },
+          { title: "设计确认", detail: "设计部门确认需求完整。", time: "04-19 10:20" },
+          { title: "确认排期", detail: "预计 04-22 18:00 完成。", time: "04-19 10:35" },
+          { title: "上传文件", detail: "已上传设计预览图与源文件。", time: "04-21 17:36" }
+        ]
+      },
+      {
+        id: "DES-002",
+        title: "新品详情页长图设计",
+        status: "designing",
+        applicant: "电商部 / 周静",
+        designer: "电商设计组 / 王卓",
+        due: "2026-04-24 12:00",
+        desc: "需要新版详情页长图，突出卖点、工艺和食用场景。",
+        files: [],
+        timeline: [
+          { title: "提交需求", detail: "已提交新品卖点和参考竞品。", time: "04-19 11:20" },
+          { title: "设计确认", detail: "设计组已接受工单。", time: "04-19 12:05" },
+          { title: "确认排期", detail: "预计 04-24 12:00 完成。", time: "04-19 12:15" }
+        ]
+      }
+    ];
+
+    const mobileRoles = [
+      { key: "requester", label: "提需求方" },
+      { key: "designer", label: "设计部门" }
+    ];
+
+    let mobileTickets = JSON.parse(JSON.stringify(initialMobileTickets));
+    let mobileRole = "requester";
+    let activeMobileId = mobileTickets[0].id;
+
+    const mobileRoleTabs = document.getElementById("mobileRoleTabs");
+    const mobileTaskList = document.getElementById("mobileTaskList");
+    const mobileDetail = document.getElementById("mobileDetail");
+    const mobileTimeline = document.getElementById("mobileTimeline");
+    const mobileFiles = document.getElementById("mobileFiles");
+
+    function getMobileTicket() {
+      return mobileTickets.find(item => item.id === activeMobileId) || mobileTickets[0];
+    }
+
+    function renderMobileRoles() {
+      mobileRoleTabs.innerHTML = mobileRoles.map(role => `
+        <button class="seg-btn ${role.key === mobileRole ? "active" : ""}" data-role="${role.key}">${role.label}</button>
+      `).join("");
+      [...mobileRoleTabs.querySelectorAll("[data-role]")].forEach(button => {
+        button.addEventListener("click", () => {
+          mobileRole = button.dataset.role;
+          renderMobile();
+        });
+      });
+    }
+
+    function renderMobileTasks() {
+      mobileTaskList.innerHTML = mobileTickets.map(ticket => `
+        <article class="task-card ${ticket.id === activeMobileId ? "active" : ""}" data-id="${ticket.id}">
+          <div class="task-meta">
+            <h3>${ticket.title}</h3>
+            <span class="pill">${statusMap[ticket.status]}</span>
+          </div>
+          <div class="sub">${ticket.applicant}</div>
+        </article>
+      `).join("");
+      [...mobileTaskList.querySelectorAll("[data-id]")].forEach(card => {
+        card.addEventListener("click", () => {
+          activeMobileId = card.dataset.id;
+          renderMobile();
+        });
+      });
+    }
+
+    function appendMobileTimeline(ticket, title, detail) {
+      ticket.timeline.push({ title, detail, time: "04-19 16:30" });
+    }
+
+    function renderRequester(ticket) {
+      return `
+        <div class="section-title">提需求方操作</div>
+        <div class="sub">提交需求、确认完成时间、确认设计文件、关闭工单。</div>
+        <div class="field">
+          <label>需求标题</label>
+          <input id="mTitle" value="${ticket.title}" />
+        </div>
+        <div class="field">
+          <label>需求说明</label>
+          <textarea id="mDesc">${ticket.desc}</textarea>
+        </div>
+        <div class="field">
+          <label>预计完成时间</label>
+          <input id="mDue" value="${ticket.due}" />
+        </div>
+        <div class="bottom-actions">
+          <button class="btn btn-primary" data-action="confirm-time">确认完成时间</button>
+          <button class="btn btn-secondary" data-action="confirm-file">确认设计文件</button>
+          <button class="btn btn-secondary" data-action="close">关闭工单</button>
+        </div>
+      `;
+    }
+
+    function renderDesigner(ticket) {
+      return `
+        <div class="section-title">设计部门操作</div>
+        <div class="sub">确认需求、反馈完成时间、上传设计文件。</div>
+        <div class="field">
+          <label>设计负责人</label>
+          <input id="mDesigner" value="${ticket.designer}" />
+        </div>
+        <div class="field">
+          <label>预计完成时间</label>
+          <input id="mDue" value="${ticket.due}" />
+        </div>
+        <div class="field">
+          <label>上传文件名称</label>
+          <input id="mUploadName" placeholder="如：设计终稿.fig" />
+        </div>
+        <div class="bottom-actions">
+          <button class="btn btn-primary" data-action="accept">确认需求</button>
+          <button class="btn btn-secondary" data-action="estimate">反馈完成时间</button>
+          <button class="btn btn-secondary" data-action="upload">上传设计文件</button>
+        </div>
+      `;
+    }
+
+    function bindMobileActions(ticket) {
+      if (document.getElementById("mTitle")) {
+        document.getElementById("mTitle").addEventListener("input", e => { ticket.title = e.target.value; renderMobileTasks(); });
+        document.getElementById("mDesc").addEventListener("input", e => { ticket.desc = e.target.value; });
+      }
+      if (document.getElementById("mDue")) {
+        document.getElementById("mDue").addEventListener("input", e => { ticket.due = e.target.value; });
+      }
+      if (document.getElementById("mDesigner")) {
+        document.getElementById("mDesigner").addEventListener("input", e => { ticket.designer = e.target.value; });
+      }
+      [...mobileDetail.querySelectorAll("[data-action]")].forEach(button => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.action;
+          if (action === "accept" && ticket.status === "pending_confirm") {
+            ticket.status = "confirming_time";
+            appendMobileTimeline(ticket, "设计确认", "设计部门已确认需求。");
+          }
+          if (action === "estimate") {
+            ticket.status = "confirming_time";
+            ticket.due = ticket.due || "2026-04-23 18:00";
+            appendMobileTimeline(ticket, "反馈完成时间", `预计 ${ticket.due} 前完成。`);
+          }
+          if (action === "confirm-time" && ticket.status === "confirming_time") {
+            ticket.status = "designing";
+            appendMobileTimeline(ticket, "确认完成时间", "需求方已确认完成时间。");
+          }
+          if (action === "upload" && (ticket.status === "designing" || ticket.status === "confirming_time")) {
+            const fileName = document.getElementById("mUploadName").value || "设计终稿.fig";
+            ticket.status = "waiting_acceptance";
+            ticket.files.push({ name: fileName, note: "移动端上传演示文件" });
+            appendMobileTimeline(ticket, "上传设计文件", `已上传 ${fileName}`);
+          }
+          if (action === "confirm-file" && ticket.status === "waiting_acceptance") {
+            appendMobileTimeline(ticket, "确认设计文件", "需求方已确认文件。");
+          }
+          if (action === "close" && ticket.status === "waiting_acceptance") {
+            ticket.status = "closed";
+            appendMobileTimeline(ticket, "关闭工单", "工单已关闭。");
+          }
+          renderMobile();
+        });
+      });
+    }
+
+    function renderMobileDetail() {
+      const ticket = getMobileTicket();
+      mobileDetail.innerHTML = `
+        <div class="section-title">${ticket.title}</div>
+        <div class="sub">${ticket.id} · ${statusMap[ticket.status]} · ${ticket.applicant}</div>
+        <div class="chip-row">
+          <span class="pill">设计：${ticket.designer}</span>
+          <span class="pill">${ticket.due ? `预计 ${ticket.due}` : "待确认时间"}</span>
+        </div>
+        ${mobileRole === "requester" ? renderRequester(ticket) : renderDesigner(ticket)}
+      `;
+      bindMobileActions(ticket);
+    }
+
+    function renderMobileTimeline() {
+      const ticket = getMobileTicket();
+      mobileTimeline.innerHTML = ticket.timeline.map(item => `
+        <div class="timeline-item">
+          <div class="dot"></div>
+          <div>
+            <strong>${item.title}</strong>
+            <div class="sub">${item.detail}</div>
+            <div class="hint" style="margin-top:4px;">${item.time}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderMobileFiles() {
+      const ticket = getMobileTicket();
+      mobileFiles.innerHTML = ticket.files.length ? ticket.files.map(file => `
+        <div class="file-item">
+          <strong>${file.name}</strong>
+          <div class="sub">${file.note}</div>
+        </div>
+      `).join("") : `<div class="empty">当前还没有上传设计文件。</div>`;
+    }
+
+    function renderMobile() {
+      renderMobileRoles();
+      renderMobileTasks();
+      renderMobileDetail();
+      renderMobileTimeline();
+      renderMobileFiles();
+    }
+
+    renderMobile();
+  </script>
 </body>
 </html>

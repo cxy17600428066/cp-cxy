@@ -300,5 +300,445 @@
       </section>
     </main>
   </div>
+  <script>
+    const roleViews = [
+      { key: "requester", title: "提需求方视角", desc: "提交需求、确认完成时间、确认文件、关闭需求。" },
+      { key: "designer", title: "设计部门视角", desc: "确认需求、预计完成时间、上传设计文件、推动验收。" }
+    ];
+
+    const statusMap = {
+      draft: { label: "待提交", tone: "brand" },
+      pending_confirm: { label: "待设计确认", tone: "warn" },
+      confirming_time: { label: "待确认完成时间", tone: "info" },
+      designing: { label: "设计中", tone: "brand" },
+      waiting_acceptance: { label: "待确认设计文件", tone: "info" },
+      closed: { label: "已关闭", tone: "good" }
+    };
+
+    const initialTickets = [
+      {
+        id: "DES-20260419-001",
+        title: "五一活动海报设计",
+        applicant: "市场部 / 李晓",
+        designer: "品牌设计组 / 陈可",
+        type: "海报设计",
+        channel: "线上活动",
+        due: "2026-04-22 18:00",
+        desc: "需产出五一促销主海报 1 张、活动长图 1 张，用于公众号和朋友圈。",
+        attachment: "活动方案_v3.pdf",
+        status: "waiting_acceptance",
+        timeline: [
+          { title: "需求方提交工单", detail: "提交活动背景、尺寸要求、文案和参考图。", time: "04-19 09:30", by: "李晓" },
+          { title: "设计部门确认需求", detail: "确认设计范围完整，可进入排期。", time: "04-19 10:20", by: "陈可" },
+          { title: "设计部门反馈完成时间", detail: "预计 04-22 18:00 前交付。", time: "04-19 10:35", by: "陈可" },
+          { title: "需求方确认完成时间", detail: "确认排期可接受，进入设计。", time: "04-19 10:48", by: "李晓" },
+          { title: "设计部门上传设计文件", detail: "已上传 JPG 预览图和 PSD 源文件。", time: "04-21 17:36", by: "陈可" }
+        ],
+        files: [
+          { name: "五一活动海报_预览.jpg", note: "客户确认用预览图", type: "预览图" },
+          { name: "五一活动海报_源文件.psd", note: "可继续编辑的源文件", type: "源文件" }
+        ]
+      },
+      {
+        id: "DES-20260419-002",
+        title: "新品详情页长图设计",
+        applicant: "电商部 / 周静",
+        designer: "电商设计组 / 王卓",
+        type: "详情页设计",
+        channel: "天猫 / 京东",
+        due: "2026-04-24 12:00",
+        desc: "新品无骨鸡爪需要 1 套电商详情页，包含卖点首屏、口味说明、工艺说明、场景图。",
+        attachment: "新品卖点梳理.xlsx",
+        status: "designing",
+        timeline: [
+          { title: "需求方提交工单", detail: "填写新品基础资料、主卖点和参考竞品。", time: "04-19 11:20", by: "周静" },
+          { title: "设计部门确认需求", detail: "确认需要详情页全套内容，排期制作。", time: "04-19 12:05", by: "王卓" },
+          { title: "设计部门反馈完成时间", detail: "预计 04-24 12:00 前交付。", time: "04-19 12:15", by: "王卓" },
+          { title: "需求方确认完成时间", detail: "时间可接受，进入设计。", time: "04-19 13:02", by: "周静" }
+        ],
+        files: []
+      },
+      {
+        id: "DES-20260419-003",
+        title: "门店展架物料需求",
+        applicant: "销售部 / 杨帆",
+        designer: "平面设计组 / 何婷",
+        type: "线下物料",
+        channel: "门店活动",
+        due: "",
+        desc: "需要门店展架、台卡、价格签，供周末路演使用。",
+        attachment: "门店路演需求.docx",
+        status: "pending_confirm",
+        timeline: [
+          { title: "需求方提交工单", detail: "提交门店活动用途、数量、尺寸和基础文案。", time: "04-19 14:06", by: "杨帆" }
+        ],
+        files: []
+      },
+      {
+        id: "DES-20260419-004",
+        title: "企业宣传册封面优化",
+        applicant: "总经办 / 许蕾",
+        designer: "品牌设计组 / 陈可",
+        type: "宣传册优化",
+        channel: "品牌招商",
+        due: "2026-04-18 18:00",
+        desc: "优化品牌宣传册封面及首页版式，用于招商资料更新。",
+        attachment: "招商手册旧版.pdf",
+        status: "closed",
+        timeline: [
+          { title: "需求方提交工单", detail: "提交原稿及希望加强的品牌感方向。", time: "04-16 09:10", by: "许蕾" },
+          { title: "设计部门确认需求", detail: "范围清晰，可直接排版优化。", time: "04-16 09:46", by: "陈可" },
+          { title: "设计部门反馈完成时间", detail: "预计 04-18 18:00 前交付。", time: "04-16 10:02", by: "陈可" },
+          { title: "需求方确认完成时间", detail: "确认无异议，开始设计。", time: "04-16 10:16", by: "许蕾" },
+          { title: "设计部门上传设计文件", detail: "上传封面图、PDF 和源文件。", time: "04-18 16:30", by: "陈可" },
+          { title: "需求方确认设计文件", detail: "确认交付内容符合预期。", time: "04-18 17:05", by: "许蕾" },
+          { title: "工单关闭", detail: "本次需求已完成并关闭。", time: "04-18 17:08", by: "系统" }
+        ],
+        files: [
+          { name: "招商手册封面_终稿.pdf", note: "对外使用版本", type: "PDF" },
+          { name: "招商手册封面_源文件.ai", note: "可编辑源文件", type: "源文件" }
+        ]
+      }
+    ];
+
+    let tickets = JSON.parse(JSON.stringify(initialTickets));
+    let currentRole = "requester";
+    let currentFilter = "all";
+    let activeId = tickets[0].id;
+
+    const roleTabs = document.getElementById("roleTabs");
+    const statusFilters = document.getElementById("statusFilters");
+    const taskList = document.getElementById("taskList");
+    const centerPanel = document.getElementById("centerPanel");
+    const timeline = document.getElementById("timeline");
+    const uploadList = document.getElementById("uploadList");
+    const pageTitle = document.getElementById("pageTitle");
+    const pageDesc = document.getElementById("pageDesc");
+
+    function getActiveTicket() {
+      return tickets.find(item => item.id === activeId) || tickets[0];
+    }
+
+    function renderRoleTabs() {
+      roleTabs.innerHTML = roleViews.map(role => `
+        <button class="menu-btn ${role.key === currentRole ? "active" : ""}" data-role="${role.key}">
+          <strong>${role.title}</strong>
+          <span>${role.desc}</span>
+        </button>
+      `).join("");
+      [...roleTabs.querySelectorAll("[data-role]")].forEach(button => {
+        button.addEventListener("click", () => {
+          currentRole = button.dataset.role;
+          render();
+        });
+      });
+    }
+
+    function renderMetrics() {
+      document.getElementById("metricTotal").textContent = tickets.length;
+      document.getElementById("metricPending").textContent = tickets.filter(t => t.status === "pending_confirm").length;
+      document.getElementById("metricReview").textContent = tickets.filter(t => t.status === "waiting_acceptance").length;
+      document.getElementById("metricClosed").textContent = tickets.filter(t => t.status === "closed").length;
+    }
+
+    function renderFilters() {
+      const filters = [
+        { key: "all", label: "全部" },
+        { key: "pending_confirm", label: "待设计确认" },
+        { key: "designing", label: "设计中" },
+        { key: "waiting_acceptance", label: "待确认文件" },
+        { key: "closed", label: "已关闭" }
+      ];
+      statusFilters.innerHTML = filters.map(filter => `
+        <button class="chip ${filter.key === currentFilter ? "active" : ""}" data-filter="${filter.key}">${filter.label}</button>
+      `).join("");
+      [...statusFilters.querySelectorAll("[data-filter]")].forEach(button => {
+        button.addEventListener("click", () => {
+          currentFilter = button.dataset.filter;
+          renderTaskList();
+        });
+      });
+    }
+
+    function renderTaskList() {
+      const filtered = currentFilter === "all" ? tickets : tickets.filter(t => t.status === currentFilter);
+      if (!filtered.some(t => t.id === activeId) && filtered.length) activeId = filtered[0].id;
+      taskList.innerHTML = filtered.map(ticket => `
+        <article class="task-card ${ticket.id === activeId ? "active" : ""}" data-id="${ticket.id}">
+          <div class="task-row">
+            <h4>${ticket.title}</h4>
+            <span class="pill ${statusMap[ticket.status].tone}">${statusMap[ticket.status].label}</span>
+          </div>
+          <p>${ticket.applicant}</p>
+          <div class="status-row" style="margin-top:10px;">
+            <span class="pill brand">${ticket.type}</span>
+            <span class="pill info">${ticket.channel}</span>
+          </div>
+          <div class="small" style="margin-top:10px;">${ticket.due ? `预计完成：${ticket.due}` : "待设计部门确认完成时间"}</div>
+        </article>
+      `).join("") || `<div class="empty">当前筛选条件下暂无工单。</div>`;
+
+      [...taskList.querySelectorAll("[data-id]")].forEach(card => {
+        card.addEventListener("click", () => {
+          activeId = card.dataset.id;
+          renderCenterPanel();
+          renderTaskList();
+          renderTimeline();
+          renderUploads();
+        });
+      });
+    }
+
+    function renderCenterPanel() {
+      const ticket = getActiveTicket();
+      pageTitle.textContent = currentRole === "requester" ? "提需求方工单处理" : "设计部门工单处理";
+      pageDesc.textContent = currentRole === "requester"
+        ? "需求方可提交需求、确认完成时间、确认设计文件并关闭工单。"
+        : "设计部门可确认需求、反馈完成时间、上传设计文件并推动验收。";
+
+      const actionBlock = currentRole === "requester"
+        ? renderRequesterView(ticket)
+        : renderDesignerView(ticket);
+
+      centerPanel.innerHTML = `
+        <div class="detail-card">
+          <div class="meta-row">
+            <div>
+              <h3>${ticket.title}</h3>
+              <div class="muted">${ticket.id} · ${ticket.type} · ${ticket.channel}</div>
+            </div>
+            <span class="pill ${statusMap[ticket.status].tone}">${statusMap[ticket.status].label}</span>
+          </div>
+          <div class="chip-row">
+            <span class="pill brand">提需求方：${ticket.applicant}</span>
+            <span class="pill info">设计部门：${ticket.designer}</span>
+            <span class="pill ${ticket.due ? "good" : "warn"}">${ticket.due ? `完成时间：${ticket.due}` : "尚未确认完成时间"}</span>
+          </div>
+          <div class="field-grid">
+            <div class="field full">
+              <label>需求说明</label>
+              <textarea id="ticketDesc">${ticket.desc}</textarea>
+            </div>
+            <div class="field">
+              <label>需求附件</label>
+              <input id="ticketAttachment" value="${ticket.attachment}" />
+            </div>
+            <div class="field">
+              <label>预计完成时间</label>
+              <input id="ticketDue" value="${ticket.due}" />
+            </div>
+          </div>
+        </div>
+        ${actionBlock}
+      `;
+
+      const descInput = document.getElementById("ticketDesc");
+      const attachmentInput = document.getElementById("ticketAttachment");
+      const dueInput = document.getElementById("ticketDue");
+      descInput.addEventListener("input", () => { ticket.desc = descInput.value; });
+      attachmentInput.addEventListener("input", () => { ticket.attachment = attachmentInput.value; });
+      dueInput.addEventListener("input", () => { ticket.due = dueInput.value; renderTaskList(); });
+
+      bindActionEvents(ticket);
+    }
+
+    function renderRequesterView(ticket) {
+      return `
+        <div class="detail-card">
+          <div class="section-head">
+            <div>
+              <h3>提需求方动作区</h3>
+              <div class="muted">负责提交、确认排期、确认文件和关闭工单。</div>
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label>需求标题</label>
+              <input id="requestTitle" value="${ticket.title}" />
+            </div>
+            <div class="field">
+              <label>需求类型</label>
+              <select id="requestType">
+                ${["海报设计","详情页设计","线下物料","宣传册优化","其他设计"].map(type => `<option value="${type}" ${ticket.type === type ? "selected" : ""}>${type}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field full">
+              <label>当前操作</label>
+              <div class="action-row">
+                <button class="btn btn-primary" data-action="submit">提交需求</button>
+                <button class="btn btn-secondary" data-action="confirm-time">确认完成时间</button>
+                <button class="btn btn-secondary" data-action="confirm-file">确认设计文件</button>
+                <button class="btn btn-secondary" data-action="close">关闭需求</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDesignerView(ticket) {
+      return `
+        <div class="detail-card">
+          <div class="section-head">
+            <div>
+              <h3>设计部门动作区</h3>
+              <div class="muted">负责确认需求、反馈时间、上传交付文件并推动验收。</div>
+            </div>
+          </div>
+          <div class="field-grid">
+            <div class="field">
+              <label>设计负责人</label>
+              <input id="designerName" value="${ticket.designer}" />
+            </div>
+            <div class="field">
+              <label>上传文件名称</label>
+              <input id="uploadName" placeholder="如：首页终稿.psd" />
+            </div>
+            <div class="field full">
+              <label>当前操作</label>
+              <div class="action-row">
+                <button class="btn btn-primary" data-action="accept">确认需求</button>
+                <button class="btn btn-secondary" data-action="estimate">反馈完成时间</button>
+                <button class="btn btn-secondary" data-action="upload">上传设计文件</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function appendTimeline(ticket, title, detail, by) {
+      ticket.timeline.push({
+        title,
+        detail,
+        time: "04-19 16:30",
+        by
+      });
+    }
+
+    function bindActionEvents(ticket) {
+      if (document.getElementById("requestTitle")) {
+        document.getElementById("requestTitle").addEventListener("input", e => {
+          ticket.title = e.target.value;
+          renderTaskList();
+          renderCenterPanel();
+        });
+        document.getElementById("requestType").addEventListener("change", e => {
+          ticket.type = e.target.value;
+          renderTaskList();
+        });
+      }
+      if (document.getElementById("designerName")) {
+        document.getElementById("designerName").addEventListener("input", e => {
+          ticket.designer = e.target.value;
+          renderCenterPanel();
+          renderTaskList();
+        });
+      }
+
+      [...centerPanel.querySelectorAll("[data-action]")].forEach(button => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.action;
+          if (action === "submit" && ticket.status === "draft") {
+            ticket.status = "pending_confirm";
+            appendTimeline(ticket, "需求方提交工单", "已提交完整需求信息，等待设计部门确认。", "提需求方");
+          }
+          if (action === "accept" && ticket.status === "pending_confirm") {
+            ticket.status = "confirming_time";
+            appendTimeline(ticket, "设计部门确认需求", "需求信息完整，可进入完成时间确认。", "设计部门");
+          }
+          if (action === "estimate" && (ticket.status === "pending_confirm" || ticket.status === "confirming_time")) {
+            ticket.status = "confirming_time";
+            ticket.due = ticket.due || "2026-04-23 18:00";
+            appendTimeline(ticket, "设计部门反馈完成时间", `预计 ${ticket.due} 前完成。`, "设计部门");
+          }
+          if (action === "confirm-time" && ticket.status === "confirming_time") {
+            ticket.status = "designing";
+            appendTimeline(ticket, "需求方确认完成时间", "已确认当前完成时间安排，进入设计阶段。", "提需求方");
+          }
+          if (action === "upload" && (ticket.status === "designing" || ticket.status === "confirming_time")) {
+            ticket.status = "waiting_acceptance";
+            const uploadName = document.getElementById("uploadName")?.value || "设计稿_终版.fig";
+            ticket.files.push({ name: uploadName, note: "设计部门本次上传文件", type: "交付文件" });
+            appendTimeline(ticket, "设计部门上传设计文件", `已上传 ${uploadName}，等待需求方确认。`, "设计部门");
+          }
+          if (action === "confirm-file" && ticket.status === "waiting_acceptance") {
+            appendTimeline(ticket, "需求方确认设计文件", "已确认设计稿满足需求。", "提需求方");
+          }
+          if (action === "close" && ticket.status === "waiting_acceptance") {
+            ticket.status = "closed";
+            appendTimeline(ticket, "工单关闭", "需求方已关闭本次设计工单。", "系统");
+          }
+          render();
+        });
+      });
+    }
+
+    function renderTimeline() {
+      const ticket = getActiveTicket();
+      timeline.innerHTML = ticket.timeline.map(item => `
+        <div class="timeline-item">
+          <div class="dot"></div>
+          <div class="timeline-content">
+            <strong>${item.title}</strong>
+            <div class="muted">${item.detail}</div>
+            <div class="small" style="margin-top:6px;">${item.time} · ${item.by}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderUploads() {
+      const ticket = getActiveTicket();
+      uploadList.innerHTML = ticket.files.length ? ticket.files.map(file => `
+        <div class="upload-item">
+          <strong>${file.name}</strong>
+          <div class="small">${file.type}</div>
+          <div class="muted" style="margin-top:6px;">${file.note}</div>
+        </div>
+      `).join("") : `<div class="empty">当前工单还没有上传设计文件。</div>`;
+    }
+
+    function advanceTicket() {
+      const ticket = getActiveTicket();
+      if (ticket.status === "pending_confirm") {
+        ticket.status = "confirming_time";
+        appendTimeline(ticket, "设计部门确认需求", "设计部门已查看并接受该工单。", "设计部门");
+      } else if (ticket.status === "confirming_time") {
+        ticket.status = "designing";
+        ticket.due = ticket.due || "2026-04-23 18:00";
+        appendTimeline(ticket, "需求方确认完成时间", `已确认 ${ticket.due} 的完成计划。`, "提需求方");
+      } else if (ticket.status === "designing") {
+        ticket.status = "waiting_acceptance";
+        ticket.files.push({ name: "设计稿_终版.fig", note: "设计部门上传的正式文件", type: "交付文件" });
+        appendTimeline(ticket, "设计部门上传设计文件", "文件已上传，等待需求方确认。", "设计部门");
+      } else if (ticket.status === "waiting_acceptance") {
+        ticket.status = "closed";
+        appendTimeline(ticket, "工单关闭", "需求方确认文件无误，工单关闭。", "系统");
+      }
+      render();
+    }
+
+    function render() {
+      renderRoleTabs();
+      renderMetrics();
+      renderFilters();
+      renderTaskList();
+      renderCenterPanel();
+      renderTimeline();
+      renderUploads();
+    }
+
+    document.getElementById("nextState").addEventListener("click", advanceTicket);
+    document.getElementById("resetDemo").addEventListener("click", () => {
+      tickets = JSON.parse(JSON.stringify(initialTickets));
+      currentRole = "requester";
+      currentFilter = "all";
+      activeId = tickets[0].id;
+      render();
+    });
+
+    render();
+  </script>
 </body>
 </html>

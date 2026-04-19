@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设计工单系统 PC端</title>
+  <style>
+    :root {
+      --bg: #f4f6f9;
+      --panel: #ffffff;
+      --panel-soft: #f8fafc;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --brand: #c2410c;
+      --brand-deep: #9a3412;
+      --brand-soft: rgba(194, 65, 12, 0.08);
+      --info: #1d4ed8;
+      --info-soft: rgba(29, 78, 216, 0.08);
+      --warn: #b45309;
+      --warn-soft: rgba(180, 83, 9, 0.08);
+      --good: #047857;
+      --good-soft: rgba(4, 120, 87, 0.08);
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Source Han Sans SC", sans-serif;
+      color: var(--ink);
+      background: radial-gradient(circle at top right, rgba(194, 65, 12, 0.08), transparent 26%), linear-gradient(180deg, #f8fafc 0%, #f4f6f9 100%);
+    }
+
+    button, input, textarea, select { font: inherit; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 24px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .switch-group {
+      display: grid;
+      gap: 6px;
+    }
+
+    .switch-group label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .switch-row,
+    .page-tabs,
+    .filters,
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .content { padding: 16px; }
+
+    .view {
+      display: none;
+      max-width: 1440px;
+      margin: 0 auto;
+      gap: 16px;
+    }
+
+    .view.active { display: grid; }
+    .list-view { grid-template-columns: 1fr; }
+    .detail-view { grid-template-columns: minmax(0, 1fr) 340px; align-items: start; }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .panel-head h2,
+    .panel-head h3 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    .panel-head p {
+      margin: 6px 0 0;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .switch,
+    .btn,
+    .pill,
+    .step-pill {
+      border: 0;
+      border-radius: 999px;
+    }
+
+    .switch {
+      padding: 10px 16px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .switch.active {
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+      border-color: rgba(194, 65, 12, 0.22);
+    }
+
+    .toolbar {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .stats {
+      padding: 18px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fcfcfd;
+    }
+
+    .stat {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+    }
+
+    .stat span {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .tickets {
+      padding: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .ticket {
+      padding: 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+      display: grid;
+      gap: 12px;
+    }
+
+    .ticket-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .ticket h4 {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .meta {
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .pill.warn { color: var(--warn); background: var(--warn-soft); }
+    .pill.info { color: var(--info); background: var(--info-soft); }
+    .pill.brand { color: var(--brand-deep); background: var(--brand-soft); }
+    .pill.good { color: var(--good); background: var(--good-soft); }
+
+    .btn {
+      padding: 11px 16px;
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .btn-primary { color: #fff; background: linear-gradient(135deg, var(--brand), #ea580c); }
+    .btn-secondary { color: var(--ink); background: #fff; border: 1px solid var(--line); }
+    .btn-ghost { color: var(--muted); background: var(--panel-soft); border: 1px solid var(--line); }
+
+    .detail-main,
+    .detail-side {
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .steps {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .step-pill {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .step-pill.done {
+      background: var(--good-soft);
+      border-color: rgba(4, 120, 87, 0.22);
+    }
+
+    .step-pill.active {
+      background: var(--brand-soft);
+      border-color: rgba(194, 65, 12, 0.24);
+      color: var(--brand-deep);
+    }
+
+    .summary-grid,
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .summary-item {
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+    }
+
+    .summary-item span {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .summary-item strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .field textarea {
+      min-height: 98px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stack-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .stack-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .empty {
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px dashed #d1d5db;
+      background: #fafbfc;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 1180px) {
+      .detail-view { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .topbar { align-items: flex-start; flex-direction: column; }
+      .stats,
+      .summary-grid,
+      .field-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <strong>设计工单系统 PC端</strong>
+        <span id="systemDesc">当前为 PC 端页面，内部区分需求端与设计端。</span>
+      </div>
+      <div class="actions">
+        <div class="switch-group">
+          <label>使用端</label>
+          <div class="switch-row" id="sideSwitch"></div>
+        </div>
+        <button class="btn btn-secondary" id="resetData">恢复演示数据</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="view list-view active" id="listView">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2 id="listTitle">PC端工单列表</h2>
+              <p id="listDesc">列表页只展示 PC 端工单，切换需求端/设计端后进入对应处理视角。</p>
+            </div>
+            <div class="page-tabs">
+              <button class="switch active" data-view="list">列表页</button>
+              <button class="switch" data-view="detail">详情页</button>
+            </div>
+          </div>
+          <div class="stats" id="statsRow"></div>
+          <div class="toolbar">
+            <div class="filters" id="filterBar"></div>
+            <button class="btn btn-primary" id="createTicket">新建PC工单</button>
+          </div>
+          <div class="tickets" id="ticketList"></div>
+        </div>
+      </section>
+
+      <section class="view detail-view" id="detailView">
+        <div class="detail-main">
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h2 id="detailTitle">PC端工单详情</h2>
+                <p id="detailDesc">详情页展示当前工单，并按需求端/设计端控制可操作内容。</p>
+              </div>
+              <div class="page-tabs">
+                <button class="switch" data-view="list">列表页</button>
+                <button class="switch active" data-view="detail">详情页</button>
+              </div>
+            </div>
+            <div class="card" style="border:0; border-radius:0;">
+              <div class="steps" id="stepRow"></div>
+              <div class="actions" style="justify-content:space-between; align-items:center; margin-top:14px;">
+                <div class="pill brand" id="contextHint">当前：PC端 / 需求端</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="card" style="border:0; border-radius:0;">
+              <h3 class="section-title">基础信息</h3>
+              <div class="summary-grid" id="summaryGrid"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="card" style="border:0; border-radius:0;" id="formPanel"></div>
+          </div>
+        </div>
+
+        <aside class="detail-side">
+          <div class="panel">
+            <div class="card" style="border:0; border-radius:0;">
+              <h3 class="section-title">设计文件</h3>
+              <div class="stack" id="fileBox"></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="card" style="border:0; border-radius:0;">
+              <h3 class="section-title">处理记录</h3>
+              <div class="stack" id="historyBox"></div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const ACCESS_LABEL = "PC端";
+    const steps = [
+      { key: "submitted", label: "提交需求" },
+      { key: "accepted", label: "确认需求" },
+      { key: "scheduled", label: "确认时间" },
+      { key: "delivered", label: "上传文件" },
+      { key: "closed", label: "关闭工单" }
+    ];
+
+    const useSides = [
+      { key: "demand", label: "需求端" },
+      { key: "design", label: "设计端" }
+    ];
+
+    const statusMap = {
+      pending_confirm: { label: "待设计端确认", step: "submitted", tone: "warn" },
+      confirming_time: { label: "待需求端确认时间", step: "accepted", tone: "info" },
+      designing: { label: "设计处理中", step: "scheduled", tone: "brand" },
+      waiting_acceptance: { label: "待需求端确认文件", step: "delivered", tone: "info" },
+      closed: { label: "已关闭", step: "closed", tone: "good" }
+    };
+
+    const actionText = {
+      demand: {
+        save: "保存需求",
+        submit: "提交需求",
+        confirmTime: "确认完成时间",
+        confirmFile: "确认设计文件",
+        close: "关闭工单"
+      },
+      design: {
+        accept: "确认需求",
+        estimate: "提交完成时间",
+        upload: "上传设计文件"
+      }
+    };
+
+    const initialTickets = [
+      {
+        id: "PC-DES-20260419-001",
+        title: "五一活动海报设计",
+        demandOwner: "市场部 / 李晓",
+        designOwner: "品牌设计组 / 陈可",
+        type: "海报设计",
+        channel: "PC端提交",
+        priority: "高",
+        due: "2026-04-22 18:00",
+        attachment: "活动方案_v3.pdf",
+        desc: "需产出五一活动主海报 1 张、活动长图 1 张，用于公众号和朋友圈投放。",
+        status: "waiting_acceptance",
+        files: [
+          { name: "五一活动海报_预览.jpg", note: "客户确认用预览图", type: "预览图" },
+          { name: "五一活动海报_源文件.psd", note: "可继续编辑的源文件", type: "源文件" }
+        ],
+        history: [
+          "04-19 09:30 需求端提交需求",
+          "04-19 10:20 设计端确认需求",
+          "04-19 10:35 设计端反馈预计完成时间",
+          "04-19 10:48 需求端确认完成时间",
+          "04-21 17:36 设计端上传设计文件"
+        ]
+      },
+      {
+        id: "PC-DES-20260419-002",
+        title: "新品详情页长图设计",
+        demandOwner: "电商部 / 周静",
+        designOwner: "电商设计组 / 王卓",
+        type: "详情页设计",
+        channel: "PC端提交",
+        priority: "中",
+        due: "2026-04-24 12:00",
+        attachment: "新品卖点梳理.xlsx",
+        desc: "新品无骨鸡爪需输出一版电商详情页长图，包含卖点首屏、口味介绍、工艺说明和场景图。",
+        status: "designing",
+        files: [],
+        history: [
+          "04-19 11:20 需求端提交需求",
+          "04-19 12:05 设计端确认需求",
+          "04-19 12:15 需求端确认预计完成时间"
+        ]
+      }
+    ];
+
+    let tickets = cloneTickets();
+    let currentSide = "demand";
+    let currentView = "list";
+    let currentFilter = "all";
+    let activeId = tickets[0].id;
+
+    const sideSwitch = document.getElementById("sideSwitch");
+    const systemDesc = document.getElementById("systemDesc");
+    const listDesc = document.getElementById("listDesc");
+    const statsRow = document.getElementById("statsRow");
+    const filterBar = document.getElementById("filterBar");
+    const ticketList = document.getElementById("ticketList");
+    const listView = document.getElementById("listView");
+    const detailView = document.getElementById("detailView");
+    const detailDesc = document.getElementById("detailDesc");
+    const contextHint = document.getElementById("contextHint");
+    const stepRow = document.getElementById("stepRow");
+    const summaryGrid = document.getElementById("summaryGrid");
+    const formPanel = document.getElementById("formPanel");
+    const fileBox = document.getElementById("fileBox");
+    const historyBox = document.getElementById("historyBox");
+
+    function cloneTickets() {
+      return JSON.parse(JSON.stringify(initialTickets));
+    }
+
+    function getSideLabel() {
+      return useSides.find(item => item.key === currentSide).label;
+    }
+
+    function getActiveTicket() {
+      return tickets.find(item => item.id === activeId) || tickets[0];
+    }
+
+    function appendHistory(ticket, text) {
+      ticket.history.push(`04-19 16:30 ${text}`);
+    }
+
+    function getStatusPill(status) {
+      const meta = statusMap[status];
+      return `<span class="pill ${meta.tone}">${meta.label}</span>`;
+    }
+
+    function renderSideSwitch() {
+      sideSwitch.innerHTML = useSides.map(item => `
+        <button class="switch ${item.key === currentSide ? "active" : ""}" data-side="${item.key}">${item.label}</button>
+      `).join("");
+      [...sideSwitch.querySelectorAll("[data-side]")].forEach(button => {
+        button.addEventListener("click", () => {
+          currentSide = button.dataset.side;
+          renderAll();
+          switchView(currentView);
+        });
+      });
+    }
+
+    function renderHeader() {
+      systemDesc.textContent = `当前为 PC 端页面，正在查看：${getSideLabel()}。`;
+      listDesc.textContent = `${getSideLabel()}在PC端查看工单列表，进入详情后按权限处理。`;
+    }
+
+    function renderStats() {
+      statsRow.innerHTML = `
+        <div class="stat"><span>全部工单</span><strong>${tickets.length}</strong></div>
+        <div class="stat"><span>处理中</span><strong>${tickets.filter(item => item.status !== "closed").length}</strong></div>
+        <div class="stat"><span>待确认文件</span><strong>${tickets.filter(item => item.status === "waiting_acceptance").length}</strong></div>
+        <div class="stat"><span>已关闭</span><strong>${tickets.filter(item => item.status === "closed").length}</strong></div>
+      `;
+    }
+
+    function renderFilters() {
+      const filters = [
+        { key: "all", label: "全部" },
+        { key: "pending_confirm", label: "待确认需求" },
+        { key: "confirming_time", label: "待确认时间" },
+        { key: "designing", label: "设计处理中" },
+        { key: "waiting_acceptance", label: "待确认文件" },
+        { key: "closed", label: "已关闭" }
+      ];
+      filterBar.innerHTML = filters.map(item => `
+        <button class="switch ${item.key === currentFilter ? "active" : ""}" data-filter="${item.key}">${item.label}</button>
+      `).join("");
+      [...filterBar.querySelectorAll("[data-filter]")].forEach(button => {
+        button.addEventListener("click", () => {
+          currentFilter = button.dataset.filter;
+          renderList();
+        });
+      });
+    }
+
+    function renderList() {
+      renderHeader();
+      renderStats();
+      renderFilters();
+      const list = tickets.filter(item => currentFilter === "all" || item.status === currentFilter);
+      if (!list.length) {
+        ticketList.innerHTML = `<div class="empty">当前条件下暂无工单。</div>`;
+        return;
+      }
+      ticketList.innerHTML = list.map(ticket => `
+        <article class="ticket">
+          <div class="ticket-head">
+            <div>
+              <h4>${ticket.title}</h4>
+              <div class="meta">
+                <span>${ticket.id}</span>
+                <span>需求端：${ticket.demandOwner}</span>
+                <span>设计端：${ticket.designOwner || "待分配"}</span>
+                <span>${ticket.due ? `预计完成：${ticket.due}` : "待确认完成时间"}</span>
+                <span>${ticket.channel}</span>
+              </div>
+            </div>
+            <div class="actions">
+              ${getStatusPill(ticket.status)}
+              <span class="pill brand">${ticket.type}</span>
+            </div>
+          </div>
+          <div class="actions">
+            <button class="btn btn-secondary" data-open="${ticket.id}">查看详情</button>
+            <button class="btn btn-primary" data-enter="${ticket.id}">进入${getSideLabel()}处理</button>
+          </div>
+        </article>
+      `).join("");
+      [...ticketList.querySelectorAll("[data-open], [data-enter]")].forEach(button => {
+        button.addEventListener("click", () => {
+          activeId = button.dataset.open || button.dataset.enter;
+          switchView("detail");
+          renderDetail();
+        });
+      });
+    }
+
+    function switchView(view) {
+      currentView = view;
+      listView.classList.toggle("active", view === "list");
+      detailView.classList.toggle("active", view === "detail");
+      [...document.querySelectorAll("[data-view]")].forEach(button => {
+        button.classList.toggle("active", button.dataset.view === view);
+      });
+    }
+
+    function renderSteps(ticket) {
+      const currentStep = statusMap[ticket.status].step;
+      const currentIndex = steps.findIndex(item => item.key === currentStep);
+      stepRow.innerHTML = steps.map((item, index) => `
+        <div class="step-pill ${index < currentIndex ? "done" : index === currentIndex ? "active" : ""}">${item.label}</div>
+      `).join("");
+    }
+
+    function renderSummary(ticket) {
+      summaryGrid.innerHTML = `
+        <div class="summary-item"><span>工单编号</span><strong>${ticket.id}</strong></div>
+        <div class="summary-item"><span>当前状态</span><strong>${statusMap[ticket.status].label}</strong></div>
+        <div class="summary-item"><span>端口</span><strong>${ACCESS_LABEL}</strong></div>
+        <div class="summary-item"><span>当前使用端</span><strong>${getSideLabel()}</strong></div>
+        <div class="summary-item"><span>需求端</span><strong>${ticket.demandOwner}</strong></div>
+        <div class="summary-item"><span>设计端</span><strong>${ticket.designOwner || "待分配"}</strong></div>
+      `;
+    }
+
+    function commonFields(ticket, readonly) {
+      const disabled = readonly ? "disabled" : "";
+      return `
+        <div class="field-grid">
+          <div class="field">
+            <label>需求标题</label>
+            <input id="field-title" value="${ticket.title}" ${disabled} />
+          </div>
+          <div class="field">
+            <label>需求端</label>
+            <input id="field-demandOwner" value="${ticket.demandOwner}" ${disabled} />
+          </div>
+          <div class="field">
+            <label>设计端</label>
+            <input id="field-designOwner" value="${ticket.designOwner}" ${disabled} />
+          </div>
+          <div class="field">
+            <label>需求类型</label>
+            <select id="field-type" ${disabled}>
+              ${["海报设计", "详情页设计", "物料设计", "包装设计", "其它"].map(item => `<option value="${item}" ${ticket.type === item ? "selected" : ""}>${item}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label>端口</label>
+            <input value="${ACCESS_LABEL}" disabled />
+          </div>
+          <div class="field">
+            <label>优先级</label>
+            <input id="field-priority" value="${ticket.priority}" ${disabled} />
+          </div>
+          <div class="field">
+            <label>预计完成时间</label>
+            <input id="field-due" value="${ticket.due}" placeholder="例如：2026-04-24 18:00" ${disabled} />
+          </div>
+          <div class="field">
+            <label>需求附件</label>
+            <input id="field-attachment" value="${ticket.attachment}" ${disabled} />
+          </div>
+          <div class="field full">
+            <label>需求说明</label>
+            <textarea id="field-desc" ${disabled}>${ticket.desc}</textarea>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDemandForm(ticket) {
+      if (ticket.status === "pending_confirm") {
+        return `
+          <h3 class="section-title">提交需求</h3>
+          <p class="hint">需求端在PC端填写需求并提交给设计端。</p>
+          ${commonFields(ticket, false)}
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-ghost" data-action="save-request">${actionText.demand.save}</button>
+            <button class="btn btn-primary" data-action="submit-request">${actionText.demand.submit}</button>
+          </div>
+        `;
+      }
+      if (ticket.status === "confirming_time") {
+        return `
+          <h3 class="section-title">确认完成时间</h3>
+          <p class="hint">需求端确认设计端反馈的预计完成时间。</p>
+          ${commonFields(ticket, true)}
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-primary" data-action="confirm-time">${actionText.demand.confirmTime}</button>
+          </div>
+        `;
+      }
+      if (ticket.status === "waiting_acceptance") {
+        return `
+          <h3 class="section-title">确认设计文件</h3>
+          <p class="hint">需求端确认设计文件，确认无误后关闭工单。</p>
+          ${commonFields(ticket, true)}
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-secondary" data-action="confirm-file">${actionText.demand.confirmFile}</button>
+            <button class="btn btn-primary" data-action="close-ticket">${actionText.demand.close}</button>
+          </div>
+        `;
+      }
+      return `
+        <h3 class="section-title">工单详情</h3>
+        <p class="hint">当前步骤无需需求端继续操作。</p>
+        ${commonFields(ticket, true)}
+      `;
+    }
+
+    function renderDesignForm(ticket) {
+      if (ticket.status === "pending_confirm") {
+        return `
+          <h3 class="section-title">确认需求</h3>
+          <p class="hint">设计端确认需求可承接后，进入时间确认环节。</p>
+          ${commonFields(ticket, false)}
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-primary" data-action="accept-ticket">${actionText.design.accept}</button>
+          </div>
+        `;
+      }
+      if (ticket.status === "confirming_time") {
+        return `
+          <h3 class="section-title">反馈完成时间</h3>
+          <p class="hint">设计端填写预计完成时间并提交给需求端确认。</p>
+          ${commonFields(ticket, false)}
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-primary" data-action="estimate-time">${actionText.design.estimate}</button>
+          </div>
+        `;
+      }
+      if (ticket.status === "designing") {
+        return `
+          <h3 class="section-title">上传设计文件</h3>
+          <p class="hint">设计端上传预览图与源文件后，进入需求端确认阶段。</p>
+          ${commonFields(ticket, true)}
+          <div class="field-grid" style="margin-top:14px;">
+            <div class="field">
+              <label>预览图文件名</label>
+              <input id="upload-preview" placeholder="例如：活动海报_预览.jpg" />
+            </div>
+            <div class="field">
+              <label>源文件名</label>
+              <input id="upload-source" placeholder="例如：活动海报_源文件.psd" />
+            </div>
+            <div class="field full">
+              <label>交付说明</label>
+              <textarea id="upload-note" placeholder="填写设计版本或交付说明。"></textarea>
+            </div>
+          </div>
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-primary" data-action="upload-files">${actionText.design.upload}</button>
+          </div>
+        `;
+      }
+      return `
+        <h3 class="section-title">工单详情</h3>
+        <p class="hint">当前步骤无需设计端继续操作。</p>
+        ${commonFields(ticket, true)}
+      `;
+    }
+
+    function saveCommonFields(ticket) {
+      ["title", "demandOwner", "designOwner", "type", "priority", "due", "attachment", "desc"].forEach(key => {
+        const node = document.getElementById(`field-${key}`);
+        if (node) ticket[key] = node.value.trim();
+      });
+    }
+
+    function bindActions(ticket) {
+      [...formPanel.querySelectorAll("[data-action]")].forEach(button => {
+        button.addEventListener("click", () => {
+          const action = button.dataset.action;
+          if (action === "save-request") {
+            saveCommonFields(ticket);
+            appendHistory(ticket, "PC端需求端保存需求");
+          }
+          if (action === "submit-request") {
+            saveCommonFields(ticket);
+            appendHistory(ticket, "PC端需求端提交需求");
+          }
+          if (action === "accept-ticket") {
+            saveCommonFields(ticket);
+            ticket.status = "confirming_time";
+            appendHistory(ticket, "PC端设计端确认需求");
+          }
+          if (action === "estimate-time") {
+            saveCommonFields(ticket);
+            if (!ticket.due) ticket.due = "2026-04-23 18:00";
+            appendHistory(ticket, `PC端设计端反馈预计完成时间 ${ticket.due}`);
+          }
+          if (action === "confirm-time") {
+            ticket.status = "designing";
+            appendHistory(ticket, "PC端需求端确认完成时间");
+          }
+          if (action === "upload-files") {
+            const previewName = document.getElementById("upload-preview")?.value.trim() || "设计预览图.jpg";
+            const sourceName = document.getElementById("upload-source")?.value.trim() || "设计源文件.psd";
+            const note = document.getElementById("upload-note")?.value.trim() || "设计端已上传交付文件";
+            ticket.files = [
+              { name: previewName, note, type: "预览图" },
+              { name: sourceName, note, type: "源文件" }
+            ];
+            ticket.status = "waiting_acceptance";
+            appendHistory(ticket, "PC端设计端上传设计文件");
+          }
+          if (action === "confirm-file") {
+            appendHistory(ticket, "PC端需求端确认设计文件");
+          }
+          if (action === "close-ticket") {
+            ticket.status = "closed";
+            appendHistory(ticket, "PC端需求端关闭工单");
+          }
+          renderAll();
+          switchView("detail");
+        });
+      });
+    }
+
+    function renderFiles(ticket) {
+      fileBox.innerHTML = ticket.files.length ? ticket.files.map(file => `
+        <div class="stack-item">
+          <strong>${file.name}</strong>
+          <div class="hint">${file.type} · ${file.note}</div>
+        </div>
+      `).join("") : `<div class="empty">当前暂无已上传设计文件。</div>`;
+    }
+
+    function renderHistory(ticket) {
+      historyBox.innerHTML = ticket.history.map(item => `
+        <div class="stack-item">
+          <strong>${item.split(" ").slice(0, 2).join(" ")}</strong>
+          <div class="hint">${item.split(" ").slice(2).join(" ")}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderDetail() {
+      const ticket = getActiveTicket();
+      if (!ticket) return;
+      detailDesc.textContent = `${ticket.id} · ${statusMap[ticket.status].label} · 当前使用端：${getSideLabel()}`;
+      contextHint.textContent = `当前：PC端 / ${getSideLabel()}`;
+      renderSteps(ticket);
+      renderSummary(ticket);
+      formPanel.innerHTML = currentSide === "demand" ? renderDemandForm(ticket) : renderDesignForm(ticket);
+      renderFiles(ticket);
+      renderHistory(ticket);
+      bindActions(ticket);
+    }
+
+    function bindViewSwitch() {
+      [...document.querySelectorAll("[data-view]")].forEach(button => {
+        button.addEventListener("click", () => {
+          switchView(button.dataset.view);
+          if (button.dataset.view === "detail") renderDetail();
+        });
+      });
+    }
+
+    function createTicket() {
+      const next = {
+        id: `PC-DES-20260419-00${tickets.length + 1}`,
+        title: "新建PC端设计需求",
+        demandOwner: "待填写需求端",
+        designOwner: "待分配设计端",
+        type: "海报设计",
+        channel: "PC端提交",
+        priority: "中",
+        due: "",
+        attachment: "",
+        desc: "",
+        status: "pending_confirm",
+        files: [],
+        history: ["04-19 16:30 系统创建PC端工单"]
+      };
+      tickets.unshift(next);
+      activeId = next.id;
+      currentSide = "demand";
+      renderAll();
+      switchView("detail");
+    }
+
+    function renderAll() {
+      renderSideSwitch();
+      renderHeader();
+      renderList();
+      renderDetail();
+    }
+
+    document.getElementById("createTicket").addEventListener("click", createTicket);
+    document.getElementById("resetData").addEventListener("click", () => {
+      tickets = cloneTickets();
+      currentSide = "demand";
+      currentView = "list";
+      currentFilter = "all";
+      activeId = tickets[0].id;
+      renderAll();
+      switchView("list");
+    });
+
+    bindViewSwitch();
+    renderAll();
+    switchView("list");
+  </script>
+</body>
+</html>

@@ -1,0 +1,650 @@
+[
+  {
+    "type": "gzip",
+    "off": 3398,
+    "consumed": 618,
+    "size": 1187,
+    "text_ratio": 0.49,
+    "file": "E:\\cxy\\rp_blocks\\g_3398_618_1187.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 4024,
+    "consumed": 30136,
+    "size": 41841,
+    "text_ratio": 0.429,
+    "file": "E:\\cxy\\rp_blocks\\g_4024_30136_41841.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 34168,
+    "consumed": 587,
+    "size": 1160,
+    "text_ratio": 0.509,
+    "file": "E:\\cxy\\rp_blocks\\g_34168_587_1160.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 34763,
+    "consumed": 229,
+    "size": 414,
+    "text_ratio": 0.319,
+    "file": "E:\\cxy\\rp_blocks\\g_34763_229_414.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 35639,
+    "consumed": 1687,
+    "size": 5682,
+    "text_ratio": 0.203,
+    "file": "E:\\cxy\\rp_blocks\\g_35639_1687_5682.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 52875,
+    "consumed": 85113,
+    "size": 115413,
+    "text_ratio": 0.315,
+    "file": "E:\\cxy\\rp_blocks\\g_52875_85113_115413.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 150508,
+    "consumed": 226230,
+    "size": 251711,
+    "text_ratio": 0.31,
+    "file": "E:\\cxy\\rp_blocks\\g_150508_226230_251711.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 389149,
+    "consumed": 256422,
+    "size": 601269,
+    "text_ratio": 0.402,
+    "file": "E:\\cxy\\rp_blocks\\g_389149_256422_601269.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 645579,
+    "consumed": 1678,
+    "size": 5760,
+    "text_ratio": 0.205,
+    "file": "E:\\cxy\\rp_blocks\\g_645579_1678_5760.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 647265,
+    "consumed": 1685,
+    "size": 5876,
+    "text_ratio": 0.203,
+    "file": "E:\\cxy\\rp_blocks\\g_647265_1685_5876.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 648958,
+    "consumed": 4000,
+    "size": 19576,
+    "text_ratio": 0.178,
+    "file": "E:\\cxy\\rp_blocks\\g_648958_4000_19576.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 652966,
+    "consumed": 3877,
+    "size": 16355,
+    "text_ratio": 0.195,
+    "file": "E:\\cxy\\rp_blocks\\g_652966_3877_16355.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 656851,
+    "consumed": 3922,
+    "size": 19954,
+    "text_ratio": 0.176,
+    "file": "E:\\cxy\\rp_blocks\\g_656851_3922_19954.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 660781,
+    "consumed": 3839,
+    "size": 17678,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_660781_3839_17678.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 664628,
+    "consumed": 3882,
+    "size": 16355,
+    "text_ratio": 0.194,
+    "file": "E:\\cxy\\rp_blocks\\g_664628_3882_16355.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 668518,
+    "consumed": 4692,
+    "size": 21844,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_668518_4692_21844.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 673218,
+    "consumed": 3450,
+    "size": 15788,
+    "text_ratio": 0.195,
+    "file": "E:\\cxy\\rp_blocks\\g_673218_3450_15788.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 676676,
+    "consumed": 4619,
+    "size": 19890,
+    "text_ratio": 0.179,
+    "file": "E:\\cxy\\rp_blocks\\g_676676_4619_19890.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 692831,
+    "consumed": 273529,
+    "size": 881919,
+    "text_ratio": 0.527,
+    "file": "E:\\cxy\\rp_blocks\\g_692831_273529_881919.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 966368,
+    "consumed": 3359,
+    "size": 14634,
+    "text_ratio": 0.227,
+    "file": "E:\\cxy\\rp_blocks\\g_966368_3359_14634.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 969735,
+    "consumed": 4134,
+    "size": 18261,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_969735_4134_18261.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 973877,
+    "consumed": 3521,
+    "size": 17489,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_973877_3521_17489.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 977406,
+    "consumed": 4118,
+    "size": 21482,
+    "text_ratio": 0.19,
+    "file": "E:\\cxy\\rp_blocks\\g_977406_4118_21482.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 981532,
+    "consumed": 3927,
+    "size": 18993,
+    "text_ratio": 0.186,
+    "file": "E:\\cxy\\rp_blocks\\g_981532_3927_18993.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 985467,
+    "consumed": 4127,
+    "size": 21482,
+    "text_ratio": 0.188,
+    "file": "E:\\cxy\\rp_blocks\\g_985467_4127_21482.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 989602,
+    "consumed": 3844,
+    "size": 17875,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_989602_3844_17875.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 993454,
+    "consumed": 4518,
+    "size": 24128,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_993454_4518_24128.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 997980,
+    "consumed": 4138,
+    "size": 18261,
+    "text_ratio": 0.186,
+    "file": "E:\\cxy\\rp_blocks\\g_997980_4138_18261.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1002126,
+    "consumed": 3517,
+    "size": 17489,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_1002126_3517_17489.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1005651,
+    "consumed": 4518,
+    "size": 24128,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_1005651_4518_24128.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1010177,
+    "consumed": 3911,
+    "size": 19954,
+    "text_ratio": 0.177,
+    "file": "E:\\cxy\\rp_blocks\\g_1010177_3911_19954.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1014096,
+    "consumed": 3112,
+    "size": 16768,
+    "text_ratio": 0.175,
+    "file": "E:\\cxy\\rp_blocks\\g_1014096_3112_16768.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1017216,
+    "consumed": 2242,
+    "size": 7492,
+    "text_ratio": 0.238,
+    "file": "E:\\cxy\\rp_blocks\\g_1017216_2242_7492.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1019466,
+    "consumed": 2244,
+    "size": 7497,
+    "text_ratio": 0.238,
+    "file": "E:\\cxy\\rp_blocks\\g_1019466_2244_7497.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1021718,
+    "consumed": 3936,
+    "size": 25972,
+    "text_ratio": 0.176,
+    "file": "E:\\cxy\\rp_blocks\\g_1021718_3936_25972.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1025662,
+    "consumed": 2420,
+    "size": 8917,
+    "text_ratio": 0.212,
+    "file": "E:\\cxy\\rp_blocks\\g_1025662_2420_8917.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1028090,
+    "consumed": 1674,
+    "size": 5760,
+    "text_ratio": 0.208,
+    "file": "E:\\cxy\\rp_blocks\\g_1028090_1674_5760.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1029772,
+    "consumed": 1683,
+    "size": 5876,
+    "text_ratio": 0.202,
+    "file": "E:\\cxy\\rp_blocks\\g_1029772_1683_5876.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1031463,
+    "consumed": 3923,
+    "size": 19954,
+    "text_ratio": 0.176,
+    "file": "E:\\cxy\\rp_blocks\\g_1031463_3923_19954.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1035394,
+    "consumed": 3840,
+    "size": 17678,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_1035394_3840_17678.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1039242,
+    "consumed": 3878,
+    "size": 16355,
+    "text_ratio": 0.194,
+    "file": "E:\\cxy\\rp_blocks\\g_1039242_3878_16355.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1043128,
+    "consumed": 4691,
+    "size": 21844,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_1043128_4691_21844.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1047827,
+    "consumed": 3452,
+    "size": 15788,
+    "text_ratio": 0.194,
+    "file": "E:\\cxy\\rp_blocks\\g_1047827_3452_15788.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1051287,
+    "consumed": 4620,
+    "size": 19890,
+    "text_ratio": 0.18,
+    "file": "E:\\cxy\\rp_blocks\\g_1051287_4620_19890.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1055915,
+    "consumed": 3999,
+    "size": 19576,
+    "text_ratio": 0.178,
+    "file": "E:\\cxy\\rp_blocks\\g_1055915_3999_19576.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1059922,
+    "consumed": 3875,
+    "size": 16355,
+    "text_ratio": 0.194,
+    "file": "E:\\cxy\\rp_blocks\\g_1059922_3875_16355.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1073876,
+    "consumed": 255173,
+    "size": 684317,
+    "text_ratio": 0.504,
+    "file": "E:\\cxy\\rp_blocks\\g_1073876_255173_684317.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1336453,
+    "consumed": 261871,
+    "size": 688762,
+    "text_ratio": 0.444,
+    "file": "E:\\cxy\\rp_blocks\\g_1336453_261871_688762.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1598332,
+    "consumed": 4128,
+    "size": 21482,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_1598332_4128_21482.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1602468,
+    "consumed": 3843,
+    "size": 17875,
+    "text_ratio": 0.183,
+    "file": "E:\\cxy\\rp_blocks\\g_1602468_3843_17875.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1606319,
+    "consumed": 3912,
+    "size": 19954,
+    "text_ratio": 0.177,
+    "file": "E:\\cxy\\rp_blocks\\g_1606319_3912_19954.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1610239,
+    "consumed": 4517,
+    "size": 24128,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_1610239_4517_24128.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1614764,
+    "consumed": 3923,
+    "size": 18993,
+    "text_ratio": 0.186,
+    "file": "E:\\cxy\\rp_blocks\\g_1614764_3923_18993.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1618695,
+    "consumed": 4128,
+    "size": 21482,
+    "text_ratio": 0.189,
+    "file": "E:\\cxy\\rp_blocks\\g_1618695_4128_21482.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1622831,
+    "consumed": 3521,
+    "size": 17489,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_1622831_3521_17489.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1626360,
+    "consumed": 2421,
+    "size": 8917,
+    "text_ratio": 0.213,
+    "file": "E:\\cxy\\rp_blocks\\g_1626360_2421_8917.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1628789,
+    "consumed": 4134,
+    "size": 18261,
+    "text_ratio": 0.186,
+    "file": "E:\\cxy\\rp_blocks\\g_1628789_4134_18261.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1632931,
+    "consumed": 3366,
+    "size": 14634,
+    "text_ratio": 0.226,
+    "file": "E:\\cxy\\rp_blocks\\g_1632931_3366_14634.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1636305,
+    "consumed": 3939,
+    "size": 25972,
+    "text_ratio": 0.176,
+    "file": "E:\\cxy\\rp_blocks\\g_1636305_3939_25972.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1640252,
+    "consumed": 2243,
+    "size": 7497,
+    "text_ratio": 0.238,
+    "file": "E:\\cxy\\rp_blocks\\g_1640252_2243_7497.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1642503,
+    "consumed": 2243,
+    "size": 7492,
+    "text_ratio": 0.237,
+    "file": "E:\\cxy\\rp_blocks\\g_1642503_2243_7492.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1644754,
+    "consumed": 3121,
+    "size": 16768,
+    "text_ratio": 0.173,
+    "file": "E:\\cxy\\rp_blocks\\g_1644754_3121_16768.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1647883,
+    "consumed": 3359,
+    "size": 14634,
+    "text_ratio": 0.227,
+    "file": "E:\\cxy\\rp_blocks\\g_1647883_3359_14634.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1651250,
+    "consumed": 4134,
+    "size": 18261,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_1651250_4134_18261.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1655392,
+    "consumed": 3521,
+    "size": 17489,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_1655392_3521_17489.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1658921,
+    "consumed": 4118,
+    "size": 21482,
+    "text_ratio": 0.19,
+    "file": "E:\\cxy\\rp_blocks\\g_1658921_4118_21482.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1663047,
+    "consumed": 3927,
+    "size": 18993,
+    "text_ratio": 0.186,
+    "file": "E:\\cxy\\rp_blocks\\g_1663047_3927_18993.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1666982,
+    "consumed": 4127,
+    "size": 21482,
+    "text_ratio": 0.188,
+    "file": "E:\\cxy\\rp_blocks\\g_1666982_4127_21482.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1671117,
+    "consumed": 3844,
+    "size": 17875,
+    "text_ratio": 0.184,
+    "file": "E:\\cxy\\rp_blocks\\g_1671117_3844_17875.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1674969,
+    "consumed": 4518,
+    "size": 24128,
+    "text_ratio": 0.187,
+    "file": "E:\\cxy\\rp_blocks\\g_1674969_4518_24128.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1679495,
+    "consumed": 2413,
+    "size": 8917,
+    "text_ratio": 0.212,
+    "file": "E:\\cxy\\rp_blocks\\g_1679495_2413_8917.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1681916,
+    "consumed": 3913,
+    "size": 19954,
+    "text_ratio": 0.177,
+    "file": "E:\\cxy\\rp_blocks\\g_1681916_3913_19954.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1685837,
+    "consumed": 3117,
+    "size": 16768,
+    "text_ratio": 0.174,
+    "file": "E:\\cxy\\rp_blocks\\g_1685837_3117_16768.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1688962,
+    "consumed": 2246,
+    "size": 7492,
+    "text_ratio": 0.237,
+    "file": "E:\\cxy\\rp_blocks\\g_1688962_2246_7492.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1691216,
+    "consumed": 2246,
+    "size": 7497,
+    "text_ratio": 0.239,
+    "file": "E:\\cxy\\rp_blocks\\g_1691216_2246_7497.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1693470,
+    "consumed": 3938,
+    "size": 25972,
+    "text_ratio": 0.176,
+    "file": "E:\\cxy\\rp_blocks\\g_1693470_3938_25972.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1697416,
+    "consumed": 4521,
+    "size": 24128,
+    "text_ratio": 0.186,
+    "file": "E:\\cxy\\rp_blocks\\g_1697416_4521_24128.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 1709815,
+    "consumed": 481415,
+    "size": 956923,
+    "text_ratio": 0.486,
+    "file": "E:\\cxy\\rp_blocks\\g_1709815_481415_956923.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 2191238,
+    "consumed": 6451,
+    "size": 78486,
+    "text_ratio": 0.188,
+    "file": "E:\\cxy\\rp_blocks\\g_2191238_6451_78486.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 2197697,
+    "consumed": 332,
+    "size": 761,
+    "text_ratio": 1.0,
+    "file": "E:\\cxy\\rp_blocks\\g_2197697_332_761.bin"
+  },
+  {
+    "type": "gzip",
+    "off": 2198037,
+    "consumed": 1867,
+    "size": 6446,
+    "text_ratio": 0.263,
+    "file": "E:\\cxy\\rp_blocks\\g_2198037_1867_6446.bin"
+  }
+]

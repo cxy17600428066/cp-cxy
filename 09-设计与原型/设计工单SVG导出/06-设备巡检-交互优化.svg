@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900"><rect x="0" y="0" width="1440" height="900" fill="#ffffff" /><foreignObject x="0" y="0" width="1440" height="900"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN"><head>
+<meta charset="utf-8" / />
+<meta name="viewport" content="width=device-width, initial-scale=1" / />
+<title>03-05 设备巡检 - 交互优化原型</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&amp;family=Noto+Sans+SC:wght@400;500;700&amp;display=swap" rel="stylesheet" />
+<style>
+:root{--bg:#f3f8fc;--card:#fff;--ink:#1d2f40;--muted:#61758a;--line:#d7e3ef;--brand:#0e63ab;--mint:#11a58f;--warn:#b85a00;--ok:#12724f;--danger:#b42318;--r:14px;--shadow:0 10px 26px rgba(12,43,71,.12)}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans SC",sans-serif;color:var(--ink);background:radial-gradient(900px 450px at -10% -20%,rgba(17,165,143,.18),transparent 56%),radial-gradient(900px 450px at 120% 0%,rgba(14,99,171,.2),transparent 58%),var(--bg)}
+.app{width:min(1280px,94vw);margin:22px auto}
+.hero{background:linear-gradient(122deg,#0d4f87,#0e63ab 55%,#129883);color:#fff;padding:22px;border-radius:18px;box-shadow:var(--shadow)}
+h1{font-family:"Space Grotesk","Noto Sans SC",sans-serif;margin:0 0 8px;font-size:clamp(24px,3vw,34px)}
+.sub{margin:0 0 14px;opacity:.92}
+.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.k{background:rgba(255,255,255,.16);padding:10px;border-radius:11px;border:1px solid rgba(255,255,255,.25)}.k b{display:block;font-family:"Space Grotesk";font-size:22px}
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.tab{border:1px solid #bfd3e7;background:#fff;padding:8px 13px;border-radius:999px;font-weight:700;cursor:pointer}.tab.on{color:#fff;border-color:transparent;background:linear-gradient(120deg,#0e63ab,#11a58f)}
+.panel{display:none;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px}.panel.on{display:block}
+.h2{margin:0 0 10px;font-family:"Space Grotesk","Noto Sans SC",sans-serif;font-size:22px}.muted{color:var(--muted)}
+.row2{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}.card{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff}
+.btn{border:0;border-radius:9px;padding:8px 11px;font-weight:700;cursor:pointer}.btn.p{color:#fff;background:linear-gradient(120deg,#0e63ab,#11a58f)}.btn.s{background:#e7f2fc;color:#17486f}.btn.g{background:#fff;border:1px solid #c7d8ea;color:#173b5b}
+input,select,textarea,button{font:inherit}.in{border:1px solid #c4d5e7;border-radius:9px;padding:8px 10px;min-height:38px;background:#fff}.bar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:10px}
+.table{overflow:auto;border:1px solid #deebf7;border-radius:10px}table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:9px 7px;border-bottom:1px solid #e5eef7;text-align:left;vertical-align:top}th{background:#f6fbff;color:#4a627a}
+.pill{display:inline-block;padding:2px 7px;border-radius:999px;border:1px solid #c4d8eb;font-size:12px}.off{background:#fff4ea;border-color:#f2cfb2;color:#8d3f16}.wait{background:#fff6ea;border-color:#f5d9b2;color:#915000}.ok{background:#ebfff5;border-color:#bde9cf;color:#136242}
+.kv{display:grid;grid-template-columns:96px 1fr;gap:8px;margin:7px 0;font-size:14px}.kv b{color:#52697f}
+.flow-item{border:1px solid #bad1e8;border-radius:12px;padding:10px;background:linear-gradient(120deg,#f8fbff,#f3fffc);cursor:pointer}.flow-item.on{border-color:#2b84cd;box-shadow:0 8px 18px rgba(43,132,205,.2)}
+.fields{display:grid;gap:8px}.f{border:1px solid #d9e6f3;border-radius:10px;padding:9px;background:#fbfdff}.tiny{font-size:12px;color:#60758b}
+.phone{width:min(360px,100%);margin:0 auto;border:9px solid #1d2f40;border-radius:26px;overflow:hidden;box-shadow:0 10px 28px rgba(17,34,52,.35)}.ph{background:linear-gradient(120deg,#0e63ab,#11a58f);color:#fff;padding:9px 12px;font-weight:700}.pb{padding:10px;max-height:520px;overflow:auto}
+.msg{position:fixed;right:18px;bottom:18px;background:#173e62;color:#fff;padding:9px 12px;border-radius:9px;opacity:0;transform:translateY(8px);transition:.2s}.msg.on{opacity:1;transform:none}
+@media (max-width:1080px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}.row2{grid-template-columns:1fr}}
+@media (max-width:680px){.app{width:96vw}.kpi{grid-template-columns:1fr}.kv{grid-template-columns:86px 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="hero">
+    <h1>03-05 设备巡检 · 可交互优化稿</h1>
+    <p class="sub">整合原型链路：设备建档 → 任务编排 → 表单配置 → 移动巡检 → 记录确认</p>
+    <div class="kpi">
+      <div class="k"><b id="k1">2</b>进行中任务</div>
+      <div class="k"><b id="k2">30%</b>月度完成率</div>
+      <div class="k"><b id="k3">1</b>待确认记录</div>
+      <div class="k"><b id="k4">8</b>巡检字段数</div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button class="tab on" data-p="flow">流程梳理</button>
+    <button class="tab" data-p="tasks">巡检任务台</button>
+    <button class="tab" data-p="form">表单配置</button>
+    <button class="tab" data-p="mobile">移动巡检</button>
+    <button class="tab" data-p="records">巡检记录</button>
+  </nav>
+
+  <section class="panel on" id="p-flow">
+    <h2 class="h2">流程梳理与优化动作</h2>
+    <div class="row2">
+      <div class="card" id="flowList"><div class="flow-item on" data-id="device"><b>1. 设备建档</b><div class="tiny">设备管理维护基础信息、状态和二维码。</div></div><div class="flow-item " data-id="task"><b>2. 任务编排</b><div class="tiny">配置巡检频率、负责人、打卡范围和要求。</div></div><div class="flow-item " data-id="form"><b>3. 表单配置</b><div class="tiny">固定字段 + 自定义字段统一配置并预览。</div></div><div class="flow-item " data-id="mobile"><b>4. 移动巡检</b><div class="tiny">扫码后自动填充并提交表单。</div></div><div class="flow-item " data-id="record"><b>5. 记录确认</b><div class="tiny">后台一键确认并查看详情。</div></div></div>
+      <div class="card">
+        <h3 id="fd1" style="margin:0 0 8px;">1. 设备建档</h3>
+        <p id="fd2" class="muted" style="margin:0 0 8px;">设备管理维护基础信息、状态和二维码。</p>
+        <div class="kv"><b>当前痛点</b><span id="fd3">停用设备仍可能进入巡检链路。</span></div>
+        <div class="kv"><b>优化动作</b><span id="fd4">把设备状态设为任务创建与提交前置校验。</span></div>
+        <div class="kv"><b>关键结果</b><span id="fd5">阻断无效巡检，减少脏数据。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-tasks">
+    <h2 class="h2">巡检任务台</h2>
+    <div class="bar">
+      <input id="qs" class="in" placeholder="搜索任务编号/设备名称" />
+      <select id="qst" class="in"><option value="all">状态：全部</option><option>开启</option><option>关闭</option></select>
+      <select id="qtp" class="in"><option value="all">类型：全部</option><option>生产设备</option><option>包装设备</option><option>存储设备</option></select>
+      <button class="btn s" id="newTask">新建演示任务</button>
+    </div>
+    <div class="row2">
+      <div class="card"><div class="table"><table><thead><tr><th>任务编号</th><th>设备</th><th>状态</th><th>频率</th><th>完成度</th><th>操作</th></tr></thead><tbody id="taskRows"><tr data-id="XJRWB-2026-03-06-000001"><td>XJRWB-2026-03-06-000001</td><td>鸡爪自动化机器<div class="tiny">生产设备 · 安徽工厂</div></td><td><span class="pill ">开启</span></td><td>5次/月</td><td>2/5</td><td><button class="btn g" data-a="view" data-id="XJRWB-2026-03-06-000001">查看</button> <button class="btn g" data-a="toggle" data-id="XJRWB-2026-03-06-000001">关闭</button></td></tr><tr><td colspan="6"><div class="tiny">进度 40%</div><div style="height:7px;background:#e7eef6;border-radius:999px;overflow:hidden"><div style="height:100%;width:40%;background:linear-gradient(90deg,#0e63ab,#11a58f)"></div></div></td></tr><tr data-id="XJRWB-2026-03-08-000014"><td>XJRWB-2026-03-08-000014</td><td>速冻线包装机<div class="tiny">包装设备 · 越南工厂</div></td><td><span class="pill ">开启</span></td><td>3次/月</td><td>1/3</td><td><button class="btn g" data-a="view" data-id="XJRWB-2026-03-08-000014">查看</button> <button class="btn g" data-a="toggle" data-id="XJRWB-2026-03-08-000014">关闭</button></td></tr><tr><td colspan="6"><div class="tiny">进度 33%</div><div style="height:7px;background:#e7eef6;border-radius:999px;overflow:hidden"><div style="height:100%;width:33%;background:linear-gradient(90deg,#0e63ab,#11a58f)"></div></div></td></tr><tr data-id="XJRWB-2026-03-10-000022"><td>XJRWB-2026-03-10-000022</td><td>冷藏库货架<div class="tiny">存储设备 · 安徽工厂</div></td><td><span class="pill off">关闭</span></td><td>2次/月</td><td>0/2</td><td><button class="btn g" data-a="view" data-id="XJRWB-2026-03-10-000022">查看</button> <button class="btn g" data-a="toggle" data-id="XJRWB-2026-03-10-000022">开启</button></td></tr><tr><td colspan="6"><div class="tiny">进度 0%</div><div style="height:7px;background:#e7eef6;border-radius:999px;overflow:hidden"><div style="height:100%;width:0%;background:linear-gradient(90deg,#0e63ab,#11a58f)"></div></div></td></tr></tbody></table></div></div>
+      <div class="card"><h3 style="margin:0 0 8px;">任务详情</h3><div id="taskDetail" class="muted"><div class="kv"><b>任务编号</b><span>XJRWB-2026-03-06-000001</span></div><div class="kv"><b>设备</b><span>鸡爪自动化机器/AHGC-000001</span></div><div class="kv"><b>设备状态</b><span>正常</span></div><div class="kv"><b>负责人</b><span>王班长</span></div><div class="kv"><b>打卡范围</b><span>10米</span></div><div class="kv"><b>巡检要求</b><span>每月巡检5次，温控波动不超过±2°C。</span></div><div class="kv"><b>本月进度</b><span>2/5 (40%)</span></div><div class="bar"><button class="btn s" id="toMobile">去移动端发起</button><button class="btn g" id="copyTask">复制任务编号</button></div></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-form">
+    <h2 class="h2">巡检任务表单配置</h2>
+    <div class="row2">
+      <div class="card">
+        <div class="bar">
+          <input id="fname" class="in" placeholder="字段名称，如：机温(°C)" />
+          <select id="ftype" class="in"><option value="text">文本</option><option value="number">数值</option><option value="select">下拉</option><option value="photo">图片</option><option value="location">定位</option><option value="time">时间</option></select>
+          <select id="fsrc" class="in"><option value="manual">手动输入</option><option value="device">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select>
+          <input id="fops" class="in" placeholder="下拉选项(逗号分隔，可选)" />
+          <button class="btn p" id="addField">添加字段</button>
+        </div>
+        <div class="tiny">固定字段（设备名称、设备型号）不可删除，可调整必填和来源。</div>
+        <div id="fieldList" class="fields" style="margin-top:8px;"><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>设备名称</b> <span class="pill">text</span> <span class="pill">固定</span></div></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f1" checked="" /> 必填</label><select class="in" data-f="src" data-id="f1"><option value="manual">手动输入</option><option value="device" selected="">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select></div><div class="tiny">规则：必填 / 设备带入</div></div><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>设备型号</b> <span class="pill">text</span> <span class="pill">固定</span></div></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f2" checked="" /> 必填</label><select class="in" data-f="src" data-id="f2"><option value="manual">手动输入</option><option value="device" selected="">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select></div><div class="tiny">规则：必填 / 设备带入</div></div><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>设备状态</b> <span class="pill">select</span> </div><button class="btn g" data-f="del" data-id="f3">删除</button></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f3" checked="" /> 必填</label><select class="in" data-f="src" data-id="f3"><option value="manual" selected="">手动输入</option><option value="device">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select><input class="in" data-f="ops" data-id="f3" value="正常,维修,停用" placeholder="下拉选项" /></div><div class="tiny">规则：必填 / 手动输入</div></div><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>机温(°C)</b> <span class="pill">number</span> </div><button class="btn g" data-f="del" data-id="f4">删除</button></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f4" checked="" /> 必填</label><select class="in" data-f="src" data-id="f4"><option value="manual" selected="">手动输入</option><option value="device">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select></div><div class="tiny">规则：必填 / 手动输入</div></div><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>巡检时间</b> <span class="pill">time</span> </div><button class="btn g" data-f="del" data-id="f5">删除</button></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f5" checked="" /> 必填</label><select class="in" data-f="src" data-id="f5"><option value="manual">手动输入</option><option value="device">设备带入</option><option value="system" selected="">系统获取</option><option value="geo">定位获取</option></select></div><div class="tiny">规则：必填 / 系统获取</div></div><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>巡检定位</b> <span class="pill">location</span> </div><button class="btn g" data-f="del" data-id="f6">删除</button></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f6" checked="" /> 必填</label><select class="in" data-f="src" data-id="f6"><option value="manual">手动输入</option><option value="device">设备带入</option><option value="system">系统获取</option><option value="geo" selected="">定位获取</option></select></div><div class="tiny">规则：必填 / 定位获取</div></div><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>巡检照片</b> <span class="pill">photo</span> </div><button class="btn g" data-f="del" data-id="f7">删除</button></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f7" checked="" /> 必填</label><select class="in" data-f="src" data-id="f7"><option value="manual" selected="">手动输入</option><option value="device">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select></div><div class="tiny">规则：必填 / 手动输入</div></div><div class="f"><div style="display:flex;justify-content:space-between;gap:8px"><div><b>异常说明</b> <span class="pill">text</span> </div><button class="btn g" data-f="del" data-id="f8">删除</button></div><div class="bar"><label class="tiny"><input type="checkbox" data-f="req" data-id="f8" /> 必填</label><select class="in" data-f="src" data-id="f8"><option value="manual" selected="">手动输入</option><option value="device">设备带入</option><option value="system">系统获取</option><option value="geo">定位获取</option></select></div><div class="tiny">规则：选填 / 手动输入</div></div></div>
+        <div class="bar" style="margin-top:8px;"><button class="btn p" id="saveField">配置完成</button><button class="btn g" id="resetField">重置自定义字段</button></div>
+      </div>
+      <div class="card"><h3 style="margin:0 0 8px;">移动端预览</h3><div class="phone"><div class="ph">巡检提交表单预览</div><div class="pb" id="preview"><div class="tiny" style="margin:6px 0">*设备名称</div><input class="in" style="width:100%" value="鸡爪自动化机器" readonly="" /><div class="tiny" style="margin:6px 0">*设备型号</div><input class="in" style="width:100%" value="AHGC-000001" readonly="" /><div class="tiny" style="margin:6px 0">*设备状态</div><select class="in" style="width:100%"><option>请选择</option><option>正常</option><option>维修</option><option>停用</option></select><div class="tiny" style="margin:6px 0">*机温(°C)</div><input class="in" style="width:100%" value="" /><div class="tiny" style="margin:6px 0">*巡检时间</div><input class="in" style="width:100%" value="2026-04-19 13:43:02" readonly="" /><div class="tiny" style="margin:6px 0">*巡检定位</div><input class="in" style="width:100%" value="" readonly="" /><div class="tiny" style="margin:6px 0">*巡检照片</div><div class="in">点击上传图片</div><div class="tiny" style="margin:6px 0">异常说明</div><input class="in" style="width:100%" value="" /></div></div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-mobile">
+    <h2 class="h2">移动端发起巡检</h2>
+    <div class="row2">
+      <div class="card">
+        <div class="bar">
+          <select id="mtask" class="in"><option value="XJRWB-2026-03-06-000001" selected="">XJRWB-2026-03-06-000001 · 鸡爪自动化机器</option><option value="XJRWB-2026-03-08-000014">XJRWB-2026-03-08-000014 · 速冻线包装机</option><option value="XJRWB-2026-03-10-000022">XJRWB-2026-03-10-000022 · 冷藏库货架</option></select>
+          <label class="tiny"><input type="checkbox" id="inrange" checked="" /> 模拟在打卡范围内</label>
+        </div>
+        <div id="mInfo"><div class="kv"><b>设备</b><span>鸡爪自动化机器/AHGC-000001</span></div><div class="kv"><b>任务状态</b><span class="pill ">开启</span></div><div class="kv"><b>设备状态</b><span class="pill ">正常</span></div><div class="kv"><b>打卡范围</b><span>10米</span></div></div>
+        <div class="phone" style="margin-top:10px;"><div class="ph">发起巡检</div><div class="pb"><div id="mForm"><div class="tiny" style="margin:6px 0">*设备名称 <span class="pill">设备带入</span></div><input class="in" data-m="in" data-id="f1" value="鸡爪自动化机器" style="width:100%" readonly="" /><div class="tiny" style="margin:6px 0">*设备型号 <span class="pill">设备带入</span></div><input class="in" data-m="in" data-id="f2" value="AHGC-000001" style="width:100%" readonly="" /><div class="tiny" style="margin:6px 0">*设备状态 <span class="pill">手动输入</span></div><select class="in" data-m="in" data-id="f3" style="width:100%"><option value="">请选择</option><option value="正常">正常</option><option value="维修">维修</option><option value="停用">停用</option></select><div class="tiny" style="margin:6px 0">*机温(°C) <span class="pill">手动输入</span></div><input class="in" data-m="in" data-id="f4" value="" style="width:100%" /><div class="tiny" style="margin:6px 0">*巡检时间 <span class="pill">系统获取</span></div><input class="in" data-m="in" data-id="f5" value="2026-04-19 13:43:02" style="width:100%" readonly="" /><div class="tiny" style="margin:6px 0">*巡检定位 <span class="pill">定位获取</span></div><div class="bar"><input class="in" data-m="in" data-id="f6" value="31.234,117.118" placeholder="点击获取定位" /><button class="btn g" data-m="loc" data-id="f6">获取</button></div><div class="tiny" style="margin:6px 0">*巡检照片 <span class="pill">手动输入</span></div><input class="in" type="file" accept="image/*" data-m="photo" data-id="f7" style="width:100%" /><div class="tiny">未上传图片</div><div class="tiny" style="margin:6px 0">异常说明 <span class="pill">手动输入</span></div><input class="in" data-m="in" data-id="f8" value="" style="width:100%" /></div><button class="btn p" id="submitCheck" style="width:100%;margin-top:8px;">确认提交</button></div></div>
+      </div>
+      <div class="card">
+        <div class="kv"><b>校验逻辑</b><span>任务开启 + 设备可用 + 在打卡范围内 + 必填项完整。</span></div>
+        <div class="kv"><b>联动结果</b><span>提交成功后自动生成待确认记录，并更新任务完成度。</span></div>
+        <div class="kv"><b>流程价值</b><span>把“发起巡检”和“确认闭环”打通，减少跨模块跳转。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" id="p-records">
+    <h2 class="h2">巡检记录确认</h2>
+    <div class="bar"><input id="rs" class="in" placeholder="搜索设备/巡检人/任务编号" /><select id="rst" class="in"><option value="all">确认状态：全部</option><option>待确认</option><option>已确认</option></select></div>
+    <div class="card"><div class="table"><table><thead><tr><th>任务编号</th><th>设备</th><th>巡检人</th><th>打卡位置</th><th>巡检时间</th><th>确认状态</th><th>操作</th></tr></thead><tbody id="recordRows"><tr><td>XJRWB-2026-03-06-000001</td><td>鸡爪自动化机器</td><td>王班长</td><td>31.234,117.118</td><td>2026-04-08 10:22:17</td><td><span class="pill wait">待确认</span></td><td><button class="btn g" data-r="view" data-id="R-20260408-001">查看</button> <button class="btn s" data-r="ok" data-id="R-20260408-001">确认</button></td></tr><tr><td>XJRWB-2026-03-08-000014</td><td>速冻线包装机</td><td>Tran Minh</td><td>21.028,105.853</td><td>2026-04-07 16:05:42</td><td><span class="pill ok">已确认</span></td><td><button class="btn g" data-r="view" data-id="R-20260407-004">查看</button> </td></tr></tbody></table></div></div>
+  </section>
+</div>
+<div class="msg" id="msg"></div>
+
+
+
+</body></html></foreignObject></svg>

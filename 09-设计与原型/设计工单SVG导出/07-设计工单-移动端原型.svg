@@ -1,0 +1,458 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1549" viewBox="0 0 1440 1549"><rect x="0" y="0" width="1440" height="1549" fill="#ffffff" /><foreignObject x="0" y="0" width="1440" height="1549"><html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN"><head>
+  <meta charset="UTF-8" / />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" / />
+  <title>设计需求工单系统 小程序端</title>
+  <style>
+    :root {
+      --page: #eff3f8;
+      --card: rgba(255, 255, 255, 0.94);
+      --card-soft: #f8fafc;
+      --ink: #0f172a;
+      --muted: #64748b;
+      --line: rgba(148, 163, 184, 0.24);
+      --brand: #0f766e;
+      --brand-strong: #0b5f58;
+      --brand-soft: rgba(15, 118, 110, 0.11);
+      --warn: #b45309;
+      --warn-soft: rgba(180, 83, 9, 0.12);
+      --info: #1d4ed8;
+      --info-soft: rgba(29, 78, 216, 0.11);
+      --good: #047857;
+      --good-soft: rgba(4, 120, 87, 0.11);
+      --danger: #b91c1c;
+      --danger-soft: rgba(185, 28, 28, 0.12);
+      --shadow: 0 20px 54px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: radial-gradient(circle at top center, rgba(15, 118, 110, 0.16), transparent 30%), linear-gradient(180deg, #ebf0f6 0%, #eff3f8 100%);
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Source Han Sans SC", sans-serif;
+    }
+
+    button, input, textarea, select { font: inherit; }
+
+    .page {
+      width: min(100%, 430px);
+      min-height: 100vh;
+      margin: 0 auto;
+      background: rgba(239, 243, 248, 0.94);
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      padding: 14px 16px 12px;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 10px;
+    }
+
+    .topbar small {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .topbar strong {
+      font-size: 20px;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .topbar span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .switch-block { display: grid; gap: 6px; }
+    .switch-block label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .switch-row,
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .content { padding: 14px; }
+
+    .view { display: none; }
+    .view.active { display: grid; gap: 14px; }
+
+    .card {
+      padding: 16px;
+      border-radius: 20px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero {
+      padding: 20px 18px;
+      border-radius: 24px;
+      color: #f0fdfa;
+      background: linear-gradient(155deg, #0b3e39 0%, #0f766e 60%, #14b8a6 100%);
+    }
+
+    .hero small {
+      display: block;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.86;
+      font-size: 11px;
+    }
+
+    .hero h1 {
+      margin: 8px 0 6px;
+      font-size: 28px;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.8;
+      color: rgba(240, 253, 250, 0.92);
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .switch,
+    .btn,
+    .pill,
+    .step-item {
+      border: 0;
+      border-radius: 999px;
+    }
+
+    .switch {
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .switch.active {
+      color: var(--brand-strong);
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.28);
+    }
+
+    .ticket-list,
+    .step-list,
+    .file-list,
+    .record-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ticket {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+      display: grid;
+      gap: 10px;
+    }
+
+    .ticket h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .pill.warn { color: var(--warn); background: var(--warn-soft); }
+    .pill.info { color: var(--info); background: var(--info-soft); }
+    .pill.good { color: var(--good); background: var(--good-soft); }
+    .pill.brand { color: var(--brand-strong); background: var(--brand-soft); }
+    .pill.danger { color: var(--danger); background: var(--danger-soft); }
+
+    .step-item {
+      padding: 11px 13px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .step-item.done {
+      background: var(--good-soft);
+      border-color: rgba(4, 120, 87, 0.2);
+    }
+
+    .step-item.active {
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.26);
+      color: var(--brand-strong);
+    }
+
+    .field { display: grid; gap: 6px; }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .field textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px 14px;
+      cursor: pointer;
+      font-weight: 900;
+    }
+
+    .btn-primary { color: #fff; background: linear-gradient(135deg, var(--brand), #14b8a6); }
+    .btn-secondary { color: var(--ink); background: #fff; border: 1px solid var(--line); }
+    .btn-ghost { color: var(--muted); background: var(--card-soft); border: 1px solid var(--line); }
+    .btn-danger { color: #fff; background: linear-gradient(135deg, #b91c1c, #ef4444); }
+
+    .file-item,
+    .record-item {
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .file-item strong,
+    .record-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .empty {
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px dashed #cbd5e1;
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 26px;
+      transform: translateX(-50%) translateY(8px);
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #fff;
+      font-size: 12px;
+      opacity: 0;
+      transition: all .18s ease;
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <small>设计需求工单系统</small>
+      <strong>小程序端</strong>
+      <span id="systemDesc">当前演示：小程序端，正在查看提需求方视角。</span>
+      <div class="switch-block">
+        <label>当前角色</label>
+        <div class="switch-row" id="roleSwitch"><button class="switch active" data-role="requester">提需求方</button><button class="switch " data-role="design">设计部门</button></div>
+      </div>
+      <div class="switch-block">
+        <label>页面</label>
+        <div class="switch-row">
+          <button class="switch active" data-view="list">列表页</button>
+          <button class="switch" data-view="detail">详情页</button>
+        </div>
+      </div>
+      <button class="btn btn-secondary" id="resetData">恢复演示数据</button>
+    </header>
+
+    <div class="content">
+      <section class="view active" id="listView">
+        <div class="hero">
+          <small>Design Ticket</small>
+          <h1 id="heroTitle">小程序端<br />提需求方工单</h1>
+          <p id="heroDesc">提需求方在小程序端查看并处理设计需求工单。</p>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">工单列表</h2>
+          <div class="switch-row" id="filterBar"><button class="switch active" data-filter="all">全部</button><button class="switch " data-filter="pending_accept">待确认需求</button><button class="switch " data-filter="pending_time_confirm">待确认时间</button><button class="switch " data-filter="designing">设计中</button><button class="switch " data-filter="pending_file_confirm">待确认文件</button><button class="switch " data-filter="file_confirmed">待关闭</button><button class="switch " data-filter="closed">已关闭</button></div>
+          <div class="ticket-list" id="ticketList">
+        <article class="ticket">
+          <h3>门店开业展架设计</h3>
+          <div class="sub">MP-DES-20260419-001 · 小程序端</div>
+          <div class="sub">提需求方：渠道部 / 何洋</div>
+          <div class="sub">设计部门：物料设计组 / 林安</div>
+          <div class="sub">待填写预计完成时间</div>
+          <div class="actions">
+            <span class="pill warn">待确认需求</span>
+            <span class="pill brand">活动物料</span>
+          </div>
+          <button class="btn btn-primary" data-open="MP-DES-20260419-001">进入提需求方详情</button>
+        </article>
+      
+        <article class="ticket">
+          <h3>朋友圈海报紧急改版</h3>
+          <div class="sub">MP-DES-20260419-002 · 小程序端</div>
+          <div class="sub">提需求方：品牌部 / 徐宁</div>
+          <div class="sub">设计部门：品牌设计组 / 赵羽</div>
+          <div class="sub">预计完成：2026-04-20 16:00</div>
+          <div class="actions">
+            <span class="pill info">待确认完成时间</span>
+            <span class="pill brand">海报设计</span>
+          </div>
+          <button class="btn btn-primary" data-open="MP-DES-20260419-002">进入提需求方详情</button>
+        </article>
+      
+        <article class="ticket">
+          <h3>新品尝鲜券落地页视觉</h3>
+          <div class="sub">MP-DES-20260419-003 · 小程序端</div>
+          <div class="sub">提需求方：增长部 / 梁晨</div>
+          <div class="sub">设计部门：电商设计组 / 王卓</div>
+          <div class="sub">预计完成：2026-04-21 18:00</div>
+          <div class="actions">
+            <span class="pill brand">设计中</span>
+            <span class="pill brand">详情页设计</span>
+          </div>
+          <button class="btn btn-primary" data-open="MP-DES-20260419-003">进入提需求方详情</button>
+        </article>
+      </div>
+          <button class="btn btn-primary" id="createTicket">新建小程序需求</button>
+        </div>
+      </section>
+
+      <section class="view" id="detailView">
+        <div class="card">
+          <div class="sub" id="detailHead">小程序端 / 提需求方<br />门店开业展架设计<br />MP-DES-20260419-001 · 待确认需求</div>
+          <div class="step-list" id="stepList"><div class="step-item active">1. 提需求</div><div class="step-item ">2. 确认需求</div><div class="step-item ">3. 预计完成时间</div><div class="step-item ">4. 确认完成时间</div><div class="step-item ">5. 上传设计文件</div><div class="step-item ">6. 确认设计文件</div><div class="step-item ">7. 关闭需求</div></div>
+        </div>
+
+        <div class="card" id="formBox">
+          <h2 class="section-title">提需求</h2>
+          <div class="sub">提需求方填写需求并提交，等待设计部门确认。</div>
+          
+        <div class="field">
+          <label>需求标题</label>
+          <input id="field-title" value="门店开业展架设计" />
+        </div>
+        <div class="field">
+          <label>需求类型</label>
+          <select id="field-type">
+            <option value="海报设计">海报设计</option><option value="详情页设计">详情页设计</option><option value="活动物料" selected="">活动物料</option><option value="包装设计">包装设计</option><option value="其他">其他</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>提需求部门</label>
+          <input id="field-requestDept" value="渠道部" />
+        </div>
+        <div class="field">
+          <label>提需求人</label>
+          <input id="field-requester" value="何洋" />
+        </div>
+        <div class="field">
+          <label>设计负责人</label>
+          <input id="field-designOwner" value="物料设计组 / 林安" />
+        </div>
+        <div class="field">
+          <label>预计完成时间</label>
+          <input id="field-due" value="" placeholder="例如：2026-04-24 18:00" />
+        </div>
+        <div class="field">
+          <label>需求附件</label>
+          <input id="field-attachment" value="开业需求说明.docx" />
+        </div>
+        <div class="field">
+          <label>需求说明</label>
+          <textarea id="field-desc">输出展架与吊旗设计，突出新品试吃活动。</textarea>
+        </div>
+      
+          <button class="btn btn-ghost" data-action="save-request">保存需求</button>
+          <button class="btn btn-primary" data-action="submit-request">提交需求</button>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">设计文件</h2>
+          <div class="file-list" id="fileList"><div class="empty">当前暂无已上传设计文件。</div></div>
+        </div>
+
+        <div class="card">
+          <h2 class="section-title">处理记录</h2>
+          <div class="record-list" id="recordList">
+          <div class="record-item">
+            <strong>04-19 14:10</strong>
+            <div class="sub">提需求方提交需求</div>
+          </div>
+        </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  
+
+
+</body></html></foreignObject></svg>

@@ -3,16 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<<<<<<< ours
-  <title>设计工单系统统一原型</title>
+  <title>设计工单系统桌面预览</title>
   <style>
     :root {
-=======
-  <title>设计工单系统 PC 端原型</title>
-  <style>
-    :root {
-      --bg: #f3f5f7;
->>>>>>> theirs
+      --bg: #f4f6f9;
       --panel: #ffffff;
       --panel-soft: #f8fafc;
       --ink: #111827;
@@ -21,13 +15,13 @@
       --brand: #c2410c;
       --brand-deep: #9a3412;
       --brand-soft: rgba(194, 65, 12, 0.08);
-      --good: #047857;
-      --good-soft: rgba(4, 120, 87, 0.08);
-      --warn: #b45309;
-      --warn-soft: rgba(180, 83, 9, 0.08);
       --info: #1d4ed8;
       --info-soft: rgba(29, 78, 216, 0.08);
-      --shadow: 0 18px 42px rgba(15, 23, 42, 0.08);
+      --warn: #b45309;
+      --warn-soft: rgba(180, 83, 9, 0.08);
+      --good: #047857;
+      --good-soft: rgba(4, 120, 87, 0.08);
+      --shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
     }
 
     * {
@@ -40,7 +34,7 @@
       color: var(--ink);
       background:
         radial-gradient(circle at top right, rgba(194, 65, 12, 0.08), transparent 26%),
-        linear-gradient(180deg, #f8fafc 0%, #f3f5f7 100%);
+        linear-gradient(180deg, #f8fafc 0%, #f4f6f9 100%);
     }
 
     button,
@@ -53,11 +47,7 @@
     .app {
       min-height: 100vh;
       display: grid;
-<<<<<<< ours
-      grid-template-rows: 82px 1fr;
-=======
-      grid-template-rows: 74px 1fr;
->>>>>>> theirs
+      grid-template-rows: 88px 1fr;
     }
 
     .topbar {
@@ -65,43 +55,33 @@
       top: 0;
       z-index: 10;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-<<<<<<< ours
+      align-items: center;
       gap: 16px;
       padding: 0 24px;
       background: rgba(255, 255, 255, 0.94);
-=======
-      padding: 0 24px;
-      background: rgba(255, 255, 255, 0.92);
->>>>>>> theirs
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
     }
 
     .brand strong {
       display: block;
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 800;
     }
 
     .brand span {
       display: block;
       margin-top: 4px;
-      color: var(--muted);
       font-size: 12px;
+      color: var(--muted);
     }
 
-    .top-actions,
-    .tabs,
-    .filters,
-<<<<<<< ours
-    .actions,
     .port-switch,
-    .role-switch {
-=======
+    .page-tabs,
+    .role-switch,
+    .filters,
     .actions {
->>>>>>> theirs
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -111,42 +91,26 @@
       padding: 16px;
     }
 
-    .page {
-<<<<<<< ours
-      max-width: 1440px;
-=======
-      max-width: 1420px;
->>>>>>> theirs
-      margin: 0 auto;
+    .view {
       display: none;
+      max-width: 1440px;
+      margin: 0 auto;
       gap: 16px;
     }
 
-    .page.active {
+    .view.active {
       display: grid;
     }
 
-<<<<<<< ours
-=======
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
->>>>>>> theirs
-    .list-page {
+    .list-view {
       grid-template-columns: 1fr;
     }
 
-    .detail-page {
+    .detail-view {
       grid-template-columns: minmax(0, 1fr) 340px;
       align-items: start;
     }
 
-<<<<<<< ours
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -155,8 +119,6 @@
       overflow: hidden;
     }
 
-=======
->>>>>>> theirs
     .panel-head {
       padding: 18px 20px 14px;
       border-bottom: 1px solid var(--line);
@@ -176,51 +138,33 @@
 
     .panel-head p {
       margin: 6px 0 0;
-      color: var(--muted);
       font-size: 13px;
+      color: var(--muted);
       line-height: 1.7;
     }
 
-    .tab,
-    .filter,
-<<<<<<< ours
-    .port-btn,
-=======
->>>>>>> theirs
-    .role-btn,
+    .switch,
     .btn,
-    .step-pill,
-    .pill {
+    .pill,
+    .step-pill {
       border: 0;
       border-radius: 999px;
     }
 
-    .tab,
-    .filter,
-<<<<<<< ours
-    .port-btn,
-=======
->>>>>>> theirs
-    .role-btn {
+    .switch {
       padding: 10px 16px;
       background: #fff;
       border: 1px solid var(--line);
+      color: var(--ink);
       cursor: pointer;
       font-size: 13px;
       font-weight: 700;
-      color: var(--ink);
     }
 
-    .tab.active,
-    .filter.active,
-<<<<<<< ours
-    .port-btn.active,
-=======
->>>>>>> theirs
-    .role-btn.active {
+    .switch.active {
       color: var(--brand-deep);
       background: var(--brand-soft);
-      border-color: rgba(194, 65, 12, 0.24);
+      border-color: rgba(194, 65, 12, 0.22);
     }
 
     .toolbar {
@@ -259,24 +203,20 @@
 
     .stat strong {
       display: block;
-<<<<<<< ours
       font-size: 24px;
-=======
-      font-size: 26px;
->>>>>>> theirs
       font-weight: 800;
     }
 
-    .list-wrap {
+    .tickets {
       padding: 18px;
       display: grid;
       gap: 12px;
     }
 
     .ticket {
-      border: 1px solid var(--line);
-      border-radius: 20px;
       padding: 16px;
+      border-radius: 20px;
+      border: 1px solid var(--line);
       background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
       display: grid;
       gap: 12px;
@@ -299,8 +239,8 @@
     .meta {
       display: grid;
       gap: 4px;
-      color: var(--muted);
       font-size: 12px;
+      color: var(--muted);
     }
 
     .pill {
@@ -321,14 +261,14 @@
       background: var(--info-soft);
     }
 
-    .pill.brand {
-      color: var(--brand-deep);
-      background: var(--brand-soft);
-    }
-
     .pill.good {
       color: var(--good);
       background: var(--good-soft);
+    }
+
+    .pill.brand {
+      color: var(--brand-deep);
+      background: var(--brand-soft);
     }
 
     .btn {
@@ -362,8 +302,8 @@
 
     .card {
       padding: 18px;
-      border-radius: 24px;
       border: 1px solid var(--line);
+      border-radius: 24px;
       background: #fff;
     }
 
@@ -371,7 +311,6 @@
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
-      margin-top: 12px;
     }
 
     .step-pill {
@@ -384,7 +323,7 @@
 
     .step-pill.done {
       background: var(--good-soft);
-      border-color: rgba(4, 120, 87, 0.22);
+      border-color: rgba(4, 120, 87, 0.24);
     }
 
     .step-pill.active {
@@ -393,18 +332,6 @@
       color: var(--brand-deep);
     }
 
-<<<<<<< ours
-=======
-    .role-switch {
-      margin-top: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
->>>>>>> theirs
     .summary-grid,
     .field-grid {
       display: grid;
@@ -421,9 +348,9 @@
 
     .summary-item span {
       display: block;
+      margin-bottom: 6px;
       font-size: 12px;
       color: var(--muted);
-      margin-bottom: 6px;
     }
 
     .summary-item strong {
@@ -443,8 +370,8 @@
 
     .field label {
       font-size: 12px;
-      color: var(--muted);
       font-weight: 700;
+      color: var(--muted);
     }
 
     .field input,
@@ -459,7 +386,7 @@
     }
 
     .field textarea {
-      min-height: 98px;
+      min-height: 96px;
       resize: vertical;
       line-height: 1.7;
     }
@@ -476,19 +403,19 @@
       line-height: 1.7;
     }
 
-    .list-box {
+    .stack {
       display: grid;
       gap: 10px;
     }
 
-    .list-item {
+    .stack-item {
       padding: 12px 14px;
       border-radius: 16px;
       border: 1px solid var(--line);
       background: #fff;
     }
 
-    .list-item strong {
+    .stack-item strong {
       display: block;
       margin-bottom: 4px;
       font-size: 14px;
@@ -504,21 +431,13 @@
       line-height: 1.8;
     }
 
-<<<<<<< ours
     @media (max-width: 1180px) {
-=======
-    @media (max-width: 1080px) {
->>>>>>> theirs
-      .detail-page {
+      .detail-view {
         grid-template-columns: 1fr;
       }
     }
 
-<<<<<<< ours
     @media (max-width: 900px) {
-=======
-    @media (max-width: 860px) {
->>>>>>> theirs
       .stats,
       .summary-grid,
       .field-grid {
@@ -531,90 +450,60 @@
   <div class="app">
     <header class="topbar">
       <div class="brand">
-<<<<<<< ours
-        <strong id="systemTitle">设计工单系统</strong>
-        <span id="systemDesc">统一切换端口后，列表页与详情页的数据、文案和操作同步联动。</span>
+        <strong id="systemTitle">设计工单系统桌面预览</strong>
+        <span id="systemDesc">端口切换为移动端 / 小程序端，角色切换为需求端 / 设计端。</span>
       </div>
-      <div class="top-actions">
+      <div class="actions">
         <div class="port-switch" id="portSwitch"></div>
-=======
-        <strong>设计工单系统</strong>
-        <span>列表页与详情页分离，按真实流程完成提交、确认、上传与关闭。</span>
-      </div>
-      <div class="top-actions">
->>>>>>> theirs
         <button class="btn btn-secondary" id="resetData">恢复演示数据</button>
       </div>
     </header>
 
     <main class="content">
-      <section class="page list-page active" id="listPage">
+      <section class="view list-view active" id="listView">
         <div class="panel">
           <div class="panel-head">
             <div>
-<<<<<<< ours
               <h2 id="listTitle">工单列表</h2>
-              <p id="listDesc">先查看工单列表，再进入详情页执行提交、确认、上传和关闭等动作。</p>
-=======
-              <h2>工单列表</h2>
-              <p>先查看工单列表，再进入详情页执行提交、确认、上传和关闭等动作。</p>
->>>>>>> theirs
+              <p id="listDesc">先查看列表，再进入详情页处理当前工单。</p>
             </div>
-            <div class="tabs">
-              <button class="tab active" data-page="list">列表页</button>
-              <button class="tab" data-page="detail">详情页</button>
+            <div class="page-tabs">
+              <button class="switch active" data-view="list">列表页</button>
+              <button class="switch" data-view="detail">详情页</button>
             </div>
           </div>
-<<<<<<< ours
+
           <div class="stats" id="statsRow"></div>
+
           <div class="toolbar">
             <div class="filters" id="filterBar"></div>
             <div class="actions">
               <button class="btn btn-primary" id="createTicket">新建工单</button>
             </div>
           </div>
-=======
 
-          <div class="stats" id="statsRow"></div>
-
-          <div class="toolbar">
-            <div class="filters" id="filterBar"></div>
-            <div class="actions">
-              <button class="btn btn-primary" id="createTicket">新建需求工单</button>
-            </div>
-          </div>
-
->>>>>>> theirs
-          <div class="list-wrap" id="ticketContainer"></div>
+          <div class="tickets" id="ticketList"></div>
         </div>
       </section>
 
-      <section class="page detail-page" id="detailPage">
+      <section class="view detail-view" id="detailView">
         <div class="detail-main">
           <div class="panel">
             <div class="panel-head">
               <div>
                 <h2 id="detailTitle">工单详情</h2>
-                <p id="detailDesc">查看工单详情并按流程完成当前操作。</p>
+                <p id="detailDesc">按角色完成提交、确认、上传和关闭等动作。</p>
               </div>
-              <div class="tabs">
-                <button class="tab" data-page="list">列表页</button>
-                <button class="tab active" data-page="detail">详情页</button>
+              <div class="page-tabs">
+                <button class="switch" data-view="list">列表页</button>
+                <button class="switch active" data-view="detail">详情页</button>
               </div>
             </div>
-<<<<<<< ours
             <div class="card" style="border:0; border-radius:0;">
               <div class="steps" id="stepRow"></div>
-              <div class="actions" style="justify-content:space-between; align-items:center; margin-top:14px; flex-wrap:wrap;">
-                <div class="role-switch" id="roleBar"></div>
-=======
-
-            <div class="card" style="border:0; border-radius:0;">
-              <div class="steps" id="stepRow"></div>
-              <div class="role-switch">
-                <div class="actions" id="roleBar"></div>
->>>>>>> theirs
-                <div class="pill brand" id="roleHint">当前角色：提需求方</div>
+              <div class="actions" style="justify-content:space-between; align-items:center; margin-top:14px;">
+                <div class="role-switch" id="roleSwitch"></div>
+                <div class="pill brand" id="roleHint">当前角色：需求端</div>
               </div>
             </div>
           </div>
@@ -635,17 +524,14 @@
           <div class="panel">
             <div class="card" style="border:0; border-radius:0;">
               <h3 class="section-title">设计文件</h3>
-              <div class="list-box" id="fileBox"></div>
+              <div class="stack" id="fileBox"></div>
             </div>
           </div>
-<<<<<<< ours
-=======
 
->>>>>>> theirs
           <div class="panel">
             <div class="card" style="border:0; border-radius:0;">
               <h3 class="section-title">处理记录</h3>
-              <div class="list-box" id="historyBox"></div>
+              <div class="stack" id="historyBox"></div>
             </div>
           </div>
         </aside>
@@ -656,80 +542,117 @@
   <script>
     const steps = [
       { key: "submitted", label: "提交需求" },
-      { key: "accepted", label: "设计确认" },
+      { key: "accepted", label: "确认需求" },
       { key: "scheduled", label: "确认时间" },
       { key: "delivered", label: "上传文件" },
       { key: "closed", label: "关闭工单" }
     ];
 
     const roles = [
-      { key: "requester", label: "提需求方" },
-      { key: "designer", label: "设计部门" }
+      { key: "demand", label: "需求端" },
+      { key: "design", label: "设计端" }
     ];
 
     const statusMap = {
-      pending_confirm: { label: "待设计确认", step: "submitted", tone: "warn" },
-      confirming_time: { label: "待确认完成时间", step: "accepted", tone: "info" },
-      designing: { label: "设计中", step: "scheduled", tone: "brand" },
-      waiting_acceptance: { label: "待确认设计文件", step: "delivered", tone: "info" },
+      pending_confirm: { label: "待设计端确认", step: "submitted", tone: "warn" },
+      confirming_time: { label: "待需求端确认时间", step: "accepted", tone: "info" },
+      designing: { label: "设计处理中", step: "scheduled", tone: "brand" },
+      waiting_acceptance: { label: "待需求端确认文件", step: "delivered", tone: "info" },
       closed: { label: "已关闭", step: "closed", tone: "good" }
     };
 
-<<<<<<< ours
     const portConfigs = {
-      pc: {
-        label: "PC端",
-        systemTitle: "设计工单系统 PC端",
-        systemDesc: "面向公司员工与设计部门的桌面端工单处理台。",
-        listTitle: "PC端工单列表",
-        listDesc: "用于后台查看、筛选、分配和进入处理工单。",
-        detailDescPrefix: "PC端详情页",
-        createLabel: "新建PC工单",
-        requesterActions: {
-          save: "保存草稿",
-          submit: "提交需求",
-          confirmTime: "确认完成时间",
-          confirmFile: "确认设计文件",
-          close: "关闭工单"
-        },
-        designerActions: {
-          accept: "确认需求",
-          estimate: "提交完成时间",
-          upload: "上传设计文件"
-        }
-      },
-      applet: {
-        label: "小程序端",
-        systemTitle: "设计工单系统 小程序端",
-        systemDesc: "面向员工移动提单与设计部门移动处理的小程序端页面。",
-        listTitle: "小程序端工单列表",
-        listDesc: "用于移动端快速查看我的工单、进入详情并确认处理。",
-        detailDescPrefix: "小程序端详情页",
-        createLabel: "新建小程序工单",
-        requesterActions: {
+      mobile: {
+        label: "移动端",
+        systemTitle: "设计工单系统桌面预览 · 移动端",
+        systemDesc: "模拟移动端业务数据，在桌面宽屏中查看完整流程。",
+        listTitle: "移动端工单列表",
+        listDesc: "展示员工通过移动端发起和查看的工单。",
+        createText: "新建移动端工单",
+        detailPrefix: "移动端详情页",
+        demandText: {
           save: "保存需求",
           submit: "提交需求",
           confirmTime: "确认时间",
           confirmFile: "确认文件",
           close: "关闭工单"
         },
-        designerActions: {
-          accept: "确认接单",
+        designText: {
+          accept: "确认需求",
           estimate: "反馈时间",
           upload: "上传文件"
+        }
+      },
+      applet: {
+        label: "小程序端",
+        systemTitle: "设计工单系统桌面预览 · 小程序端",
+        systemDesc: "模拟小程序端业务数据，在桌面宽屏中查看完整流程。",
+        listTitle: "小程序端工单列表",
+        listDesc: "展示员工通过小程序端发起和查看的工单。",
+        createText: "新建小程序工单",
+        detailPrefix: "小程序端详情页",
+        demandText: {
+          save: "保存草稿",
+          submit: "提交需求",
+          confirmTime: "确认完成时间",
+          confirmFile: "确认设计文件",
+          close: "关闭工单"
+        },
+        designText: {
+          accept: "确认接单",
+          estimate: "提交完成时间",
+          upload: "上传设计文件"
         }
       }
     };
 
     const initialData = {
-      pc: [
+      mobile: [
         {
-          id: "PC-DES-20260419-001",
-          title: "五一活动海报设计",
-          applicant: "市场部 / 李晓",
-          designer: "品牌设计组 / 陈可",
+          id: "M-DES-20260419-001",
+          title: "门店开业展架设计",
+          demandOwner: "渠道部 / 何洋",
+          designOwner: "平面设计组 / 林安",
+          type: "物料设计",
+          channel: "移动端提单",
+          priority: "紧急",
+          due: "",
+          attachment: "门店开业需求说明.docx",
+          desc: "门店开业需要一套展架和吊旗设计，需突出新品试吃和门店活动权益。",
+          status: "pending_confirm",
+          files: [],
+          history: [
+            "04-19 14:10 需求端提交需求"
+          ]
+        },
+        {
+          id: "M-DES-20260419-002",
+          title: "朋友圈海报快速修改",
+          demandOwner: "品牌部 / 徐宁",
+          designOwner: "平面设计组 / 赵羽",
           type: "海报设计",
-          channel: "PC后台活动投放",
+          channel: "移动端催办",
+          priority: "高",
+          due: "2026-04-20 16:00",
+          attachment: "朋友圈文案.txt",
+          desc: "对现有朋友圈海报做主题替换和日期更新，需要移动端快速确认。",
+          status: "confirming_time",
+          files: [],
+          history: [
+            "04-19 15:10 需求端提交需求",
+            "04-19 15:22 设计端确认需求",
+            "04-19 15:30 设计端反馈预计完成时间"
+          ]
+        }
+      ],
+      applet: [
+        {
+          id: "A-DES-20260419-001",
+          title: "五一活动海报设计",
+          demandOwner: "市场部 / 李晓",
+          designOwner: "品牌设计组 / 陈可",
+          type: "海报设计",
+          channel: "小程序端提单",
           priority: "高",
           due: "2026-04-22 18:00",
           attachment: "活动方案_v3.pdf",
@@ -740,20 +663,20 @@
             { name: "五一活动海报_源文件.psd", note: "可继续编辑的源文件", type: "源文件" }
           ],
           history: [
-            "04-19 09:30 提需求方提交需求",
-            "04-19 10:20 设计部门确认需求",
-            "04-19 10:35 设计部门反馈预计完成时间",
-            "04-19 10:48 提需求方确认完成时间",
-            "04-21 17:36 设计部门上传设计文件"
+            "04-19 09:30 需求端提交需求",
+            "04-19 10:20 设计端确认需求",
+            "04-19 10:35 设计端反馈预计完成时间",
+            "04-19 10:48 需求端确认完成时间",
+            "04-21 17:36 设计端上传设计文件"
           ]
         },
         {
-          id: "PC-DES-20260419-002",
+          id: "A-DES-20260419-002",
           title: "新品详情页长图设计",
-          applicant: "电商部 / 周静",
-          designer: "电商设计组 / 王卓",
+          demandOwner: "电商部 / 周静",
+          designOwner: "电商设计组 / 王卓",
           type: "详情页设计",
-          channel: "PC电商运营后台",
+          channel: "小程序端流转",
           priority: "中",
           due: "2026-04-24 12:00",
           attachment: "新品卖点梳理.xlsx",
@@ -761,63 +684,24 @@
           status: "designing",
           files: [],
           history: [
-            "04-19 11:20 提需求方提交需求",
-            "04-19 12:05 设计部门确认需求",
-            "04-19 12:15 提需求方确认预计完成时间"
-          ]
-        }
-      ],
-      applet: [
-        {
-          id: "MP-DES-20260419-001",
-          title: "门店开业展架设计",
-          applicant: "渠道部 / 何洋",
-          designer: "平面设计组 / 林安",
-          type: "物料设计",
-          channel: "小程序移动提单",
-          priority: "紧急",
-          due: "",
-          attachment: "门店开业需求说明.docx",
-          desc: "门店开业需要一套展架和吊旗设计，需突出新品试吃和门店活动权益。",
-          status: "pending_confirm",
-          files: [],
-          history: [
-            "04-19 14:10 提需求方提交需求"
-          ]
-        },
-        {
-          id: "MP-DES-20260419-002",
-          title: "朋友圈海报快速修改",
-          applicant: "品牌部 / 徐宁",
-          designer: "平面设计组 / 赵羽",
-          type: "海报设计",
-          channel: "小程序移动审批",
-          priority: "高",
-          due: "2026-04-20 16:00",
-          attachment: "朋友圈文案.txt",
-          desc: "需要对现有朋友圈海报做主题替换和日期更新，移动端快速确认。",
-          status: "confirming_time",
-          files: [],
-          history: [
-            "04-19 15:10 提需求方提交需求",
-            "04-19 15:22 设计部门确认需求"
+            "04-19 11:20 需求端提交需求",
+            "04-19 12:05 设计端确认需求",
+            "04-19 12:15 需求端确认预计完成时间"
           ]
         }
       ]
     };
 
-    let currentPort = "pc";
-    let currentPage = "list";
+    let dataByPort = cloneData();
+    let currentPort = "mobile";
+    let currentView = "list";
+    let currentRole = "demand";
     let currentFilter = "all";
-    let currentRole = "requester";
-    let ticketsByPort = cloneAllData();
     let activeIds = {
-      pc: ticketsByPort.pc[0].id,
-      applet: ticketsByPort.applet[0].id
+      mobile: dataByPort.mobile[0].id,
+      applet: dataByPort.applet[0].id
     };
 
-    const listPage = document.getElementById("listPage");
-    const detailPage = document.getElementById("detailPage");
     const systemTitle = document.getElementById("systemTitle");
     const systemDesc = document.getElementById("systemDesc");
     const portSwitch = document.getElementById("portSwitch");
@@ -825,118 +709,35 @@
     const listDesc = document.getElementById("listDesc");
     const statsRow = document.getElementById("statsRow");
     const filterBar = document.getElementById("filterBar");
-    const ticketContainer = document.getElementById("ticketContainer");
+    const ticketList = document.getElementById("ticketList");
     const createTicketBtn = document.getElementById("createTicket");
-=======
-    const initialTickets = [
-      {
-        id: "DES-20260419-001",
-        title: "五一活动海报设计",
-        applicant: "市场部 / 李晓",
-        designer: "品牌设计组 / 陈可",
-        type: "海报设计",
-        channel: "线上活动",
-        priority: "高",
-        due: "2026-04-22 18:00",
-        attachment: "活动方案_v3.pdf",
-        desc: "需产出五一活动主海报 1 张、活动长图 1 张，用于公众号和朋友圈投放。",
-        status: "waiting_acceptance",
-        files: [
-          { name: "五一活动海报_预览.jpg", note: "客户确认用预览图", type: "预览图" },
-          { name: "五一活动海报_源文件.psd", note: "可继续编辑的源文件", type: "源文件" }
-        ],
-        history: [
-          "04-19 09:30 提需求方提交需求",
-          "04-19 10:20 设计部门确认需求",
-          "04-19 10:35 设计部门反馈预计完成时间",
-          "04-19 10:48 提需求方确认完成时间",
-          "04-21 17:36 设计部门上传设计文件"
-        ]
-      },
-      {
-        id: "DES-20260419-002",
-        title: "新品详情页长图设计",
-        applicant: "电商部 / 周静",
-        designer: "电商设计组 / 王卓",
-        type: "详情页设计",
-        channel: "天猫 / 京东",
-        priority: "中",
-        due: "2026-04-24 12:00",
-        attachment: "新品卖点梳理.xlsx",
-        desc: "新品无骨鸡爪需输出一版电商详情页长图，包含卖点首屏、口味介绍、工艺说明和场景图。",
-        status: "designing",
-        files: [],
-        history: [
-          "04-19 11:20 提需求方提交需求",
-          "04-19 12:05 设计部门确认需求",
-          "04-19 12:15 提需求方确认预计完成时间"
-        ]
-      },
-      {
-        id: "DES-20260419-003",
-        title: "门店开业展架设计",
-        applicant: "渠道部 / 何洋",
-        designer: "平面设计组 / 林安",
-        type: "物料设计",
-        channel: "线下门店",
-        priority: "紧急",
-        due: "",
-        attachment: "门店开业需求说明.docx",
-        desc: "门店开业需要一套展架和吊旗设计，需突出新品试吃和门店活动权益。",
-        status: "pending_confirm",
-        files: [],
-        history: [
-          "04-19 14:10 提需求方提交需求"
-        ]
-      }
-    ];
-
-    let tickets = cloneTickets();
-    let currentPage = "list";
-    let currentFilter = "all";
-    let currentRole = "requester";
-    let activeId = tickets[0].id;
-
-    const listPage = document.getElementById("listPage");
-    const detailPage = document.getElementById("detailPage");
-    const statsRow = document.getElementById("statsRow");
-    const filterBar = document.getElementById("filterBar");
-    const ticketContainer = document.getElementById("ticketContainer");
->>>>>>> theirs
+    const listView = document.getElementById("listView");
+    const detailView = document.getElementById("detailView");
     const detailTitle = document.getElementById("detailTitle");
     const detailDesc = document.getElementById("detailDesc");
-    const stepRow = document.getElementById("stepRow");
-    const roleBar = document.getElementById("roleBar");
+    const roleSwitch = document.getElementById("roleSwitch");
     const roleHint = document.getElementById("roleHint");
+    const stepRow = document.getElementById("stepRow");
     const summaryGrid = document.getElementById("summaryGrid");
     const formPanel = document.getElementById("formPanel");
     const fileBox = document.getElementById("fileBox");
     const historyBox = document.getElementById("historyBox");
 
-<<<<<<< ours
-    function cloneAllData() {
+    function cloneData() {
       return JSON.parse(JSON.stringify(initialData));
     }
 
-    function currentConfig() {
+    function getConfig() {
       return portConfigs[currentPort];
     }
 
-    function currentTickets() {
-      return ticketsByPort[currentPort];
+    function getTickets() {
+      return dataByPort[currentPort];
     }
 
     function getActiveTicket() {
-      const list = currentTickets();
-      return list.find(ticket => ticket.id === activeIds[currentPort]) || list[0];
-=======
-    function cloneTickets() {
-      return JSON.parse(JSON.stringify(initialTickets));
-    }
-
-    function getActiveTicket() {
-      return tickets.find(ticket => ticket.id === activeId) || tickets[0];
->>>>>>> theirs
+      const list = getTickets();
+      return list.find(item => item.id === activeIds[currentPort]) || list[0];
     }
 
     function getStatusPill(status) {
@@ -948,61 +749,44 @@
       ticket.history.push(`04-19 16:30 ${text}`);
     }
 
-    function switchPage(page) {
-      currentPage = page;
-      listPage.classList.toggle("active", page === "list");
-      detailPage.classList.toggle("active", page === "detail");
-      [...document.querySelectorAll("[data-page]")].forEach(button => {
-        button.classList.toggle("active", button.dataset.page === page);
-      });
-    }
-
-<<<<<<< ours
     function renderPortSwitch() {
       portSwitch.innerHTML = Object.entries(portConfigs).map(([key, config]) => `
-        <button class="port-btn ${key === currentPort ? "active" : ""}" data-port="${key}">${config.label}</button>
+        <button class="switch ${key === currentPort ? "active" : ""}" data-port="${key}">${config.label}</button>
       `).join("");
 
       [...portSwitch.querySelectorAll("[data-port]")].forEach(button => {
         button.addEventListener("click", () => {
           currentPort = button.dataset.port;
+          currentRole = "demand";
           currentFilter = "all";
-          currentRole = "requester";
           renderAll();
+          switchView(currentView);
         });
       });
     }
 
-    function renderHeaderCopy() {
-      const config = currentConfig();
+    function renderHeader() {
+      const config = getConfig();
       systemTitle.textContent = config.systemTitle;
       systemDesc.textContent = config.systemDesc;
       listTitle.textContent = config.listTitle;
       listDesc.textContent = config.listDesc;
-      createTicketBtn.textContent = config.createLabel;
+      createTicketBtn.textContent = config.createText;
     }
 
     function renderStats() {
-      const list = currentTickets();
-      const counts = {
-        total: list.length,
-        pending: list.filter(item => item.status !== "closed").length,
-        confirm: list.filter(item => item.status === "waiting_acceptance").length,
-        closed: list.filter(item => item.status === "closed").length
-=======
-    function renderStats() {
+      const tickets = getTickets();
       const counts = {
         total: tickets.length,
         pending: tickets.filter(item => item.status !== "closed").length,
-        confirm: tickets.filter(item => item.status === "waiting_acceptance").length,
+        awaiting: tickets.filter(item => item.status === "waiting_acceptance").length,
         closed: tickets.filter(item => item.status === "closed").length
->>>>>>> theirs
       };
 
       statsRow.innerHTML = `
         <div class="stat"><span>全部工单</span><strong>${counts.total}</strong></div>
         <div class="stat"><span>处理中</span><strong>${counts.pending}</strong></div>
-        <div class="stat"><span>待确认文件</span><strong>${counts.confirm}</strong></div>
+        <div class="stat"><span>待确认文件</span><strong>${counts.awaiting}</strong></div>
         <div class="stat"><span>已关闭</span><strong>${counts.closed}</strong></div>
       `;
     }
@@ -1010,15 +794,15 @@
     function renderFilters() {
       const filters = [
         { key: "all", label: "全部" },
-        { key: "pending_confirm", label: "待设计确认" },
+        { key: "pending_confirm", label: "待确认需求" },
         { key: "confirming_time", label: "待确认时间" },
-        { key: "designing", label: "设计中" },
+        { key: "designing", label: "设计处理中" },
         { key: "waiting_acceptance", label: "待确认文件" },
         { key: "closed", label: "已关闭" }
       ];
 
       filterBar.innerHTML = filters.map(item => `
-        <button class="filter ${item.key === currentFilter ? "active" : ""}" data-filter="${item.key}">${item.label}</button>
+        <button class="switch ${item.key === currentFilter ? "active" : ""}" data-filter="${item.key}">${item.label}</button>
       `).join("");
 
       [...filterBar.querySelectorAll("[data-filter]")].forEach(button => {
@@ -1030,39 +814,29 @@
     }
 
     function renderList() {
-<<<<<<< ours
-      renderHeaderCopy();
+      renderHeader();
       renderStats();
       renderFilters();
 
-      const config = currentConfig();
-      const list = currentTickets().filter(ticket => currentFilter === "all" || ticket.status === currentFilter);
-      if (!list.length) {
-        ticketContainer.innerHTML = `<div class="empty">当前端口和筛选条件下暂无工单。</div>`;
-=======
-      renderStats();
-      renderFilters();
+      const config = getConfig();
+      const list = getTickets().filter(item => currentFilter === "all" || item.status === currentFilter);
 
-      const list = tickets.filter(ticket => currentFilter === "all" || ticket.status === currentFilter);
       if (!list.length) {
-        ticketContainer.innerHTML = `<div class="empty">当前筛选条件下暂无工单。</div>`;
->>>>>>> theirs
+        ticketList.innerHTML = `<div class="empty">当前端口与筛选条件下暂无工单。</div>`;
         return;
       }
 
-      ticketContainer.innerHTML = list.map(ticket => `
+      ticketList.innerHTML = list.map(ticket => `
         <article class="ticket">
           <div class="ticket-head">
             <div>
               <h4>${ticket.title}</h4>
               <div class="meta">
                 <span>${ticket.id}</span>
-                <span>${ticket.applicant}</span>
+                <span>需求端：${ticket.demandOwner}</span>
+                <span>设计端：${ticket.designOwner || "待分配"}</span>
                 <span>${ticket.due ? `预计完成：${ticket.due}` : "待确认完成时间"}</span>
-<<<<<<< ours
                 <span>${ticket.channel}</span>
-=======
->>>>>>> theirs
               </div>
             </div>
             <div class="actions">
@@ -1071,24 +845,38 @@
             </div>
           </div>
           <div class="actions">
-            <button class="btn btn-secondary" data-view="${ticket.id}">查看详情</button>
-<<<<<<< ours
-            <button class="btn btn-primary" data-open="${ticket.id}">进入${config.label}处理</button>
-=======
-            <button class="btn btn-primary" data-open="${ticket.id}">进入处理</button>
->>>>>>> theirs
+            <button class="btn btn-secondary" data-open="${ticket.id}">查看详情</button>
+            <button class="btn btn-primary" data-enter="${ticket.id}">进入${config.label}处理</button>
           </div>
         </article>
       `).join("");
 
-      [...ticketContainer.querySelectorAll("[data-view], [data-open]")].forEach(button => {
+      [...ticketList.querySelectorAll("[data-open], [data-enter]")].forEach(button => {
         button.addEventListener("click", () => {
-<<<<<<< ours
-          activeIds[currentPort] = button.dataset.view || button.dataset.open;
-=======
-          activeId = button.dataset.view || button.dataset.open;
->>>>>>> theirs
-          switchPage("detail");
+          activeIds[currentPort] = button.dataset.open || button.dataset.enter;
+          switchView("detail");
+          renderDetail();
+        });
+      });
+    }
+
+    function switchView(view) {
+      currentView = view;
+      listView.classList.toggle("active", view === "list");
+      detailView.classList.toggle("active", view === "detail");
+      [...document.querySelectorAll("[data-view]")].forEach(button => {
+        button.classList.toggle("active", button.dataset.view === view);
+      });
+    }
+
+    function renderRoles() {
+      roleSwitch.innerHTML = roles.map(role => `
+        <button class="switch ${role.key === currentRole ? "active" : ""}" data-role="${role.key}">${role.label}</button>
+      `).join("");
+
+      [...roleSwitch.querySelectorAll("[data-role]")].forEach(button => {
+        button.addEventListener("click", () => {
+          currentRole = button.dataset.role;
           renderDetail();
         });
       });
@@ -1097,38 +885,21 @@
     function renderSteps(ticket) {
       const currentStep = statusMap[ticket.status].step;
       const currentIndex = steps.findIndex(item => item.key === currentStep);
-      stepRow.innerHTML = steps.map((item, index) => `
+      stepRow.innerHTML = steps.map((step, index) => `
         <div class="step-pill ${index < currentIndex ? "done" : index === currentIndex ? "active" : ""}">
-          ${item.label}
+          ${step.label}
         </div>
       `).join("");
-    }
-
-    function renderRoles() {
-      roleBar.innerHTML = roles.map(role => `
-        <button class="role-btn ${role.key === currentRole ? "active" : ""}" data-role="${role.key}">${role.label}</button>
-      `).join("");
-
-      [...roleBar.querySelectorAll("[data-role]")].forEach(button => {
-        button.addEventListener("click", () => {
-          currentRole = button.dataset.role;
-          renderDetail();
-        });
-      });
     }
 
     function renderSummary(ticket) {
       summaryGrid.innerHTML = `
         <div class="summary-item"><span>工单编号</span><strong>${ticket.id}</strong></div>
         <div class="summary-item"><span>当前状态</span><strong>${statusMap[ticket.status].label}</strong></div>
-        <div class="summary-item"><span>需求部门 / 提交人</span><strong>${ticket.applicant}</strong></div>
-        <div class="summary-item"><span>设计负责人</span><strong>${ticket.designer || "待分配"}</strong></div>
+        <div class="summary-item"><span>端口</span><strong>${getConfig().label}</strong></div>
         <div class="summary-item"><span>需求类型</span><strong>${ticket.type}</strong></div>
-<<<<<<< ours
-        <div class="summary-item"><span>提交端口</span><strong>${currentConfig().label}</strong></div>
-=======
-        <div class="summary-item"><span>投放渠道</span><strong>${ticket.channel}</strong></div>
->>>>>>> theirs
+        <div class="summary-item"><span>需求端</span><strong>${ticket.demandOwner}</strong></div>
+        <div class="summary-item"><span>设计端</span><strong>${ticket.designOwner || "待分配"}</strong></div>
       `;
     }
 
@@ -1141,12 +912,12 @@
             <input id="field-title" value="${ticket.title}" ${disabled} />
           </div>
           <div class="field">
-            <label>需求部门 / 提交人</label>
-            <input id="field-applicant" value="${ticket.applicant}" ${disabled} />
+            <label>需求端</label>
+            <input id="field-demandOwner" value="${ticket.demandOwner}" ${disabled} />
           </div>
           <div class="field">
-            <label>设计负责人</label>
-            <input id="field-designer" value="${ticket.designer}" ${disabled} />
+            <label>设计端</label>
+            <input id="field-designOwner" value="${ticket.designOwner}" ${disabled} />
           </div>
           <div class="field">
             <label>需求类型</label>
@@ -1155,23 +926,12 @@
             </select>
           </div>
           <div class="field">
-<<<<<<< ours
-            <label>提单端口</label>
-            <input value="${currentConfig().label}" disabled />
+            <label>端口</label>
+            <input value="${getConfig().label}" disabled />
           </div>
           <div class="field">
             <label>优先级</label>
             <input id="field-priority" value="${ticket.priority}" ${disabled} />
-=======
-            <label>投放渠道</label>
-            <input id="field-channel" value="${ticket.channel}" ${disabled} />
-          </div>
-          <div class="field">
-            <label>优先级</label>
-            <select id="field-priority" ${disabled}>
-              ${["高", "中", "紧急"].map(item => `<option value="${item}" ${ticket.priority === item ? "selected" : ""}>${item}</option>`).join("")}
-            </select>
->>>>>>> theirs
           </div>
           <div class="field">
             <label>预计完成时间</label>
@@ -1189,28 +949,17 @@
       `;
     }
 
-    function renderRequesterForm(ticket) {
-<<<<<<< ours
-      const labels = currentConfig().requesterActions;
+    function renderDemandForm(ticket) {
+      const text = getConfig().demandText;
 
       if (ticket.status === "pending_confirm") {
         return `
           <h3 class="section-title">提交需求</h3>
-          <p class="hint">当前为${currentConfig().label}提需求方操作界面，可先保存再提交。</p>
+          <p class="hint">当前为需求端操作，可先保存再提交给设计端。</p>
           ${commonFields(ticket, false)}
           <div class="actions" style="margin-top:14px;">
-            <button class="btn btn-ghost" data-action="save-request">${labels.save}</button>
-            <button class="btn btn-primary" data-action="submit-request">${labels.submit}</button>
-=======
-      if (ticket.status === "pending_confirm") {
-        return `
-          <h3 class="section-title">提交需求</h3>
-          <p class="hint">提需求方提交完整内容后，工单进入设计部门确认环节。</p>
-          ${commonFields(ticket, false)}
-          <div class="actions" style="margin-top:14px;">
-            <button class="btn btn-ghost" data-action="save-request">保存草稿</button>
-            <button class="btn btn-primary" data-action="submit-request">提交需求</button>
->>>>>>> theirs
+            <button class="btn btn-ghost" data-action="save-demand">${text.save}</button>
+            <button class="btn btn-primary" data-action="submit-demand">${text.submit}</button>
           </div>
         `;
       }
@@ -1218,17 +967,10 @@
       if (ticket.status === "confirming_time") {
         return `
           <h3 class="section-title">确认完成时间</h3>
-<<<<<<< ours
-          <p class="hint">当前由提需求方确认设计部门反馈的完成时间。</p>
+          <p class="hint">当前由需求端确认设计端反馈的预计完成时间。</p>
           ${commonFields(ticket, true)}
           <div class="actions" style="margin-top:14px;">
-            <button class="btn btn-primary" data-action="confirm-time">${labels.confirmTime}</button>
-=======
-          <p class="hint">当前由提需求方确认设计部门反馈的预计完成时间。</p>
-          ${commonFields(ticket, true)}
-          <div class="actions" style="margin-top:14px;">
-            <button class="btn btn-primary" data-action="confirm-time">确认完成时间</button>
->>>>>>> theirs
+            <button class="btn btn-primary" data-action="confirm-time">${text.confirmTime}</button>
           </div>
         `;
       }
@@ -1239,45 +981,29 @@
           <p class="hint">请确认设计文件，确认无误后关闭工单。</p>
           ${commonFields(ticket, true)}
           <div class="actions" style="margin-top:14px;">
-<<<<<<< ours
-            <button class="btn btn-secondary" data-action="confirm-file">${labels.confirmFile}</button>
-            <button class="btn btn-primary" data-action="close-ticket">${labels.close}</button>
-=======
-            <button class="btn btn-secondary" data-action="confirm-file">确认设计文件</button>
-            <button class="btn btn-primary" data-action="close-ticket">关闭工单</button>
->>>>>>> theirs
+            <button class="btn btn-secondary" data-action="confirm-file">${text.confirmFile}</button>
+            <button class="btn btn-primary" data-action="close-ticket">${text.close}</button>
           </div>
         `;
       }
 
       return `
         <h3 class="section-title">工单详情</h3>
-<<<<<<< ours
-        <p class="hint">当前步骤无需提需求方继续处理，可查看工单信息与记录。</p>
-=======
-        <p class="hint">当前步骤无需提需求方继续处理，可查看信息与记录。</p>
->>>>>>> theirs
+        <p class="hint">当前步骤无需需求端继续操作，可查看工单信息与记录。</p>
         ${commonFields(ticket, true)}
       `;
     }
 
-    function renderDesignerForm(ticket) {
-<<<<<<< ours
-      const labels = currentConfig().designerActions;
+    function renderDesignForm(ticket) {
+      const text = getConfig().designText;
 
-=======
->>>>>>> theirs
       if (ticket.status === "pending_confirm") {
         return `
           <h3 class="section-title">确认需求</h3>
-          <p class="hint">设计部门确认需求可承接后，进入完成时间确认环节。</p>
+          <p class="hint">设计端确认需求可承接后，进入时间确认环节。</p>
           ${commonFields(ticket, false)}
           <div class="actions" style="margin-top:14px;">
-<<<<<<< ours
-            <button class="btn btn-primary" data-action="accept-ticket">${labels.accept}</button>
-=======
-            <button class="btn btn-primary" data-action="accept-ticket">确认需求</button>
->>>>>>> theirs
+            <button class="btn btn-primary" data-action="accept-demand">${text.accept}</button>
           </div>
         `;
       }
@@ -1285,14 +1011,10 @@
       if (ticket.status === "confirming_time") {
         return `
           <h3 class="section-title">反馈完成时间</h3>
-          <p class="hint">请填写预计完成时间并提交给提需求方确认。</p>
+          <p class="hint">请填写预计完成时间并提交给需求端确认。</p>
           ${commonFields(ticket, false)}
           <div class="actions" style="margin-top:14px;">
-<<<<<<< ours
-            <button class="btn btn-primary" data-action="estimate-time">${labels.estimate}</button>
-=======
-            <button class="btn btn-primary" data-action="estimate-time">提交完成时间</button>
->>>>>>> theirs
+            <button class="btn btn-primary" data-action="estimate-time">${text.estimate}</button>
           </div>
         `;
       }
@@ -1300,7 +1022,7 @@
       if (ticket.status === "designing") {
         return `
           <h3 class="section-title">上传设计文件</h3>
-          <p class="hint">上传预览图与源文件后，工单进入提需求方确认阶段。</p>
+          <p class="hint">上传预览图与源文件后，进入需求端确认阶段。</p>
           ${commonFields(ticket, true)}
           <div class="field-grid" style="margin-top:14px;">
             <div class="field">
@@ -1313,32 +1035,24 @@
             </div>
             <div class="field full">
               <label>交付说明</label>
-              <textarea id="upload-note" placeholder="填写设计版本或交付说明。"></textarea>
+              <textarea id="upload-note" placeholder="填写交付版本与备注。"></textarea>
             </div>
           </div>
           <div class="actions" style="margin-top:14px;">
-<<<<<<< ours
-            <button class="btn btn-primary" data-action="upload-files">${labels.upload}</button>
-=======
-            <button class="btn btn-primary" data-action="upload-files">上传设计文件</button>
->>>>>>> theirs
+            <button class="btn btn-primary" data-action="upload-files">${text.upload}</button>
           </div>
         `;
       }
 
       return `
         <h3 class="section-title">工单详情</h3>
-        <p class="hint">当前步骤无需设计部门继续处理，可查看工单信息与记录。</p>
+        <p class="hint">当前步骤无需设计端继续操作，可查看工单信息与记录。</p>
         ${commonFields(ticket, true)}
       `;
     }
 
     function saveCommonFields(ticket) {
-<<<<<<< ours
-      const keys = ["title", "applicant", "designer", "type", "priority", "due", "attachment", "desc"];
-=======
-      const keys = ["title", "applicant", "designer", "type", "channel", "priority", "due", "attachment", "desc"];
->>>>>>> theirs
+      const keys = ["title", "demandOwner", "designOwner", "type", "priority", "due", "attachment", "desc"];
       keys.forEach(key => {
         const node = document.getElementById(`field-${key}`);
         if (node) {
@@ -1347,37 +1061,25 @@
       });
     }
 
-    function bindFormActions(ticket) {
+    function bindActions(ticket) {
       [...formPanel.querySelectorAll("[data-action]")].forEach(button => {
         button.addEventListener("click", () => {
           const action = button.dataset.action;
 
-          if (action === "save-request") {
+          if (action === "save-demand") {
             saveCommonFields(ticket);
-<<<<<<< ours
-            appendHistory(ticket, `${currentConfig().label}提需求方保存需求草稿`);
-=======
-            appendHistory(ticket, "提需求方保存需求草稿");
->>>>>>> theirs
+            appendHistory(ticket, `${getConfig().label}需求端保存需求`);
           }
 
-          if (action === "submit-request") {
+          if (action === "submit-demand") {
             saveCommonFields(ticket);
-<<<<<<< ours
-            appendHistory(ticket, `${currentConfig().label}提需求方提交需求`);
-=======
-            appendHistory(ticket, "提需求方提交需求");
->>>>>>> theirs
+            appendHistory(ticket, `${getConfig().label}需求端提交需求`);
           }
 
-          if (action === "accept-ticket") {
+          if (action === "accept-demand") {
             saveCommonFields(ticket);
             ticket.status = "confirming_time";
-<<<<<<< ours
-            appendHistory(ticket, `${currentConfig().label}设计部门确认需求`);
-=======
-            appendHistory(ticket, "设计部门确认需求");
->>>>>>> theirs
+            appendHistory(ticket, `${getConfig().label}设计端确认需求`);
           }
 
           if (action === "estimate-time") {
@@ -1385,81 +1087,53 @@
             if (!ticket.due) {
               ticket.due = "2026-04-23 18:00";
             }
-<<<<<<< ours
-            appendHistory(ticket, `${currentConfig().label}设计部门反馈预计完成时间 ${ticket.due}`);
-=======
-            appendHistory(ticket, `设计部门反馈预计完成时间 ${ticket.due}`);
->>>>>>> theirs
+            appendHistory(ticket, `${getConfig().label}设计端反馈预计完成时间 ${ticket.due}`);
           }
 
           if (action === "confirm-time") {
             ticket.status = "designing";
-<<<<<<< ours
-            appendHistory(ticket, `${currentConfig().label}提需求方确认完成时间`);
-=======
-            appendHistory(ticket, "提需求方确认完成时间");
->>>>>>> theirs
+            appendHistory(ticket, `${getConfig().label}需求端确认完成时间`);
           }
 
           if (action === "upload-files") {
             const previewName = document.getElementById("upload-preview")?.value.trim() || "设计预览图.jpg";
             const sourceName = document.getElementById("upload-source")?.value.trim() || "设计源文件.psd";
-            const note = document.getElementById("upload-note")?.value.trim() || "设计部门已上传设计文件";
+            const note = document.getElementById("upload-note")?.value.trim() || "设计端已上传交付文件";
             ticket.files = [
               { name: previewName, note, type: "预览图" },
               { name: sourceName, note, type: "源文件" }
             ];
             ticket.status = "waiting_acceptance";
-<<<<<<< ours
-            appendHistory(ticket, `${currentConfig().label}设计部门上传设计文件`);
+            appendHistory(ticket, `${getConfig().label}设计端上传设计文件`);
           }
 
           if (action === "confirm-file") {
-            appendHistory(ticket, `${currentConfig().label}提需求方确认设计文件`);
-=======
-            appendHistory(ticket, "设计部门上传设计文件");
-          }
-
-          if (action === "confirm-file") {
-            appendHistory(ticket, "提需求方确认设计文件");
->>>>>>> theirs
+            appendHistory(ticket, `${getConfig().label}需求端确认设计文件`);
           }
 
           if (action === "close-ticket") {
             ticket.status = "closed";
-<<<<<<< ours
-            appendHistory(ticket, `${currentConfig().label}提需求方关闭工单`);
+            appendHistory(ticket, `${getConfig().label}需求端关闭工单`);
           }
 
           renderAll();
-          switchPage("detail");
-=======
-            appendHistory(ticket, "提需求方关闭工单");
-          }
-
-          renderList();
-          renderDetail();
->>>>>>> theirs
+          switchView("detail");
         });
       });
     }
 
     function renderFiles(ticket) {
       fileBox.innerHTML = ticket.files.length ? ticket.files.map(file => `
-        <div class="list-item">
+        <div class="stack-item">
           <strong>${file.name}</strong>
           <div class="hint">${file.type} · ${file.note}</div>
         </div>
-<<<<<<< ours
-      `).join("") : `<div class="empty">当前端口下该工单暂无已上传设计文件。</div>`;
-=======
       `).join("") : `<div class="empty">当前暂无已上传设计文件。</div>`;
->>>>>>> theirs
     }
 
     function renderHistory(ticket) {
       historyBox.innerHTML = ticket.history.map(item => `
-        <div class="list-item">
+        <div class="stack-item">
           <strong>${item.split(" ").slice(0, 2).join(" ")}</strong>
           <div class="hint">${item.split(" ").slice(2).join(" ")}</div>
         </div>
@@ -1472,122 +1146,79 @@
         return;
       }
 
-<<<<<<< ours
-      detailTitle.textContent = `${currentConfig().label}工单详情`;
-      detailDesc.textContent = `${currentConfig().detailDescPrefix} · ${ticket.id} · ${statusMap[ticket.status].label} · ${ticket.applicant}`;
-=======
-      detailTitle.textContent = ticket.title;
-      detailDesc.textContent = `${ticket.id} · ${statusMap[ticket.status].label} · ${ticket.applicant}`;
->>>>>>> theirs
+      detailTitle.textContent = `${getConfig().label}工单详情`;
+      detailDesc.textContent = `${getConfig().detailPrefix} · ${ticket.id} · ${statusMap[ticket.status].label} · 需求端：${ticket.demandOwner}`;
       roleHint.textContent = `当前角色：${roles.find(role => role.key === currentRole).label}`;
 
-      renderSteps(ticket);
       renderRoles();
+      renderSteps(ticket);
       renderSummary(ticket);
-      formPanel.innerHTML = currentRole === "requester" ? renderRequesterForm(ticket) : renderDesignerForm(ticket);
+      formPanel.innerHTML = currentRole === "demand" ? renderDemandForm(ticket) : renderDesignForm(ticket);
       renderFiles(ticket);
       renderHistory(ticket);
-      bindFormActions(ticket);
+      bindActions(ticket);
     }
 
-    function bindPageTabs() {
-      [...document.querySelectorAll("[data-page]")].forEach(button => {
+    function bindViewSwitch() {
+      [...document.querySelectorAll("[data-view]")].forEach(button => {
         button.addEventListener("click", () => {
-          switchPage(button.dataset.page);
-          if (button.dataset.page === "detail") {
+          switchView(button.dataset.view);
+          if (button.dataset.view === "detail") {
             renderDetail();
           }
         });
       });
     }
 
-<<<<<<< ours
     function createTicket() {
-      const nextIndex = currentTickets().length + 1;
-      const prefix = currentPort === "pc" ? "PC" : "MP";
+      const prefix = currentPort === "mobile" ? "M" : "A";
       const next = {
-        id: `${prefix}-DES-20260419-00${nextIndex}`,
-        title: currentPort === "pc" ? "新建PC设计需求" : "新建小程序设计需求",
-        applicant: currentPort === "pc" ? "待填写部门 / 待填写" : "移动提交人 / 待填写",
-        designer: "待分配",
+        id: `${prefix}-DES-20260419-00${getTickets().length + 1}`,
+        title: currentPort === "mobile" ? "新建移动端需求" : "新建小程序端需求",
+        demandOwner: "待填写需求端",
+        designOwner: "待分配设计端",
         type: "海报设计",
-        channel: `${currentConfig().label}新建工单`,
-=======
-    function createNewTicket() {
-      const next = {
-        id: `DES-20260419-00${tickets.length + 1}`,
-        title: "新建设计需求",
-        applicant: "待填写",
-        designer: "待分配",
-        type: "海报设计",
-        channel: "待填写",
->>>>>>> theirs
+        channel: `${getConfig().label}新建工单`,
         priority: "中",
         due: "",
         attachment: "",
         desc: "",
         status: "pending_confirm",
         files: [],
-<<<<<<< ours
-        history: [`04-19 16:30 系统创建${currentConfig().label}新工单`]
+        history: [`04-19 16:30 系统创建${getConfig().label}新工单`]
       };
-      currentTickets().unshift(next);
+      getTickets().unshift(next);
       activeIds[currentPort] = next.id;
-      currentRole = "requester";
+      currentRole = "demand";
       renderAll();
-      switchPage("detail");
+      switchView("detail");
     }
 
     function renderAll() {
       renderPortSwitch();
-      renderHeaderCopy();
+      renderHeader();
       renderList();
       renderDetail();
     }
 
     document.getElementById("createTicket").addEventListener("click", createTicket);
     document.getElementById("resetData").addEventListener("click", () => {
-      ticketsByPort = cloneAllData();
-      currentPort = "pc";
+      dataByPort = cloneData();
+      currentPort = "mobile";
+      currentView = "list";
+      currentRole = "demand";
       currentFilter = "all";
-      currentRole = "requester";
       activeIds = {
-        pc: ticketsByPort.pc[0].id,
-        applet: ticketsByPort.applet[0].id
+        mobile: dataByPort.mobile[0].id,
+        applet: dataByPort.applet[0].id
       };
       renderAll();
-=======
-        history: ["04-19 16:30 系统创建新工单"]
-      };
-      tickets.unshift(next);
-      activeId = next.id;
-      currentRole = "requester";
-      renderList();
-      switchPage("detail");
-      renderDetail();
-    }
-
-    document.getElementById("createTicket").addEventListener("click", createNewTicket);
-    document.getElementById("resetData").addEventListener("click", () => {
-      tickets = cloneTickets();
-      currentPage = "list";
-      currentFilter = "all";
-      currentRole = "requester";
-      activeId = tickets[0].id;
-      renderList();
-      renderDetail();
->>>>>>> theirs
-      switchPage("list");
+      switchView("list");
     });
 
-    bindPageTabs();
-<<<<<<< ours
+    bindViewSwitch();
     renderAll();
-=======
-    renderList();
-    renderDetail();
->>>>>>> theirs
-    switchPage("list");
+    switchView("list");
   </script>
 </body>
 </html>

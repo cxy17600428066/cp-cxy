@@ -291,14 +291,6 @@
       line-height: 1.7;
     }
 
-    .bottom-bar {
-      position: sticky;
-      bottom: 0;
-      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
-      background: rgba(255, 255, 255, 0.94);
-      backdrop-filter: blur(12px);
-      border-top: 1px solid var(--line);
-    }
   </style>
 </head>
 <body>
@@ -355,8 +347,6 @@
         </div>
       </section>
     </div>
-
-    <div class="bottom-bar" id="bottomBar"></div>
   </main>
 
   <script>
@@ -454,7 +444,6 @@
     const formBox = document.getElementById("formBox");
     const fileList = document.getElementById("fileList");
     const recordList = document.getElementById("recordList");
-    const bottomBar = document.getElementById("bottomBar");
 
     function cloneTickets() {
       return JSON.parse(JSON.stringify(initialTickets));
@@ -675,19 +664,6 @@
       });
     }
 
-    function getBottomAction(ticket) {
-      if (currentSide === "demand") {
-        if (ticket.status === "pending_confirm") return { label: actionText.demand.submit, action: "submit-request" };
-        if (ticket.status === "confirming_time") return { label: actionText.demand.confirmTime, action: "confirm-time" };
-        if (ticket.status === "waiting_acceptance") return { label: actionText.demand.close, action: "close-ticket" };
-        return { label: "返回列表", action: "back-list" };
-      }
-      if (ticket.status === "pending_confirm") return { label: actionText.design.accept, action: "accept-ticket" };
-      if (ticket.status === "confirming_time") return { label: actionText.design.estimate, action: "estimate-time" };
-      if (ticket.status === "designing") return { label: actionText.design.upload, action: "upload-files" };
-      return { label: "返回列表", action: "back-list" };
-    }
-
     function handleAction(action, ticket) {
       if (action === "back-list") {
         switchView("list");
@@ -748,12 +724,6 @@
       `).join("");
     }
 
-    function renderBottom(ticket) {
-      const config = getBottomAction(ticket);
-      bottomBar.innerHTML = `<button class="btn btn-primary" data-action="${config.action}">${config.label}</button>`;
-      bottomBar.querySelector("[data-action]").addEventListener("click", () => handleAction(config.action, ticket));
-    }
-
     function renderDetail() {
       const ticket = getActiveTicket();
       if (!ticket) return;
@@ -762,7 +732,6 @@
       formBox.innerHTML = currentSide === "demand" ? demandForm(ticket) : designForm(ticket);
       renderFiles(ticket);
       renderRecords(ticket);
-      renderBottom(ticket);
     }
 
     function createTicket() {

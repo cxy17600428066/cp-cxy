@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>设计工单系统 移动端原型</title>
+  <style>
+    :root {
+      --page: #f5f7fa;
+      --card: rgba(255, 255, 255, 0.94);
+      --card-soft: #f8fafc;
+      --ink: #111827;
+      --muted: #6b7280;
+      --line: rgba(148, 163, 184, 0.2);
+      --brand: #c2410c;
+      --brand-deep: #9a3412;
+      --brand-soft: rgba(194, 65, 12, 0.08);
+      --good: #047857;
+      --good-soft: rgba(4, 120, 87, 0.08);
+      --info: #1d4ed8;
+      --info-soft: rgba(29, 78, 216, 0.08);
+      --warn: #b45309;
+      --warn-soft: rgba(180, 83, 9, 0.08);
+      --shadow: 0 20px 54px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Source Han Sans SC", sans-serif;
+      background:
+        radial-gradient(circle at top center, rgba(194, 65, 12, 0.12), transparent 28%),
+        linear-gradient(180deg, #eef2f7 0%, #f5f7fa 100%);
+      color: var(--ink);
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .page {
+      width: min(100%, 430px);
+      min-height: 100vh;
+      margin: 0 auto;
+      background: rgba(245, 247, 250, 0.92);
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 14px 16px 12px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .topbar small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .topbar strong {
+      display: block;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .topbar span {
+      display: block;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .seg-row,
+    .quick-row,
+    .action-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .seg-row {
+      margin-top: 12px;
+    }
+
+    .content {
+      padding: 14px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .card {
+      padding: 16px;
+      border-radius: 22px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero {
+      padding: 20px 18px;
+      border-radius: 28px;
+      color: #fff7f3;
+      background: linear-gradient(155deg, #561d14 0%, #a23517 58%, #de7a2f 100%);
+    }
+
+    .hero small {
+      display: block;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.82;
+    }
+
+    .hero h1 {
+      margin: 10px 0 8px;
+      font-size: 28px;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.8;
+      color: rgba(255, 247, 243, 0.92);
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .pill,
+    .seg-btn,
+    .quick-btn,
+    .btn {
+      border: 0;
+      border-radius: 999px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .pill.warn {
+      color: var(--warn);
+      background: var(--warn-soft);
+    }
+
+    .pill.info {
+      color: var(--info);
+      background: var(--info-soft);
+    }
+
+    .pill.brand {
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+    }
+
+    .pill.good {
+      color: var(--good);
+      background: var(--good-soft);
+    }
+
+    .seg-btn,
+    .quick-btn {
+      padding: 10px 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .seg-btn.active,
+    .quick-btn.active {
+      color: var(--brand-deep);
+      background: var(--brand-soft);
+      border-color: rgba(194, 65, 12, 0.24);
+    }
+
+    .ticket-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ticket-card {
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+      cursor: pointer;
+    }
+
+    .ticket-card.active {
+      border-color: rgba(194, 65, 12, 0.26);
+      box-shadow: inset 0 0 0 1px rgba(194, 65, 12, 0.08);
+      background: linear-gradient(180deg, #fffdfb 0%, #fff7f2 100%);
+    }
+
+    .ticket-card h3 {
+      margin: 0 0 8px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .ticket-card .sub {
+      font-size: 12px;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .step-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .step-item small {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .step-item strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .step-item.done {
+      background: var(--good-soft);
+      border-color: rgba(4, 120, 87, 0.2);
+    }
+
+    .step-item.active {
+      background: var(--brand-soft);
+      border-color: rgba(194, 65, 12, 0.24);
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .field textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .file-list,
+    .record-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .file-item,
+    .record-item {
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .file-item strong,
+    .record-item strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 13px 16px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(135deg, var(--brand), #ea580c);
+    }
+
+    .btn-secondary {
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .bottom-bar {
+      position: sticky;
+      bottom: 0;
+      padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--line);
+    }
+
+    .empty {
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px dashed #d1d5db;
+      color: var(--muted);
+      background: #fafbfc;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <small>移动端工单流程</small>
+      <strong>设计需求提交</strong>
+      <span>员工发起需求，设计部门处理，移动端按步骤查看与确认。</span>
+      <div class="seg-row" id="roleTabs"></div>
+    </header>
+
+    <div class="content">
+      <section class="hero">
+        <small>Design Ticket</small>
+        <h1>一步一步<br />完成设计工单</h1>
+        <p>移动端用于提需求、查看进度、确认时间、确认设计文件，不展示说明性模块，只保留业务流程本身。</p>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">我的工单</h2>
+        <div class="quick-row" id="statusTabs"></div>
+        <div class="ticket-list" id="ticketList"></div>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">当前进度</h2>
+        <div class="step-list" id="stepList"></div>
+      </section>
+
+      <section class="card" id="detailCard"></section>
+
+      <section class="card">
+        <h2 class="section-title">处理记录</h2>
+        <div class="record-list" id="recordList"></div>
+      </section>
+    </div>
+
+    <div class="bottom-bar" id="bottomBar"></div>
+  </main>
+
+  <script>
+    const roles = [
+      { key: "requester", label: "提需求方" },
+      { key: "designer", label: "设计部门" }
+    ];
+
+    const statuses = [
+      { key: "all", label: "全部" },
+      { key: "pending_confirm", label: "待确认" },
+      { key: "confirming_time", label: "待时间" },
+      { key: "designing", label: "设计中" },
+      { key: "waiting_acceptance", label: "待收件" },
+      { key: "closed", label: "已关闭" }
+    ];
+
+    const steps = [
+      { key: "submitted", label: "提交需求" },
+      { key: "accepted", label: "设计确认" },
+      { key: "scheduled", label: "确认时间" },
+      { key: "delivered", label: "上传文件" },
+      { key: "closed", label: "关闭工单" }
+    ];
+
+    const statusMap = {
+      pending_confirm: { label: "待设计确认", step: "submitted", tone: "warn" },
+      confirming_time: { label: "待确认完成时间", step: "accepted", tone: "info" },
+      designing: { label: "设计中", step: "scheduled", tone: "brand" },
+      waiting_acceptance: { label: "待确认设计文件", step: "delivered", tone: "info" },
+      closed: { label: "已关闭", step: "closed", tone: "good" }
+    };
+
+    const initialTickets = [
+      {
+        id: "DES-20260419-001",
+        title: "五一活动海报设计",
+        applicant: "市场部 / 李晓",
+        designer: "品牌设计组 / 陈可",
+        type: "海报设计",
+        due: "2026-04-22 18:00",
+        desc: "需产出五一活动主海报 1 张、活动长图 1 张，用于公众号和朋友圈投放。",
+        attachment: "活动方案_v3.pdf",
+        status: "waiting_acceptance",
+        files: [
+          { name: "五一活动海报_预览.jpg", note: "客户确认用预览图", type: "预览图" },
+          { name: "五一活动海报_源文件.psd", note: "可继续编辑的源文件", type: "源文件" }
+        ],
+        history: [
+          "04-19 09:30 提需求方提交需求",
+          "04-19 10:20 设计部门确认需求",
+          "04-19 10:35 设计部门反馈预计完成时间",
+          "04-19 10:48 提需求方确认完成时间",
+          "04-21 17:36 设计部门上传设计文件"
+        ]
+      },
+      {
+        id: "DES-20260419-002",
+        title: "新品详情页长图设计",
+        applicant: "电商部 / 周静",
+        designer: "电商设计组 / 王卓",
+        type: "详情页设计",
+        due: "2026-04-24 12:00",
+        desc: "新品无骨鸡爪需输出一版电商详情页长图，包含卖点首屏、口味介绍、工艺说明和场景图。",
+        attachment: "新品卖点梳理.xlsx",
+        status: "designing",
+        files: [],
+        history: [
+          "04-19 11:20 提需求方提交需求",
+          "04-19 12:05 设计部门确认需求",
+          "04-19 12:15 提需求方确认预计完成时间"
+        ]
+      },
+      {
+        id: "DES-20260419-003",
+        title: "门店开业展架设计",
+        applicant: "渠道部 / 何洋",
+        designer: "平面设计组 / 林安",
+        type: "物料设计",
+        due: "",
+        desc: "门店开业需要一套展架和吊旗设计，需突出新品试吃和门店活动权益。",
+        attachment: "门店开业需求说明.docx",
+        status: "pending_confirm",
+        files: [],
+        history: [
+          "04-19 14:10 提需求方提交需求"
+        ]
+      }
+    ];
+
+    let tickets = JSON.parse(JSON.stringify(initialTickets));
+    let currentRole = "requester";
+    let currentFilter = "all";
+    let activeId = tickets[0].id;
+
+    const roleTabs = document.getElementById("roleTabs");
+    const statusTabs = document.getElementById("statusTabs");
+    const ticketList = document.getElementById("ticketList");
+    const stepList = document.getElementById("stepList");
+    const detailCard = document.getElementById("detailCard");
+    const recordList = document.getElementById("recordList");
+    const bottomBar = document.getElementById("bottomBar");
+
+    function getFilteredTickets() {
+      return tickets.filter(ticket => currentFilter === "all" || ticket.status === currentFilter);
+    }
+
+    function getActiveTicket() {
+      const filtered = getFilteredTickets();
+      const current = tickets.find(ticket => ticket.id === activeId);
+      if (current && (currentFilter === "all" || current.status === currentFilter)) {
+        return current;
+      }
+      if (filtered.length) {
+        activeId = filtered[0].id;
+        return filtered[0];
+      }
+      activeId = tickets[0]?.id || "";
+      return tickets[0];
+    }
+
+    function getStatusPill(status) {
+      const meta = statusMap[status];
+      return `<span class="pill ${meta.tone}">${meta.label}</span>`;
+    }
+
+    function appendHistory(ticket, text) {
+      ticket.history.push(`04-19 16:30 ${text}`);
+    }
+
+    function saveCommonFields(ticket) {
+      const map = ["title", "applicant", "designer", "type", "due", "attachment", "desc"];
+      map.forEach(key => {
+        const el = document.getElementById(`field-${key}`);
+        if (el) {
+          ticket[key] = el.value.trim();
+        }
+      });
+    }
+
+    function renderRoles() {
+      roleTabs.innerHTML = roles.map(role => `
+        <button class="seg-btn ${role.key === currentRole ? "active" : ""}" data-role="${role.key}">${role.label}</button>
+      `).join("");
+
+      [...roleTabs.querySelectorAll("[data-role]")].forEach(button => {
+        button.addEventListener("click", () => {
+          currentRole = button.dataset.role;
+          renderMobile();
+        });
+      });
+    }
+
+    function renderStatusTabs() {
+      statusTabs.innerHTML = statuses.map(item => `
+        <button class="quick-btn ${item.key === currentFilter ? "active" : ""}" data-filter="${item.key}">${item.label}</button>
+      `).join("");
+
+      [...statusTabs.querySelectorAll("[data-filter]")].forEach(button => {
+        button.addEventListener("click", () => {
+          currentFilter = button.dataset.filter;
+          renderMobile();
+        });
+      });
+    }
+
+    function renderTickets() {
+      const list = getFilteredTickets();
+      if (!list.length) {
+        ticketList.innerHTML = `<div class="empty">当前筛选条件下暂无工单。</div>`;
+        return;
+      }
+
+      ticketList.innerHTML = list.map(ticket => `
+        <article class="ticket-card ${ticket.id === activeId ? "active" : ""}" data-id="${ticket.id}">
+          <h3>${ticket.title}</h3>
+          <div class="sub">${ticket.id} · ${ticket.applicant}</div>
+          <div class="sub">${ticket.due ? `预计完成：${ticket.due}` : "待确认完成时间"}</div>
+          <div class="action-row" style="margin-top:10px;">
+            ${getStatusPill(ticket.status)}
+            <span class="pill brand">${ticket.type}</span>
+          </div>
+        </article>
+      `).join("");
+
+      [...ticketList.querySelectorAll("[data-id]")].forEach(card => {
+        card.addEventListener("click", () => {
+          activeId = card.dataset.id;
+          renderMobile();
+        });
+      });
+    }
+
+    function renderSteps(ticket) {
+      const currentIndex = steps.findIndex(item => item.key === statusMap[ticket.status].step);
+      stepList.innerHTML = steps.map((step, index) => `
+        <div class="step-item ${index < currentIndex ? "done" : index === currentIndex ? "active" : ""}">
+          <small>步骤 ${index + 1}</small>
+          <strong>${step.label}</strong>
+        </div>
+      `).join("");
+    }
+
+    function commonFields(ticket, readonly = false) {
+      const disabled = readonly ? "disabled" : "";
+      return `
+        <div class="field">
+          <label>需求标题</label>
+          <input id="field-title" value="${ticket.title}" ${disabled} />
+        </div>
+        <div class="field">
+          <label>需求部门 / 提交人</label>
+          <input id="field-applicant" value="${ticket.applicant}" ${disabled} />
+        </div>
+        <div class="field">
+          <label>设计负责人</label>
+          <input id="field-designer" value="${ticket.designer}" ${disabled} />
+        </div>
+        <div class="field">
+          <label>需求类型</label>
+          <select id="field-type" ${disabled}>
+            ${["海报设计", "详情页设计", "物料设计", "包装设计", "其它"].map(item => `<option value="${item}" ${ticket.type === item ? "selected" : ""}>${item}</option>`).join("")}
+          </select>
+        </div>
+        <div class="field">
+          <label>预计完成时间</label>
+          <input id="field-due" value="${ticket.due}" placeholder="例如：2026-04-24 18:00" ${disabled} />
+        </div>
+        <div class="field">
+          <label>需求附件</label>
+          <input id="field-attachment" value="${ticket.attachment}" ${disabled} />
+        </div>
+        <div class="field">
+          <label>需求说明</label>
+          <textarea id="field-desc" ${disabled}>${ticket.desc}</textarea>
+        </div>
+      `;
+    }
+
+    function renderRequester(ticket) {
+      if (ticket.status === "pending_confirm") {
+        return `
+          <h2 class="section-title">提交需求</h2>
+          <div class="sub">当前为提需求方编辑态，可继续补充需求信息后保存或提交。</div>
+          ${commonFields(ticket, false)}
+        `;
+      }
+
+      if (ticket.status === "confirming_time") {
+        return `
+          <h2 class="section-title">确认完成时间</h2>
+          <div class="sub">请确认设计部门反馈的完成时间后进入设计执行阶段。</div>
+          ${commonFields(ticket, true)}
+        `;
+      }
+
+      if (ticket.status === "waiting_acceptance") {
+        return `
+          <h2 class="section-title">确认设计文件</h2>
+          <div class="sub">请查看已上传设计文件，确认无误后关闭工单。</div>
+          ${commonFields(ticket, true)}
+          <div class="file-list">
+            ${ticket.files.map(file => `
+              <div class="file-item">
+                <strong>${file.name}</strong>
+                <div class="sub">${file.type} · ${file.note}</div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }
+
+      return `
+        <h2 class="section-title">工单信息</h2>
+        <div class="sub">当前步骤无需提需求方继续处理，可查看工单内容和流转记录。</div>
+        ${commonFields(ticket, true)}
+      `;
+    }
+
+    function renderDesigner(ticket) {
+      if (ticket.status === "pending_confirm") {
+        return `
+          <h2 class="section-title">确认需求</h2>
+          <div class="sub">设计部门确认可承接后，工单进入完成时间确认环节。</div>
+          ${commonFields(ticket, false)}
+        `;
+      }
+
+      if (ticket.status === "confirming_time") {
+        return `
+          <h2 class="section-title">反馈完成时间</h2>
+          <div class="sub">请填写预计完成时间并提交给提需求方确认。</div>
+          ${commonFields(ticket, false)}
+        `;
+      }
+
+      if (ticket.status === "designing") {
+        return `
+          <h2 class="section-title">上传设计文件</h2>
+          <div class="sub">当前工单执行中，交付预览图和源文件后进入确认阶段。</div>
+          ${commonFields(ticket, true)}
+          <div class="field">
+            <label>预览图文件名</label>
+            <input id="upload-preview" placeholder="例如：活动海报_预览.jpg" />
+          </div>
+          <div class="field">
+            <label>源文件名</label>
+            <input id="upload-source" placeholder="例如：活动海报_源文件.psd" />
+          </div>
+          <div class="field">
+            <label>交付说明</label>
+            <textarea id="upload-note" placeholder="填写版本说明或交付备注。"></textarea>
+          </div>
+        `;
+      }
+
+      return `
+        <h2 class="section-title">工单信息</h2>
+        <div class="sub">当前步骤无需设计部门继续操作，可查看完整信息。</div>
+        ${commonFields(ticket, true)}
+        <div class="file-list">
+          ${ticket.files.length ? ticket.files.map(file => `
+            <div class="file-item">
+              <strong>${file.name}</strong>
+              <div class="sub">${file.type} · ${file.note}</div>
+            </div>
+          `).join("") : `<div class="empty">当前暂无已上传设计文件。</div>`}
+        </div>
+      `;
+    }
+
+    function renderDetail(ticket) {
+      detailCard.innerHTML = `
+        <div class="action-row">
+          ${getStatusPill(ticket.status)}
+          <span class="pill brand">${ticket.id}</span>
+        </div>
+        <div class="sub">设计负责人：${ticket.designer || "待分配"}${ticket.due ? ` · 预计完成：${ticket.due}` : ""}</div>
+        ${currentRole === "requester" ? renderRequester(ticket) : renderDesigner(ticket)}
+      `;
+    }
+
+    function renderRecords(ticket) {
+      recordList.innerHTML = ticket.history.map(item => `
+        <div class="record-item">
+          <strong>${item.split(" ").slice(0, 2).join(" ")}</strong>
+          <div class="sub">${item.split(" ").slice(2).join(" ")}</div>
+        </div>
+      `).join("");
+    }
+
+    function getPrimaryAction(ticket) {
+      if (currentRole === "requester") {
+        if (ticket.status === "pending_confirm") {
+          return { label: "提交当前需求", action: "save-request" };
+        }
+        if (ticket.status === "confirming_time") {
+          return { label: "确认完成时间", action: "confirm-time" };
+        }
+        if (ticket.status === "waiting_acceptance") {
+          return { label: "关闭工单", action: "close-ticket" };
+        }
+        return { label: "保存当前内容", action: "save-only" };
+      }
+
+      if (ticket.status === "pending_confirm") {
+        return { label: "确认需求", action: "accept-ticket" };
+      }
+      if (ticket.status === "confirming_time") {
+        return { label: "反馈完成时间", action: "estimate-time" };
+      }
+      if (ticket.status === "designing") {
+        return { label: "上传设计文件", action: "upload-files" };
+      }
+      return { label: "保存当前内容", action: "save-only" };
+    }
+
+    function bindBottomAction(ticket) {
+      const primary = getPrimaryAction(ticket);
+      bottomBar.innerHTML = `<button class="btn btn-primary" data-action="${primary.action}">${primary.label}</button>`;
+      bottomBar.querySelector("[data-action]").addEventListener("click", () => {
+        handleAction(primary.action, ticket);
+      });
+    }
+
+    function handleAction(action, ticket) {
+      if (action === "save-only" || action === "save-request") {
+        saveCommonFields(ticket);
+        appendHistory(ticket, "移动端保存当前内容");
+      }
+
+      if (action === "accept-ticket") {
+        saveCommonFields(ticket);
+        ticket.status = "confirming_time";
+        appendHistory(ticket, "设计部门确认需求");
+      }
+
+      if (action === "estimate-time") {
+        saveCommonFields(ticket);
+        if (!ticket.due) {
+          ticket.due = "2026-04-23 18:00";
+        }
+        appendHistory(ticket, `设计部门反馈预计完成时间 ${ticket.due}`);
+      }
+
+      if (action === "confirm-time") {
+        saveCommonFields(ticket);
+        ticket.status = "designing";
+        appendHistory(ticket, "提需求方确认完成时间");
+      }
+
+      if (action === "upload-files") {
+        const preview = document.getElementById("upload-preview")?.value.trim() || "设计预览图.jpg";
+        const source = document.getElementById("upload-source")?.value.trim() || "设计源文件.fig";
+        const note = document.getElementById("upload-note")?.value.trim() || "移动端演示上传";
+        ticket.files = [
+          { name: preview, note, type: "预览图" },
+          { name: source, note, type: "源文件" }
+        ];
+        ticket.status = "waiting_acceptance";
+        appendHistory(ticket, "设计部门上传设计文件");
+      }
+
+      if (action === "close-ticket") {
+        ticket.status = "closed";
+        appendHistory(ticket, "提需求方关闭工单");
+      }
+
+      renderMobile();
+    }
+
+    function renderMobile() {
+      renderRoles();
+      renderStatusTabs();
+      renderTickets();
+      const ticket = getActiveTicket();
+      if (!ticket) {
+        detailCard.innerHTML = `<div class="empty">暂无可查看工单。</div>`;
+        recordList.innerHTML = "";
+        bottomBar.innerHTML = "";
+        return;
+      }
+      renderSteps(ticket);
+      renderDetail(ticket);
+      renderRecords(ticket);
+      bindBottomAction(ticket);
+    }
+
+    renderMobile();
+  </script>
+</body>
+</html>

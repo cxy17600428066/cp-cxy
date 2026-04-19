@@ -3,9 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<<<<<<< ours
   <title>设计工单系统统一原型</title>
   <style>
     :root {
+=======
+  <title>设计工单系统 PC 端原型</title>
+  <style>
+    :root {
+      --bg: #f3f5f7;
+>>>>>>> theirs
       --panel: #ffffff;
       --panel-soft: #f8fafc;
       --ink: #111827;
@@ -46,7 +53,11 @@
     .app {
       min-height: 100vh;
       display: grid;
+<<<<<<< ours
       grid-template-rows: 82px 1fr;
+=======
+      grid-template-rows: 74px 1fr;
+>>>>>>> theirs
     }
 
     .topbar {
@@ -56,9 +67,14 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+<<<<<<< ours
       gap: 16px;
       padding: 0 24px;
       background: rgba(255, 255, 255, 0.94);
+=======
+      padding: 0 24px;
+      background: rgba(255, 255, 255, 0.92);
+>>>>>>> theirs
       backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--line);
     }
@@ -79,9 +95,13 @@
     .top-actions,
     .tabs,
     .filters,
+<<<<<<< ours
     .actions,
     .port-switch,
     .role-switch {
+=======
+    .actions {
+>>>>>>> theirs
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -92,7 +112,11 @@
     }
 
     .page {
+<<<<<<< ours
       max-width: 1440px;
+=======
+      max-width: 1420px;
+>>>>>>> theirs
       margin: 0 auto;
       display: none;
       gap: 16px;
@@ -102,6 +126,17 @@
       display: grid;
     }
 
+<<<<<<< ours
+=======
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+>>>>>>> theirs
     .list-page {
       grid-template-columns: 1fr;
     }
@@ -111,6 +146,7 @@
       align-items: start;
     }
 
+<<<<<<< ours
     .panel {
       background: var(--panel);
       border: 1px solid var(--line);
@@ -119,6 +155,8 @@
       overflow: hidden;
     }
 
+=======
+>>>>>>> theirs
     .panel-head {
       padding: 18px 20px 14px;
       border-bottom: 1px solid var(--line);
@@ -145,7 +183,10 @@
 
     .tab,
     .filter,
+<<<<<<< ours
     .port-btn,
+=======
+>>>>>>> theirs
     .role-btn,
     .btn,
     .step-pill,
@@ -156,7 +197,10 @@
 
     .tab,
     .filter,
+<<<<<<< ours
     .port-btn,
+=======
+>>>>>>> theirs
     .role-btn {
       padding: 10px 16px;
       background: #fff;
@@ -169,7 +213,10 @@
 
     .tab.active,
     .filter.active,
+<<<<<<< ours
     .port-btn.active,
+=======
+>>>>>>> theirs
     .role-btn.active {
       color: var(--brand-deep);
       background: var(--brand-soft);
@@ -212,7 +259,11 @@
 
     .stat strong {
       display: block;
+<<<<<<< ours
       font-size: 24px;
+=======
+      font-size: 26px;
+>>>>>>> theirs
       font-weight: 800;
     }
 
@@ -342,6 +393,18 @@
       color: var(--brand-deep);
     }
 
+<<<<<<< ours
+=======
+    .role-switch {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+>>>>>>> theirs
     .summary-grid,
     .field-grid {
       display: grid;
@@ -441,13 +504,21 @@
       line-height: 1.8;
     }
 
+<<<<<<< ours
     @media (max-width: 1180px) {
+=======
+    @media (max-width: 1080px) {
+>>>>>>> theirs
       .detail-page {
         grid-template-columns: 1fr;
       }
     }
 
+<<<<<<< ours
     @media (max-width: 900px) {
+=======
+    @media (max-width: 860px) {
+>>>>>>> theirs
       .stats,
       .summary-grid,
       .field-grid {
@@ -460,11 +531,18 @@
   <div class="app">
     <header class="topbar">
       <div class="brand">
+<<<<<<< ours
         <strong id="systemTitle">设计工单系统</strong>
         <span id="systemDesc">统一切换端口后，列表页与详情页的数据、文案和操作同步联动。</span>
       </div>
       <div class="top-actions">
         <div class="port-switch" id="portSwitch"></div>
+=======
+        <strong>设计工单系统</strong>
+        <span>列表页与详情页分离，按真实流程完成提交、确认、上传与关闭。</span>
+      </div>
+      <div class="top-actions">
+>>>>>>> theirs
         <button class="btn btn-secondary" id="resetData">恢复演示数据</button>
       </div>
     </header>
@@ -474,14 +552,20 @@
         <div class="panel">
           <div class="panel-head">
             <div>
+<<<<<<< ours
               <h2 id="listTitle">工单列表</h2>
               <p id="listDesc">先查看工单列表，再进入详情页执行提交、确认、上传和关闭等动作。</p>
+=======
+              <h2>工单列表</h2>
+              <p>先查看工单列表，再进入详情页执行提交、确认、上传和关闭等动作。</p>
+>>>>>>> theirs
             </div>
             <div class="tabs">
               <button class="tab active" data-page="list">列表页</button>
               <button class="tab" data-page="detail">详情页</button>
             </div>
           </div>
+<<<<<<< ours
           <div class="stats" id="statsRow"></div>
           <div class="toolbar">
             <div class="filters" id="filterBar"></div>
@@ -489,6 +573,18 @@
               <button class="btn btn-primary" id="createTicket">新建工单</button>
             </div>
           </div>
+=======
+
+          <div class="stats" id="statsRow"></div>
+
+          <div class="toolbar">
+            <div class="filters" id="filterBar"></div>
+            <div class="actions">
+              <button class="btn btn-primary" id="createTicket">新建需求工单</button>
+            </div>
+          </div>
+
+>>>>>>> theirs
           <div class="list-wrap" id="ticketContainer"></div>
         </div>
       </section>
@@ -506,10 +602,18 @@
                 <button class="tab active" data-page="detail">详情页</button>
               </div>
             </div>
+<<<<<<< ours
             <div class="card" style="border:0; border-radius:0;">
               <div class="steps" id="stepRow"></div>
               <div class="actions" style="justify-content:space-between; align-items:center; margin-top:14px; flex-wrap:wrap;">
                 <div class="role-switch" id="roleBar"></div>
+=======
+
+            <div class="card" style="border:0; border-radius:0;">
+              <div class="steps" id="stepRow"></div>
+              <div class="role-switch">
+                <div class="actions" id="roleBar"></div>
+>>>>>>> theirs
                 <div class="pill brand" id="roleHint">当前角色：提需求方</div>
               </div>
             </div>
@@ -534,6 +638,10 @@
               <div class="list-box" id="fileBox"></div>
             </div>
           </div>
+<<<<<<< ours
+=======
+
+>>>>>>> theirs
           <div class="panel">
             <div class="card" style="border:0; border-radius:0;">
               <h3 class="section-title">处理记录</h3>
@@ -567,6 +675,7 @@
       closed: { label: "已关闭", step: "closed", tone: "good" }
     };
 
+<<<<<<< ours
     const portConfigs = {
       pc: {
         label: "PC端",
@@ -718,6 +827,82 @@
     const filterBar = document.getElementById("filterBar");
     const ticketContainer = document.getElementById("ticketContainer");
     const createTicketBtn = document.getElementById("createTicket");
+=======
+    const initialTickets = [
+      {
+        id: "DES-20260419-001",
+        title: "五一活动海报设计",
+        applicant: "市场部 / 李晓",
+        designer: "品牌设计组 / 陈可",
+        type: "海报设计",
+        channel: "线上活动",
+        priority: "高",
+        due: "2026-04-22 18:00",
+        attachment: "活动方案_v3.pdf",
+        desc: "需产出五一活动主海报 1 张、活动长图 1 张，用于公众号和朋友圈投放。",
+        status: "waiting_acceptance",
+        files: [
+          { name: "五一活动海报_预览.jpg", note: "客户确认用预览图", type: "预览图" },
+          { name: "五一活动海报_源文件.psd", note: "可继续编辑的源文件", type: "源文件" }
+        ],
+        history: [
+          "04-19 09:30 提需求方提交需求",
+          "04-19 10:20 设计部门确认需求",
+          "04-19 10:35 设计部门反馈预计完成时间",
+          "04-19 10:48 提需求方确认完成时间",
+          "04-21 17:36 设计部门上传设计文件"
+        ]
+      },
+      {
+        id: "DES-20260419-002",
+        title: "新品详情页长图设计",
+        applicant: "电商部 / 周静",
+        designer: "电商设计组 / 王卓",
+        type: "详情页设计",
+        channel: "天猫 / 京东",
+        priority: "中",
+        due: "2026-04-24 12:00",
+        attachment: "新品卖点梳理.xlsx",
+        desc: "新品无骨鸡爪需输出一版电商详情页长图，包含卖点首屏、口味介绍、工艺说明和场景图。",
+        status: "designing",
+        files: [],
+        history: [
+          "04-19 11:20 提需求方提交需求",
+          "04-19 12:05 设计部门确认需求",
+          "04-19 12:15 提需求方确认预计完成时间"
+        ]
+      },
+      {
+        id: "DES-20260419-003",
+        title: "门店开业展架设计",
+        applicant: "渠道部 / 何洋",
+        designer: "平面设计组 / 林安",
+        type: "物料设计",
+        channel: "线下门店",
+        priority: "紧急",
+        due: "",
+        attachment: "门店开业需求说明.docx",
+        desc: "门店开业需要一套展架和吊旗设计，需突出新品试吃和门店活动权益。",
+        status: "pending_confirm",
+        files: [],
+        history: [
+          "04-19 14:10 提需求方提交需求"
+        ]
+      }
+    ];
+
+    let tickets = cloneTickets();
+    let currentPage = "list";
+    let currentFilter = "all";
+    let currentRole = "requester";
+    let activeId = tickets[0].id;
+
+    const listPage = document.getElementById("listPage");
+    const detailPage = document.getElementById("detailPage");
+    const statsRow = document.getElementById("statsRow");
+    const filterBar = document.getElementById("filterBar");
+    const ticketContainer = document.getElementById("ticketContainer");
+>>>>>>> theirs
     const detailTitle = document.getElementById("detailTitle");
     const detailDesc = document.getElementById("detailDesc");
     const stepRow = document.getElementById("stepRow");
@@ -728,6 +913,7 @@
     const fileBox = document.getElementById("fileBox");
     const historyBox = document.getElementById("historyBox");
 
+<<<<<<< ours
     function cloneAllData() {
       return JSON.parse(JSON.stringify(initialData));
     }
@@ -743,6 +929,14 @@
     function getActiveTicket() {
       const list = currentTickets();
       return list.find(ticket => ticket.id === activeIds[currentPort]) || list[0];
+=======
+    function cloneTickets() {
+      return JSON.parse(JSON.stringify(initialTickets));
+    }
+
+    function getActiveTicket() {
+      return tickets.find(ticket => ticket.id === activeId) || tickets[0];
+>>>>>>> theirs
     }
 
     function getStatusPill(status) {
@@ -763,6 +957,7 @@
       });
     }
 
+<<<<<<< ours
     function renderPortSwitch() {
       portSwitch.innerHTML = Object.entries(portConfigs).map(([key, config]) => `
         <button class="port-btn ${key === currentPort ? "active" : ""}" data-port="${key}">${config.label}</button>
@@ -794,6 +989,14 @@
         pending: list.filter(item => item.status !== "closed").length,
         confirm: list.filter(item => item.status === "waiting_acceptance").length,
         closed: list.filter(item => item.status === "closed").length
+=======
+    function renderStats() {
+      const counts = {
+        total: tickets.length,
+        pending: tickets.filter(item => item.status !== "closed").length,
+        confirm: tickets.filter(item => item.status === "waiting_acceptance").length,
+        closed: tickets.filter(item => item.status === "closed").length
+>>>>>>> theirs
       };
 
       statsRow.innerHTML = `
@@ -827,6 +1030,7 @@
     }
 
     function renderList() {
+<<<<<<< ours
       renderHeaderCopy();
       renderStats();
       renderFilters();
@@ -835,6 +1039,14 @@
       const list = currentTickets().filter(ticket => currentFilter === "all" || ticket.status === currentFilter);
       if (!list.length) {
         ticketContainer.innerHTML = `<div class="empty">当前端口和筛选条件下暂无工单。</div>`;
+=======
+      renderStats();
+      renderFilters();
+
+      const list = tickets.filter(ticket => currentFilter === "all" || ticket.status === currentFilter);
+      if (!list.length) {
+        ticketContainer.innerHTML = `<div class="empty">当前筛选条件下暂无工单。</div>`;
+>>>>>>> theirs
         return;
       }
 
@@ -847,7 +1059,10 @@
                 <span>${ticket.id}</span>
                 <span>${ticket.applicant}</span>
                 <span>${ticket.due ? `预计完成：${ticket.due}` : "待确认完成时间"}</span>
+<<<<<<< ours
                 <span>${ticket.channel}</span>
+=======
+>>>>>>> theirs
               </div>
             </div>
             <div class="actions">
@@ -857,14 +1072,22 @@
           </div>
           <div class="actions">
             <button class="btn btn-secondary" data-view="${ticket.id}">查看详情</button>
+<<<<<<< ours
             <button class="btn btn-primary" data-open="${ticket.id}">进入${config.label}处理</button>
+=======
+            <button class="btn btn-primary" data-open="${ticket.id}">进入处理</button>
+>>>>>>> theirs
           </div>
         </article>
       `).join("");
 
       [...ticketContainer.querySelectorAll("[data-view], [data-open]")].forEach(button => {
         button.addEventListener("click", () => {
+<<<<<<< ours
           activeIds[currentPort] = button.dataset.view || button.dataset.open;
+=======
+          activeId = button.dataset.view || button.dataset.open;
+>>>>>>> theirs
           switchPage("detail");
           renderDetail();
         });
@@ -901,7 +1124,11 @@
         <div class="summary-item"><span>需求部门 / 提交人</span><strong>${ticket.applicant}</strong></div>
         <div class="summary-item"><span>设计负责人</span><strong>${ticket.designer || "待分配"}</strong></div>
         <div class="summary-item"><span>需求类型</span><strong>${ticket.type}</strong></div>
+<<<<<<< ours
         <div class="summary-item"><span>提交端口</span><strong>${currentConfig().label}</strong></div>
+=======
+        <div class="summary-item"><span>投放渠道</span><strong>${ticket.channel}</strong></div>
+>>>>>>> theirs
       `;
     }
 
@@ -928,12 +1155,23 @@
             </select>
           </div>
           <div class="field">
+<<<<<<< ours
             <label>提单端口</label>
             <input value="${currentConfig().label}" disabled />
           </div>
           <div class="field">
             <label>优先级</label>
             <input id="field-priority" value="${ticket.priority}" ${disabled} />
+=======
+            <label>投放渠道</label>
+            <input id="field-channel" value="${ticket.channel}" ${disabled} />
+          </div>
+          <div class="field">
+            <label>优先级</label>
+            <select id="field-priority" ${disabled}>
+              ${["高", "中", "紧急"].map(item => `<option value="${item}" ${ticket.priority === item ? "selected" : ""}>${item}</option>`).join("")}
+            </select>
+>>>>>>> theirs
           </div>
           <div class="field">
             <label>预计完成时间</label>
@@ -952,6 +1190,7 @@
     }
 
     function renderRequesterForm(ticket) {
+<<<<<<< ours
       const labels = currentConfig().requesterActions;
 
       if (ticket.status === "pending_confirm") {
@@ -962,6 +1201,16 @@
           <div class="actions" style="margin-top:14px;">
             <button class="btn btn-ghost" data-action="save-request">${labels.save}</button>
             <button class="btn btn-primary" data-action="submit-request">${labels.submit}</button>
+=======
+      if (ticket.status === "pending_confirm") {
+        return `
+          <h3 class="section-title">提交需求</h3>
+          <p class="hint">提需求方提交完整内容后，工单进入设计部门确认环节。</p>
+          ${commonFields(ticket, false)}
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-ghost" data-action="save-request">保存草稿</button>
+            <button class="btn btn-primary" data-action="submit-request">提交需求</button>
+>>>>>>> theirs
           </div>
         `;
       }
@@ -969,10 +1218,17 @@
       if (ticket.status === "confirming_time") {
         return `
           <h3 class="section-title">确认完成时间</h3>
+<<<<<<< ours
           <p class="hint">当前由提需求方确认设计部门反馈的完成时间。</p>
           ${commonFields(ticket, true)}
           <div class="actions" style="margin-top:14px;">
             <button class="btn btn-primary" data-action="confirm-time">${labels.confirmTime}</button>
+=======
+          <p class="hint">当前由提需求方确认设计部门反馈的预计完成时间。</p>
+          ${commonFields(ticket, true)}
+          <div class="actions" style="margin-top:14px;">
+            <button class="btn btn-primary" data-action="confirm-time">确认完成时间</button>
+>>>>>>> theirs
           </div>
         `;
       }
@@ -983,29 +1239,45 @@
           <p class="hint">请确认设计文件，确认无误后关闭工单。</p>
           ${commonFields(ticket, true)}
           <div class="actions" style="margin-top:14px;">
+<<<<<<< ours
             <button class="btn btn-secondary" data-action="confirm-file">${labels.confirmFile}</button>
             <button class="btn btn-primary" data-action="close-ticket">${labels.close}</button>
+=======
+            <button class="btn btn-secondary" data-action="confirm-file">确认设计文件</button>
+            <button class="btn btn-primary" data-action="close-ticket">关闭工单</button>
+>>>>>>> theirs
           </div>
         `;
       }
 
       return `
         <h3 class="section-title">工单详情</h3>
+<<<<<<< ours
         <p class="hint">当前步骤无需提需求方继续处理，可查看工单信息与记录。</p>
+=======
+        <p class="hint">当前步骤无需提需求方继续处理，可查看信息与记录。</p>
+>>>>>>> theirs
         ${commonFields(ticket, true)}
       `;
     }
 
     function renderDesignerForm(ticket) {
+<<<<<<< ours
       const labels = currentConfig().designerActions;
 
+=======
+>>>>>>> theirs
       if (ticket.status === "pending_confirm") {
         return `
           <h3 class="section-title">确认需求</h3>
           <p class="hint">设计部门确认需求可承接后，进入完成时间确认环节。</p>
           ${commonFields(ticket, false)}
           <div class="actions" style="margin-top:14px;">
+<<<<<<< ours
             <button class="btn btn-primary" data-action="accept-ticket">${labels.accept}</button>
+=======
+            <button class="btn btn-primary" data-action="accept-ticket">确认需求</button>
+>>>>>>> theirs
           </div>
         `;
       }
@@ -1016,7 +1288,11 @@
           <p class="hint">请填写预计完成时间并提交给提需求方确认。</p>
           ${commonFields(ticket, false)}
           <div class="actions" style="margin-top:14px;">
+<<<<<<< ours
             <button class="btn btn-primary" data-action="estimate-time">${labels.estimate}</button>
+=======
+            <button class="btn btn-primary" data-action="estimate-time">提交完成时间</button>
+>>>>>>> theirs
           </div>
         `;
       }
@@ -1041,7 +1317,11 @@
             </div>
           </div>
           <div class="actions" style="margin-top:14px;">
+<<<<<<< ours
             <button class="btn btn-primary" data-action="upload-files">${labels.upload}</button>
+=======
+            <button class="btn btn-primary" data-action="upload-files">上传设计文件</button>
+>>>>>>> theirs
           </div>
         `;
       }
@@ -1054,7 +1334,11 @@
     }
 
     function saveCommonFields(ticket) {
+<<<<<<< ours
       const keys = ["title", "applicant", "designer", "type", "priority", "due", "attachment", "desc"];
+=======
+      const keys = ["title", "applicant", "designer", "type", "channel", "priority", "due", "attachment", "desc"];
+>>>>>>> theirs
       keys.forEach(key => {
         const node = document.getElementById(`field-${key}`);
         if (node) {
@@ -1070,18 +1354,30 @@
 
           if (action === "save-request") {
             saveCommonFields(ticket);
+<<<<<<< ours
             appendHistory(ticket, `${currentConfig().label}提需求方保存需求草稿`);
+=======
+            appendHistory(ticket, "提需求方保存需求草稿");
+>>>>>>> theirs
           }
 
           if (action === "submit-request") {
             saveCommonFields(ticket);
+<<<<<<< ours
             appendHistory(ticket, `${currentConfig().label}提需求方提交需求`);
+=======
+            appendHistory(ticket, "提需求方提交需求");
+>>>>>>> theirs
           }
 
           if (action === "accept-ticket") {
             saveCommonFields(ticket);
             ticket.status = "confirming_time";
+<<<<<<< ours
             appendHistory(ticket, `${currentConfig().label}设计部门确认需求`);
+=======
+            appendHistory(ticket, "设计部门确认需求");
+>>>>>>> theirs
           }
 
           if (action === "estimate-time") {
@@ -1089,12 +1385,20 @@
             if (!ticket.due) {
               ticket.due = "2026-04-23 18:00";
             }
+<<<<<<< ours
             appendHistory(ticket, `${currentConfig().label}设计部门反馈预计完成时间 ${ticket.due}`);
+=======
+            appendHistory(ticket, `设计部门反馈预计完成时间 ${ticket.due}`);
+>>>>>>> theirs
           }
 
           if (action === "confirm-time") {
             ticket.status = "designing";
+<<<<<<< ours
             appendHistory(ticket, `${currentConfig().label}提需求方确认完成时间`);
+=======
+            appendHistory(ticket, "提需求方确认完成时间");
+>>>>>>> theirs
           }
 
           if (action === "upload-files") {
@@ -1106,20 +1410,36 @@
               { name: sourceName, note, type: "源文件" }
             ];
             ticket.status = "waiting_acceptance";
+<<<<<<< ours
             appendHistory(ticket, `${currentConfig().label}设计部门上传设计文件`);
           }
 
           if (action === "confirm-file") {
             appendHistory(ticket, `${currentConfig().label}提需求方确认设计文件`);
+=======
+            appendHistory(ticket, "设计部门上传设计文件");
+          }
+
+          if (action === "confirm-file") {
+            appendHistory(ticket, "提需求方确认设计文件");
+>>>>>>> theirs
           }
 
           if (action === "close-ticket") {
             ticket.status = "closed";
+<<<<<<< ours
             appendHistory(ticket, `${currentConfig().label}提需求方关闭工单`);
           }
 
           renderAll();
           switchPage("detail");
+=======
+            appendHistory(ticket, "提需求方关闭工单");
+          }
+
+          renderList();
+          renderDetail();
+>>>>>>> theirs
         });
       });
     }
@@ -1130,7 +1450,11 @@
           <strong>${file.name}</strong>
           <div class="hint">${file.type} · ${file.note}</div>
         </div>
+<<<<<<< ours
       `).join("") : `<div class="empty">当前端口下该工单暂无已上传设计文件。</div>`;
+=======
+      `).join("") : `<div class="empty">当前暂无已上传设计文件。</div>`;
+>>>>>>> theirs
     }
 
     function renderHistory(ticket) {
@@ -1148,8 +1472,13 @@
         return;
       }
 
+<<<<<<< ours
       detailTitle.textContent = `${currentConfig().label}工单详情`;
       detailDesc.textContent = `${currentConfig().detailDescPrefix} · ${ticket.id} · ${statusMap[ticket.status].label} · ${ticket.applicant}`;
+=======
+      detailTitle.textContent = ticket.title;
+      detailDesc.textContent = `${ticket.id} · ${statusMap[ticket.status].label} · ${ticket.applicant}`;
+>>>>>>> theirs
       roleHint.textContent = `当前角色：${roles.find(role => role.key === currentRole).label}`;
 
       renderSteps(ticket);
@@ -1172,6 +1501,7 @@
       });
     }
 
+<<<<<<< ours
     function createTicket() {
       const nextIndex = currentTickets().length + 1;
       const prefix = currentPort === "pc" ? "PC" : "MP";
@@ -1182,12 +1512,23 @@
         designer: "待分配",
         type: "海报设计",
         channel: `${currentConfig().label}新建工单`,
+=======
+    function createNewTicket() {
+      const next = {
+        id: `DES-20260419-00${tickets.length + 1}`,
+        title: "新建设计需求",
+        applicant: "待填写",
+        designer: "待分配",
+        type: "海报设计",
+        channel: "待填写",
+>>>>>>> theirs
         priority: "中",
         due: "",
         attachment: "",
         desc: "",
         status: "pending_confirm",
         files: [],
+<<<<<<< ours
         history: [`04-19 16:30 系统创建${currentConfig().label}新工单`]
       };
       currentTickets().unshift(next);
@@ -1215,11 +1556,37 @@
         applet: ticketsByPort.applet[0].id
       };
       renderAll();
+=======
+        history: ["04-19 16:30 系统创建新工单"]
+      };
+      tickets.unshift(next);
+      activeId = next.id;
+      currentRole = "requester";
+      renderList();
+      switchPage("detail");
+      renderDetail();
+    }
+
+    document.getElementById("createTicket").addEventListener("click", createNewTicket);
+    document.getElementById("resetData").addEventListener("click", () => {
+      tickets = cloneTickets();
+      currentPage = "list";
+      currentFilter = "all";
+      currentRole = "requester";
+      activeId = tickets[0].id;
+      renderList();
+      renderDetail();
+>>>>>>> theirs
       switchPage("list");
     });
 
     bindPageTabs();
+<<<<<<< ours
     renderAll();
+=======
+    renderList();
+    renderDetail();
+>>>>>>> theirs
     switchPage("list");
   </script>
 </body>

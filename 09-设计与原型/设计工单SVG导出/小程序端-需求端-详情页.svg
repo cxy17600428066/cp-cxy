@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="430" height="1040" viewBox="0 0 430 1040">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#eef2f7"/>
+      <stop offset="1" stop-color="#f5f7fa"/>
+    </linearGradient>
+  </defs>
+  <rect width="430" height="1040" fill="url(#bg)"/>
+  <rect x="0" y="0" width="430" height="158" fill="#fff" opacity=".94"/>
+  <line x1="0" y1="158" x2="430" y2="158" stroke="#d9e0ea"/>
+  <text x="16" y="26" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#6b7280">设计工单系统</text>
+  <text x="16" y="54" font-family="Microsoft YaHei, sans-serif" font-size="20" font-weight="900" fill="#111827">小程序端</text>
+  <text x="16" y="80" font-family="Microsoft YaHei, sans-serif" font-size="12" fill="#6b7280">当前为小程序端页面，正在查看：需求端。</text>
+  <text x="16" y="108" font-family="Microsoft YaHei, sans-serif" font-size="12" font-weight="800" fill="#6b7280">使用端</text>
+  <rect x="16" y="116" width="78" height="34" rx="17" fill="#fff7ed" stroke="#f3c6ad"/>
+  <text x="36" y="138" font-family="Microsoft YaHei, sans-serif" font-size="13" font-weight="800" fill="#9a3412">需求端</text>
+  <rect x="102" y="116" width="78" height="34" rx="17" fill="#fff" stroke="#d9e0ea"/>
+  <text x="122" y="138" font-family="Microsoft YaHei, sans-serif" font-size="13" font-weight="800" fill="#111827">设计端</text>
+  <rect x="16" y="170" width="78" height="34" rx="17" fill="#fff" stroke="#d9e0ea"/>
+  <text x="36" y="192" font-family="Microsoft YaHei, sans-serif" font-size="13" font-weight="800" fill="#111827">列表页</text>
+  <rect x="102" y="170" width="78" height="34" rx="17" fill="#fff7ed" stroke="#f3c6ad"/>
+  <text x="122" y="192" font-family="Microsoft YaHei, sans-serif" font-size="13" font-weight="800" fill="#9a3412">详情页</text>
+
+  <rect x="14" y="224" width="402" height="110" rx="22" fill="#fff" opacity=".94" stroke="#d9e0ea"/>
+  <text x="30" y="258" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#6b7280">小程序端 / 需求端</text>
+  <text x="30" y="286" font-family="Microsoft YaHei, sans-serif" font-size="17" font-weight="900" fill="#111827">朋友圈海报快速修改</text>
+  <text x="30" y="314" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#6b7280">MP-DES-20260419-002 · 待需求端确认时间</text>
+
+  <rect x="14" y="350" width="402" height="166" rx="22" fill="#fff" opacity=".94" stroke="#d9e0ea"/>
+  <text x="30" y="384" font-family="Microsoft YaHei, sans-serif" font-size="17" font-weight="900" fill="#111827">当前进度</text>
+  <g font-family="Microsoft YaHei, sans-serif" font-size="13" font-weight="800">
+    <rect x="30" y="402" width="370" height="34" rx="16" fill="#d1fae5" stroke="#a7f3d0"/><text x="48" y="424" fill="#047857">提交需求</text>
+    <rect x="30" y="444" width="370" height="34" rx="16" fill="#fff7ed" stroke="#f3c6ad"/><text x="48" y="466" fill="#9a3412">确认需求</text>
+    <rect x="30" y="486" width="370" height="34" rx="16" fill="#fff" stroke="#d9e0ea"/><text x="48" y="508" fill="#111827">确认时间</text>
+  </g>
+
+  <rect x="14" y="532" width="402" height="300" rx="22" fill="#fff" opacity=".94" stroke="#d9e0ea"/>
+  <text x="30" y="566" font-family="Microsoft YaHei, sans-serif" font-size="17" font-weight="900" fill="#111827">确认完成时间</text>
+  <text x="30" y="592" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#6b7280">需求端确认设计端反馈的预计完成时间。</text>
+  <g font-family="Microsoft YaHei, sans-serif">
+    <text x="30" y="626" font-size="12" font-weight="700" fill="#6b7280">需求标题</text>
+    <rect x="30" y="636" width="370" height="42" rx="14" fill="#fff" stroke="#d9e0ea"/><text x="44" y="662" font-size="13" fill="#111827">朋友圈海报快速修改</text>
+    <text x="30" y="708" font-size="12" font-weight="700" fill="#6b7280">预计完成时间</text>
+    <rect x="30" y="718" width="370" height="42" rx="14" fill="#fff" stroke="#d9e0ea"/><text x="44" y="744" font-size="13" fill="#111827">2026-04-20 16:00</text>
+    <text x="30" y="790" font-size="12" font-weight="700" fill="#6b7280">需求说明</text>
+    <text x="30" y="814" font-size="13" fill="#111827">对现有朋友圈海报做主题替换和日期更新。</text>
+  </g>
+
+  <rect x="14" y="850" width="402" height="72" rx="22" fill="#fff" opacity=".94" stroke="#d9e0ea"/>
+  <text x="30" y="884" font-family="Microsoft YaHei, sans-serif" font-size="17" font-weight="900" fill="#111827">设计文件</text>
+  <text x="30" y="910" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#6b7280">当前暂无已上传设计文件。</text>
+
+  <rect x="14" y="938" width="402" height="80" rx="22" fill="#fff" opacity=".94" stroke="#d9e0ea"/>
+  <text x="30" y="972" font-family="Microsoft YaHei, sans-serif" font-size="17" font-weight="900" fill="#111827">处理记录</text>
+  <text x="30" y="998" font-family="Microsoft YaHei, sans-serif" font-size="13" fill="#6b7280">04-19 15:30 设计端反馈预计完成时间</text>
+</svg>

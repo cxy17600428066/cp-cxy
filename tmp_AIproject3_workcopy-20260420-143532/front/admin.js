@@ -426,7 +426,7 @@ function moveOrder(module, id, direction) {
 }
 
 function deleteItem(module, id) {
-  if (!confirm("确认执行该操作？") return;
+  if (!confirm("确认执行该操作？")) return;
   siteData.deleteItem(module, id);
   refreshActiveViews();
 }
@@ -798,7 +798,7 @@ function revertVersionById(versionId) {
   const module = ui.entityModule.value;
   const id = ui.entityId.value;
   if (!module || !id) return;
-  if (!confirm("确认执行该操作？") return;
+  if (!confirm("确认执行该操作？")) return;
   siteData.revertVersion(module, id, versionId);
   const fresh = siteData.getItemByModule(module, id);
   state.modal.item = JSON.parse(JSON.stringify(fresh));
@@ -1109,6 +1109,7 @@ function escapeHtml(text) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
+
 
 
 

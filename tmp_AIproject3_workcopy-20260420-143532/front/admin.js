@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Zhuoxi Admin Panel v2
  * Covers: auth, role-based workflow, CRUD, status transitions, pagination, search, logs, versions, SEO/profile/legal/media.
  */
@@ -185,7 +185,7 @@ function onLoginSubmit(e) {
   e.preventDefault();
   const user = siteData.login(ui.loginUsername.value.trim(), ui.loginPassword.value.trim());
   if (!user) {
-    ui.loginError.textContent = "账号或密码错误";
+    ui.loginError.textContent = "璐﹀彿鎴栧瘑鐮侀敊璇?;
     return;
   }
   ui.loginError.textContent = "";
@@ -215,7 +215,7 @@ function initCategoryFilters() {
     if (item.categoryKey && !keys.includes(item.categoryKey)) keys.push(item.categoryKey);
   });
   ui.newsCategoryFilter.innerHTML =
-    `<option value="all">全部分类</option>` +
+    `<option value="all">鍏ㄩ儴鍒嗙被</option>` +
     keys.map(k => `<option value="${escapeHtml(k)}">${escapeHtml(categoryLabel(k))}</option>`).join("");
 }
 
@@ -269,12 +269,12 @@ function getFilteredItems(module) {
 
 function renderDashboard() {
   const kpi = [
-    { label: "轮播", value: siteData.getCarousel().length },
-    { label: "资讯", value: siteData.getNews().length },
-    { label: "产品", value: siteData.getProducts().length },
-    { label: "岗位", value: siteData.getCareers().length },
-    { label: "已发布资讯", value: siteData.getPublishedNews().length },
-    { label: "已发布产品", value: siteData.getPublishedProducts().length }
+    { label: "杞挱", value: siteData.getCarousel().length },
+    { label: "璧勮", value: siteData.getNews().length },
+    { label: "浜у搧", value: siteData.getProducts().length },
+    { label: "宀椾綅", value: siteData.getCareers().length },
+    { label: "宸插彂甯冭祫璁?, value: siteData.getPublishedNews().length },
+    { label: "宸插彂甯冧骇鍝?, value: siteData.getPublishedProducts().length }
   ];
   ui.dashboardKpi.innerHTML = kpi
     .map(item => `<div class="admin-kpi-card"><span>${item.label}</span><strong>${item.value}</strong></div>`)
@@ -285,12 +285,12 @@ function renderDashboard() {
     ? logs
         .map(
           log => `<div class="admin-log-row">
-          <div><strong>${escapeHtml(log.action)}</strong> · ${escapeHtml(log.detail || "")}</div>
-          <div>${escapeHtml(log.userName || "")} · ${formatTime(log.at)}</div>
+          <div><strong>${escapeHtml(log.action)}</strong> 路 ${escapeHtml(log.detail || "")}</div>
+          <div>${escapeHtml(log.userName || "")} 路 ${formatTime(log.at)}</div>
         </div>`
         )
         .join("")
-    : `<div class="admin-empty">暂无日志</div>`;
+    : `<div class="admin-empty">鏆傛棤鏃ュ織</div>`;
 }
 
 function renderListByModule(module, listNode, paginationNode, renderCard) {
@@ -299,27 +299,27 @@ function renderListByModule(module, listNode, paginationNode, renderCard) {
   const paged = siteData.paginate(items, page, PAGE_SIZE);
   listNode.innerHTML = paged.records.length
     ? paged.records.map(renderCard).join("")
-    : `<div class="admin-empty"><h4>暂无数据</h4><p>当前筛选条件下没有可展示内容。</p></div>`;
+    : `<div class="admin-empty"><h4>鏆傛棤鏁版嵁</h4><p>褰撳墠绛涢€夋潯浠朵笅娌℃湁鍙睍绀哄唴瀹广€?/p></div>`;
   renderPagination(paginationNode, module, paged);
 }
 
 function renderCarouselList() {
   renderListByModule("carousel", ui.carouselList, ui.carouselPagination, item => {
     return `<div class="admin-card">
-      <div class="admin-card-thumb"><img src="${escapeHtml(item.src || "")}" alt="${escapeHtml(item.alt || "")}" onerror="this.parentElement.innerHTML='🖼️'" /></div>
+      <div class="admin-card-thumb"><img src="${escapeHtml(item.src || "")}" alt="${escapeHtml(item.alt || "")}" onerror="this.parentElement.innerHTML='馃柤锔?" /></div>
       <div class="admin-card-body">
         <div class="admin-card-title">${escapeHtml(item.alt || "")}</div>
         <div class="admin-card-meta">
-          <span>路径：${escapeHtml(item.src || "")}</span>
-          <span>状态：${statusLabel(item.status)}</span>
-          <span>排序：${item.order || 0}</span>
+          <span>璺緞锛?{escapeHtml(item.src || "")}</span>
+          <span>鐘舵€侊細${statusLabel(item.status)}</span>
+          <span>鎺掑簭锛?{item.order || 0}</span>
         </div>
       </div>
       <div class="admin-card-actions">
-        <button class="order-btn" onclick="moveOrder('carousel','${item.id}',-1)">↑</button>
-        <button class="order-btn" onclick="moveOrder('carousel','${item.id}',1)">↓</button>
-        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('carousel','${item.id}')">编辑</button>
-        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('carousel','${item.id}')">删除</button>
+        <button class="order-btn" onclick="moveOrder('carousel','${item.id}',-1)">鈫?/button>
+        <button class="order-btn" onclick="moveOrder('carousel','${item.id}',1)">鈫?/button>
+        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('carousel','${item.id}')">缂栬緫</button>
+        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('carousel','${item.id}')">鍒犻櫎</button>
       </div>
     </div>`;
   });
@@ -328,21 +328,21 @@ function renderCarouselList() {
 function renderNewsList() {
   renderListByModule("news", ui.newsList, ui.newsPagination, item => {
     return `<div class="admin-card">
-      <div class="admin-card-thumb"><span class="emoji-thumb">${escapeHtml(item.emoji || "📰")}</span></div>
+      <div class="admin-card-thumb"><span class="emoji-thumb">${escapeHtml(item.emoji || "馃摪")}</span></div>
       <div class="admin-card-body">
         <div class="admin-card-title">${escapeHtml(item.title || "")}</div>
         <div class="admin-card-meta">
           <span class="admin-card-badge">${escapeHtml(item.category || "")}</span>
           <span>${escapeHtml(item.date || "")}</span>
-          <span>状态：${statusLabel(item.status)}</span>
-          <span>slug：${escapeHtml(item.slug || "")}</span>
+          <span>鐘舵€侊細${statusLabel(item.status)}</span>
+          <span>slug锛?{escapeHtml(item.slug || "")}</span>
         </div>
       </div>
       <div class="admin-card-actions">
-        <button class="order-btn" onclick="moveOrder('news','${item.id}',-1)">↑</button>
-        <button class="order-btn" onclick="moveOrder('news','${item.id}',1)">↓</button>
-        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('news','${item.id}')">编辑</button>
-        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('news','${item.id}')">删除</button>
+        <button class="order-btn" onclick="moveOrder('news','${item.id}',-1)">鈫?/button>
+        <button class="order-btn" onclick="moveOrder('news','${item.id}',1)">鈫?/button>
+        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('news','${item.id}')">缂栬緫</button>
+        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('news','${item.id}')">鍒犻櫎</button>
       </div>
     </div>`;
   });
@@ -351,21 +351,21 @@ function renderNewsList() {
 function renderProductsList() {
   renderListByModule("products", ui.productsList, ui.productsPagination, item => {
     return `<div class="admin-card">
-      <div class="admin-card-thumb"><img src="${escapeHtml(item.image || "")}" alt="${escapeHtml(item.name || "")}" onerror="this.parentElement.innerHTML='📦'" /></div>
+      <div class="admin-card-thumb"><img src="${escapeHtml(item.image || "")}" alt="${escapeHtml(item.name || "")}" onerror="this.parentElement.innerHTML='馃摝'" /></div>
       <div class="admin-card-body">
         <div class="admin-card-title">${escapeHtml(item.name || "")}</div>
         <div class="admin-card-meta">
           <span class="admin-card-badge">${escapeHtml(item.badge || "")}</span>
-          <span>分类：${escapeHtml(categoryLabel(item.categoryKey))}</span>
-          <span>状态：${statusLabel(item.status)}</span>
-          <span>slug：${escapeHtml(item.slug || "")}</span>
+          <span>鍒嗙被锛?{escapeHtml(categoryLabel(item.categoryKey))}</span>
+          <span>鐘舵€侊細${statusLabel(item.status)}</span>
+          <span>slug锛?{escapeHtml(item.slug || "")}</span>
         </div>
       </div>
       <div class="admin-card-actions">
-        <button class="order-btn" onclick="moveOrder('products','${item.id}',-1)">↑</button>
-        <button class="order-btn" onclick="moveOrder('products','${item.id}',1)">↓</button>
-        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('products','${item.id}')">编辑</button>
-        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('products','${item.id}')">删除</button>
+        <button class="order-btn" onclick="moveOrder('products','${item.id}',-1)">鈫?/button>
+        <button class="order-btn" onclick="moveOrder('products','${item.id}',1)">鈫?/button>
+        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('products','${item.id}')">缂栬緫</button>
+        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('products','${item.id}')">鍒犻櫎</button>
       </div>
     </div>`;
   });
@@ -374,21 +374,21 @@ function renderProductsList() {
 function renderCareersList() {
   renderListByModule("careers", ui.careersList, ui.careersPagination, item => {
     return `<div class="admin-card">
-      <div class="admin-card-thumb"><span class="emoji-thumb">👥</span></div>
+      <div class="admin-card-thumb"><span class="emoji-thumb">馃懃</span></div>
       <div class="admin-card-body">
         <div class="admin-card-title">${escapeHtml(item.title || "")}</div>
         <div class="admin-card-meta">
           <span class="admin-card-badge">${escapeHtml(item.department || "")}</span>
           <span>${escapeHtml(item.city || "")}</span>
-          <span>状态：${statusLabel(item.status)}</span>
-          <span>薪资：${escapeHtml(item.salary || "")}</span>
+          <span>鐘舵€侊細${statusLabel(item.status)}</span>
+          <span>钖祫锛?{escapeHtml(item.salary || "")}</span>
         </div>
       </div>
       <div class="admin-card-actions">
-        <button class="order-btn" onclick="moveOrder('careers','${item.id}',-1)">↑</button>
-        <button class="order-btn" onclick="moveOrder('careers','${item.id}',1)">↓</button>
-        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('careers','${item.id}')">编辑</button>
-        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('careers','${item.id}')">删除</button>
+        <button class="order-btn" onclick="moveOrder('careers','${item.id}',-1)">鈫?/button>
+        <button class="order-btn" onclick="moveOrder('careers','${item.id}',1)">鈫?/button>
+        <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="openEntityModal('careers','${item.id}')">缂栬緫</button>
+        <button class="btn-admin btn-admin-sm btn-admin-danger" onclick="deleteItem('careers','${item.id}')">鍒犻櫎</button>
       </div>
     </div>`;
   });
@@ -396,9 +396,9 @@ function renderCareersList() {
 
 function renderPagination(node, module, paged) {
   node.innerHTML = `
-    <button class="btn-admin btn-admin-sm btn-admin-ghost" ${paged.page <= 1 ? "disabled" : ""} onclick="changePage('${module}',${paged.page - 1})">上一页</button>
-    <span class="admin-page-info">第 ${paged.page} / ${paged.pages} 页 · 共 ${paged.total} 条</span>
-    <button class="btn-admin btn-admin-sm btn-admin-ghost" ${paged.page >= paged.pages ? "disabled" : ""} onclick="changePage('${module}',${paged.page + 1})">下一页</button>
+    <button class="btn-admin btn-admin-sm btn-admin-ghost" ${paged.page <= 1 ? "disabled" : ""} onclick="changePage('${module}',${paged.page - 1})">涓婁竴椤?/button>
+    <span class="admin-page-info">绗?${paged.page} / ${paged.pages} 椤?路 鍏?${paged.total} 鏉?/span>
+    <button class="btn-admin btn-admin-sm btn-admin-ghost" ${paged.page >= paged.pages ? "disabled" : ""} onclick="changePage('${module}',${paged.page + 1})">涓嬩竴椤?/button>
   `;
 }
 
@@ -426,7 +426,7 @@ function moveOrder(module, id, direction) {
 }
 
 function deleteItem(module, id) {
-  if (!confirm("确认删除该条数据？此操作不可恢复。")) return;
+  if (!confirm("纭鍒犻櫎璇ユ潯鏁版嵁锛熸鎿嶄綔涓嶅彲鎭㈠銆?)) return;
   siteData.deleteItem(module, id);
   refreshActiveViews();
 }
@@ -438,7 +438,7 @@ function openEntityModal(module, id = "") {
 
   ui.entityModule.value = module;
   ui.entityId.value = state.modal.item.id || "";
-  ui.entityModalTitle.textContent = `${moduleLabel(module)}编辑`;
+  ui.entityModalTitle.textContent = `${moduleLabel(module)}缂栬緫`;
   ui.entityFormBody.innerHTML = buildEntityForm(module, state.modal.item);
   renderEntityVersions(state.modal.item);
   ui.entityModalOverlay.classList.add("active");
@@ -460,12 +460,12 @@ function createEmptyItem(module) {
       id: SiteDataManager.generateId("n"),
       slug: "",
       title: "",
-      category: "品牌资讯",
+      category: "鍝佺墝璧勮",
       categoryKey: "brand",
       date: formatDate(new Date()),
       excerpt: "",
       detail: "",
-      emoji: "📰",
+      emoji: "馃摪",
       thumbClass: "thumb-amber",
       isFeatured: false,
       order: siteData.getNews().length + 1,
@@ -508,7 +508,7 @@ function createEmptyItem(module) {
     title: "",
     department: "",
     city: "",
-    type: "全职",
+    type: "鍏ㄨ亴",
     level: "",
     salary: "",
     status: "draft",
@@ -525,41 +525,41 @@ function createEmptyItem(module) {
 function buildEntityForm(module, item) {
   if (module === "carousel") {
     return `
-      <div class="admin-form-group"><label>图片路径</label><input id="f_src" class="admin-input" value="${escapeHtml(item.src || "")}" required /></div>
-      <div class="admin-form-group"><label>替代文本 alt</label><input id="f_alt" class="admin-input" value="${escapeHtml(item.alt || "")}" required /></div>
-      <div class="admin-form-group"><label>排序</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
-      <div class="admin-form-group"><label>状态</label>${statusSelect(item.status)}</div>
+      <div class="admin-form-group"><label>鍥剧墖璺緞</label><input id="f_src" class="admin-input" value="${escapeHtml(item.src || "")}" required /></div>
+      <div class="admin-form-group"><label>鏇夸唬鏂囨湰 alt</label><input id="f_alt" class="admin-input" value="${escapeHtml(item.alt || "")}" required /></div>
+      <div class="admin-form-group"><label>鎺掑簭</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
+      <div class="admin-form-group"><label>鐘舵€?/label>${statusSelect(item.status)}</div>
     `;
   }
   if (module === "news") {
     return `
       <div class="admin-form-row">
-        <div class="admin-form-group"><label>标题</label><input id="f_title" class="admin-input" value="${escapeHtml(item.title || "")}" required /></div>
+        <div class="admin-form-group"><label>鏍囬</label><input id="f_title" class="admin-input" value="${escapeHtml(item.title || "")}" required /></div>
         <div class="admin-form-group"><label>slug</label><input id="f_slug" class="admin-input" value="${escapeHtml(item.slug || "")}" required /></div>
       </div>
       <div class="admin-form-row">
-        <div class="admin-form-group"><label>分类</label>
+        <div class="admin-form-group"><label>鍒嗙被</label>
           <select id="f_categoryKey" class="admin-select">
-            <option value="brand" ${item.categoryKey === "brand" ? "selected" : ""}>品牌资讯</option>
-            <option value="event" ${item.categoryKey === "event" ? "selected" : ""}>活动报道</option>
-            <option value="industry" ${item.categoryKey === "industry" ? "selected" : ""}>行业动态</option>
-            <option value="global" ${item.categoryKey === "global" ? "selected" : ""}>全球化</option>
-            <option value="product" ${item.categoryKey === "product" ? "selected" : ""}>产品研发</option>
+            <option value="brand" ${item.categoryKey === "brand" ? "selected" : ""}>鍝佺墝璧勮</option>
+            <option value="event" ${item.categoryKey === "event" ? "selected" : ""}>娲诲姩鎶ラ亾</option>
+            <option value="industry" ${item.categoryKey === "industry" ? "selected" : ""}>琛屼笟鍔ㄦ€?/option>
+            <option value="global" ${item.categoryKey === "global" ? "selected" : ""}>鍏ㄧ悆鍖?/option>
+            <option value="product" ${item.categoryKey === "product" ? "selected" : ""}>浜у搧鐮斿彂</option>
           </select>
         </div>
-        <div class="admin-form-group"><label>日期</label><input id="f_date" class="admin-input" value="${escapeHtml(item.date || "")}" /></div>
+        <div class="admin-form-group"><label>鏃ユ湡</label><input id="f_date" class="admin-input" value="${escapeHtml(item.date || "")}" /></div>
       </div>
       <div class="admin-form-row">
-        <div class="admin-form-group"><label>作者</label><input id="f_author" class="admin-input" value="${escapeHtml(item.author || "")}" /></div>
-        <div class="admin-form-group"><label>来源</label><input id="f_source" class="admin-input" value="${escapeHtml(item.source || "")}" /></div>
+        <div class="admin-form-group"><label>浣滆€?/label><input id="f_author" class="admin-input" value="${escapeHtml(item.author || "")}" /></div>
+        <div class="admin-form-group"><label>鏉ユ簮</label><input id="f_source" class="admin-input" value="${escapeHtml(item.source || "")}" /></div>
       </div>
       <div class="admin-form-row">
         <div class="admin-form-group"><label>emoji</label><input id="f_emoji" class="admin-input" value="${escapeHtml(item.emoji || "")}" /></div>
-        <div class="admin-form-group"><label>排序</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
+        <div class="admin-form-group"><label>鎺掑簭</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
       </div>
-      <div class="admin-form-group"><label>摘要</label><textarea id="f_excerpt" class="admin-textarea" rows="3">${escapeHtml(item.excerpt || "")}</textarea></div>
-      <div class="admin-form-group"><label>正文</label><textarea id="f_detail" class="admin-textarea" rows="6">${escapeHtml(item.detail || "")}</textarea></div>
-      <div class="admin-form-group"><label>标签（逗号分隔）</label><input id="f_tags" class="admin-input" value="${escapeHtml((item.tags || []).join(","))}" /></div>
+      <div class="admin-form-group"><label>鎽樿</label><textarea id="f_excerpt" class="admin-textarea" rows="3">${escapeHtml(item.excerpt || "")}</textarea></div>
+      <div class="admin-form-group"><label>姝ｆ枃</label><textarea id="f_detail" class="admin-textarea" rows="6">${escapeHtml(item.detail || "")}</textarea></div>
+      <div class="admin-form-group"><label>鏍囩锛堥€楀彿鍒嗛殧锛?/label><input id="f_tags" class="admin-input" value="${escapeHtml((item.tags || []).join(","))}" /></div>
       <div class="admin-form-group"><label>SEO Title</label><input id="f_seoTitle" class="admin-input" value="${escapeHtml((item.seo || {}).title || "")}" /></div>
       <div class="admin-form-group"><label>SEO Description</label><textarea id="f_seoDescription" class="admin-textarea" rows="3">${escapeHtml((item.seo || {}).description || "")}</textarea></div>
       <div class="admin-form-row">
@@ -567,40 +567,40 @@ function buildEntityForm(module, item) {
         <div class="admin-form-group"><label>OG Image</label><input id="f_seoOgImage" class="admin-input" value="${escapeHtml((item.seo || {}).ogImage || "")}" /></div>
       </div>
       <div class="admin-form-row">
-        <div class="admin-form-group"><label><input id="f_featured" type="checkbox" ${item.isFeatured ? "checked" : ""} /> 头条</label></div>
-        <div class="admin-form-group"><label>状态</label>${statusSelect(item.status)}</div>
+        <div class="admin-form-group"><label><input id="f_featured" type="checkbox" ${item.isFeatured ? "checked" : ""} /> 澶存潯</label></div>
+        <div class="admin-form-group"><label>鐘舵€?/label>${statusSelect(item.status)}</div>
       </div>
     `;
   }
   if (module === "products") {
     return `
       <div class="admin-form-row">
-        <div class="admin-form-group"><label>产品名</label><input id="f_name" class="admin-input" value="${escapeHtml(item.name || "")}" required /></div>
+        <div class="admin-form-group"><label>浜у搧鍚?/label><input id="f_name" class="admin-input" value="${escapeHtml(item.name || "")}" required /></div>
         <div class="admin-form-group"><label>slug</label><input id="f_slug" class="admin-input" value="${escapeHtml(item.slug || "")}" required /></div>
       </div>
       <div class="admin-form-row">
-        <div class="admin-form-group"><label>分类</label>
+        <div class="admin-form-group"><label>鍒嗙被</label>
           <select id="f_categoryKey" class="admin-select">
-            <option value="spicy" ${item.categoryKey === "spicy" ? "selected" : ""}>无骨系列</option>
-            <option value="sour" ${item.categoryKey === "sour" ? "selected" : ""}>虎皮系列</option>
-            <option value="fragrant" ${item.categoryKey === "fragrant" ? "selected" : ""}>老卤系列</option>
+            <option value="spicy" ${item.categoryKey === "spicy" ? "selected" : ""}>鏃犻绯诲垪</option>
+            <option value="sour" ${item.categoryKey === "sour" ? "selected" : ""}>铏庣毊绯诲垪</option>
+            <option value="fragrant" ${item.categoryKey === "fragrant" ? "selected" : ""}>鑰佸崵绯诲垪</option>
           </select>
         </div>
-        <div class="admin-form-group"><label>口味/标签</label><input id="f_flavor" class="admin-input" value="${escapeHtml(item.flavor || "")}" /></div>
+        <div class="admin-form-group"><label>鍙ｅ懗/鏍囩</label><input id="f_flavor" class="admin-input" value="${escapeHtml(item.flavor || "")}" /></div>
       </div>
       <div class="admin-form-row">
-        <div class="admin-form-group"><label>图片路径</label><input id="f_image" class="admin-input" value="${escapeHtml(item.image || "")}" /></div>
-        <div class="admin-form-group"><label>购买链接</label><input id="f_link" class="admin-input" value="${escapeHtml(item.link || "")}" /></div>
+        <div class="admin-form-group"><label>鍥剧墖璺緞</label><input id="f_image" class="admin-input" value="${escapeHtml(item.image || "")}" /></div>
+        <div class="admin-form-group"><label>璐拱閾炬帴</label><input id="f_link" class="admin-input" value="${escapeHtml(item.link || "")}" /></div>
       </div>
       <div class="admin-form-row">
-        <div class="admin-form-group"><label>展示徽标</label><input id="f_badge" class="admin-input" value="${escapeHtml(item.badge || "")}" /></div>
-        <div class="admin-form-group"><label>排序</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
+        <div class="admin-form-group"><label>灞曠ず寰芥爣</label><input id="f_badge" class="admin-input" value="${escapeHtml(item.badge || "")}" /></div>
+        <div class="admin-form-group"><label>鎺掑簭</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
       </div>
-      <div class="admin-form-group"><label>短描述</label><textarea id="f_desc" class="admin-textarea" rows="3">${escapeHtml(item.desc || "")}</textarea></div>
-      <div class="admin-form-group"><label>规格（每行一项）</label><textarea id="f_specs" class="admin-textarea" rows="3">${escapeHtml((item.specs || []).join("\n"))}</textarea></div>
-      <div class="admin-form-group"><label>配料信息</label><textarea id="f_ingredients" class="admin-textarea" rows="2">${escapeHtml(item.ingredients || "")}</textarea></div>
-      <div class="admin-form-group"><label>营养信息</label><textarea id="f_nutrition" class="admin-textarea" rows="2">${escapeHtml(item.nutrition || "")}</textarea></div>
-      <div class="admin-form-group"><label>推荐食用场景</label><textarea id="f_scenes" class="admin-textarea" rows="2">${escapeHtml(item.scenes || "")}</textarea></div>
+      <div class="admin-form-group"><label>鐭弿杩?/label><textarea id="f_desc" class="admin-textarea" rows="3">${escapeHtml(item.desc || "")}</textarea></div>
+      <div class="admin-form-group"><label>瑙勬牸锛堟瘡琛屼竴椤癸級</label><textarea id="f_specs" class="admin-textarea" rows="3">${escapeHtml((item.specs || []).join("\n"))}</textarea></div>
+      <div class="admin-form-group"><label>閰嶆枡淇℃伅</label><textarea id="f_ingredients" class="admin-textarea" rows="2">${escapeHtml(item.ingredients || "")}</textarea></div>
+      <div class="admin-form-group"><label>钀ュ吇淇℃伅</label><textarea id="f_nutrition" class="admin-textarea" rows="2">${escapeHtml(item.nutrition || "")}</textarea></div>
+      <div class="admin-form-group"><label>鎺ㄨ崘椋熺敤鍦烘櫙</label><textarea id="f_scenes" class="admin-textarea" rows="2">${escapeHtml(item.scenes || "")}</textarea></div>
       <div class="admin-form-group"><label>FAQ</label><textarea id="f_faq" class="admin-textarea" rows="2">${escapeHtml(item.faq || "")}</textarea></div>
       <div class="admin-form-group"><label>SEO Title</label><input id="f_seoTitle" class="admin-input" value="${escapeHtml((item.seo || {}).title || "")}" /></div>
       <div class="admin-form-group"><label>SEO Description</label><textarea id="f_seoDescription" class="admin-textarea" rows="3">${escapeHtml((item.seo || {}).description || "")}</textarea></div>
@@ -608,40 +608,40 @@ function buildEntityForm(module, item) {
         <div class="admin-form-group"><label>SEO Keywords</label><input id="f_seoKeywords" class="admin-input" value="${escapeHtml((item.seo || {}).keywords || "")}" /></div>
         <div class="admin-form-group"><label>OG Image</label><input id="f_seoOgImage" class="admin-input" value="${escapeHtml((item.seo || {}).ogImage || "")}" /></div>
       </div>
-      <div class="admin-form-group"><label>状态</label>${statusSelect(item.status)}</div>
+      <div class="admin-form-group"><label>鐘舵€?/label>${statusSelect(item.status)}</div>
     `;
   }
 
   return `
     <div class="admin-form-row">
-      <div class="admin-form-group"><label>岗位名称</label><input id="f_title" class="admin-input" value="${escapeHtml(item.title || "")}" required /></div>
-      <div class="admin-form-group"><label>所属部门</label><input id="f_department" class="admin-input" value="${escapeHtml(item.department || "")}" /></div>
+      <div class="admin-form-group"><label>宀椾綅鍚嶇О</label><input id="f_title" class="admin-input" value="${escapeHtml(item.title || "")}" required /></div>
+      <div class="admin-form-group"><label>鎵€灞為儴闂?/label><input id="f_department" class="admin-input" value="${escapeHtml(item.department || "")}" /></div>
     </div>
     <div class="admin-form-row">
-      <div class="admin-form-group"><label>城市</label><input id="f_city" class="admin-input" value="${escapeHtml(item.city || "")}" /></div>
-      <div class="admin-form-group"><label>职位类型</label><input id="f_type" class="admin-input" value="${escapeHtml(item.type || "")}" /></div>
+      <div class="admin-form-group"><label>鍩庡競</label><input id="f_city" class="admin-input" value="${escapeHtml(item.city || "")}" /></div>
+      <div class="admin-form-group"><label>鑱屼綅绫诲瀷</label><input id="f_type" class="admin-input" value="${escapeHtml(item.type || "")}" /></div>
     </div>
     <div class="admin-form-row">
-      <div class="admin-form-group"><label>级别</label><input id="f_level" class="admin-input" value="${escapeHtml(item.level || "")}" /></div>
-      <div class="admin-form-group"><label>薪资范围</label><input id="f_salary" class="admin-input" value="${escapeHtml(item.salary || "")}" /></div>
+      <div class="admin-form-group"><label>绾у埆</label><input id="f_level" class="admin-input" value="${escapeHtml(item.level || "")}" /></div>
+      <div class="admin-form-group"><label>钖祫鑼冨洿</label><input id="f_salary" class="admin-input" value="${escapeHtml(item.salary || "")}" /></div>
     </div>
-    <div class="admin-form-group"><label>岗位职责</label><textarea id="f_responsibilities" class="admin-textarea" rows="3">${escapeHtml(item.responsibilities || "")}</textarea></div>
-    <div class="admin-form-group"><label>任职要求</label><textarea id="f_requirements" class="admin-textarea" rows="3">${escapeHtml(item.requirements || "")}</textarea></div>
-    <div class="admin-form-group"><label>招聘流程</label><textarea id="f_process" class="admin-textarea" rows="2">${escapeHtml(item.process || "")}</textarea></div>
+    <div class="admin-form-group"><label>宀椾綅鑱岃矗</label><textarea id="f_responsibilities" class="admin-textarea" rows="3">${escapeHtml(item.responsibilities || "")}</textarea></div>
+    <div class="admin-form-group"><label>浠昏亴瑕佹眰</label><textarea id="f_requirements" class="admin-textarea" rows="3">${escapeHtml(item.requirements || "")}</textarea></div>
+    <div class="admin-form-group"><label>鎷涜仒娴佺▼</label><textarea id="f_process" class="admin-textarea" rows="2">${escapeHtml(item.process || "")}</textarea></div>
     <div class="admin-form-row">
-      <div class="admin-form-group"><label>联系邮箱</label><input id="f_contactEmail" class="admin-input" value="${escapeHtml(item.contactEmail || "")}" /></div>
-      <div class="admin-form-group"><label>排序</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
+      <div class="admin-form-group"><label>鑱旂郴閭</label><input id="f_contactEmail" class="admin-input" value="${escapeHtml(item.contactEmail || "")}" /></div>
+      <div class="admin-form-group"><label>鎺掑簭</label><input id="f_order" type="number" class="admin-input" value="${item.order || 1}" min="1" /></div>
     </div>
-    <div class="admin-form-group"><label>状态</label>${statusSelect(item.status)}</div>
+    <div class="admin-form-group"><label>鐘舵€?/label>${statusSelect(item.status)}</div>
   `;
 }
 
 function statusSelect(value) {
   return `<select id="f_status" class="admin-select">
-    <option value="draft" ${value === "draft" ? "selected" : ""}>草稿</option>
-    <option value="review" ${value === "review" ? "selected" : ""}>待审核</option>
-    <option value="published" ${value === "published" ? "selected" : ""}>已发布</option>
-    <option value="archived" ${value === "archived" ? "selected" : ""}>已归档</option>
+    <option value="draft" ${value === "draft" ? "selected" : ""}>鑽夌</option>
+    <option value="review" ${value === "review" ? "selected" : ""}>寰呭鏍?/option>
+    <option value="published" ${value === "published" ? "selected" : ""}>宸插彂甯?/option>
+    <option value="archived" ${value === "archived" ? "selected" : ""}>宸插綊妗?/option>
   </select>`;
 }
 
@@ -668,7 +668,7 @@ function collectEntityData() {
       date: val("f_date"),
       author: val("f_author"),
       source: val("f_source"),
-      emoji: val("f_emoji") || "📰",
+      emoji: val("f_emoji") || "馃摪",
       order: num("f_order", base.order || 1),
       excerpt: val("f_excerpt"),
       detail: val("f_detail"),
@@ -730,7 +730,7 @@ function saveEntityWithStatus(nextStatus) {
   const module = ui.entityModule.value;
   if (!module) return;
   if (!canTransitTo(nextStatus)) {
-    alert("当前账号角色无权限执行该状态流转。");
+    alert("褰撳墠璐﹀彿瑙掕壊鏃犳潈闄愭墽琛岃鐘舵€佹祦杞€?);
     return;
   }
   const item = collectEntityData();
@@ -744,25 +744,25 @@ function saveEntityWithStatus(nextStatus) {
 function validateEntity(module, item) {
   if (module === "carousel") {
     if (!item.src || !item.alt) {
-      alert("轮播图需填写图片路径和alt。");
+      alert("杞挱鍥鹃渶濉啓鍥剧墖璺緞鍜宎lt銆?);
       return false;
     }
   }
   if (module === "news") {
     if (!item.title || !item.slug || !item.detail) {
-      alert("资讯需填写标题、slug、正文。");
+      alert("璧勮闇€濉啓鏍囬銆乻lug銆佹鏂囥€?);
       return false;
     }
   }
   if (module === "products") {
     if (!item.name || !item.slug || !item.image) {
-      alert("产品需填写名称、slug、图片路径。");
+      alert("浜у搧闇€濉啓鍚嶇О銆乻lug銆佸浘鐗囪矾寰勩€?);
       return false;
     }
   }
   if (module === "careers") {
     if (!item.title || !item.department) {
-      alert("岗位需填写岗位名称和所属部门。");
+      alert("宀椾綅闇€濉啓宀椾綅鍚嶇О鍜屾墍灞為儴闂ㄣ€?);
       return false;
     }
   }
@@ -780,15 +780,15 @@ function canTransitTo(nextStatus) {
 function renderEntityVersions(item) {
   const versions = (item && item.versionHistory) || [];
   if (!versions.length) {
-    ui.entityVersions.innerHTML = `<div class="admin-empty">暂无版本</div>`;
+    ui.entityVersions.innerHTML = `<div class="admin-empty">鏆傛棤鐗堟湰</div>`;
     return;
   }
   ui.entityVersions.innerHTML = versions
     .slice(0, 8)
     .map(
       v => `<div class="admin-version-row">
-      <span>${formatTime(v.at)} · ${escapeHtml(v.author || "system")} · ${escapeHtml(v.note || "")}</span>
-      <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="revertVersionById('${escapeHtml(v.versionId)}')">回滚</button>
+      <span>${formatTime(v.at)} 路 ${escapeHtml(v.author || "system")} 路 ${escapeHtml(v.note || "")}</span>
+      <button class="btn-admin btn-admin-sm btn-admin-ghost" onclick="revertVersionById('${escapeHtml(v.versionId)}')">鍥炴粴</button>
     </div>`
     )
     .join("");
@@ -798,7 +798,7 @@ function revertVersionById(versionId) {
   const module = ui.entityModule.value;
   const id = ui.entityId.value;
   if (!module || !id) return;
-  if (!confirm("确认回滚到该版本？")) return;
+  if (!confirm("纭鍥炴粴鍒拌鐗堟湰锛?)) return;
   siteData.revertVersion(module, id, versionId);
   const fresh = siteData.getItemByModule(module, id);
   state.modal.item = JSON.parse(JSON.stringify(fresh));
@@ -811,12 +811,12 @@ function revertLatestVersion() {
   const module = ui.entityModule.value;
   const id = ui.entityId.value;
   if (!module || !id) {
-    alert("仅支持已有内容回滚。");
+    alert("浠呮敮鎸佸凡鏈夊唴瀹瑰洖婊氥€?);
     return;
   }
   const item = siteData.getItemByModule(module, id);
   if (!item || !item.versionHistory || item.versionHistory.length < 2) {
-    alert("没有可回滚的历史版本。");
+    alert("娌℃湁鍙洖婊氱殑鍘嗗彶鐗堟湰銆?);
     return;
   }
   revertVersionById(item.versionHistory[1].versionId);
@@ -842,11 +842,12 @@ function saveSeoForm(e) {
     ogImage: byId("seoOgImage").value.trim(),
     canonical: byId("seoCanonical").value.trim()
   });
-  alert("SEO设置已保存");
+  alert("SEO璁剧疆宸蹭繚瀛?);
 }
 
 function loadSiteProfileForm() {
   const p = siteData.getProfile();
+  const s = siteData.getSettings();
   byId("profileCompanyName").value = p.companyName || "";
   byId("profileCompanyShortName").value = p.companyShortName || "";
   byId("profileUnifiedCode").value = p.unifiedCode || "";
@@ -859,6 +860,9 @@ function loadSiteProfileForm() {
   byId("profileHrEmail").value = p.hrEmail || "";
   byId("profileWorkingHours").value = p.workingHours || "";
   byId("profileLegalStatement").value = p.legalStatement || "";
+  if (byId("siteStatus")) byId("siteStatus").value = s.siteStatus || "online";
+  if (byId("defaultPageSize")) byId("defaultPageSize").value = s.defaultPageSize || 10;
+  if (byId("enableCookieNotice")) byId("enableCookieNotice").checked = Boolean(s.enableCookieNotice);
 }
 
 function saveSiteProfile(e) {
@@ -876,6 +880,11 @@ function saveSiteProfile(e) {
     hrEmail: byId("profileHrEmail").value.trim(),
     workingHours: byId("profileWorkingHours").value.trim(),
     legalStatement: byId("profileLegalStatement").value.trim()
+  });
+  siteData.updateSettings({
+    siteStatus: byId("siteStatus") ? byId("siteStatus").value : "online",
+    defaultPageSize: byId("defaultPageSize") ? Number(byId("defaultPageSize").value || 10) : 10,
+    enableCookieNotice: byId("enableCookieNotice") ? byId("enableCookieNotice").checked : true
   });
   alert("站点信息已保存");
 }
@@ -898,7 +907,7 @@ function saveLegal(e) {
     effectiveDate: byId("termsEffectiveDate").value.trim(),
     content: byId("termsContent").value.trim()
   });
-  alert("法律条款已保存");
+  alert("娉曞緥鏉℃宸蹭繚瀛?);
 }
 
 function renderLogs() {
@@ -907,12 +916,12 @@ function renderLogs() {
     ? logs
         .map(
           log => `<div class="admin-log-row">
-      <div><strong>${escapeHtml(log.action)}</strong> · ${escapeHtml(log.module)} · ${escapeHtml(log.detail || "")}</div>
-      <div>${formatTime(log.at)} · ${escapeHtml(log.userName || "")}</div>
+      <div><strong>${escapeHtml(log.action)}</strong> 路 ${escapeHtml(log.module)} 路 ${escapeHtml(log.detail || "")}</div>
+      <div>${formatTime(log.at)} 路 ${escapeHtml(log.userName || "")}</div>
     </div>`
         )
         .join("")
-    : `<div class="admin-empty">暂无日志</div>`;
+    : `<div class="admin-empty">鏆傛棤鏃ュ織</div>`;
 }
 
 function renderMedia() {
@@ -922,20 +931,20 @@ function renderMedia() {
         .map(
           m => `<div class="admin-media-row">
       <div><strong>${escapeHtml(m.path)}</strong><div>${escapeHtml(m.title || "")}</div></div>
-      <div>标签：${escapeHtml((m.tags || []).join(", ")) || "-"}</div>
-      <div>使用：${escapeHtml((m.usage || []).join(", ")) || "-"}</div>
+      <div>鏍囩锛?{escapeHtml((m.tags || []).join(", ")) || "-"}</div>
+      <div>浣跨敤锛?{escapeHtml((m.usage || []).join(", ")) || "-"}</div>
       <div>${formatTime(m.updatedAt)}</div>
     </div>`
         )
         .join("")
-    : `<div class="admin-empty">暂无媒体资产记录</div>`;
+    : `<div class="admin-empty">鏆傛棤濯掍綋璧勪骇璁板綍</div>`;
 }
 
 function saveMediaAsset(e) {
   e.preventDefault();
   const path = byId("mediaPath").value.trim();
   if (!path) {
-    alert("请填写文件路径");
+    alert("璇峰～鍐欐枃浠惰矾寰?);
     return;
   }
   siteData.upsertMediaAsset({
@@ -965,10 +974,10 @@ function renderWorkflow() {
       };
       return `<div class="admin-workflow-card">
         <h4>${moduleLabel(module)}</h4>
-        <div>草稿：${count.draft}</div>
-        <div>待审核：${count.review}</div>
-        <div>已发布：${count.published}</div>
-        <div>已归档：${count.archived}</div>
+        <div>鑽夌锛?{count.draft}</div>
+        <div>寰呭鏍革細${count.review}</div>
+        <div>宸插彂甯冿細${count.published}</div>
+        <div>宸插綊妗ｏ細${count.archived}</div>
       </div>`;
     })
     .join("");
@@ -993,7 +1002,7 @@ function importData(event) {
   reader.onload = e => {
     const ok = siteData.importJSON(e.target.result);
     if (!ok) {
-      alert("导入失败，JSON格式不正确。");
+      alert("瀵煎叆澶辫触锛孞SON鏍煎紡涓嶆纭€?);
       return;
     }
     initCategoryFilters();
@@ -1001,14 +1010,14 @@ function importData(event) {
     loadSiteProfileForm();
     loadLegalForm();
     renderAll();
-    alert("数据导入成功。");
+    alert("鏁版嵁瀵煎叆鎴愬姛銆?);
   };
   reader.readAsText(file, "utf-8");
   event.target.value = "";
 }
 
 function resetData() {
-  if (!confirm("确认重置为默认数据？")) return;
+  if (!confirm("纭閲嶇疆涓洪粯璁ゆ暟鎹紵")) return;
   siteData.resetToDefault();
   initCategoryFilters();
   loadSeoForm();
@@ -1061,33 +1070,33 @@ function formatDate(d) {
 }
 
 function statusLabel(status) {
-  if (status === "draft") return "草稿";
-  if (status === "review") return "待审核";
-  if (status === "published") return "已发布";
-  if (status === "archived") return "已归档";
+  if (status === "draft") return "鑽夌";
+  if (status === "review") return "寰呭鏍?;
+  if (status === "published") return "宸插彂甯?;
+  if (status === "archived") return "宸插綊妗?;
   return status || "-";
 }
 
 function categoryLabel(key) {
   const map = {
-    brand: "品牌资讯",
-    event: "活动报道",
-    industry: "行业动态",
-    global: "全球化",
-    product: "产品研发",
-    spicy: "无骨系列",
-    sour: "虎皮系列",
-    fragrant: "老卤系列"
+    brand: "鍝佺墝璧勮",
+    event: "娲诲姩鎶ラ亾",
+    industry: "琛屼笟鍔ㄦ€?,
+    global: "鍏ㄧ悆鍖?,
+    product: "浜у搧鐮斿彂",
+    spicy: "鏃犻绯诲垪",
+    sour: "铏庣毊绯诲垪",
+    fragrant: "鑰佸崵绯诲垪"
   };
-  return map[key] || key || "未分类";
+  return map[key] || key || "鏈垎绫?;
 }
 
 function moduleLabel(module) {
   const map = {
-    carousel: "轮播",
-    news: "资讯",
-    products: "产品",
-    careers: "岗位"
+    carousel: "杞挱",
+    news: "璧勮",
+    products: "浜у搧",
+    careers: "宀椾綅"
   };
   return map[module] || module;
 }
@@ -1100,4 +1109,5 @@ function escapeHtml(text) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
+
 

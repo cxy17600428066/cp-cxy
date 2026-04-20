@@ -651,59 +651,58 @@
 
     <script src="main.js"></script>
     <script>
-        // 鈺愨晲鈺?Dynamic News Renderer 鈺愨晲鈺?        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
             siteData.load();
             const allNews = siteData.getPublishedNews();
 
-            // Render Featured Section
             const featuredContainer = document.querySelector('.news-featured');
             if (featuredContainer && allNews.length > 0) {
-            const slugMap = new Map(allNews.map(item => [item.id, item.slug]));
                 const featured = allNews.filter(n => n.isFeatured);
                 const hero = featured[0] || allNews[0];
                 const sides = (featured.length > 1 ? featured.slice(1, 3) : allNews.slice(1, 3));
 
                 featuredContainer.innerHTML = `
-                    <div class="news-hero-card" onclick="openNewsDetail('')">
+                    <a class="news-hero-card" href="news-detail.html?slug=${encodeURIComponent(hero.slug || '')}">
                         <div class="news-hero-content">
                             <div class="news-hero-cat"><span class="cat-dot"></span>${hero.category}</div>
                             <div class="news-hero-title">${hero.title}</div>
                             <div class="news-hero-excerpt">${hero.excerpt}</div>
                             <div class="news-hero-foot">
-                                <span class="news-hero-date">${hero.date.replace(/\./g, ' 路 ')}</span>
-                                <span class="btn-outline-light">闃呰璇︽儏 <span class="btn-arrow">鈫?/span></span>
+                                <span class="news-hero-date">${hero.date.replace(/\./g, ' · ')}</span>
+                                <span class="btn-outline-light">阅读详情 <span class="btn-arrow">→</span></span>
                             </div>
                         </div>
-                    </div>
+                    </a>
                     <div class="news-side-stack">
                         ${sides.map(n => `
-                            <div class="news-side-card" onclick="openNewsDetail('')">
+                            <a class="news-side-card" href="news-detail.html?slug=${encodeURIComponent(n.slug || '')}">
                                 <div class="side-cat">${n.category}</div>
                                 <div class="side-title">${n.title}</div>
                                 <div class="side-excerpt">${n.excerpt}</div>
                                 <div class="side-foot">
                                     <span class="side-date">${n.date}</span>
-                                    <span class="side-arrow">鈫?/span>
+                                    <span class="side-arrow">→</span>
                                 </div>
-                            </div>
+                            </a>
                         `).join('')}
                     </div>
                 `;
             }
 
-            // 鈺愨晲鈺?News Grid Pagination Logic 鈺愨晲鈺?            let displayCount = 3;
+            let displayCount = 3;
             const gridContainer = document.querySelector('.news-grid');
-            const loadMoreBtn = document.querySelector('.news-load-more');
+            const loadMoreWrap = document.querySelector('.news-load-more');
+            const loadMoreButton = loadMoreWrap ? loadMoreWrap.querySelector('button') : null;
 
             function renderNewsGrid() {
                 if (!gridContainer) return;
-                
+
                 const gridNews = allNews.filter(n => !n.isFeatured);
                 const toRender = gridNews.slice(0, displayCount);
 
                 gridContainer.innerHTML = toRender.map((n, i) => `
-                    <div class="news-card reveal in-view" style="transition-delay:${i*0.05}s" data-category="${n.categoryKey}" onclick="openNewsDetail('${n.id}')">
-                        <div class="card-thumb ${n.thumbClass || 'thumb-amber'}">${n.emoji || '馃摪'}</div>
+                    <a class="news-card reveal in-view" style="transition-delay:${i * 0.05}s" data-category="${n.categoryKey}" href="news-detail.html?slug=${encodeURIComponent(n.slug || '')}">
+                        <div class="card-thumb ${n.thumbClass || 'thumb-amber'}">${n.emoji || '📰'}</div>
                         <div class="card-body">
                             <div class="card-meta">
                                 <span class="card-cat">${n.category}</span>
@@ -711,73 +710,42 @@
                             </div>
                             <div class="card-title">${n.title}</div>
                             <div class="card-excerpt">${n.excerpt}</div>
-                            <span class="card-link">闃呰璇︽儏 鈫?/span>
+                            <span class="card-link">阅读详情 →</span>
                         </div>
-                    </div>
+                    </a>
                 `).join('');
 
-                // Hide button if no more news
-                if (loadMoreBtn) {
-                    if (displayCount >= gridNews.length) {
-                        loadMoreBtn.style.display = 'none';
-                    } else {
-                        loadMoreBtn.style.display = 'flex';
-                    }
+                if (loadMoreWrap) {
+                    loadMoreWrap.style.display = displayCount >= gridNews.length ? 'none' : 'block';
                 }
             }
 
-            // Initial Render
             renderNewsGrid();
 
-            // Load More Click
-            if (loadMoreBtn) {
-                loadMoreBtn.querySelector('button').addEventListener('click', () => {
+            if (loadMoreButton) {
+                loadMoreButton.addEventListener('click', () => {
                     displayCount += 3;
                     renderNewsGrid();
                 });
             }
 
-            // Dynamic filter buttons
             const filterBar = document.querySelector('.filter-bar');
             if (filterBar) {
-                const categories = [{key: 'all', label: '鍏ㄩ儴鍔ㄦ€?}];
+                const categories = [{ key: 'all', label: '全部动态' }];
                 const seen = new Set();
                 allNews.forEach(n => {
-                    if (!seen.has(n.categoryKey)) {
+                    if (n.categoryKey && !seen.has(n.categoryKey)) {
                         seen.add(n.categoryKey);
-                        categories.push({key: n.categoryKey, label: n.category});
+                        categories.push({ key: n.categoryKey, label: n.category });
                     }
                 });
-                filterBar.innerHTML = categories.map(c =>
-                    `<button class="filter-btn${c.key === 'all' ? ' active' : ''}" onclick="filterNews(this,'${c.key}')">${c.label}</button>`
-                ).join('');
-                
-                // 鈺愨晲鈺?Trigger initial filter to show news 鈺愨晲鈺?                const activeBtn = filterBar.querySelector('.filter-btn.active');
-                if (activeBtn) {
-                    filterNews(activeBtn, 'all');
-                }
+                filterBar.innerHTML = categories
+                    .map(c => `<button class="filter-btn${c.key === 'all' ? ' active' : ''}" onclick="filterNews(this,'${c.key}')">${c.label}</button>`)
+                    .join('');
+
+                const activeBtn = filterBar.querySelector('.filter-btn.active');
+                if (activeBtn) filterNews(activeBtn, 'all');
             }
-        });
-
-        // 鈺愨晲鈺?News Detail Modal 鈺愨晲鈺?        function openNewsDetail(id) {
-            const news = siteData.getNewsById(id);
-            if (!news) return;
-            document.getElementById('detail-cat').textContent = news.category;
-            document.getElementById('detail-title').textContent = news.title;
-            document.getElementById('detail-date').textContent = news.date;
-            document.getElementById('detail-body').innerHTML = news.detail.split('\n').map(p => `<p style="margin-bottom:16px">${p}</p>`).join('');
-            document.getElementById('news-detail-overlay').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeNewsDetail() {
-            document.getElementById('news-detail-overlay').classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        // Close on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeNewsDetail();
         });
 
         function filterNews(btn, category) {
@@ -806,3 +774,4 @@
 </body>
 
 </html>
+

@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Zhuoxi Group - Site Data Manager
  * Single data layer for frontend + admin.
  * localStorage persistence with schema migration, versions, logs and publish workflow.
@@ -10,39 +10,39 @@ const VERSION_LIMIT = 20;
 const LOG_LIMIT = 400;
 
 const DEFAULT_SITE_PROFILE = {
-  companyName: "卓希食品科技有限公司",
-  companyShortName: "卓希集团",
+  companyName: "鍗撳笇椋熷搧绉戞妧鏈夐檺鍏徃",
+  companyShortName: "鍗撳笇闆嗗洟",
   unifiedCode: "91310000MA00000000",
-  icp: "沪ICP备20000000号-1",
+  icp: "娌狪CP澶?0000000鍙?1",
   foodLicense: "SC00000000000000",
-  publicSecurity: "沪公网安备31000000000000号",
-  address: "中国（上海）浦东新区示范路88号",
+  publicSecurity: "娌叕缃戝畨澶?1000000000000鍙?,
+  address: "涓浗锛堜笂娴凤級娴︿笢鏂板尯绀鸿寖璺?8鍙?,
   servicePhone: "400-888-8888",
   businessEmail: "biz@zhuoxi-hero.com",
   hrEmail: "hr@zhuoxi-hero.com",
-  workingHours: "周一至周五 09:00-18:00",
+  workingHours: "鍛ㄤ竴鑷冲懆浜?09:00-18:00",
   legalStatement:
-    "本网站仅用于品牌展示与信息发布，产品信息请以实际销售页面为准。"
+    "鏈綉绔欎粎鐢ㄤ簬鍝佺墝灞曠ず涓庝俊鎭彂甯冿紝浜у搧淇℃伅璇蜂互瀹為檯閿€鍞〉闈负鍑嗐€?
 };
 
 const DEFAULT_SEO = {
-  title: "卓希集团 | 官方门户",
-  description: "卓希集团官方信息门户，提供品牌、产品、新闻与合作信息。",
-  keywords: "卓希,脱骨侠,休闲食品,无骨鸡爪",
+  title: "鍗撳笇闆嗗洟 | 瀹樻柟闂ㄦ埛",
+  description: "鍗撳笇闆嗗洟瀹樻柟淇℃伅闂ㄦ埛锛屾彁渚涘搧鐗屻€佷骇鍝併€佹柊闂讳笌鍚堜綔淇℃伅銆?,
+  keywords: "鍗撳笇,鑴遍渚?浼戦棽椋熷搧,鏃犻楦＄埅",
   ogImage: "hero.png",
   canonical: ""
 };
 
 const DEFAULT_ROLES = [
-  { key: "admin", label: "系统管理员", permissions: ["*"] },
+  { key: "admin", label: "绯荤粺绠＄悊鍛?, permissions: ["*"] },
   {
     key: "editor",
-    label: "内容编辑",
+    label: "鍐呭缂栬緫",
     permissions: ["content.read", "content.write", "media.read", "media.write", "preview.use"]
   },
   {
     key: "reviewer",
-    label: "审核员",
+    label: "瀹℃牳鍛?,
     permissions: ["content.read", "content.review", "preview.use", "publish.use"]
   }
 ];
@@ -52,7 +52,7 @@ const DEFAULT_USERS = [
     id: "u_admin",
     username: "admin",
     password: "admin123",
-    displayName: "系统管理员",
+    displayName: "绯荤粺绠＄悊鍛?,
     role: "admin",
     status: "active"
   },
@@ -60,7 +60,7 @@ const DEFAULT_USERS = [
     id: "u_editor",
     username: "editor",
     password: "editor123",
-    displayName: "内容编辑",
+    displayName: "鍐呭缂栬緫",
     role: "editor",
     status: "active"
   },
@@ -68,7 +68,7 @@ const DEFAULT_USERS = [
     id: "u_reviewer",
     username: "reviewer",
     password: "reviewer123",
-    displayName: "内容审核",
+    displayName: "鍐呭瀹℃牳",
     role: "reviewer",
     status: "active"
   }
@@ -78,7 +78,7 @@ function defaultVersion(item) {
   return {
     versionId: "v_" + Date.now().toString(36),
     at: new Date().toISOString(),
-    note: "初始化版本",
+    note: "鍒濆鍖栫増鏈?,
     author: "system",
     snapshot: JSON.parse(JSON.stringify(item))
   };
@@ -94,7 +94,7 @@ function defaultLogs() {
       action: "SYSTEM_INIT",
       module: "system",
       targetId: "root",
-      detail: "初始化站点数据"
+      detail: "鍒濆鍖栫珯鐐规暟鎹?
     }
   ];
 }
@@ -103,14 +103,14 @@ const SEED_DATA = {
   meta: { schemaVersion: 2, updatedAt: new Date().toISOString() },
   profile: JSON.parse(JSON.stringify(DEFAULT_SITE_PROFILE)),
   seo: {
-    home: { ...DEFAULT_SEO, title: "脱骨侠集团 | 官方门户 — 予你无骨自由" },
-    about: { ...DEFAULT_SEO, title: "关于我们 | 卓希集团" },
-    news: { ...DEFAULT_SEO, title: "新闻中心 | 卓希集团" },
-    products: { ...DEFAULT_SEO, title: "产品中心 | 脱骨侠" },
-    contact: { ...DEFAULT_SEO, title: "联系我们 | 卓希集团" },
-    privacy: { ...DEFAULT_SEO, title: "隐私政策 | 卓希集团" },
-    terms: { ...DEFAULT_SEO, title: "使用条款 | 卓希集团" },
-    careers: { ...DEFAULT_SEO, title: "加入我们 | 卓希集团" }
+    home: { ...DEFAULT_SEO, title: "鑴遍渚犻泦鍥?| 瀹樻柟闂ㄦ埛 鈥?浜堜綘鏃犻鑷敱" },
+    about: { ...DEFAULT_SEO, title: "鍏充簬鎴戜滑 | 鍗撳笇闆嗗洟" },
+    news: { ...DEFAULT_SEO, title: "鏂伴椈涓績 | 鍗撳笇闆嗗洟" },
+    products: { ...DEFAULT_SEO, title: "浜у搧涓績 | 鑴遍渚? },
+    contact: { ...DEFAULT_SEO, title: "鑱旂郴鎴戜滑 | 鍗撳笇闆嗗洟" },
+    privacy: { ...DEFAULT_SEO, title: "闅愮鏀跨瓥 | 鍗撳笇闆嗗洟" },
+    terms: { ...DEFAULT_SEO, title: "浣跨敤鏉℃ | 鍗撳笇闆嗗洟" },
+    careers: { ...DEFAULT_SEO, title: "鍔犲叆鎴戜滑 | 鍗撳笇闆嗗洟" }
   },
   settings: {
     siteStatus: "online",
@@ -127,18 +127,18 @@ const SEED_DATA = {
   careers: [
     {
       id: "j1",
-      title: "品牌设计师",
-      department: "品牌中心",
-      city: "上海",
-      type: "全职",
-      level: "中级",
+      title: "鍝佺墝璁捐甯?,
+      department: "鍝佺墝涓績",
+      city: "涓婃捣",
+      type: "鍏ㄨ亴",
+      level: "涓骇",
       salary: "12k-20k",
       status: "published",
       responsibilities:
-        "负责品牌主视觉、营销活动KV、包装视觉延展，保障输出质量与品牌一致性。",
+        "璐熻矗鍝佺墝涓昏瑙夈€佽惀閿€娲诲姩KV銆佸寘瑁呰瑙夊欢灞曪紝淇濋殰杈撳嚭璐ㄩ噺涓庡搧鐗屼竴鑷存€с€?,
       requirements:
-        "3年以上品牌设计经验，熟练使用主流设计软件，具备食品行业经验优先。",
-      process: "简历筛选 -> 专业面试 -> 终面 -> 发放Offer",
+        "3骞翠互涓婂搧鐗岃璁＄粡楠岋紝鐔熺粌浣跨敤涓绘祦璁捐杞欢锛屽叿澶囬鍝佽涓氱粡楠屼紭鍏堛€?,
+      process: "绠€鍘嗙瓫閫?-> 涓撲笟闈㈣瘯 -> 缁堥潰 -> 鍙戞斁Offer",
       contactEmail: "hr@zhuoxi-hero.com",
       order: 1,
       publishAt: "2026-04-20T00:00:00.000Z",
@@ -148,18 +148,18 @@ const SEED_DATA = {
     },
     {
       id: "j2",
-      title: "区域渠道经理",
-      department: "渠道发展部",
-      city: "杭州",
-      type: "全职",
-      level: "高级",
+      title: "鍖哄煙娓犻亾缁忕悊",
+      department: "娓犻亾鍙戝睍閮?,
+      city: "鏉窞",
+      type: "鍏ㄨ亴",
+      level: "楂樼骇",
       salary: "18k-30k",
       status: "published",
       responsibilities:
-        "负责区域渠道拓展、经销商管理与销售目标达成，推进重点项目落地。",
+        "璐熻矗鍖哄煙娓犻亾鎷撳睍銆佺粡閿€鍟嗙鐞嗕笌閿€鍞洰鏍囪揪鎴愶紝鎺ㄨ繘閲嶇偣椤圭洰钀藉湴銆?,
       requirements:
-        "5年以上快消渠道经验，具备大客户拓展能力与团队协同能力。",
-      process: "简历筛选 -> 业务面试 -> 终面 -> 背调",
+        "5骞翠互涓婂揩娑堟笭閬撶粡楠岋紝鍏峰澶у鎴锋嫇灞曡兘鍔涗笌鍥㈤槦鍗忓悓鑳藉姏銆?,
+      process: "绠€鍘嗙瓫閫?-> 涓氬姟闈㈣瘯 -> 缁堥潰 -> 鑳岃皟",
       contactEmail: "hr@zhuoxi-hero.com",
       order: 2,
       publishAt: "2026-04-20T00:00:00.000Z",
@@ -172,7 +172,7 @@ const SEED_DATA = {
     {
       id: "c1",
       src: "IMG_20240724_193055 (08073368).jpg",
-      alt: "脱骨侠招牌鸡爪",
+      alt: "鑴遍渚犳嫑鐗岄浮鐖?,
       order: 1,
       status: "published",
       publishAt: "2026-04-20T00:00:00.000Z",
@@ -181,7 +181,7 @@ const SEED_DATA = {
     {
       id: "c2",
       src: "picture/椒麻鸡杂-自己修图.png",
-      alt: "脱骨侠椒麻鸡杂",
+      alt: "鑴遍渚犳楹婚浮鏉?,
       order: 2,
       status: "published",
       publishAt: "2026-04-20T00:00:00.000Z",
@@ -190,7 +190,7 @@ const SEED_DATA = {
     {
       id: "c3",
       src: "picture/IMG_20240723_193744 (09809270).jpg",
-      alt: "脱骨侠精选产品",
+      alt: "鑴遍渚犵簿閫変骇鍝?,
       order: 3,
       status: "published",
       publishAt: "2026-04-20T00:00:00.000Z",
@@ -199,7 +199,7 @@ const SEED_DATA = {
     {
       id: "c4",
       src: "picture/IMG_20240724_165402 (0EAECDD8).jpg",
-      alt: "脱骨侠系列全家福",
+      alt: "鑴遍渚犵郴鍒楀叏瀹剁",
       order: 4,
       status: "published",
       publishAt: "2026-04-20T00:00:00.000Z",
@@ -210,84 +210,84 @@ const SEED_DATA = {
     {
       id: "n1",
       slug: "innovation-award-2026",
-      title: "卓希集团荣获“年度最具创新零食品牌”，连续四年位列行业前列",
-      category: "品牌资讯",
+      title: "鍗撳笇闆嗗洟鑽ｈ幏鈥滃勾搴︽渶鍏峰垱鏂伴浂椋熷搧鐗屸€濓紝杩炵画鍥涘勾浣嶅垪琛屼笟鍓嶅垪",
+      category: "鍝佺墝璧勮",
       categoryKey: "brand",
       date: "2026.04.12",
       excerpt:
-        "在第十二届中国食品博览会上，卓希凭借独有工艺与产品矩阵，再次获得行业创新大奖。",
+        "鍦ㄧ鍗佷簩灞婁腑鍥介鍝佸崥瑙堜細涓婏紝鍗撳笇鍑€熺嫭鏈夊伐鑹轰笌浜у搧鐭╅樀锛屽啀娆¤幏寰楄涓氬垱鏂板ぇ濂栥€?,
       detail:
-        "在第十二届中国食品博览会上，卓希凭借其独有的入味工艺再次获得行业创新大奖。评审团认为，卓希在产品研发、供应链整合和品牌建设方面形成了完整的竞争壁垒。",
-      emoji: "🏆",
+        "鍦ㄧ鍗佷簩灞婁腑鍥介鍝佸崥瑙堜細涓婏紝鍗撳笇鍑€熷叾鐙湁鐨勫叆鍛冲伐鑹哄啀娆¤幏寰楄涓氬垱鏂板ぇ濂栥€傝瘎瀹″洟璁や负锛屽崜甯屽湪浜у搧鐮斿彂銆佷緵搴旈摼鏁村悎鍜屽搧鐗屽缓璁炬柟闈㈠舰鎴愪簡瀹屾暣鐨勭珵浜夊鍨掋€?,
+      emoji: "馃弳",
       thumbClass: "thumb-amber",
       isFeatured: true,
       order: 1,
       status: "published",
       publishAt: "2026-04-12T08:00:00.000Z",
       seo: {
-        title: "卓希集团创新大奖 | 新闻中心",
-        description: "卓希集团荣获年度创新品牌大奖，持续领跑无骨鸡爪赛道。",
-        keywords: "卓希,创新大奖,新闻",
+        title: "鍗撳笇闆嗗洟鍒涙柊澶у | 鏂伴椈涓績",
+        description: "鍗撳笇闆嗗洟鑽ｈ幏骞村害鍒涙柊鍝佺墝澶у锛屾寔缁璺戞棤楠ㄩ浮鐖禌閬撱€?,
+        keywords: "鍗撳笇,鍒涙柊澶у,鏂伴椈",
         ogImage: "hero4.png"
       },
-      author: "品牌公关部",
-      source: "卓希集团",
-      tags: ["品牌", "行业奖项"],
+      author: "鍝佺墝鍏叧閮?,
+      source: "鍗撳笇闆嗗洟",
+      tags: ["鍝佺墝", "琛屼笟濂栭」"],
       versionHistory: []
     },
     {
       id: "n2",
       slug: "distributor-conference-2026",
-      title: "卓希全球分销商大会圆满落幕，500位伙伴共绘蓝图",
-      category: "活动报道",
+      title: "鍗撳笇鍏ㄧ悆鍒嗛攢鍟嗗ぇ浼氬渾婊¤惤骞曪紝500浣嶄紮浼村叡缁樿摑鍥?,
+      category: "娲诲姩鎶ラ亾",
       categoryKey: "event",
       date: "2026.03.20",
       excerpt:
-        "来自全国及东南亚的核心合作伙伴齐聚，发布全年新品矩阵与渠道政策。",
+        "鏉ヨ嚜鍏ㄥ浗鍙婁笢鍗椾簹鐨勬牳蹇冨悎浣滀紮浼撮綈鑱氾紝鍙戝竷鍏ㄥ勾鏂板搧鐭╅樀涓庢笭閬撴斂绛栥€?,
       detail:
-        "大会发布了2026年全线新品路线图，并推出了全新的渠道合作激励政策，覆盖线上电商、线下商超及新零售。",
-      emoji: "📣",
+        "澶т細鍙戝竷浜?026骞村叏绾挎柊鍝佽矾绾垮浘锛屽苟鎺ㄥ嚭浜嗗叏鏂扮殑娓犻亾鍚堜綔婵€鍔辨斂绛栵紝瑕嗙洊绾夸笂鐢靛晢銆佺嚎涓嬪晢瓒呭強鏂伴浂鍞€?,
+      emoji: "馃摚",
       thumbClass: "thumb-brick",
       isFeatured: true,
       order: 2,
       status: "published",
       publishAt: "2026-03-20T08:00:00.000Z",
       seo: {
-        title: "卓希分销商大会 | 新闻中心",
-        description: "卓希举办全球分销商大会，发布2026新品与渠道策略。",
-        keywords: "卓希,分销商大会,渠道",
+        title: "鍗撳笇鍒嗛攢鍟嗗ぇ浼?| 鏂伴椈涓績",
+        description: "鍗撳笇涓惧姙鍏ㄧ悆鍒嗛攢鍟嗗ぇ浼氾紝鍙戝竷2026鏂板搧涓庢笭閬撶瓥鐣ャ€?,
+        keywords: "鍗撳笇,鍒嗛攢鍟嗗ぇ浼?娓犻亾",
         ogImage: "hero4.png"
       },
-      author: "品牌公关部",
-      source: "卓希集团",
-      tags: ["渠道", "大会"],
+      author: "鍝佺墝鍏叧閮?,
+      source: "鍗撳笇闆嗗洟",
+      tags: ["娓犻亾", "澶т細"],
       versionHistory: []
     },
     {
       id: "n3",
       slug: "lab-2-online",
-      title: "脱骨实验室2.0上线，攻克多触感风味新逻辑",
-      category: "产品研发",
+      title: "鑴遍瀹為獙瀹?.0涓婄嚎锛屾敾鍏嬪瑙︽劅椋庡懗鏂伴€昏緫",
+      category: "浜у搧鐮斿彂",
       categoryKey: "product",
       date: "2026.02.15",
-      excerpt: "研发中心扩容升级，聚焦多触感风味工程。",
+      excerpt: "鐮斿彂涓績鎵╁鍗囩骇锛岃仛鐒﹀瑙︽劅椋庡懗宸ョ▼銆?,
       detail:
-        "新实验室配备行业领先设备，重点推进软糯化骨与微观复配技术，为新品迭代提供研发能力支撑。",
-      emoji: "🔬",
+        "鏂板疄楠屽閰嶅琛屼笟棰嗗厛璁惧锛岄噸鐐规帹杩涜蒋绯寲楠ㄤ笌寰澶嶉厤鎶€鏈紝涓烘柊鍝佽凯浠ｆ彁渚涚爺鍙戣兘鍔涙敮鎾戙€?,
+      emoji: "馃敩",
       thumbClass: "thumb-blue",
       isFeatured: true,
       order: 3,
       status: "published",
       publishAt: "2026-02-15T08:00:00.000Z",
       seo: {
-        title: "脱骨实验室2.0上线 | 新闻中心",
-        description: "卓希升级研发中心，持续推进风味技术创新。",
-        keywords: "脱骨实验室,研发,卓希",
+        title: "鑴遍瀹為獙瀹?.0涓婄嚎 | 鏂伴椈涓績",
+        description: "鍗撳笇鍗囩骇鐮斿彂涓績锛屾寔缁帹杩涢鍛虫妧鏈垱鏂般€?,
+        keywords: "鑴遍瀹為獙瀹?鐮斿彂,鍗撳笇",
         ogImage: "hero4.png"
       },
-      author: "研发中心",
-      source: "卓希集团",
-      tags: ["研发", "实验室"],
+      author: "鐮斿彂涓績",
+      source: "鍗撳笇闆嗗洟",
+      tags: ["鐮斿彂", "瀹為獙瀹?],
       versionHistory: []
     }
   ],
@@ -295,68 +295,68 @@ const SEED_DATA = {
     {
       id: "p1",
       slug: "chuanshi-red-oil",
-      name: "川香红油",
-      flavor: "经典爆款",
+      name: "宸濋绾㈡补",
+      flavor: "缁忓吀鐖嗘",
       categoryKey: "spicy",
       desc:
-        "甄选优质辣椒与花椒，以秘制红油工艺入味，香辣过瘾、回味绵长。",
+        "鐢勯€変紭璐ㄨ荆妞掍笌鑺辨锛屼互绉樺埗绾㈡补宸ヨ壓鍏ュ懗锛岄杈ｈ繃鐦俱€佸洖鍛崇坏闀裤€?,
       image: "川香红油.png",
-      badge: "经典爆款",
-      specs: ["250g/袋", "麻辣鲜香"],
+      badge: "缁忓吀鐖嗘",
+      specs: ["250g/琚?, "楹昏荆椴滈"],
       link: "https://www.taobao.com",
       order: 1,
       status: "published",
       publishAt: "2026-04-20T00:00:00.000Z",
-      nutrition: "能量 1200kJ/100g，蛋白质 18g/100g。",
-      ingredients: "鸡爪、植物油、辣椒、花椒、食用盐、白砂糖。",
-      scenes: "追剧、聚会、夜宵",
-      faq: "开袋即食，建议冷藏后风味更佳。",
+      nutrition: "鑳介噺 1200kJ/100g锛岃泲鐧借川 18g/100g銆?,
+      ingredients: "楦＄埅銆佹鐗╂补銆佽荆妞掋€佽姳妞掋€侀鐢ㄧ洂銆佺櫧鐮傜硸銆?,
+      scenes: "杩藉墽銆佽仛浼氥€佸瀹?,
+      faq: "寮€琚嬪嵆椋燂紝寤鸿鍐疯棌鍚庨鍛虫洿浣炽€?,
       seo: {
-        title: "川香红油无骨鸡爪 | 卓希产品中心",
-        description: "卓希经典川香红油口味，香辣鲜香，回味十足。",
-        keywords: "川香红油,无骨鸡爪,卓希"
+        title: "宸濋绾㈡补鏃犻楦＄埅 | 鍗撳笇浜у搧涓績",
+        description: "鍗撳笇缁忓吀宸濋绾㈡补鍙ｅ懗锛岄杈ｉ矞棣欙紝鍥炲懗鍗佽冻銆?,
+        keywords: "宸濋绾㈡补,鏃犻楦＄埅,鍗撳笇"
       },
       versionHistory: []
     },
     {
       id: "p2",
       slug: "sour-lemon",
-      name: "酸辣柠檬",
-      flavor: "鲜爽入魂",
+      name: "閰歌荆鏌犳",
+      flavor: "椴滅埥鍏ラ瓊",
       categoryKey: "sour",
       desc:
-        "精选柠檬清香与酸辣平衡工艺，入口清爽，适合夏季和日常解腻。",
+        "绮鹃€夋煚妾竻棣欎笌閰歌荆骞宠　宸ヨ壓锛屽叆鍙ｆ竻鐖斤紝閫傚悎澶忓鍜屾棩甯歌В鑵汇€?,
       image: "酸辣柠檬.png",
-      badge: "鲜爽入魂",
-      specs: ["250g/袋", "柠檬酸辣"],
+      badge: "椴滅埥鍏ラ瓊",
+      specs: ["250g/琚?, "鏌犳閰歌荆"],
       link: "https://www.taobao.com",
       order: 2,
       status: "published",
       publishAt: "2026-04-20T00:00:00.000Z",
-      nutrition: "能量 1100kJ/100g，蛋白质 17g/100g。",
-      ingredients: "鸡爪、柠檬汁、辣椒、食用盐、糖。",
-      scenes: "办公、通勤、出游",
-      faq: "建议开封后尽快食用。",
+      nutrition: "鑳介噺 1100kJ/100g锛岃泲鐧借川 17g/100g銆?,
+      ingredients: "楦＄埅銆佹煚妾眮銆佽荆妞掋€侀鐢ㄧ洂銆佺硸銆?,
+      scenes: "鍔炲叕銆侀€氬嫟銆佸嚭娓?,
+      faq: "寤鸿寮€灏佸悗灏藉揩椋熺敤銆?,
       seo: {
-        title: "酸辣柠檬无骨鸡爪 | 卓希产品中心",
-        description: "酸辣清爽风味，开袋即食，适合多场景食用。",
-        keywords: "酸辣柠檬,无骨鸡爪,卓希"
+        title: "閰歌荆鏌犳鏃犻楦＄埅 | 鍗撳笇浜у搧涓績",
+        description: "閰歌荆娓呯埥椋庡懗锛屽紑琚嬪嵆椋燂紝閫傚悎澶氬満鏅鐢ㄣ€?,
+        keywords: "閰歌荆鏌犳,鏃犻楦＄埅,鍗撳笇"
       },
       versionHistory: []
     }
   ],
   legal: {
     privacy: {
-      title: "隐私政策",
+      title: "闅愮鏀跨瓥",
       effectiveDate: "2026-04-20",
       content:
-        "我们仅在提供服务所必需的范围内收集和使用信息。我们不会在未经授权的情况下向第三方出售用户个人信息。"
+        "鎴戜滑浠呭湪鎻愪緵鏈嶅姟鎵€蹇呴渶鐨勮寖鍥村唴鏀堕泦鍜屼娇鐢ㄤ俊鎭€傛垜浠笉浼氬湪鏈粡鎺堟潈鐨勬儏鍐典笅鍚戠涓夋柟鍑哄敭鐢ㄦ埛涓汉淇℃伅銆?
     },
     terms: {
-      title: "使用条款",
+      title: "浣跨敤鏉℃",
       effectiveDate: "2026-04-20",
       content:
-        "本网站内容用于品牌信息展示。未经许可不得擅自转载、复制或用于商业用途。"
+        "鏈綉绔欏唴瀹圭敤浜庡搧鐗屼俊鎭睍绀恒€傛湭缁忚鍙笉寰楁搮鑷浆杞姐€佸鍒舵垨鐢ㄤ簬鍟嗕笟鐢ㄩ€斻€?
     }
   }
 };
@@ -439,14 +439,14 @@ class SiteDataManager {
     };
     this._session = session;
     localStorage.setItem(SESSION_KEY, JSON.stringify(session));
-    this.appendLog("AUTH_LOGIN", "auth", user.id, `${user.displayName} 登录后台`);
+    this.appendLog("AUTH_LOGIN", "auth", user.id, `${user.displayName} 鐧诲綍鍚庡彴`);
     return session;
   }
 
   logout() {
     const s = this.getSession();
     if (s && s.user) {
-      this.appendLog("AUTH_LOGOUT", "auth", s.user.id, `${s.user.displayName} 退出后台`);
+      this.appendLog("AUTH_LOGOUT", "auth", s.user.id, `${s.user.displayName} 閫€鍑哄悗鍙癭);
     }
     this._session = null;
     localStorage.removeItem(SESSION_KEY);
@@ -474,7 +474,7 @@ class SiteDataManager {
     const data = this.getData();
     data.profile = { ...data.profile, ...nextProfile };
     this.save();
-    this.appendLog("PROFILE_UPDATE", "profile", "profile", "更新站点基础信息");
+    this.appendLog("PROFILE_UPDATE", "profile", "profile", "鏇存柊绔欑偣鍩虹淇℃伅");
   }
 
   getSeo(pageKey) {
@@ -488,7 +488,7 @@ class SiteDataManager {
     const data = this.getData();
     data.seo[pageKey] = { ...this.getSeo(pageKey), ...seo };
     this.save();
-    this.appendLog("SEO_UPDATE", "seo", pageKey, `更新页面SEO: ${pageKey}`);
+    this.appendLog("SEO_UPDATE", "seo", pageKey, `鏇存柊椤甸潰SEO: ${pageKey}`);
   }
 
   getSettings() {
@@ -499,7 +499,7 @@ class SiteDataManager {
     const data = this.getData();
     data.settings = { ...data.settings, ...nextSettings };
     this.save();
-    this.appendLog("SETTINGS_UPDATE", "settings", "settings", "更新站点设置");
+    this.appendLog("SETTINGS_UPDATE", "settings", "settings", "鏇存柊绔欑偣璁剧疆");
   }
 
   getLegal() {
@@ -511,7 +511,7 @@ class SiteDataManager {
     data.legal = data.legal || {};
     data.legal[key] = { ...(data.legal[key] || {}), ...payload };
     this.save();
-    this.appendLog("LEGAL_UPDATE", "legal", key, `更新法律条款: ${key}`);
+    this.appendLog("LEGAL_UPDATE", "legal", key, `鏇存柊娉曞緥鏉℃: ${key}`);
   }
 
   // ===== Content Collections =====
@@ -591,7 +591,7 @@ class SiteDataManager {
     else data[module].push(nextItem);
 
     this.save();
-    this.appendLog(`${module.toUpperCase()}_${operation}`, module, nextItem.id, `保存${module}内容`);
+    this.appendLog(`${module.toUpperCase()}_${operation}`, module, nextItem.id, `淇濆瓨${module}鍐呭`);
     return nextItem;
   }
 
@@ -599,7 +599,7 @@ class SiteDataManager {
     const data = this.getData();
     data[module] = ensureArray(data[module]).filter(item => item.id !== id);
     this.save();
-    this.appendLog(`${module.toUpperCase()}_DELETE`, module, id, `删除${module}内容`);
+    this.appendLog(`${module.toUpperCase()}_DELETE`, module, id, `鍒犻櫎${module}鍐呭`);
   }
 
   updateStatus(module, id, status) {
@@ -676,7 +676,7 @@ class SiteDataManager {
       this._data = parsed;
       this._migrate();
       this.save();
-      this.appendLog("SYSTEM_IMPORT", "system", "root", "导入站点数据");
+      this.appendLog("SYSTEM_IMPORT", "system", "root", "瀵煎叆绔欑偣鏁版嵁");
       return true;
     } catch (err) {
       console.error("Import failed:", err);
@@ -687,7 +687,7 @@ class SiteDataManager {
   resetToDefault() {
     this._data = deepClone(SEED_DATA);
     this.save();
-    this.appendLog("SYSTEM_RESET", "system", "root", "重置为默认数据");
+    this.appendLog("SYSTEM_RESET", "system", "root", "閲嶇疆涓洪粯璁ゆ暟鎹?);
   }
 
   search(module, keyword) {

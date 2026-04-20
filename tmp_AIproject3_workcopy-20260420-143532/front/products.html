@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>产品中心 | 脱骨侠 — 全系列风味矩阵</title>
-    <meta name="description" content="探索脱骨侠集团的全系列产品。从经典的柠檬系列到川香红油等创新口味，18 道脱骨工艺带来极致爽感体验。">
+    <title>浜у搧涓績 | 鑴遍渚?鈥?鍏ㄧ郴鍒楅鍛崇煩闃?/title>
+    <meta name="description" content="鎺㈢储鑴遍渚犻泦鍥㈢殑鍏ㄧ郴鍒椾骇鍝併€備粠缁忓吀鐨勬煚妾郴鍒楀埌宸濋绾㈡补绛夊垱鏂板彛鍛筹紝18 閬撹劚楠ㄥ伐鑹哄甫鏉ユ瀬鑷寸埥鎰熶綋楠屻€?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -14,9 +14,9 @@
     <link rel="stylesheet" href="style.css">
     <script src="data/site-data.js"></script>
     <style>
-        /* ════════════════════════════════════
+        /* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲
            DESIGN SYSTEM TOKENS (DESIGN.md)
-        ════════════════════════════════════ */
+        鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲 */
         :root {
             --bg-base: #faf8f5;
             --surface: #ffffff;
@@ -34,21 +34,21 @@
             --r-inner: 12px;
         }
 
-        /* ── Base ── */
+        /* 鈹€鈹€ Base 鈹€鈹€ */
         body {
             background: var(--bg-base);
             font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
             color: var(--text-primary);
         }
 
-        /* ════ Page Layout ════ */
+        /* 鈺愨晲鈺愨晲 Page Layout 鈺愨晲鈺愨晲 */
         .products-wrap {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 40px 120px;
         }
 
-        /* ════ HERO — Brand Orange ════ */
+        /* 鈺愨晲鈺愨晲 HERO 鈥?Brand Orange 鈺愨晲鈺愨晲 */
         .products-hero {
             background: linear-gradient(145deg, #ff7200 0%, #ffaa00 65%, #ffc300 100%);
             border-radius: var(--r-card);
@@ -61,7 +61,7 @@
             margin-bottom: 24px;
         }
 
-        /* ── Top area: 2-col grid ── */
+        /* 鈹€鈹€ Top area: 2-col grid 鈹€鈹€ */
         .hero-main-area {
             display: grid;
             grid-template-columns: 200px 1fr;
@@ -70,7 +70,7 @@
             align-items: start;
         }
 
-        /* ── Left column: category tags ── */
+        /* 鈹€鈹€ Left column: category tags 鈹€鈹€ */
         .hero-categories {
             display: flex;
             flex-direction: column;
@@ -106,7 +106,7 @@
             margin-left: 12px;
         }
 
-        /* ── Right column: title ── */
+        /* 鈹€鈹€ Right column: title 鈹€鈹€ */
         .hero-title-area {
             text-align: right;
         }
@@ -141,7 +141,7 @@
             font-weight: 500;
         }
 
-        /* ── Nucleus: product image ── */
+        /* 鈹€鈹€ Nucleus: product image 鈹€鈹€ */
         .hero-product-lineup-wrap {
             width: 100%;
             display: flex;
@@ -167,7 +167,7 @@
             transform: scale(1.03) translateY(-6px);
         }
 
-        /* ── Bottom white brand bar ── */
+        /* 鈹€鈹€ Bottom white brand bar 鈹€鈹€ */
         .hero-brand-bar {
             background: #fff;
             padding: 14px 56px;
@@ -217,7 +217,7 @@
             white-space: nowrap;
         }
 
-        /* ── Inline Marquee Ticker ── */
+        /* 鈹€鈹€ Inline Marquee Ticker 鈹€鈹€ */
         .hero-ticker {
             overflow: hidden;
         }
@@ -285,7 +285,7 @@
         }
 
 
-        /* ════ Filter Bar ════ */
+        /* 鈺愨晲鈺愨晲 Filter Bar 鈺愨晲鈺愨晲 */
         .filter-bar {
             display: flex;
             gap: 10px;
@@ -323,7 +323,7 @@
             box-shadow: var(--shadow-cta);
         }
 
-        /* ════ Section Header ════ */
+        /* 鈺愨晲鈺愨晲 Section Header 鈺愨晲鈺愨晲 */
         .section-eyebrow {
             font-size: 11px;
             font-weight: 700;
@@ -333,7 +333,7 @@
             margin-bottom: 24px;
         }
 
-        /* ════ Products Grid ════ */
+        /* 鈺愨晲鈺愨晲 Products Grid 鈺愨晲鈺愨晲 */
         .products-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -344,7 +344,7 @@
             grid-column: span 2;
         }
 
-        /* ── Base Card ── */
+        /* 鈹€鈹€ Base Card 鈹€鈹€ */
         .product-card {
             background: var(--surface);
             border-radius: var(--r-card);
@@ -367,7 +367,7 @@
             flex-direction: row;
         }
 
-        /* ── Image Zone ── */
+        /* 鈹€鈹€ Image Zone 鈹€鈹€ */
         .product-img-zone {
             flex-shrink: 0;
             overflow: hidden;
@@ -469,7 +469,7 @@
             background: var(--primary);
         }
 
-        /* ── Card Body ── */
+        /* 鈹€鈹€ Card Body 鈹€鈹€ */
         .product-card-body {
             padding: 24px 28px 28px;
             flex: 1;
@@ -583,7 +583,7 @@
             transform: translateX(4px);
         }
 
-        /* ════ Brand CTA Strip ════ */
+        /* 鈺愨晲鈺愨晲 Brand CTA Strip 鈺愨晲鈺愨晲 */
         .brand-strip {
             margin-top: 56px;
             background: var(--text-primary);
@@ -647,7 +647,7 @@
             transform: translateY(1px) scale(0.97);
         }
 
-        /* ════ Responsive ════ */
+        /* 鈺愨晲鈺愨晲 Responsive 鈺愨晲鈺愨晲 */
         @media (max-width: 1100px) {
             .hero-lineup-img {
                 width: 100%;
@@ -723,78 +723,78 @@
 
 <body>
 
-    <!-- ═══ Navbar ═══ -->
+    <!-- 鈺愨晲鈺?Navbar 鈺愨晲鈺?-->
     <zhuoxi-navbar></zhuoxi-navbar>
     <script src="components/navbar.js"></script>
 
     <main style="padding-top: 80px;">
         <div class="products-wrap">
 
-            <!-- ═══ Hero ═══ -->
+            <!-- 鈺愨晲鈺?Hero 鈺愨晲鈺?-->
             <div class="products-hero reveal">
 
-                <!-- ── Main content: Left tags + Right title ── -->
+                <!-- 鈹€鈹€ Main content: Left tags + Right title 鈹€鈹€ -->
                 <div class="hero-main-area">
 
                     <!-- Left: Category / series tags -->
                     <div class="hero-categories">
-                        <span class="hero-cat-tag active" onclick="switchHeroTheme(this, 'all')">全品矩阵</span>
-                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'spicy')">无骨系列</span>
-                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'sour')">虎皮系列</span>
-                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'fragrant')">老卤系列</span>
+                        <span class="hero-cat-tag active" onclick="switchHeroTheme(this, 'all')">鍏ㄥ搧鐭╅樀</span>
+                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'spicy')">鏃犻绯诲垪</span>
+                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'sour')">铏庣毊绯诲垪</span>
+                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'fragrant')">鑰佸崵绯诲垪</span>
                     </div>
 
                     <!-- Right: Title area -->
                     <div class="hero-title-area">
                         <div class="hero-eyebrow">PREMIUM SHOWCASE</div>
-                        <h1 class="hero-title">大爆品带动<br><em>多品类矩阵</em></h1>
-                        <p class="hero-subtitle">从经典柠檬到跨界联名，20+ 全线集结。每一口，毫不妥协。</p>
+                        <h1 class="hero-title">澶х垎鍝佸甫鍔?br><em>澶氬搧绫荤煩闃?/em></h1>
+                        <p class="hero-subtitle">浠庣粡鍏告煚妾埌璺ㄧ晫鑱斿悕锛?0+ 鍏ㄧ嚎闆嗙粨銆傛瘡涓€鍙ｏ紝姣笉濡ュ崗銆?/p>
                     </div>
 
                 </div>
 
-                <!-- ── Nucleus: Products lineup image ── -->
+                <!-- 鈹€鈹€ Nucleus: Products lineup image 鈹€鈹€ -->
                 <div class="hero-product-lineup-wrap">
-                    <img class="hero-lineup-img" src="products_lineup.png" alt="脱骨侠全系列产品矩阵">
+                    <img class="hero-lineup-img" src="products_lineup.png" alt="鑴遍渚犲叏绯诲垪浜у搧鐭╅樀">
                 </div>
 
-                <!-- ── Bottom white brand bar ── -->
+                <!-- 鈹€鈹€ Bottom white brand bar 鈹€鈹€ -->
                 <div class="hero-brand-bar">
                     <div class="hero-brand-left">
-                        <img src="brand_logo2.png" alt="脱骨侠"
+                        <img src="brand_logo2.png" alt="鑴遍渚?
                             style="height:28px;width:auto;object-fit:contain;display:block;">
                         <span class="hero-brand-divider">|</span>
-                        <span class="hero-brand-tagline">全球鸡爪专家</span>
+                        <span class="hero-brand-tagline">鍏ㄧ悆楦＄埅涓撳</span>
                     </div>
 
                     <!-- Inline scrolling ticker -->
                     <div class="hero-ticker">
                         <div class="hero-ticker-track">
-                            <span class="ticker-item"><b>18道</b> 大师级脱骨工艺</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>1.4<em>亿+</em></b> 累计热销罐数</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>No.<em>1</em></b> 全网销量冠军</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>4连冠</b> 全国销量第一</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>20+</b> 爆款口味阵容</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>14万吐</b> 年产能全球第一</span>
-                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>18閬?/b> 澶у笀绾ц劚楠ㄥ伐鑹?/span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>1.4<em>浜?</em></b> 绱鐑攢缃愭暟</span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>No.<em>1</em></b> 鍏ㄧ綉閿€閲忓啝鍐?/span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>4杩炲啝</b> 鍏ㄥ浗閿€閲忕涓€</span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>20+</b> 鐖嗘鍙ｅ懗闃靛</span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>14涓囧悙</b> 骞翠骇鑳藉叏鐞冪涓€</span>
+                            <span class="ticker-sep">鈥?/span>
                             <!-- Duplicate for seamless loop -->
-                            <span class="ticker-item"><b>18道</b> 大师级脱骨工艺</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>1.4<em>亿+</em></b> 累计热销罐数</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>No.<em>1</em></b> 全网销量冠军</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>4连冠</b> 全国销量第一</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>20+</b> 爆款口味阵容</span>
-                            <span class="ticker-sep">•</span>
-                            <span class="ticker-item"><b>14万吐</b> 年产能全球第一</span>
-                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>18閬?/b> 澶у笀绾ц劚楠ㄥ伐鑹?/span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>1.4<em>浜?</em></b> 绱鐑攢缃愭暟</span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>No.<em>1</em></b> 鍏ㄧ綉閿€閲忓啝鍐?/span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>4杩炲啝</b> 鍏ㄥ浗閿€閲忕涓€</span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>20+</b> 鐖嗘鍙ｅ懗闃靛</span>
+                            <span class="ticker-sep">鈥?/span>
+                            <span class="ticker-item"><b>14涓囧悙</b> 骞翠骇鑳藉叏鐞冪涓€</span>
+                            <span class="ticker-sep">鈥?/span>
                         </div>
                     </div>
 
@@ -803,42 +803,41 @@
 
             </div>
 
-            <!-- ═══ Filter ═══ -->
+            <!-- 鈺愨晲鈺?Filter 鈺愨晲鈺?-->
             <div class="filter-bar reveal">
-                <button class="filter-btn active" onclick="filterProducts(this,'all')">全部口味</button>
-                <button class="filter-btn" onclick="filterProducts(this,'spicy')">无骨系列</button>
-                <button class="filter-btn" onclick="filterProducts(this,'sour')">虎皮系列</button>
-                <button class="filter-btn" onclick="filterProducts(this,'fragrant')">老卤系列</button>
+                <button class="filter-btn active" onclick="filterProducts(this,'all')">鍏ㄩ儴鍙ｅ懗</button>
+                <button class="filter-btn" onclick="filterProducts(this,'spicy')">鏃犻绯诲垪</button>
+                <button class="filter-btn" onclick="filterProducts(this,'sour')">铏庣毊绯诲垪</button>
+                <button class="filter-btn" onclick="filterProducts(this,'fragrant')">鑰佸崵绯诲垪</button>
             </div>
 
-            <!-- ═══ Section label ═══ -->
-            <div class="section-eyebrow reveal">脱骨侠 · 主力单品</div>
+            <!-- 鈺愨晲鈺?Section label 鈺愨晲鈺?-->
+            <div class="section-eyebrow reveal">鑴遍渚?路 涓诲姏鍗曞搧</div>
 
-            <!-- ═══ Products Grid (Dynamically rendered) ═══ -->
+            <!-- 鈺愨晲鈺?Products Grid (Dynamically rendered) 鈺愨晲鈺?-->
             <div class="products-grid"></div>
 
-            <!-- ═══ Brand Strip ═══ -->
+            <!-- 鈺愨晲鈺?Brand Strip 鈺愨晲鈺?-->
             <div class="brand-strip reveal">
                 <div>
-                    <div class="brand-strip-heading">渠道合作 <em>共赢未来</em></div>
-                    <p class="brand-strip-sub">全系列产品现已在抖音、淘宝、京东全渠道开售，更多联名限定款即将发布，欢迎商务洽谈。</p>
+                    <div class="brand-strip-heading">娓犻亾鍚堜綔 <em>鍏辫耽鏈潵</em></div>
+                    <p class="brand-strip-sub">鍏ㄧ郴鍒椾骇鍝佺幇宸插湪鎶栭煶銆佹窐瀹濄€佷含涓滃叏娓犻亾寮€鍞紝鏇村鑱斿悕闄愬畾娆惧嵆灏嗗彂甯冿紝娆㈣繋鍟嗗姟娲借皥銆?/p>
                 </div>
-                <a href="contact.html" class="brand-strip-cta">立即洽谈 <span>→</span></a>
+                <a href="contact.html" class="brand-strip-cta">绔嬪嵆娲借皥 <span>鈫?/span></a>
             </div>
 
         </div>
     </main>
 
-    <!-- ═══ Footer ═══ -->
+    <!-- 鈺愨晲鈺?Footer 鈺愨晲鈺?-->
     <zhuoxi-footer></zhuoxi-footer>
     <script src="components/footer.js"></script>
 
     <script src="main.js"></script>
     <script>
-        // ═══ Dynamic Product Renderer ═══
-        document.addEventListener('DOMContentLoaded', () => {
+        // 鈺愨晲鈺?Dynamic Product Renderer 鈺愨晲鈺?        document.addEventListener('DOMContentLoaded', () => {
             siteData.load();
-            const products = siteData.getProducts();
+            const products = siteData.getPublishedProducts();
             const grid = document.querySelector('.products-grid');
             if (grid && products.length > 0) {
                 const bgColors = ['bg-lemon', 'bg-red', 'bg-spicy', 'bg-garlic', 'bg-pepper'];
@@ -856,20 +855,19 @@
                             </div>
                             <div class="product-card-body">
                                 <div class="product-flavor-label">${p.badge || p.flavor || ''}</div>
-                                <div class="product-name">${p.name}无骨凤爪</div>
+                                <div class="product-name">${p.name}鏃犻鍑ょ埅</div>
                                 <div class="product-desc">${p.desc}</div>
                                 ${specsHtml ? `<div class="product-attrs">${specsHtml}</div>` : ''}
                                 <div class="product-card-footer">
                                     <span class="product-weight">${(p.specs && p.specs[0]) || ''}</span>
-                                    <a href="${p.link || '#'}" target="_blank" class="btn-primary-pill">了解详情 <span class="btn-arrow">→</span></a>
+                                    <a href="${p.link || '#'}" target="_blank" class="btn-primary-pill">浜嗚В璇︽儏 <span class="btn-arrow">鈫?/span></a>
                                 </div>
                             </div>
                         </div>
                     `;
                 }).join('');
 
-                // ═══ Trigger initial filter to show products ═══
-                const activeBtn = document.querySelector('.filter-btn.active');
+                // 鈺愨晲鈺?Trigger initial filter to show products 鈺愨晲鈺?                const activeBtn = document.querySelector('.filter-btn.active');
                 if (activeBtn) {
                     const flavor = activeBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
                     filterProducts(activeBtn, flavor);
@@ -893,7 +891,7 @@
                 });
             });
             setTimeout(() => {
-                const filterMap = { 'all': '全部口味', 'spicy': '无骨系列', 'sour': '虎皮系列', 'fragrant': '老卤系列' };
+                const filterMap = { 'all': '鍏ㄩ儴鍙ｅ懗', 'spicy': '鏃犻绯诲垪', 'sour': '铏庣毊绯诲垪', 'fragrant': '鑰佸崵绯诲垪' };
                 const targetText = filterMap[type];
                 const mainFilterBtn = Array.from(document.querySelectorAll('.filter-btn')).find(btn => btn.innerText === targetText);
                 if (mainFilterBtn) filterProducts(mainFilterBtn, type);
@@ -920,3 +918,4 @@
 </body>
 
 </html>
+

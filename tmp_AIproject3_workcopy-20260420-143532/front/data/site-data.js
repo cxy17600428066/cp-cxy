@@ -535,6 +535,10 @@ class SiteDataManager {
     return this.getNews().filter(item => item.status === "published");
   }
 
+  getPublishedCarousel() {
+    return this.getCarousel().filter(item => item.status === "published");
+  }
+
   getPublishedProducts() {
     return this.getProducts().filter(item => item.status === "published");
   }
@@ -789,4 +793,3 @@ class SiteDataManager {
 }
 
 const siteData = new SiteDataManager();
-

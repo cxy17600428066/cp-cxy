@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>脱骨侠集团 | 官方门户 — 予你无骨自由</title>
+    <meta name="description" content="脱骨侠（Deboning Hero）官方网站。作为脱骨零食行业的领跑者，我们致力于通过技术创新与匠心工艺，构建全球领先的休闲食品产业格局。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+</head>
+
+<body>
+
+    <!-- ═══ Floating Navbar ═══ -->
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main>
+
+        <!-- ═══ Hero Section ═══ -->
+        <section class="hero-section">
+            <div class="hero-island reveal" style="display: flex; flex-direction: column; position: relative; gap: 0;">
+
+                <!-- Top Main Content Row -->
+                <div class="hero-main-row"
+                    style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 30px; gap: 20px;">
+
+                    <!-- Left Content: Logo + Mascot + Calligraphy consolidated -->
+                    <div class="hero-left-group" style="display: flex; align-items: center; gap: 10px; flex: 1.1;">
+
+                        <!-- Logo & Mascot -->
+                        <div class="hero-brand" style="position: relative; width: 380px; flex-shrink: 0;">
+                            <h1 class="display-hero"
+                                style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 2;">
+                                <span
+                                    style="font-size: 52px; font-weight: 900; line-height: 1; letter-spacing: -1px; text-transform: uppercase; color: #ff5100;">BONELESS
+                                    MAN</span>
+                                <span
+                                    style="font-size: 14px; font-weight: 700; letter-spacing: 6px; color: var(--hero-orange); text-transform: uppercase;">BRAND
+                                    MANUAL</span>
+                            </h1>
+                            <div class="hero-image"
+                                style="position: relative; z-index: 1; max-width: 440px; margin-top: -20px; margin-left: -30px;">
+                                <img src="hero.png" alt="脱骨侠集团形象" loading="eager"
+                                    style="mix-blend-mode: multiply; filter: contrast(1.05); width: 100%;">
+                            </div>
+                        </div>
+
+                        <!-- Calligraphy Image Replacement -->
+                        <div class="calligraphy-art"
+                            style="position: relative; width: 220px; flex-shrink: 0; transform: translateY(20px); margin-left: -70px;">
+                            <img src="hero_text.png" alt="无骨鸡爪第一品牌" style="width: 100%; height: auto; display: block;">
+                        </div>
+
+                    </div>
+
+                    <!-- Right Content: Image Carousel Container -->
+                    <div class="hero-carousel"
+                        style="flex: 1.1; height: 500px; border-radius: 40px; overflow: hidden; position: relative; box-shadow: 0 24px 48px rgba(0,0,0,0.08);">
+
+                        <!-- Images Stack -->
+                        <div class="carousel-images" style="width: 100%; height: 100%; position: relative;">
+                            <img src="IMG_20240724_193055 (08073368).jpg" alt="脱骨侠招牌鸡爪" class="carousel-img active"
+                                style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateX(20px);">
+                            <img src="picture/椒麻鸡杂-自己修图.png" alt="脱骨侠椒麻鸡杂" class="carousel-img"
+                                style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateX(20px);">
+                            <img src="picture/IMG_20240723_193744 (09809270).jpg" alt="脱骨侠精选产品" class="carousel-img"
+                                style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateX(20px);">
+                            <img src="picture/IMG_20240724_165402 (0EAECDD8).jpg" alt="脱骨侠系列全家福" class="carousel-img"
+                                style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateX(20px);">
+                        </div>
+
+                        <!-- Navigation Arrows -->
+                        <button class="carousel-nav prev"
+                            style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 10; transition: all 0.3s ease;">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 18 9 12 15 6"></polyline>
+                            </svg>
+                        </button>
+                        <button class="carousel-nav next"
+                            style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 10; transition: all 0.3s ease;">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
+                                fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                        </button>
+
+                        <!-- Indicators Dots -->
+                        <div class="carousel-dots"
+                            style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10;">
+                            <span class="dot active"
+                                style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: 1; transition: all 0.3s ease;"></span>
+                            <span class="dot"
+                                style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.4; transition: all 0.3s ease;"></span>
+                            <span class="dot"
+                                style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.4; transition: all 0.3s ease;"></span>
+                            <span class="dot"
+                                style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.4; transition: all 0.3s ease;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bottom Footer Bar -->
+                <div class="hero-bottom-bar"
+                    style="width: 100%; border-top: 2px solid rgba(0,0,0,0.06); padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="bottom-bar-left" style="display: flex; align-items: center; gap: 20px;">
+                        <img src="brand_logo.png" alt="脱骨侠 LOGO" style="height: 32px; mix-blend-mode: multiply;">
+                        <div style="width: 1px; height: 16px; background-color: rgba(0,0,0,0.2);"></div>
+                        <span
+                            style="font-size: 16px; color: var(--text-muted); letter-spacing: 2px; font-weight: 500;">全球鸡爪专家</span>
+                    </div>
+
+                    <div class="bottom-bar-right"
+                        style="display: flex; flex-direction: column; text-align: right; font-size: 10px; color: rgba(0,0,0,0.3); letter-spacing: 2px; font-weight: 700; font-family: 'Outfit', sans-serif;">
+                        <span
+                            style="border-bottom: 1px dashed rgba(0,0,0,0.15); padding-bottom: 2px; margin-bottom: 2px;">BONELESS
+                            | </span>
+                        <span>CHICKEN FEET</span>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ═══ Core Products (Bento Box Layout) ═══ -->
+        <section id="products" class="products-section section" style="padding-top: 60px;">
+            <div class="content-container">
+                <div class="section-header reveal" style="text-align: center; margin-bottom: 60px;">
+                    <h2 class="section-title">核心爆品</h2>
+                    <div class="title-accent" style="margin: 0 auto 24px;"></div>
+                    <p style="color: var(--text-muted); font-size: 18px;">重新定义无骨鸡爪风味标准</p>
+                </div>
+
+                <div class="flavor-grid reveal-stagger">
+                    <!-- 川香红油 -->
+                    <a href="https://www.taobao.com/list/item/1009311407228.htm?spm=a21wu.11804641.shop-content.53.6b6132168kY1DJ"
+                        target="_blank" class="flavor-card">
+                        <div class="flavor-badge">经典爆款</div>
+                        <div class="flavor-img-wrapper">
+                            <img src="川香红油.png" alt="川香红油" class="flavor-img">
+                            <img src="阴影.png" alt="阴影" class="flavor-shadow">
+                        </div>
+                        <div class="flavor-info">
+                            <h3 class="flavor-name">川香红油</h3>
+                            <span class="flavor-tag">地道川味 · 香辣过瘾</span>
+                        </div>
+                    </a>
+
+                    <!-- 麻辣藤椒 -->
+                    <a href="https://www.taobao.com/list/item/1009311407228.htm?spm=a21wu.11804641.shop-content.53.6b6132168kY1DJ"
+                        target="_blank" class="flavor-card">
+                        <div class="flavor-badge">鲜爽入魂</div>
+                        <div class="flavor-img-wrapper">
+                            <img src="麻辣藤椒.png" alt="麻辣藤椒" class="flavor-img">
+                            <img src="阴影.png" alt="阴影" class="flavor-shadow">
+                        </div>
+                        <div class="flavor-info">
+                            <h3 class="flavor-name">麻辣藤椒</h3>
+                            <span class="flavor-tag">麻香持久 · 爽滑脆嫩</span>
+                        </div>
+                    </a>
+
+                    <!-- 酸辣柠檬 -->
+                    <a href="https://www.taobao.com/list/item/1009311407228.htm?spm=a21wu.11804641.shop-content.53.6b6132168kY1DJ"
+                        target="_blank" class="flavor-card">
+                        <div class="flavor-badge">当家王牌</div>
+                        <div class="flavor-img-wrapper">
+                            <img src="酸辣柠檬.png" alt="酸辣柠檬" class="flavor-img">
+                            <img src="阴影.png" alt="阴影" class="flavor-shadow">
+                        </div>
+                        <div class="flavor-info">
+                            <h3 class="flavor-name">酸辣柠檬</h3>
+                            <span class="flavor-tag">清新果香 · 解腻神器</span>
+                        </div>
+                    </a>
+
+                    <!-- 蒜香酸甜辣 -->
+                    <a href="https://www.taobao.com/list/item/1009311407228.htm?spm=a21wu.11804641.shop-content.53.6b6132168kY1DJ"
+                        target="_blank" class="flavor-card">
+                        <div class="flavor-badge">匠心工艺</div>
+                        <div class="flavor-img-wrapper">
+                            <img src="蒜香酸甜辣.png" alt="蒜香酸甜辣" class="flavor-img">
+                            <img src="阴影.png" alt="阴影" class="flavor-shadow">
+                        </div>
+                        <div class="flavor-info">
+                            <h3 class="flavor-name">蒜香酸甜辣</h3>
+                            <span class="flavor-tag">层次丰富 · 蒜香浓郁</span>
+                        </div>
+                    </a>
+
+                    <!-- 香辣泡椒 -->
+                    <a href="https://www.taobao.com/list/item/1009311407228.htm?spm=a21wu.11804641.shop-content.53.6b6132168kY1DJ"
+                        target="_blank" class="flavor-card">
+                        <div class="flavor-badge">地道风味</div>
+                        <div class="flavor-img-wrapper">
+                            <img src="香辣泡椒.png" alt="香辣泡椒" class="flavor-img">
+                            <img src="阴影.png" alt="阴影" class="flavor-shadow">
+                        </div>
+                        <div class="flavor-info">
+                            <h3 class="flavor-name">香辣泡椒</h3>
+                            <span class="flavor-tag">爽利酸辣 · 回味无穷</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="section-cta reveal" style="text-align: center; margin-top: 40px;">
+                    <a href="products.html" class="btn btn-primary"
+                        style="font-size: 18px; padding: 18px 48px;">浏览完整产品线</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══ News Center (Magazine Layout) ═══ -->
+        <section id="news" class="news-section section" style="background-color: #f9f9f9; padding-top: 40px;">
+            <div class="content-container">
+                <div class="section-header reveal" style="text-align: center; margin-bottom: 40px;">
+                    <h2 class="section-title">集团资讯</h2>
+                    <div class="title-accent" style="margin: 0 auto 24px;"></div>
+                </div>
+
+                <div class="magazine-grid reveal-stagger">
+                    <!-- Featured Mag Article -->
+                    <a href="news.html" class="mag-featured">
+                        <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=1200"
+                            alt="新闻头条" class="mag-featured-img">
+                        <div class="mag-glass-wrapper">
+                            <div class="mag-glass-content">
+                                <span class="news-date-pill"
+                                    style="background: var(--hero-orange); color: white;">重大发表</span>
+                                <div style="margin-top: 20px;">
+                                    <div class="news-date"
+                                        style="font-weight: 800; font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 12px; letter-spacing: 2px;">
+                                        2026.04.12</div>
+                                    <h3 class="mag-item-title"
+                                        style="font-size: 32px; color: white; margin-bottom: 16px;">卓希集团荣获“年度最具创新零食品牌”
+                                    </h3>
+                                    <p class="mag-item-desc"
+                                        style="color: rgba(255,255,255,0.7); font-size: 16px; -webkit-line-clamp: 3;">
+                                        在第十二届食品博览会上，卓希凭借其独有的 18 道入味工艺再次蝉联全场最大规模创新大奖，确立无骨赛道绝对壁垒。</p>
+                                </div>
+                                <div class="mag-action-row"
+                                    style="color: white; opacity: 1; transform: none; margin-top: 24px;">
+                                    阅读全文
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <path d="m12 5 7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Magazine List -->
+                    <div class="mag-list">
+                        <a href="news.html" class="mag-item">
+                            <div class="mag-item-thumb">
+                                <img src="https://images.unsplash.com/photo-1543269865-cbf427effbad?auto=format&fit=crop&q=80&w=400"
+                                    alt="分销商大会">
+                            </div>
+                            <div class="mag-item-body">
+                                <div class="news-date-pill">集团动态</div>
+                                <h3 class="mag-item-title">卓希全球分销商大会圆满落幕</h3>
+                                <p class="mag-item-desc">来自全国各地的 500 位核心合作伙伴齐聚一堂，共绘千亿级“无骨零食”商业蓝图。</p>
+                                <div class="mag-action-row">
+                                    查看详情 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <path d="m12 5 7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+                        <a href="news.html" class="mag-item">
+                            <div class="mag-item-thumb">
+                                <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&q=80&w=400"
+                                    alt="实验室">
+                            </div>
+                            <div class="mag-item-body">
+                                <div class="news-date-pill">科研成果</div>
+                                <h3 class="mag-item-title">脱骨实验室 2.0 正式上线</h3>
+                                <p class="mag-item-desc">研发中心总面积扩容至万平，重点攻关“软糯化骨”与“微观复配”的多触感风味逻辑。</p>
+                                <div class="mag-action-row">
+                                    技术解读 <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <path d="m12 5 7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </a>
+
+
+                        <!-- Action Area aligned to bottom -->
+                        <a href="news.html" class="btn btn-primary"
+                            style="display: flex; align-items: center; justify-content: center; min-height: 80px; width: 100%; font-size: 18px; border-radius: 32px; margin-top: auto;">
+                            前往新闻中心查看所有资讯
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="3" stroke-linecap="round" stroke-linejoin="round"
+                                style="margin-left: 12px;">
+                                <path d="M5 12h14"></path>
+                                <path d="m12 5 7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ESG 与招聘入口已独立至 Contact 页面 -->
+
+
+    </main>
+
+    <!-- ═══ Footer ═══ -->
+    <!-- ═══ Footer ═══ -->
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+
+    <!-- Back to Top Button -->
+    <div id="back-to-top" class="btn-primary" title="点击回到顶部">↑</div>
+
+    <script src="main.js"></script>
+    <script>
+        // ═══ Dynamic Content Renderer ═══
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+
+            // 1. Dynamic Carousel
+            const carouselImagesContainer = document.querySelector('.carousel-images');
+            const dotsContainer = document.querySelector('.carousel-dots');
+            if (carouselImagesContainer && dotsContainer) {
+                const carouselItems = siteData.getCarousel();
+                if (carouselItems.length > 0) {
+                    carouselImagesContainer.innerHTML = carouselItems.map((item, i) => 
+                        `<img src="${item.src}" alt="${item.alt}" class="carousel-img${i===0?' active':''}" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;transition:all 0.8s cubic-bezier(0.4,0,0.2,1);opacity:0;transform:translateX(20px);">`
+                    ).join('');
+                    dotsContainer.innerHTML = carouselItems.map((_, i) =>
+                        `<span class="dot${i===0?' active':''}" style="width:8px;height:8px;border-radius:50%;background:white;cursor:pointer;opacity:${i===0?'1':'0.4'};transition:all 0.3s ease;"></span>`
+                    ).join('');
+                    // Re-init carousel after dynamic render
+                    initHeroCarousel();
+                }
+            }
+
+            // 2. Dynamic Products
+            const flavorGrid = document.querySelector('.flavor-grid');
+            if (flavorGrid) {
+                const products = siteData.getProducts();
+                if (products.length > 0) {
+                    flavorGrid.innerHTML = products.map(p => `
+                        <a href="${p.link || '#'}" target="_blank" class="flavor-card">
+                            <div class="flavor-badge">${p.badge || ''}</div>
+                            <div class="flavor-img-wrapper">
+                                <img src="${p.image}" alt="${p.name}" class="flavor-img">
+                                <img src="阴影.png" alt="阴影" class="flavor-shadow">
+                            </div>
+                            <div class="flavor-info">
+                                <h3 class="flavor-name">${p.name}</h3>
+                                <span class="flavor-tag">${p.desc}</span>
+                            </div>
+                        </a>
+                    `).join('');
+                }
+            }
+
+            // 3. Dynamic News (Magazine Layout)
+            const magGrid = document.querySelector('.magazine-grid');
+            if (magGrid) {
+                const news = siteData.getNews();
+                const featured = news[0];
+                const sideNews = news.slice(1, 3);
+                if (featured) {
+                    magGrid.innerHTML = `
+                        <a href="news.html" class="mag-featured">
+                            <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=1200" alt="${featured.title}" class="mag-featured-img">
+                            <div class="mag-glass-wrapper">
+                                <div class="mag-glass-content">
+                                    <span class="news-date-pill" style="background: var(--hero-orange); color: white;">${featured.category}</span>
+                                    <div style="margin-top: 20px;">
+                                        <div class="news-date" style="font-weight: 800; font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 12px; letter-spacing: 2px;">${featured.date}</div>
+                                        <h3 class="mag-item-title" style="font-size: 32px; color: white; margin-bottom: 16px;">${featured.title}</h3>
+                                        <p class="mag-item-desc" style="color: rgba(255,255,255,0.7); font-size: 16px; -webkit-line-clamp: 3;">${featured.excerpt}</p>
+                                    </div>
+                                    <div class="mag-action-row" style="color: white; opacity: 1; transform: none; margin-top: 24px;">阅读全文
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="mag-list">
+                            ${sideNews.map(n => `
+                                <a href="news.html" class="mag-item">
+                                    <div class="mag-item-thumb"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:#f5f5f5;">${n.emoji || '📰'}</div></div>
+                                    <div class="mag-item-body">
+                                        <div class="news-date-pill">${n.category}</div>
+                                        <h3 class="mag-item-title">${n.title}</h3>
+                                        <p class="mag-item-desc">${n.excerpt}</p>
+                                        <div class="mag-action-row">查看详情 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></div>
+                                    </div>
+                                </a>
+                            `).join('')}
+                            <a href="news.html" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; min-height: 80px; width: 100%; font-size: 18px; border-radius: 32px; margin-top: auto;">前往新闻中心查看所有资讯
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="margin-left: 12px;"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+        });
+
+        // Re-init carousel after dynamic render
+        function initHeroCarousel() {
+            const heroCarousel = document.querySelector('.hero-carousel');
+            if (!heroCarousel) return;
+            const images = heroCarousel.querySelectorAll('.carousel-img');
+            const dots = heroCarousel.querySelectorAll('.dot');
+            const prevBtn = heroCarousel.querySelector('.prev');
+            const nextBtn = heroCarousel.querySelector('.next');
+            let currentIndex = 0;
+            let autoPlayTimer;
+
+            const updateCarousel = (index, direction = 'next') => {
+                images.forEach(img => { img.classList.remove('active'); img.style.transform = direction === 'next' ? 'translateX(-20px)' : 'translateX(20px)'; });
+                dots.forEach(dot => dot.classList.remove('active'));
+                currentIndex = index;
+                images[currentIndex].classList.add('active');
+                dots[currentIndex].classList.add('active');
+            };
+            const nextSlide = () => { updateCarousel((currentIndex + 1) % images.length, 'next'); };
+            const prevSlide = () => { updateCarousel((currentIndex - 1 + images.length) % images.length, 'prev'); };
+            nextBtn?.addEventListener('click', () => { nextSlide(); resetTimer(); });
+            prevBtn?.addEventListener('click', () => { prevSlide(); resetTimer(); });
+            dots.forEach((dot, index) => { dot.addEventListener('click', () => { updateCarousel(index, index > currentIndex ? 'next' : 'prev'); resetTimer(); }); });
+            const startTimer = () => { autoPlayTimer = setInterval(nextSlide, 5000); };
+            const resetTimer = () => { clearInterval(autoPlayTimer); startTimer(); };
+            updateCarousel(0);
+            startTimer();
+            heroCarousel.addEventListener('mouseenter', () => clearInterval(autoPlayTimer));
+            heroCarousel.addEventListener('mouseleave', () => startTimer());
+        }
+    </script>
+</body>
+
+</html>

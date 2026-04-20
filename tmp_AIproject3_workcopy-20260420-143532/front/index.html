@@ -340,7 +340,7 @@
             const carouselImagesContainer = document.querySelector('.carousel-images');
             const dotsContainer = document.querySelector('.carousel-dots');
             if (carouselImagesContainer && dotsContainer) {
-                const carouselItems = siteData.getCarousel();
+                const carouselItems = siteData.getPublishedCarousel();
                 if (carouselItems.length > 0) {
                     carouselImagesContainer.innerHTML = carouselItems.map((item, i) => 
                         `<img src="${item.src}" alt="${item.alt}" class="carousel-img${i===0?' active':''}" style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;transition:all 0.8s cubic-bezier(0.4,0,0.2,1);opacity:0;transform:translateX(20px);">`
@@ -356,10 +356,10 @@
             // 2. Dynamic Products
             const flavorGrid = document.querySelector('.flavor-grid');
             if (flavorGrid) {
-                const products = siteData.getProducts();
+                const products = siteData.getPublishedProducts();
                 if (products.length > 0) {
                     flavorGrid.innerHTML = products.map(p => `
-                        <a href="${p.link || '#'}" target="_blank" class="flavor-card">
+                        <a href="product-detail.html?slug=${encodeURIComponent(p.slug || '')}" class="flavor-card">
                             <div class="flavor-badge">${p.badge || ''}</div>
                             <div class="flavor-img-wrapper">
                                 <img src="${p.image}" alt="${p.name}" class="flavor-img">
@@ -377,12 +377,12 @@
             // 3. Dynamic News (Magazine Layout)
             const magGrid = document.querySelector('.magazine-grid');
             if (magGrid) {
-                const news = siteData.getNews();
+                const news = siteData.getPublishedNews();
                 const featured = news[0];
                 const sideNews = news.slice(1, 3);
                 if (featured) {
                     magGrid.innerHTML = `
-                        <a href="news.html" class="mag-featured">
+                        <a href="news-detail.html?slug=${encodeURIComponent(featured.slug || '')}" class="mag-featured">
                             <img src="https://images.unsplash.com/photo-1559136555-9303baea8ebd?auto=format&fit=crop&q=80&w=1200" alt="${featured.title}" class="mag-featured-img">
                             <div class="mag-glass-wrapper">
                                 <div class="mag-glass-content">
@@ -400,7 +400,7 @@
                         </a>
                         <div class="mag-list">
                             ${sideNews.map(n => `
-                                <a href="news.html" class="mag-item">
+                                <a href="news-detail.html?slug=${encodeURIComponent(n.slug || '')}" class="mag-item">
                                     <div class="mag-item-thumb"><div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:#f5f5f5;">${n.emoji || '📰'}</div></div>
                                     <div class="mag-item-body">
                                         <div class="news-date-pill">${n.category}</div>

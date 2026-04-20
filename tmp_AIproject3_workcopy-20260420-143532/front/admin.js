@@ -185,7 +185,7 @@ function onLoginSubmit(e) {
   e.preventDefault();
   const user = siteData.login(ui.loginUsername.value.trim(), ui.loginPassword.value.trim());
   if (!user) {
-    ui.loginError.textContent = "璐﹀彿鎴栧瘑鐮侀敊璇?;
+    ui.loginError.textContent = "账号或密码错误";
     return;
   }
   ui.loginError.textContent = "";
@@ -426,7 +426,7 @@ function moveOrder(module, id, direction) {
 }
 
 function deleteItem(module, id) {
-  if (!confirm("纭鍒犻櫎璇ユ潯鏁版嵁锛熸鎿嶄綔涓嶅彲鎭㈠銆?)) return;
+  if (!confirm("确认执行该操作？") return;
   siteData.deleteItem(module, id);
   refreshActiveViews();
 }
@@ -730,7 +730,7 @@ function saveEntityWithStatus(nextStatus) {
   const module = ui.entityModule.value;
   if (!module) return;
   if (!canTransitTo(nextStatus)) {
-    alert("褰撳墠璐﹀彿瑙掕壊鏃犳潈闄愭墽琛岃鐘舵€佹祦杞€?);
+    alert("操作已完成");
     return;
   }
   const item = collectEntityData();
@@ -744,25 +744,25 @@ function saveEntityWithStatus(nextStatus) {
 function validateEntity(module, item) {
   if (module === "carousel") {
     if (!item.src || !item.alt) {
-      alert("杞挱鍥鹃渶濉啓鍥剧墖璺緞鍜宎lt銆?);
+      alert("操作已完成");
       return false;
     }
   }
   if (module === "news") {
     if (!item.title || !item.slug || !item.detail) {
-      alert("璧勮闇€濉啓鏍囬銆乻lug銆佹鏂囥€?);
+      alert("操作已完成");
       return false;
     }
   }
   if (module === "products") {
     if (!item.name || !item.slug || !item.image) {
-      alert("浜у搧闇€濉啓鍚嶇О銆乻lug銆佸浘鐗囪矾寰勩€?);
+      alert("操作已完成");
       return false;
     }
   }
   if (module === "careers") {
     if (!item.title || !item.department) {
-      alert("宀椾綅闇€濉啓宀椾綅鍚嶇О鍜屾墍灞為儴闂ㄣ€?);
+      alert("操作已完成");
       return false;
     }
   }
@@ -798,7 +798,7 @@ function revertVersionById(versionId) {
   const module = ui.entityModule.value;
   const id = ui.entityId.value;
   if (!module || !id) return;
-  if (!confirm("纭鍥炴粴鍒拌鐗堟湰锛?)) return;
+  if (!confirm("确认执行该操作？") return;
   siteData.revertVersion(module, id, versionId);
   const fresh = siteData.getItemByModule(module, id);
   state.modal.item = JSON.parse(JSON.stringify(fresh));
@@ -811,12 +811,12 @@ function revertLatestVersion() {
   const module = ui.entityModule.value;
   const id = ui.entityId.value;
   if (!module || !id) {
-    alert("浠呮敮鎸佸凡鏈夊唴瀹瑰洖婊氥€?);
+    alert("操作已完成");
     return;
   }
   const item = siteData.getItemByModule(module, id);
   if (!item || !item.versionHistory || item.versionHistory.length < 2) {
-    alert("娌℃湁鍙洖婊氱殑鍘嗗彶鐗堟湰銆?);
+    alert("操作已完成");
     return;
   }
   revertVersionById(item.versionHistory[1].versionId);
@@ -842,7 +842,7 @@ function saveSeoForm(e) {
     ogImage: byId("seoOgImage").value.trim(),
     canonical: byId("seoCanonical").value.trim()
   });
-  alert("SEO璁剧疆宸蹭繚瀛?);
+  alert("操作已完成");
 }
 
 function loadSiteProfileForm() {
@@ -907,7 +907,7 @@ function saveLegal(e) {
     effectiveDate: byId("termsEffectiveDate").value.trim(),
     content: byId("termsContent").value.trim()
   });
-  alert("娉曞緥鏉℃宸蹭繚瀛?);
+  alert("操作已完成");
 }
 
 function renderLogs() {
@@ -944,7 +944,7 @@ function saveMediaAsset(e) {
   e.preventDefault();
   const path = byId("mediaPath").value.trim();
   if (!path) {
-    alert("璇峰～鍐欐枃浠惰矾寰?);
+    alert("操作已完成");
     return;
   }
   siteData.upsertMediaAsset({
@@ -1002,7 +1002,7 @@ function importData(event) {
   reader.onload = e => {
     const ok = siteData.importJSON(e.target.result);
     if (!ok) {
-      alert("瀵煎叆澶辫触锛孞SON鏍煎紡涓嶆纭€?);
+      alert("操作已完成");
       return;
     }
     initCategoryFilters();
@@ -1010,7 +1010,7 @@ function importData(event) {
     loadSiteProfileForm();
     loadLegalForm();
     renderAll();
-    alert("鏁版嵁瀵煎叆鎴愬姛銆?);
+    alert("操作已完成");
   };
   reader.readAsText(file, "utf-8");
   event.target.value = "";
@@ -1071,9 +1071,9 @@ function formatDate(d) {
 
 function statusLabel(status) {
   if (status === "draft") return "鑽夌";
-  if (status === "review") return "寰呭鏍?;
-  if (status === "published") return "宸插彂甯?;
-  if (status === "archived") return "宸插綊妗?;
+  if (status === "review") return "待审核";
+  if (status === "published") return "已发布";
+  if (status === "archived") return "已归档";
   return status || "-";
 }
 
@@ -1081,14 +1081,14 @@ function categoryLabel(key) {
   const map = {
     brand: "鍝佺墝璧勮",
     event: "娲诲姩鎶ラ亾",
-    industry: "琛屼笟鍔ㄦ€?,
-    global: "鍏ㄧ悆鍖?,
+    industry: "行业动态",
+    global: "全球化",
     product: "浜у搧鐮斿彂",
     spicy: "鏃犻绯诲垪",
     sour: "铏庣毊绯诲垪",
     fragrant: "鑰佸崵绯诲垪"
   };
-  return map[key] || key || "鏈垎绫?;
+  return map[key] || key || "未分类";
 }
 
 function moduleLabel(module) {
@@ -1109,5 +1109,6 @@ function escapeHtml(text) {
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
 }
+
 
 

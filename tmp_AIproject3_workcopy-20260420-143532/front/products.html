@@ -860,7 +860,7 @@
                                 ${specsHtml ? `<div class="product-attrs">${specsHtml}</div>` : ''}
                                 <div class="product-card-footer">
                                     <span class="product-weight">${(p.specs && p.specs[0]) || ''}</span>
-                                    <a href="${p.link || '#'}" target="_blank" class="btn-primary-pill">浜嗚В璇︽儏 <span class="btn-arrow">鈫?/span></a>
+                                    <a href="product-detail.html?slug=${encodeURIComponent(p.slug || '')}" class="btn-primary-pill">了解详情 <span class="btn-arrow">→</span></a>
                                 </div>
                             </div>
                         </div>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用条款 | 卓希集团</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+</head>
+
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 120px; padding-bottom: 80px;">
+        <div class="content-container" style="max-width: 980px;">
+            <div class="glass-card reveal" style="padding: 48px;">
+                <h1 id="pageTitle" style="font-size:clamp(30px,4vw,46px);line-height:1.2;margin:0 0 16px;">使用条款</h1>
+                <div id="effectiveDate" style="color:var(--text-muted);font-size:14px;margin-bottom:24px;"></div>
+                <div id="contentBody" style="font-size:16px;line-height:1.9;color:#333;"></div>
+            </div>
+        </div>
+    </main>
+
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            siteData.load();
+            const legal = siteData.getLegal().terms || {};
+            document.getElementById("pageTitle").textContent = legal.title || "使用条款";
+            document.getElementById("effectiveDate").textContent = legal.effectiveDate ? `生效日期：${legal.effectiveDate}` : "";
+            document.getElementById("contentBody").innerHTML = String(legal.content || "")
+                .split("\n")
+                .filter(Boolean)
+                .map(p => `<p style="margin-bottom:14px;">${p}</p>`)
+                .join("");
+        });
+    </script>
+</body>
+
+</html>

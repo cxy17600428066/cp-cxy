@@ -285,6 +285,25 @@
               <label>法律声明</label>
               <textarea id="profileLegalStatement" class="admin-textarea" rows="3"></textarea>
             </div>
+            <div class="admin-form-row">
+              <div class="admin-form-group">
+                <label>站点状态</label>
+                <select id="siteStatus" class="admin-select">
+                  <option value="online">在线</option>
+                  <option value="maintenance">维护中</option>
+                </select>
+              </div>
+              <div class="admin-form-group">
+                <label>默认分页大小</label>
+                <input id="defaultPageSize" class="admin-input" type="number" min="1" />
+              </div>
+            </div>
+            <div class="admin-form-group">
+              <label style="display:flex;align-items:center;gap:8px;">
+                <input id="enableCookieNotice" type="checkbox" />
+                启用 Cookie 提示
+              </label>
+            </div>
             <div class="admin-modal-footer">
               <button class="btn-admin btn-admin-primary" type="submit">保存站点信息</button>
             </div>
@@ -404,4 +423,3 @@
   <script src="admin.js"></script>
 </body>
 </html>
-

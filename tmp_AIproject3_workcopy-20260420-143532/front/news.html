@@ -1,20 +1,20 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>新闻中心 | 卓希集团</title>
-    <meta name="description" content="卓希集团媒体中心 — 最新资讯、品牌动态、行业洞察，持续记录卓希的极致成长。">
+    <title>鏂伴椈涓績 | 鍗撳笇闆嗗洟</title>
+    <meta name="description" content="鍗撳笇闆嗗洟濯掍綋涓績 鈥?鏈€鏂拌祫璁€佸搧鐗屽姩鎬併€佽涓氭礊瀵燂紝鎸佺画璁板綍鍗撳笇鐨勬瀬鑷存垚闀裤€?>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="data/site-data.js"></script>
     <style>
-        /* ════════════════════════════════════
+        /* 鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲
            DESIGN SYSTEM TOKENS (DESIGN.md)
-        ════════════════════════════════════ */
+        鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲鈺愨晲 */
         :root {
             --bg-base:       #faf8f5;
             --surface:       #ffffff;
@@ -36,14 +36,14 @@
             color: var(--text-primary);
         }
 
-        /* ════ Layout ════ */
+        /* 鈺愨晲鈺愨晲 Layout 鈺愨晲鈺愨晲 */
         .news-wrap {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 40px 120px;
         }
 
-        /* ════ Page Header ════ */
+        /* 鈺愨晲鈺愨晲 Page Header 鈺愨晲鈺愨晲 */
         .news-page-header {
             padding: 60px 0 48px;
         }
@@ -72,7 +72,7 @@
             font-weight: 500;
         }
 
-        /* ════ Filter Bar ════ */
+        /* 鈺愨晲鈺愨晲 Filter Bar 鈺愨晲鈺愨晲 */
         .filter-bar {
             display: flex;
             gap: 10px;
@@ -110,7 +110,7 @@
             box-shadow: var(--shadow-cta);
         }
 
-        /* ════ Hero + Side Stack ════ */
+        /* 鈺愨晲鈺愨晲 Hero + Side Stack 鈺愨晲鈺愨晲 */
         .news-featured {
             display: grid;
             grid-template-columns: 1.4fr 1fr;
@@ -118,7 +118,7 @@
             margin-bottom: 20px;
         }
 
-        /* ── Hero Card (dark ambient surface) ── */
+        /* 鈹€鈹€ Hero Card (dark ambient surface) 鈹€鈹€ */
         .news-hero-card {
             background: var(--text-primary);
             border-radius: var(--r-card);
@@ -206,7 +206,7 @@
             font-weight: 600;
         }
 
-        /* Read CTA — outline on dark */
+        /* Read CTA 鈥?outline on dark */
         .btn-outline-light {
             display: inline-flex;
             align-items: center;
@@ -239,7 +239,7 @@
         .btn-arrow { transition: transform 0.25s ease; }
         .btn-outline-light:hover .btn-arrow { transform: translateX(4px); }
 
-        /* ── Side stack ── */
+        /* 鈹€鈹€ Side stack 鈹€鈹€ */
         .news-side-stack {
             display: flex;
             flex-direction: column;
@@ -330,7 +330,7 @@
             transform: translateX(6px);
         }
 
-        /* ════ Standard Grid ════ */
+        /* 鈺愨晲鈺愨晲 Standard Grid 鈺愨晲鈺愨晲 */
         .grid-eyebrow {
             font-size: 11px;
             font-weight: 700;
@@ -451,7 +451,7 @@
             gap: 10px;
         }
 
-        /* ════ Load More ════ */
+        /* 鈺愨晲鈺愨晲 Load More 鈺愨晲鈺愨晲 */
         .news-load-more {
             text-align: center;
             margin-top: 56px;
@@ -485,7 +485,7 @@
             transform: scale(0.97);
         }
 
-        /* ════ Responsive ════ */
+        /* 鈺愨晲鈺愨晲 Responsive 鈺愨晲鈺愨晲 */
         @media (max-width: 960px) {
             .news-wrap { padding: 0 20px 80px; }
             .news-featured { grid-template-columns: 1fr; }
@@ -495,7 +495,7 @@
         @media (max-width: 640px) {
             .news-grid { grid-template-columns: 1fr; }
         }
-        /* ════ News Detail Modal ════ */
+        /* 鈺愨晲鈺愨晲 News Detail Modal 鈺愨晲鈺愨晲 */
         .news-detail-overlay {
             position: fixed;
             inset: 0;
@@ -586,51 +586,51 @@
 
 <body>
 
-    <!-- ═══ Navbar ═══ -->
+    <!-- 鈺愨晲鈺?Navbar 鈺愨晲鈺?-->
     <zhuoxi-navbar></zhuoxi-navbar>
     <script src="components/navbar.js"></script>
 
     <main style="padding-top: 80px;">
         <div class="news-wrap">
 
-            <!-- ═══ Header ═══ -->
+            <!-- 鈺愨晲鈺?Header 鈺愨晲鈺?-->
             <div class="news-page-header reveal">
                 <div class="page-eyebrow">MEDIA CENTER</div>
-                <h1 class="page-title">新闻中心</h1>
-                <p class="page-subtitle">品牌动态 · 行业洞察 · 企业资讯</p>
+                <h1 class="page-title">鏂伴椈涓績</h1>
+                <p class="page-subtitle">鍝佺墝鍔ㄦ€?路 琛屼笟娲炲療 路 浼佷笟璧勮</p>
             </div>
 
-            <!-- ═══ Filter ═══ -->
+            <!-- 鈺愨晲鈺?Filter 鈺愨晲鈺?-->
             <div class="filter-bar reveal">
-                <button class="filter-btn active" onclick="filterNews(this,'all')">全部动态</button>
-                <button class="filter-btn" onclick="filterNews(this,'brand')">品牌资讯</button>
-                <button class="filter-btn" onclick="filterNews(this,'industry')">行业动态</button>
-                <button class="filter-btn" onclick="filterNews(this,'event')">活动报道</button>
-                <button class="filter-btn" onclick="filterNews(this,'global')">全球化</button>
-                <button class="filter-btn" onclick="filterNews(this,'product')">产品研发</button>
+                <button class="filter-btn active" onclick="filterNews(this,'all')">鍏ㄩ儴鍔ㄦ€?/button>
+                <button class="filter-btn" onclick="filterNews(this,'brand')">鍝佺墝璧勮</button>
+                <button class="filter-btn" onclick="filterNews(this,'industry')">琛屼笟鍔ㄦ€?/button>
+                <button class="filter-btn" onclick="filterNews(this,'event')">娲诲姩鎶ラ亾</button>
+                <button class="filter-btn" onclick="filterNews(this,'global')">鍏ㄧ悆鍖?/button>
+                <button class="filter-btn" onclick="filterNews(this,'product')">浜у搧鐮斿彂</button>
             </div>
 
-            <!-- ═══ Featured row ═══ -->
+            <!-- 鈺愨晲鈺?Featured row 鈺愨晲鈺?-->
             <div class="news-featured reveal">
                 <!-- Dynamically filled -->
             </div>
 
-            <!-- ═══ Standard Grid ═══ -->
-            <div class="grid-eyebrow reveal" style="margin-top: 48px;">更多资讯</div>
+            <!-- 鈺愨晲鈺?Standard Grid 鈺愨晲鈺?-->
+            <div class="grid-eyebrow reveal" style="margin-top: 48px;">鏇村璧勮</div>
 
             <div class="news-grid">
                 <!-- Dynamically filled -->
             </div>
 
-            <!-- ═══ Load More ═══ -->
+            <!-- 鈺愨晲鈺?Load More 鈺愨晲鈺?-->
             <div class="news-load-more reveal">
-                <button class="btn-ghost">加载更多资讯 ↓</button>
+                <button class="btn-ghost">鍔犺浇鏇村璧勮 鈫?/button>
             </div>
 
         </div>
     </main>
 
-    <!-- ═══ News Detail Modal ═══ -->
+    <!-- 鈺愨晲鈺?News Detail Modal 鈺愨晲鈺?-->
     <div id="news-detail-overlay" class="news-detail-overlay" onclick="if(event.target===this)closeNewsDetail()">
         <div class="news-detail-modal">
             <div class="news-detail-header">
@@ -639,51 +639,51 @@
                     <h2 id="detail-title" class="news-detail-title"></h2>
                     <div id="detail-date" class="news-detail-date"></div>
                 </div>
-                <button class="news-detail-close" onclick="closeNewsDetail()">✕</button>
+                <button class="news-detail-close" onclick="closeNewsDetail()">鉁?/button>
             </div>
             <div id="detail-body" class="news-detail-body"></div>
         </div>
     </div>
 
-    <!-- ═══ Footer ═══ -->
+    <!-- 鈺愨晲鈺?Footer 鈺愨晲鈺?-->
     <zhuoxi-footer></zhuoxi-footer>
     <script src="components/footer.js"></script>
 
     <script src="main.js"></script>
     <script>
-        // ═══ Dynamic News Renderer ═══
-        document.addEventListener('DOMContentLoaded', () => {
+        // 鈺愨晲鈺?Dynamic News Renderer 鈺愨晲鈺?        document.addEventListener('DOMContentLoaded', () => {
             siteData.load();
-            const allNews = siteData.getNews();
+            const allNews = siteData.getPublishedNews();
 
             // Render Featured Section
             const featuredContainer = document.querySelector('.news-featured');
             if (featuredContainer && allNews.length > 0) {
+            const slugMap = new Map(allNews.map(item => [item.id, item.slug]));
                 const featured = allNews.filter(n => n.isFeatured);
                 const hero = featured[0] || allNews[0];
                 const sides = (featured.length > 1 ? featured.slice(1, 3) : allNews.slice(1, 3));
 
                 featuredContainer.innerHTML = `
-                    <div class="news-hero-card" onclick="openNewsDetail('${hero.id}')">
+                    <div class="news-hero-card" onclick="openNewsDetail('')">
                         <div class="news-hero-content">
                             <div class="news-hero-cat"><span class="cat-dot"></span>${hero.category}</div>
                             <div class="news-hero-title">${hero.title}</div>
                             <div class="news-hero-excerpt">${hero.excerpt}</div>
                             <div class="news-hero-foot">
-                                <span class="news-hero-date">${hero.date.replace(/\./g, ' · ')}</span>
-                                <span class="btn-outline-light">阅读详情 <span class="btn-arrow">→</span></span>
+                                <span class="news-hero-date">${hero.date.replace(/\./g, ' 路 ')}</span>
+                                <span class="btn-outline-light">闃呰璇︽儏 <span class="btn-arrow">鈫?/span></span>
                             </div>
                         </div>
                     </div>
                     <div class="news-side-stack">
                         ${sides.map(n => `
-                            <div class="news-side-card" onclick="openNewsDetail('${n.id}')">
+                            <div class="news-side-card" onclick="openNewsDetail('')">
                                 <div class="side-cat">${n.category}</div>
                                 <div class="side-title">${n.title}</div>
                                 <div class="side-excerpt">${n.excerpt}</div>
                                 <div class="side-foot">
                                     <span class="side-date">${n.date}</span>
-                                    <span class="side-arrow">→</span>
+                                    <span class="side-arrow">鈫?/span>
                                 </div>
                             </div>
                         `).join('')}
@@ -691,8 +691,7 @@
                 `;
             }
 
-            // ═══ News Grid Pagination Logic ═══
-            let displayCount = 3;
+            // 鈺愨晲鈺?News Grid Pagination Logic 鈺愨晲鈺?            let displayCount = 3;
             const gridContainer = document.querySelector('.news-grid');
             const loadMoreBtn = document.querySelector('.news-load-more');
 
@@ -704,7 +703,7 @@
 
                 gridContainer.innerHTML = toRender.map((n, i) => `
                     <div class="news-card reveal in-view" style="transition-delay:${i*0.05}s" data-category="${n.categoryKey}" onclick="openNewsDetail('${n.id}')">
-                        <div class="card-thumb ${n.thumbClass || 'thumb-amber'}">${n.emoji || '📰'}</div>
+                        <div class="card-thumb ${n.thumbClass || 'thumb-amber'}">${n.emoji || '馃摪'}</div>
                         <div class="card-body">
                             <div class="card-meta">
                                 <span class="card-cat">${n.category}</span>
@@ -712,7 +711,7 @@
                             </div>
                             <div class="card-title">${n.title}</div>
                             <div class="card-excerpt">${n.excerpt}</div>
-                            <span class="card-link">阅读详情 →</span>
+                            <span class="card-link">闃呰璇︽儏 鈫?/span>
                         </div>
                     </div>
                 `).join('');
@@ -741,7 +740,7 @@
             // Dynamic filter buttons
             const filterBar = document.querySelector('.filter-bar');
             if (filterBar) {
-                const categories = [{key: 'all', label: '全部动态'}];
+                const categories = [{key: 'all', label: '鍏ㄩ儴鍔ㄦ€?}];
                 const seen = new Set();
                 allNews.forEach(n => {
                     if (!seen.has(n.categoryKey)) {
@@ -753,16 +752,14 @@
                     `<button class="filter-btn${c.key === 'all' ? ' active' : ''}" onclick="filterNews(this,'${c.key}')">${c.label}</button>`
                 ).join('');
                 
-                // ═══ Trigger initial filter to show news ═══
-                const activeBtn = filterBar.querySelector('.filter-btn.active');
+                // 鈺愨晲鈺?Trigger initial filter to show news 鈺愨晲鈺?                const activeBtn = filterBar.querySelector('.filter-btn.active');
                 if (activeBtn) {
                     filterNews(activeBtn, 'all');
                 }
             }
         });
 
-        // ═══ News Detail Modal ═══
-        function openNewsDetail(id) {
+        // 鈺愨晲鈺?News Detail Modal 鈺愨晲鈺?        function openNewsDetail(id) {
             const news = siteData.getNewsById(id);
             if (!news) return;
             document.getElementById('detail-cat').textContent = news.category;

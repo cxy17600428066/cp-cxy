@@ -273,8 +273,8 @@ function renderDashboard() {
     { label: "璧勮", value: siteData.getNews().length },
     { label: "浜у搧", value: siteData.getProducts().length },
     { label: "宀椾綅", value: siteData.getCareers().length },
-    { label: "宸插彂甯冭祫璁?, value: siteData.getPublishedNews().length },
-    { label: "宸插彂甯冧骇鍝?, value: siteData.getPublishedProducts().length }
+    { label: "已发布资讯", value: siteData.getPublishedNews().length },
+    { label: "已发布产品", value: siteData.getPublishedProducts().length }
   ];
   ui.dashboardKpi.innerHTML = kpi
     .map(item => `<div class="admin-kpi-card"><span>${item.label}</span><strong>${item.value}</strong></div>`)

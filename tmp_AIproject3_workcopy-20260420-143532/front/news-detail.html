@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新闻详情 | 卓希集团</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+</head>
+
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 120px; padding-bottom: 80px;">
+        <div class="content-container" style="max-width: 980px;">
+            <div class="glass-card reveal" style="padding: 48px;">
+                <div id="detailCat" style="display:inline-block;padding:6px 14px;border-radius:999px;background:#ffaa00;color:#fff;font-size:12px;font-weight:700;margin-bottom:16px;">新闻</div>
+                <h1 id="detailTitle" style="font-size:clamp(30px,4vw,46px);line-height:1.2;margin:0 0 16px;">新闻标题</h1>
+                <div id="detailMeta" style="color:var(--text-muted);font-size:14px;margin-bottom:28px;">发布时间</div>
+                <div id="detailBody" style="font-size:17px;line-height:1.9;color:#333;"></div>
+                <div style="margin-top:36px;">
+                    <a href="news.html" class="btn btn-primary">返回新闻中心</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            siteData.load();
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get("slug") || "";
+            const item = siteData.getNewsBySlug(slug);
+
+            const titleNode = document.getElementById("detailTitle");
+            const catNode = document.getElementById("detailCat");
+            const metaNode = document.getElementById("detailMeta");
+            const bodyNode = document.getElementById("detailBody");
+
+            if (!item || item.status !== "published") {
+                titleNode.textContent = "未找到对应新闻";
+                catNode.textContent = "提示";
+                metaNode.textContent = "";
+                bodyNode.innerHTML = "<p>当前内容不存在或未发布。</p>";
+                return;
+            }
+
+            catNode.textContent = item.category || "新闻";
+            titleNode.textContent = item.title || "新闻详情";
+            metaNode.textContent = `${item.date || ""} · ${item.author || ""}`.replace(/^ · | · $/g, "");
+            bodyNode.innerHTML = String(item.detail || "")
+                .split("\n")
+                .filter(Boolean)
+                .map(p => `<p style="margin-bottom:14px;">${p}</p>`)
+                .join("");
+
+            if (item.seo && item.seo.title) document.title = item.seo.title;
+        });
+    </script>
+</body>
+
+</html>

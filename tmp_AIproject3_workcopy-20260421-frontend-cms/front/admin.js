@@ -351,6 +351,7 @@ const AdminUI = {
             ${this.pageJsonCard('新闻页(news)', 'pages_news', pages.news)}
             ${this.pageJsonCard('产品页(products)', 'pages_products', pages.products)}
             ${this.pageJsonCard('联系页(contact)', 'pages_contact', pages.contact)}
+            ${this.pageJsonCard('careers', 'pages_careers', pages.careers || {})}
         `;
     },
     savePages() {

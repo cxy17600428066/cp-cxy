@@ -509,10 +509,10 @@ class SiteDataManager {
                     site: { ...merged.settings.site, ...((oldData.settings || {}).site || {}) }
                 },
                 legal: { ...merged.legal, ...(oldData.legal || {}) },
-                navigation: {
+                navigation: this._normalizeNavigation({
                     ...merged.navigation,
                     ...(oldData.navigation || {})
-                },
+                }),
                 pages: {
                     ...merged.pages,
                     ...(oldData.pages || {})
@@ -573,7 +573,29 @@ class SiteDataManager {
             status: 'published'
         })), 'products');
 
+        merged.navigation = this._normalizeNavigation(merged.navigation);
         return merged;
+    }
+
+    _normalizeNavigation(navigation) {
+        const safeNav = {
+            ...deepClone(SEED_DATA.navigation),
+            ...(navigation || {})
+        };
+        const groups = Array.isArray(safeNav.footerGroups) ? safeNav.footerGroups : [];
+        safeNav.footerGroups = groups.map((group) => {
+            const links = Array.isArray(group.links) ? group.links : [];
+            return {
+                ...group,
+                links: links.map((link) => {
+                    if (link && link.href === 'contact.html#careers') {
+                        return { ...link, href: 'careers.html' };
+                    }
+                    return link;
+                })
+            };
+        });
+        return safeNav;
     }
 
     _normalizeItems(items, module) {
@@ -652,10 +674,10 @@ class SiteDataManager {
 
     updateNavigation(payload, user = 'system') {
         const data = this.getData();
-        data.navigation = {
+        data.navigation = this._normalizeNavigation({
             ...data.navigation,
             ...payload
-        };
+        });
         this._touchMeta(user);
         this._appendLog('update', 'navigation', '更新导航与页脚', user);
         this._snapshot('update-navigation', user);

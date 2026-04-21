@@ -629,6 +629,7 @@ class SiteDataManager {
         };
         this._touchMeta(user);
         this._appendLog('update', 'seo', `更新SEO: ${key}`, user);
+        this._snapshot(`update-seo-${key}`, user);
         this.save();
     }
 
@@ -641,6 +642,7 @@ class SiteDataManager {
         data.legal = { ...data.legal, ...payload };
         this._touchMeta(user);
         this._appendLog('update', 'legal', '更新法务页面内容', user);
+        this._snapshot('update-legal', user);
         this.save();
     }
 
@@ -656,6 +658,7 @@ class SiteDataManager {
         };
         this._touchMeta(user);
         this._appendLog('update', 'navigation', '更新导航与页脚', user);
+        this._snapshot('update-navigation', user);
         this.save();
     }
 
@@ -671,6 +674,7 @@ class SiteDataManager {
         };
         this._touchMeta(user);
         this._appendLog('update', `page:${pageKey}`, `更新页面配置 ${pageKey}`, user);
+        this._snapshot(`update-page-${pageKey}`, user);
         this.save();
     }
 
@@ -726,6 +730,7 @@ class SiteDataManager {
         data.modules[module] = this._normalizeItems(items, module);
         this._touchMeta(user);
         this._appendLog('save', module, `保存 ${module} 项 ${id}`, user);
+        this._snapshot(`save-${module}`, user);
         this.save();
         return id;
     }
@@ -737,6 +742,7 @@ class SiteDataManager {
         if (data.modules[module].length !== before) {
             this._touchMeta(user);
             this._appendLog('delete', module, `删除 ${module} 项 ${id}`, user);
+            this._snapshot(`delete-${module}`, user);
             this.save();
             return true;
         }
@@ -749,6 +755,7 @@ class SiteDataManager {
         item.status = normalizeStatus(status);
         this._touchMeta(user);
         this._appendLog('status', module, `状态更新 ${id} => ${item.status}`, user);
+        this._snapshot(`status-${module}`, user);
         this.save();
         return true;
     }
@@ -764,6 +771,7 @@ class SiteDataManager {
         this.getData().modules[module] = this._normalizeItems(items, module);
         this._touchMeta(user);
         this._appendLog('sort', module, `排序调整 ${id}`, user);
+        this._snapshot(`sort-${module}`, user);
         this.save();
         return true;
     }
@@ -867,6 +875,7 @@ class SiteDataManager {
             this._data = this._migrate(parsed);
             this._touchMeta(user);
             this._appendLog('import', 'system', '导入站点数据', user);
+            this._snapshot('import', user);
             this.save();
             return true;
         } catch (error) {
@@ -879,6 +888,7 @@ class SiteDataManager {
         this._data = deepClone(SEED_DATA);
         this._touchMeta(user);
         this._appendLog('reset', 'system', '重置为默认数据', user);
+        this._snapshot('reset', user);
         this.save();
     }
 

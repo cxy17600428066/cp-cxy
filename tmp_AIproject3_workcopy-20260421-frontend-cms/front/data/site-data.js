@@ -120,8 +120,8 @@ const SEED_DATA = {
                 description: '商务合作、招聘联系与渠道合作咨询。'
             },
             careers: {
-                title: '???? | ????',
-                description: '??????????????????'
+                title: 'Join Us | ZHUOXI GROUP',
+                description: 'View open roles and apply from this page.'
             },
             privacy: {
                 title: '隐私政策 | 卓曦集团',
@@ -266,13 +266,13 @@ const SEED_DATA = {
             mascotAlt: '卓曦吉祥物'
         },
         careers: {
-            heroTitle: '????',
-            heroDesc: '??????????????????',
-            sectionTitle: '????',
-            sectionDesc: '????????????????',
-            emptyText: '??????????',
-            applyPrefix: '????',
-            ctaLabel: '??????',
+            heroTitle: 'Join Us',
+            heroDesc: 'We are looking for people who care about craft and execution.',
+            sectionTitle: 'Open Positions',
+            sectionDesc: 'The list below is synced from the admin careers module.',
+            emptyText: 'No published positions yet.',
+            applyPrefix: 'Apply',
+            ctaLabel: 'Contact Business Team',
             ctaHref: 'contact.html#cooperative'
         }
     },

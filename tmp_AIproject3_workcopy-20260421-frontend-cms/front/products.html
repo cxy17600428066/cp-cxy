@@ -146,7 +146,7 @@
         function renderTicker(tickerItems) {
             const arr = tickerItems.length ? tickerItems : ['18道 大师级脱骨工艺', '1.4亿 累计热销罐数', 'No.1 全网销量冠军'];
             const full = [...arr, ...arr];
-            document.getElementById('products-ticker-track').innerHTML = full.map((item) => `<span class="ticker-item">${item}</span><span class="ticker-sep">•</span>`).join('');
+            document.getElementById('products-ticker-track').innerHTML = full.map((item) => `<span class="ticker-item">${item}</span><span class="ticker-sep">?</span>`).join('');
         }
 
         function renderHeroCategories() {

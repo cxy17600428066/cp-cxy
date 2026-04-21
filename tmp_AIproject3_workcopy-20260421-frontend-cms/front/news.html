@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">新闻中心 | 卓曦集团</title>
+    <meta id="page-description" name="description" content="卓曦集团新闻中心。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        :root {
+            --bg-base:#faf8f5;--surface:#fff;--text-primary:#171717;--text-muted:#888;--primary:#ffaa00;
+            --shadow-card:0 12px 32px rgba(0,0,0,.05);--shadow-soft:0 8px 30px rgba(0,0,0,.03);
+            --shadow-raised:0 12px 40px rgba(0,0,0,.10);--shadow-cta:0 8px 24px rgba(255,170,0,.35);
+            --r-pill:999px;--r-card:32px;
+        }
+        body { background: var(--bg-base); font-family: 'Inter','Noto Sans SC',system-ui,-apple-system,sans-serif; color: var(--text-primary);}
+        .news-wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px 120px; }
+        .news-page-header { padding: 60px 0 48px; }
+        .page-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; color: var(--primary); margin-bottom: 12px; }
+        .page-title { font-size: clamp(40px, 5vw, 64px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.0; margin-bottom: 12px; }
+        .page-subtitle { font-size: 16px; color: var(--text-muted); font-weight: 500; }
+        .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 48px; }
+        .filter-btn { padding:11px 24px;border-radius:var(--r-pill);font-size:13px;font-weight:700;cursor:pointer;border:none;background:var(--surface);color:var(--text-muted);box-shadow:var(--shadow-soft);transition:all .25s}
+        .filter-btn.active { background: var(--primary); color: #fff; box-shadow: var(--shadow-cta); }
+        .news-featured { display:grid;grid-template-columns:1.4fr 1fr;gap:20px;margin-bottom:20px; }
+        .news-hero-card { background: var(--text-primary); border-radius: var(--r-card); box-shadow: var(--shadow-raised); overflow: hidden; min-height: 480px; display: flex; flex-direction: column; justify-content: flex-end; cursor: pointer; position: relative; text-decoration:none; }
+        .news-hero-content { position:relative; z-index:2; padding:44px 48px; }
+        .news-hero-cat { display:inline-flex;align-items:center;gap:8px;background:rgba(255,170,0,.15);color:var(--primary);border-radius:var(--r-pill);padding:6px 14px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px; }
+        .cat-dot { width:6px;height:6px;border-radius:50%;background:var(--primary);}
+        .news-hero-title { font-size: clamp(20px,2.2vw,28px); font-weight: 900; color: #fff; line-height: 1.3; margin-bottom: 14px; }
+        .news-hero-excerpt { font-size:14px;color:rgba(255,255,255,.5);line-height:1.7;margin-bottom:28px; }
+        .news-hero-foot { display:flex;align-items:center;justify-content:space-between; }
+        .news-hero-date { font-size: 12px; color: rgba(255,255,255,.35); font-weight: 600; }
+        .btn-outline-light { display:inline-flex;align-items:center;gap:8px;background:transparent;border:2px solid rgba(255,255,255,.3);border-radius:var(--r-pill);padding:10px 22px;font-size:13px;font-weight:700;color:#fff;text-decoration:none; }
+        .news-side-stack { display:flex;flex-direction:column;gap:20px; }
+        .news-side-card { background:var(--surface);border-radius:var(--r-card);padding:32px;box-shadow:var(--shadow-card);cursor:pointer;text-decoration:none;color:inherit; }
+        .side-cat { font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--primary);margin-bottom:10px; }
+        .side-title { font-size:17px;font-weight:800;line-height:1.35;margin-bottom:10px; }
+        .side-excerpt { font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:16px; }
+        .side-foot { display:flex;align-items:center;justify-content:space-between; }
+        .side-date { font-size:12px;color:var(--text-muted);font-weight:600; }
+        .grid-eyebrow { font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:20px; }
+        .news-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:20px; }
+        .news-card { background:var(--surface);border-radius:var(--r-card);overflow:hidden;box-shadow:var(--shadow-card);display:flex;flex-direction:column;text-decoration:none;color:inherit; }
+        .card-thumb { height:160px;display:flex;align-items:center;justify-content:center;font-size:44px; }
+        .thumb-amber{background:linear-gradient(135deg,#fff8e0,#ffedb0)}.thumb-dark{background:linear-gradient(135deg,#1c1c1c,#2e1800)}
+        .thumb-brick{background:linear-gradient(135deg,#fff0e8,#ffe0cc)}.thumb-green{background:linear-gradient(135deg,#eafaf0,#c8f0d8)}
+        .thumb-blue{background:linear-gradient(135deg,#eaf4ff,#c0deff)}.thumb-purple{background:linear-gradient(135deg,#f5f0ff,#e0d0ff)}
+        .card-body { padding:24px 24px 28px;flex:1;display:flex;flex-direction:column; }
+        .card-meta { display:flex;align-items:center;justify-content:space-between;margin-bottom:10px; }
+        .card-cat { font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--primary); }
+        .card-date { font-size:11px;color:var(--text-muted);font-weight:600; }
+        .card-title { font-size:16px;font-weight:800;line-height:1.4;margin-bottom:10px; }
+        .card-excerpt { font-size:13px;color:var(--text-muted);line-height:1.65;flex:1;margin-bottom:18px; }
+        .card-link { display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--primary);text-decoration:none; }
+        .news-load-more { text-align:center;margin-top:56px; }
+        .btn-ghost { display:inline-flex;align-items:center;gap:10px;background:var(--surface);border:none;border-radius:var(--r-pill);padding:14px 36px;font-size:14px;font-weight:700;color:var(--text-muted);cursor:pointer;box-shadow:var(--shadow-soft); }
+        @media (max-width:960px){.news-wrap{padding:0 20px 80px}.news-featured{grid-template-columns:1fr}.news-grid{grid-template-columns:repeat(2,1fr)}}
+        @media (max-width:640px){.news-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 80px;">
+        <div class="news-wrap">
+            <div class="news-page-header reveal">
+                <div id="news-eyebrow" class="page-eyebrow">MEDIA CENTER</div>
+                <h1 id="news-title" class="page-title">新闻中心</h1>
+                <p id="news-subtitle" class="page-subtitle">品牌动态 · 行业洞察 · 企业资讯</p>
+            </div>
+
+            <div id="filter-bar" class="filter-bar reveal"></div>
+            <div id="featured-wrap" class="news-featured reveal"></div>
+            <div class="grid-eyebrow reveal" style="margin-top: 48px;">更多资讯</div>
+            <div id="news-grid" class="news-grid"></div>
+            <div class="news-load-more reveal">
+                <button id="load-more-btn" class="btn-ghost">加载更多资讯 →</button>
+            </div>
+        </div>
+    </main>
+
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        const newsPageState = { category: 'all', displayCount: 6 };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const seo = siteData.getSeoPage('news');
+            if (seo.title) document.getElementById('page-title').textContent = seo.title;
+            if (seo.description) document.getElementById('page-description').setAttribute('content', seo.description);
+
+            const page = siteData.getPageConfig('news');
+            if (page.headerEyebrow) document.getElementById('news-eyebrow').textContent = page.headerEyebrow;
+            if (page.headerTitle) document.getElementById('news-title').textContent = page.headerTitle;
+            if (page.headerSubtitle) document.getElementById('news-subtitle').textContent = page.headerSubtitle;
+
+            renderFilterBar();
+            renderFeatured();
+            renderGrid();
+            document.getElementById('load-more-btn').addEventListener('click', () => {
+                newsPageState.displayCount += siteData.getData().settings.site.publicNewsPageSize || 6;
+                renderGrid();
+            });
+        });
+
+        function getFilteredNews() {
+            const list = siteData.getPublicNews();
+            if (newsPageState.category === 'all') return list;
+            return list.filter((n) => n.categoryKey === newsPageState.category);
+        }
+
+        function renderFilterBar() {
+            const all = siteData.getPublicNews();
+            const unique = [];
+            const seen = new Set();
+            all.forEach((n) => {
+                if (!seen.has(n.categoryKey)) {
+                    seen.add(n.categoryKey);
+                    unique.push({ key: n.categoryKey, label: n.category });
+                }
+            });
+            const filters = [{ key: 'all', label: '全部动态' }, ...unique];
+            const root = document.getElementById('filter-bar');
+            root.innerHTML = filters.map((f) => `<button class="filter-btn ${newsPageState.category === f.key ? 'active' : ''}" data-filter="${f.key}">${f.label}</button>`).join('');
+            root.querySelectorAll('[data-filter]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    newsPageState.category = btn.getAttribute('data-filter');
+                    newsPageState.displayCount = 6;
+                    renderFilterBar();
+                    renderFeatured();
+                    renderGrid();
+                });
+            });
+        }
+
+        function renderFeatured() {
+            const list = getFilteredNews();
+            const root = document.getElementById('featured-wrap');
+            if (!list.length) {
+                root.innerHTML = '';
+                return;
+            }
+            const featured = list.find((n) => n.isFeatured) || list[0];
+            const side = list.filter((n) => n.id !== featured.id).slice(0, 2);
+            root.innerHTML = `
+                <a class="news-hero-card" href="news-detail.html?slug=${encodeURIComponent(featured.slug)}">
+                    <div class="news-hero-content">
+                        <div class="news-hero-cat"><span class="cat-dot"></span>${featured.category}</div>
+                        <div class="news-hero-title">${featured.title}</div>
+                        <div class="news-hero-excerpt">${featured.excerpt || ''}</div>
+                        <div class="news-hero-foot">
+                            <span class="news-hero-date">${featured.date}</span>
+                            <span class="btn-outline-light">阅读详情 →</span>
+                        </div>
+                    </div>
+                </a>
+                <div class="news-side-stack">
+                    ${side.map((n) => `
+                        <a class="news-side-card" href="news-detail.html?slug=${encodeURIComponent(n.slug)}">
+                            <div class="side-cat">${n.category}</div>
+                            <div class="side-title">${n.title}</div>
+                            <div class="side-excerpt">${n.excerpt || ''}</div>
+                            <div class="side-foot"><span class="side-date">${n.date}</span><span>→</span></div>
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderGrid() {
+            const list = getFilteredNews();
+            const featured = list.find((n) => n.isFeatured) || list[0];
+            const gridList = list.filter((n) => !featured || n.id !== featured.id).slice(0, newsPageState.displayCount);
+            const root = document.getElementById('news-grid');
+            root.innerHTML = gridList.map((n) => `
+                <a class="news-card reveal in-view" href="news-detail.html?slug=${encodeURIComponent(n.slug)}">
+                    <div class="card-thumb ${n.thumbClass || 'thumb-amber'}">${n.emoji || '📰'}</div>
+                    <div class="card-body">
+                        <div class="card-meta"><span class="card-cat">${n.category}</span><span class="card-date">${n.date}</span></div>
+                        <div class="card-title">${n.title}</div>
+                        <div class="card-excerpt">${n.excerpt || ''}</div>
+                        <span class="card-link">阅读详情 →</span>
+                    </div>
+                </a>
+            `).join('');
+            const hasMore = list.filter((n) => !featured || n.id !== featured.id).length > gridList.length;
+            document.getElementById('load-more-btn').style.display = hasMore ? 'inline-flex' : 'none';
+        }
+    </script>
+</body>
+</html>

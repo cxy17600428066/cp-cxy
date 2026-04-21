@@ -119,6 +119,10 @@ const SEED_DATA = {
                 title: '联系我们 | 卓曦集团',
                 description: '商务合作、招聘联系与渠道合作咨询。'
             },
+            careers: {
+                title: '???? | ????',
+                description: '??????????????????'
+            },
             privacy: {
                 title: '隐私政策 | 卓曦集团',
                 description: '卓曦集团官网隐私政策说明。'
@@ -184,7 +188,7 @@ const SEED_DATA = {
                 order: 3,
                 links: [
                     { label: '商务合作', href: 'contact.html' },
-                    { label: '加入我们', href: 'contact.html#careers' }
+                    { label: '加入我们', href: 'careers.html' }
                 ]
             }
         ]
@@ -260,6 +264,16 @@ const SEED_DATA = {
             careerDesc: '寻找敢于打破常规、有想法、做实事的同行者。',
             mascotImage: '喇叭脱脱.png',
             mascotAlt: '卓曦吉祥物'
+        },
+        careers: {
+            heroTitle: '????',
+            heroDesc: '??????????????????',
+            sectionTitle: '????',
+            sectionDesc: '????????????????',
+            emptyText: '??????????',
+            applyPrefix: '????',
+            ctaLabel: '??????',
+            ctaHref: 'contact.html#cooperative'
         }
     },
     modules: {
@@ -588,7 +602,7 @@ class SiteDataManager {
             return {
                 ...group,
                 links: links.map((link) => {
-                    if (link && link.href === 'contact.html#careers') {
+                    if (link && link.href === 'careers.html') {
                         return { ...link, href: 'careers.html' };
                     }
                     return link;

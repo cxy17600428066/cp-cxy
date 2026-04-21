@@ -602,7 +602,7 @@ class SiteDataManager {
             return {
                 ...group,
                 links: links.map((link) => {
-                    if (link && link.href === 'careers.html') {
+                    if (link && link.href === 'contact.html#careers') {
                         return { ...link, href: 'careers.html' };
                     }
                     return link;

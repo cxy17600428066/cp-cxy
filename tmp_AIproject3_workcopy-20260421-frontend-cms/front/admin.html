@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 | 卓曦集团</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .admin-auth {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .admin-auth-card {
+            width: 100%;
+            max-width: 460px;
+            background: var(--admin-surface);
+            border: 1px solid var(--admin-border);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: 0 20px 56px rgba(0, 0, 0, 0.35);
+        }
+        .admin-auth-title {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            color: var(--admin-text);
+        }
+        .admin-auth-sub {
+            color: var(--admin-text-muted);
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+        .admin-field-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .admin-note {
+            margin-top: 12px;
+            color: var(--admin-text-muted);
+            font-size: 12px;
+        }
+        .admin-kv {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .admin-list-toolbar {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .admin-list-table {
+            border: 1px solid var(--admin-border);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .admin-row {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr .8fr .8fr auto;
+            gap: 10px;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--admin-border);
+            align-items: center;
+            background: var(--admin-surface);
+        }
+        .admin-row:last-child {
+            border-bottom: none;
+        }
+        .admin-row.header {
+            background: #141414;
+            color: var(--admin-text-muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+        .admin-actions-inline {
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+        .admin-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 72px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .tag-draft {
+            background: rgba(148, 163, 184, .15);
+            color: #94a3b8;
+        }
+        .tag-review {
+            background: rgba(234, 179, 8, .18);
+            color: #eab308;
+        }
+        .tag-published {
+            background: rgba(34, 197, 94, .16);
+            color: #22c55e;
+        }
+        .tag-archived {
+            background: rgba(239, 68, 68, .16);
+            color: #ef4444;
+        }
+        .admin-pager {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .admin-log-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .admin-log-item {
+            background: var(--admin-surface);
+            border: 1px solid var(--admin-border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+        }
+        .admin-hidden {
+            display: none !important;
+        }
+        @media (max-width: 1200px) {
+            .admin-main {
+                padding: 28px;
+            }
+            .admin-list-toolbar {
+                grid-template-columns: 1fr;
+            }
+            .admin-row, .admin-row.header {
+                grid-template-columns: 1fr;
+            }
+            .admin-actions-inline {
+                justify-content: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="admin-auth" class="admin-auth">
+    <div class="admin-auth-card">
+        <h1 class="admin-auth-title">卓曦管理后台</h1>
+        <p class="admin-auth-sub">登录后可配置前台全部内容、发布状态与法务页面。</p>
+        <form id="login-form">
+            <div class="admin-form-group">
+                <label for="login-username">账号</label>
+                <input id="login-username" class="admin-input" type="text" placeholder="admin" required>
+            </div>
+            <div class="admin-form-group">
+                <label for="login-password">密码</label>
+                <input id="login-password" class="admin-input" type="password" placeholder="admin123" required>
+            </div>
+            <button class="btn-admin btn-admin-primary" type="submit">登录</button>
+            <div class="admin-note">默认账号：`admin/admin123`、`editor/editor123`、`viewer/viewer123`</div>
+        </form>
+    </div>
+</div>
+
+<div id="admin-app" class="admin-layout admin-hidden">
+    <aside class="admin-sidebar">
+        <div class="admin-logo">
+            <h1>卓曦配置中心</h1>
+            <p>ZHUOXI CMS V2</p>
+        </div>
+
+        <nav class="admin-nav">
+            <button class="admin-nav-item active" data-tab="dashboard"><span class="nav-icon">📊</span> 总览</button>
+            <button class="admin-nav-item" data-tab="site"><span class="nav-icon">🏢</span> 站点资料</button>
+            <button class="admin-nav-item" data-tab="seo"><span class="nav-icon">🔍</span> SEO</button>
+            <button class="admin-nav-item" data-tab="navigation"><span class="nav-icon">🧭</span> 导航页脚</button>
+            <button class="admin-nav-item" data-tab="carousel"><span class="nav-icon">🖼️</span> 轮播</button>
+            <button class="admin-nav-item" data-tab="news"><span class="nav-icon">📰</span> 新闻</button>
+            <button class="admin-nav-item" data-tab="products"><span class="nav-icon">📦</span> 产品</button>
+            <button class="admin-nav-item" data-tab="careers"><span class="nav-icon">💼</span> 招聘</button>
+            <button class="admin-nav-item" data-tab="pages"><span class="nav-icon">📄</span> 页面配置</button>
+            <button class="admin-nav-item" data-tab="legal"><span class="nav-icon">⚖️</span> 法务</button>
+            <button class="admin-nav-item" data-tab="workflow"><span class="nav-icon">✅</span> 发布流</button>
+            <button class="admin-nav-item" data-tab="logs"><span class="nav-icon">🧾</span> 操作日志</button>
+            <button class="admin-nav-item" data-tab="versions"><span class="nav-icon">🕘</span> 版本快照</button>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+            <button class="admin-nav-item" id="btn-export"><span class="nav-icon">📤</span> 导出数据</button>
+            <button class="admin-nav-item" id="btn-import-trigger"><span class="nav-icon">📥</span> 导入数据</button>
+            <input class="hidden-input" id="import-file" type="file" accept=".json">
+            <button class="admin-nav-item" id="btn-reset" style="color: var(--admin-danger);"><span class="nav-icon">🧹</span> 重置默认</button>
+            <a href="index.html" class="admin-nav-item" style="text-decoration:none;"><span class="nav-icon">🏠</span> 返回前台</a>
+            <button class="admin-nav-item" id="btn-logout"><span class="nav-icon">🚪</span> 退出登录</button>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <section id="tab-dashboard" class="admin-tab-content active">
+            <div class="admin-header">
+                <h2>系统总览</h2>
+            </div>
+            <div id="dashboard-cards" class="admin-grid"></div>
+        </section>
+
+        <section id="tab-site" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>站点资料配置</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="save-site-profile">保存站点资料</button>
+                </div>
+            </div>
+            <div class="admin-field-stack" id="site-profile-form"></div>
+        </section>
+
+        <section id="tab-seo" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>SEO 配置</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="save-seo">保存 SEO</button>
+                </div>
+            </div>
+            <div id="seo-form" class="admin-field-stack"></div>
+        </section>
+
+        <section id="tab-navigation" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>导航与页脚</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="save-navigation">保存导航</button>
+                </div>
+            </div>
+            <div id="navigation-form" class="admin-field-stack"></div>
+        </section>
+
+        <section id="tab-carousel" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>轮播管理</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="add-carousel">+ 新增轮播</button>
+                </div>
+            </div>
+            <div id="carousel-module"></div>
+        </section>
+
+        <section id="tab-news" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>新闻管理</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="add-news">+ 新增新闻</button>
+                </div>
+            </div>
+            <div id="news-module"></div>
+        </section>
+
+        <section id="tab-products" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>产品管理</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="add-product">+ 新增产品</button>
+                </div>
+            </div>
+            <div id="products-module"></div>
+        </section>
+
+        <section id="tab-careers" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>招聘管理</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="add-career">+ 新增岗位</button>
+                </div>
+            </div>
+            <div id="careers-module"></div>
+        </section>
+
+        <section id="tab-pages" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>页面配置</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="save-pages">保存页面配置</button>
+                </div>
+            </div>
+            <div id="pages-form" class="admin-field-stack"></div>
+        </section>
+
+        <section id="tab-legal" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>法务页面</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="save-legal">保存法务内容</button>
+                </div>
+            </div>
+            <div id="legal-form" class="admin-field-stack"></div>
+        </section>
+
+        <section id="tab-workflow" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>发布流程</h2>
+                <div class="admin-header-actions">
+                    <button class="btn-admin btn-admin-primary" id="save-workflow">保存流程设置</button>
+                </div>
+            </div>
+            <div id="workflow-form" class="admin-field-stack"></div>
+        </section>
+
+        <section id="tab-logs" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>操作日志</h2>
+            </div>
+            <div id="logs-list" class="admin-log-list"></div>
+        </section>
+
+        <section id="tab-versions" class="admin-tab-content">
+            <div class="admin-header">
+                <h2>版本快照</h2>
+            </div>
+            <div id="versions-list" class="admin-log-list"></div>
+        </section>
+    </main>
+</div>
+
+<div id="module-modal" class="admin-modal-overlay" onclick="if(event.target===this)window.AdminUI.closeModuleModal()">
+    <div class="admin-modal" style="max-width: 780px;">
+        <div class="admin-modal-header">
+            <h3 id="module-modal-title">编辑内容</h3>
+            <button class="admin-modal-close" onclick="window.AdminUI.closeModuleModal()">✕</button>
+        </div>
+        <form id="module-form"></form>
+    </div>
+</div>
+
+<script src="data/site-data.js"></script>
+<script src="admin.js"></script>
+</body>
+</html>

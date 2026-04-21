@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Zhuoxi Site Data Center
  * Unified configurable data model for frontend + admin.
  */
@@ -75,7 +75,7 @@ const SEED_DATA = {
         session: null
     },
     profile: {
-        brandName: '卓曦集团',
+        brandName: '卓希集团',
         brandNameEn: 'ZHUOXI GROUP',
         slogan: '全球鸡爪专家',
         heroBrandTitle: 'BONELESS MAN',
@@ -88,7 +88,7 @@ const SEED_DATA = {
         businessEmail: 'biz@zhuoxi-hero.com',
         hrEmail: 'hr@zhuoxi-hero.com',
         phone: '400-888-XXXX',
-        companyName: '卓曦食品科技有限公司',
+        companyName: '卓希食品科技有限公司',
         icp: '皖ICP备XXXXXXX号',
         sc: 'SCXXXXXXXXXXXX',
         social: {
@@ -100,23 +100,23 @@ const SEED_DATA = {
     seo: {
         pages: {
             index: {
-                title: '卓曦集团 | 官方门户',
-                description: '卓曦集团官方网站，聚焦无骨鸡爪产品与品牌创新。'
+                title: '卓希集团 | 官方门户',
+                description: '卓希集团官方网站，聚焦无骨鸡爪产品与品牌创新。'
             },
             about: {
-                title: '关于我们 | 卓曦集团',
-                description: '了解卓曦集团的发展历程、企业文化与业务布局。'
+                title: '关于我们 | 卓希集团',
+                description: '了解卓希集团的发展历程、企业文化与业务布局。'
             },
             news: {
-                title: '新闻中心 | 卓曦集团',
+                title: '新闻中心 | 卓希集团',
                 description: '品牌资讯、行业动态、活动报道与产品研发新闻。'
             },
             products: {
-                title: '产品中心 | 卓曦集团',
-                description: '浏览卓曦集团无骨鸡爪产品矩阵与口味系列。'
+                title: '产品中心 | 卓希集团',
+                description: '浏览卓希集团无骨鸡爪产品矩阵与口味系列。'
             },
             contact: {
-                title: '联系我们 | 卓曦集团',
+                title: '联系我们 | 卓希集团',
                 description: '商务合作、招聘联系与渠道合作咨询。'
             },
             careers: {
@@ -124,12 +124,12 @@ const SEED_DATA = {
                 description: 'View open roles and apply from this page.'
             },
             privacy: {
-                title: '隐私政策 | 卓曦集团',
-                description: '卓曦集团官网隐私政策说明。'
+                title: '隐私政策 | 卓希集团',
+                description: '卓希集团官网隐私政策说明。'
             },
             terms: {
-                title: '使用条款 | 卓曦集团',
-                description: '卓曦集团官网使用条款与免责声明。'
+                title: '使用条款 | 卓希集团',
+                description: '卓希集团官网使用条款与免责声明。'
             }
         }
     },
@@ -166,7 +166,7 @@ const SEED_DATA = {
         footerGroups: [
             {
                 id: 'f1',
-                title: '了解卓曦',
+                title: '了解卓希',
                 order: 1,
                 links: [
                     { label: '集团概况', href: 'about.html' },
@@ -210,7 +210,7 @@ const SEED_DATA = {
         about: {
             hero: {
                 eyebrow: 'ZHUOXI GROUP · EST. 2020',
-                title: '卓曦集团',
+                title: '卓希集团',
                 titleHighlight: '全链路',
                 subtitle: '国内首家无骨鸡爪全链路食品集团',
                 image: 'factory.jpg'
@@ -229,7 +229,7 @@ const SEED_DATA = {
             timeline: [
                 { id: 't1', idx: '01', date: '2020.06', label: '建厂投产', title: '安徽工厂建成投产', body: '安徽现代化工厂正式建成投产。', badges: ['智能生产'], order: 1, status: 'published' },
                 { id: 't2', idx: '02', date: '2021.10', label: '品牌上线', title: '脱骨侠品牌正式上线', body: '无骨鸡爪品类快速打开市场。', badges: ['无骨鸡爪'], order: 2, status: 'published' },
-                { id: 't3', idx: '03', date: '2022.06', label: '集团化', title: '成立卓曦食品', body: '整合品牌与渠道资源。', badges: ['集团化'], order: 3, status: 'published' }
+                { id: 't3', idx: '03', date: '2022.06', label: '集团化', title: '成立卓希食品', body: '整合品牌与渠道资源。', badges: ['集团化'], order: 3, status: 'published' }
             ]
         },
         products: {
@@ -263,7 +263,7 @@ const SEED_DATA = {
             careerTitle: '加入我们',
             careerDesc: '寻找敢于打破常规、有想法、做实事的同行者。',
             mascotImage: '喇叭脱脱.png',
-            mascotAlt: '卓曦吉祥物'
+            mascotAlt: '卓希吉祥物'
         },
         careers: {
             heroTitle: 'Join Us',
@@ -291,7 +291,7 @@ const SEED_DATA = {
                 categoryKey: 'brand',
                 date: '2026.04.12',
                 excerpt: '凭借工艺创新与供应链能力，集团获得行业奖项。',
-                detail: '在食品博览会上，卓曦集团凭借产品创新能力获得年度创新奖。',
+                detail: '在食品博览会上，卓希集团凭借产品创新能力获得年度创新奖。',
                 emoji: '🏆',
                 thumbClass: 'thumb-amber',
                 isFeatured: true,

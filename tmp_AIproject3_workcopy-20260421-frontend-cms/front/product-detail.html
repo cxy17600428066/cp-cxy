@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">产品详情 | 卓曦集团</title>
+    <title id="page-title">产品详情 | 卓希集团</title>
     <meta id="page-description" name="description" content="产品详情页面。">
     <link rel="stylesheet" href="style.css">
     <script src="data/site-data.js"></script>
@@ -66,7 +66,7 @@
             document.getElementById('product-desc').textContent = p.desc || '';
             document.getElementById('product-specs').innerHTML = (p.specs || []).map((s) => `<span class="detail-chip">${s}</span>`).join('');
             if (p.link) document.getElementById('product-buy-link').setAttribute('href', p.link);
-            document.title = `${p.name} | 卓曦集团`;
+            document.title = `${p.name} | 卓希集团`;
             document.getElementById('page-description').setAttribute('content', p.desc || '');
         });
     </script>

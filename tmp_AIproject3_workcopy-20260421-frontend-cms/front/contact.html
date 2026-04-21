@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">联系我们 | 卓曦集团</title>
+    <title id="page-title">联系我们 | 卓希集团</title>
     <meta id="page-description" name="description" content="联系我们。">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -58,7 +58,7 @@
                         <div id="career-list" class="job-list"></div>
                     </div>
                     <div class="career-image-wrap">
-                        <img id="contact-mascot" src="喇叭脱脱.png" alt="卓曦吉祥物">
+                        <img id="contact-mascot" src="喇叭脱脱.png" alt="卓希吉祥物">
                     </div>
                 </div>
             </section>
@@ -100,7 +100,7 @@
             hrEl.textContent = `📮 ${hrEmail}`;
 
             document.getElementById('contact-mascot').setAttribute('src', page.mascotImage || '喇叭脱脱.png');
-            document.getElementById('contact-mascot').setAttribute('alt', page.mascotAlt || '卓曦吉祥物');
+            document.getElementById('contact-mascot').setAttribute('alt', page.mascotAlt || '卓希吉祥物');
 
             const jobs = siteData.getPublicCareers();
             document.getElementById('career-list').innerHTML = jobs.map((job) => `

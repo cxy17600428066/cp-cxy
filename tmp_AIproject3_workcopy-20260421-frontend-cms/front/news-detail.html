@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">新闻详情 | 卓曦集团</title>
+    <title id="page-title">新闻详情 | 卓希集团</title>
     <meta id="page-description" name="description" content="新闻详情页面。">
     <link rel="stylesheet" href="style.css">
     <script src="data/site-data.js"></script>
@@ -50,7 +50,7 @@
             document.getElementById('news-title').textContent = news.title;
             document.getElementById('news-date').textContent = news.date || '';
             document.getElementById('news-body').innerHTML = (news.detail || '').split('\n').map((p) => `<p>${p}</p>`).join('');
-            document.title = `${news.title} | 卓曦集团`;
+            document.title = `${news.title} | 卓希集团`;
             document.getElementById('page-description').setAttribute('content', news.excerpt || '');
         });
     </script>

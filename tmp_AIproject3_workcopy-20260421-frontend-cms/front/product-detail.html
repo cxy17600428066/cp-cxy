@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">产品详情 | 卓曦集团</title>
+    <meta id="page-description" name="description" content="产品详情页面。">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        .detail-wrap { max-width: 1080px; margin: 0 auto; padding: 120px 20px 80px; }
+        .detail-card { background: #fff; border-radius: 36px; box-shadow: var(--island-shadow); padding: 40px; display: grid; grid-template-columns: 360px 1fr; gap: 30px; }
+        .detail-image { background: #faf8f5; border-radius: 24px; display: flex; justify-content: center; align-items: center; min-height: 320px; }
+        .detail-image img { width: 100%; max-height: 320px; object-fit: contain; }
+        .detail-badge { display: inline-block; padding: 6px 12px; border-radius: 999px; background: var(--hero-orange-soft); color: var(--hero-orange); font-size: 12px; font-weight: 700; margin-bottom: 10px; }
+        .detail-title { font-size: 34px; font-weight: 900; margin-bottom: 10px; }
+        .detail-desc { color: #444; line-height: 1.8; margin-bottom: 18px; }
+        .detail-specs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+        .detail-chip { background: #f4f4f4; border-radius: 999px; padding: 6px 12px; font-size: 12px; color: #666; font-weight: 600; }
+        .detail-actions { display: flex; gap: 12px; align-items: center; }
+        .btn-link { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; border-radius: 999px; background: var(--hero-orange); color: #fff; text-decoration: none; font-weight: 700; }
+        .back-link { color: var(--hero-orange); text-decoration: none; font-weight: 700; }
+        @media (max-width: 900px) { .detail-card { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+    <main>
+        <div class="detail-wrap">
+            <div class="detail-card">
+                <div class="detail-image"><img id="product-image" src="" alt="产品图片"></div>
+                <div>
+                    <div id="product-badge" class="detail-badge">产品标签</div>
+                    <h1 id="product-title" class="detail-title">产品名称</h1>
+                    <p id="product-desc" class="detail-desc"></p>
+                    <div id="product-specs" class="detail-specs"></div>
+                    <div class="detail-actions">
+                        <a id="product-buy-link" class="btn-link" href="#" target="_blank" rel="noopener">立即购买 →</a>
+                        <a href="products.html" class="back-link">← 返回产品中心</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('slug') || '';
+            const p = siteData.getProductBySlug(slug);
+            if (!p || p.status !== 'published') {
+                document.getElementById('product-title').textContent = '产品不存在或未发布';
+                document.getElementById('product-desc').textContent = '请返回产品中心查看已发布产品。';
+                document.getElementById('product-buy-link').style.display = 'none';
+                document.getElementById('product-image').style.display = 'none';
+                return;
+            }
+            document.getElementById('product-image').setAttribute('src', p.image || '');
+            document.getElementById('product-image').setAttribute('alt', p.name || '产品');
+            document.getElementById('product-badge').textContent = p.badge || p.flavor || '产品';
+            document.getElementById('product-title').textContent = p.name || '';
+            document.getElementById('product-desc').textContent = p.desc || '';
+            document.getElementById('product-specs').innerHTML = (p.specs || []).map((s) => `<span class="detail-chip">${s}</span>`).join('');
+            if (p.link) document.getElementById('product-buy-link').setAttribute('href', p.link);
+            document.title = `${p.name} | 卓曦集团`;
+            document.getElementById('page-description').setAttribute('content', p.desc || '');
+        });
+    </script>
+</body>
+</html>

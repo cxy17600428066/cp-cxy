@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">卓曦集团 | 官方门户</title>
+    <meta id="page-description" name="description" content="卓曦集团官方网站。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-island reveal" style="display: flex; flex-direction: column; position: relative; gap: 0;">
+                <div class="hero-main-row" style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 30px; gap: 20px;">
+                    <div class="hero-left-group" style="display: flex; align-items: center; gap: 10px; flex: 1.1;">
+                        <div class="hero-brand" style="position: relative; width: 380px; flex-shrink: 0;">
+                            <h1 class="display-hero" style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 2;">
+                                <span id="hero-brand-title" style="font-size: 52px; font-weight: 900; line-height: 1; letter-spacing: -1px; text-transform: uppercase; color: #ff5100;">BONELESS MAN</span>
+                                <span id="hero-brand-subtitle" style="font-size: 14px; font-weight: 700; letter-spacing: 6px; color: var(--hero-orange); text-transform: uppercase;">BRAND MANUAL</span>
+                            </h1>
+                            <div class="hero-image" style="position: relative; z-index: 1; max-width: 440px; margin-top: -20px; margin-left: -30px;">
+                                <img id="hero-brand-image" src="hero.png" alt="品牌形象" loading="eager" style="mix-blend-mode: multiply; filter: contrast(1.05); width: 100%;">
+                            </div>
+                        </div>
+
+                        <div class="calligraphy-art" style="position: relative; width: 220px; flex-shrink: 0; transform: translateY(20px); margin-left: -70px;">
+                            <img id="hero-calligraphy-image" src="hero_text.png" alt="品牌文字" style="width: 100%; height: auto; display: block;">
+                        </div>
+                    </div>
+
+                    <div class="hero-carousel" style="flex: 1.1; height: 500px; border-radius: 40px; overflow: hidden; position: relative; box-shadow: 0 24px 48px rgba(0,0,0,0.08);">
+                        <div id="carousel-images" class="carousel-images" style="width: 100%; height: 100%; position: relative;"></div>
+                        <button class="carousel-nav prev" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 10; transition: all 0.3s ease;">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                        </button>
+                        <button class="carousel-nav next" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3); color: white; cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 10; transition: all 0.3s ease;">
+                            <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </button>
+                        <div id="carousel-dots" class="carousel-dots" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 10;"></div>
+                    </div>
+                </div>
+
+                <div class="hero-bottom-bar" style="width: 100%; border-top: 2px solid rgba(0,0,0,0.06); padding-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div class="bottom-bar-left" style="display: flex; align-items: center; gap: 20px;">
+                        <img id="hero-bottom-logo" src="brand_logo.png" alt="品牌LOGO" style="height: 32px; mix-blend-mode: multiply;">
+                        <div style="width: 1px; height: 16px; background-color: rgba(0,0,0,0.2);"></div>
+                        <span id="hero-bottom-slogan" style="font-size: 16px; color: var(--text-muted); letter-spacing: 2px; font-weight: 500;">全球鸡爪专家</span>
+                    </div>
+                    <div class="bottom-bar-right" style="display: flex; flex-direction: column; text-align: right; font-size: 10px; color: rgba(0,0,0,0.3); letter-spacing: 2px; font-weight: 700; font-family: 'Outfit', sans-serif;">
+                        <span id="hero-bottom-right-top" style="border-bottom: 1px dashed rgba(0,0,0,0.15); padding-bottom: 2px; margin-bottom: 2px;">BONELESS</span>
+                        <span id="hero-bottom-right-bottom">CHICKEN FEET</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="products-section section" style="padding-top: 60px;">
+            <div class="content-container">
+                <div class="section-header reveal" style="text-align: center; margin-bottom: 60px;">
+                    <h2 id="home-products-title" class="section-title">核心爆品</h2>
+                    <div class="title-accent" style="margin: 0 auto 24px;"></div>
+                    <p id="home-products-desc" style="color: var(--text-muted); font-size: 18px;">重新定义无骨鸡爪风味标准</p>
+                </div>
+                <div id="home-products-grid" class="flavor-grid reveal-stagger"></div>
+                <div class="section-cta reveal" style="text-align: center; margin-top: 40px;">
+                    <a href="products.html" id="home-products-cta" class="btn btn-primary" style="font-size: 18px; padding: 18px 48px;">浏览完整产品线</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="news" class="news-section section" style="background-color: #f9f9f9; padding-top: 40px;">
+            <div class="content-container">
+                <div class="section-header reveal" style="text-align: center; margin-bottom: 40px;">
+                    <h2 id="home-news-title" class="section-title">集团资讯</h2>
+                    <div class="title-accent" style="margin: 0 auto 24px;"></div>
+                </div>
+                <div id="home-news-grid" class="magazine-grid reveal-stagger"></div>
+            </div>
+        </section>
+    </main>
+
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+
+    <div id="back-to-top" class="btn-primary" title="点击回到顶部">↑</div>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const seo = siteData.getSeoPage('index');
+            if (seo.title) document.getElementById('page-title').textContent = seo.title;
+            if (seo.description) document.getElementById('page-description').setAttribute('content', seo.description);
+
+            const profile = siteData.getProfile();
+            const page = siteData.getPageConfig('index');
+            const hero = page.hero || {};
+
+            document.getElementById('hero-brand-title').textContent = profile.heroBrandTitle || hero.title || 'BONELESS MAN';
+            document.getElementById('hero-brand-subtitle').textContent = profile.heroBrandSubTitle || hero.subtitle || 'BRAND MANUAL';
+            document.getElementById('hero-brand-image').setAttribute('src', profile.navLogo || 'hero.png');
+            document.getElementById('hero-calligraphy-image').setAttribute('src', profile.heroCalligraphyImage || 'hero_text.png');
+            document.getElementById('hero-bottom-logo').setAttribute('src', profile.logo || 'brand_logo.png');
+            document.getElementById('hero-bottom-slogan').textContent = profile.slogan || hero.leftTagline || '';
+            document.getElementById('hero-bottom-right-top').textContent = hero.rightTaglineTop || 'BONELESS';
+            document.getElementById('hero-bottom-right-bottom').textContent = hero.rightTaglineBottom || 'CHICKEN FEET';
+
+            document.getElementById('home-products-title').textContent = hero.productSectionTitle || '核心爆品';
+            document.getElementById('home-products-desc').textContent = hero.productSectionDesc || '';
+            document.getElementById('home-products-cta').textContent = hero.productCTA || '浏览完整产品线';
+            document.getElementById('home-news-title').textContent = hero.newsSectionTitle || '集团资讯';
+
+            const carousel = siteData.getPublicCarousel();
+            const carouselRoot = document.getElementById('carousel-images');
+            const dotsRoot = document.getElementById('carousel-dots');
+            const carouselItems = carousel.length ? carousel : [{ src: 'hero4.png', alt: '默认图' }];
+            carouselRoot.innerHTML = carouselItems.map((item, i) => `
+                <img src="${item.src}" alt="${item.alt || ''}" class="carousel-img${i === 0 ? ' active' : ''}" style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0; transform: translateX(20px);">
+            `).join('');
+            dotsRoot.innerHTML = carouselItems.map((_, i) => `
+                <span class="dot${i === 0 ? ' active' : ''}" style="width: 8px; height: 8px; border-radius: 50%; background: white; cursor: pointer; opacity: ${i === 0 ? '1' : '0.4'}; transition: all 0.3s ease;"></span>
+            `).join('');
+
+            const products = siteData.getPublicProducts();
+            const productGrid = document.getElementById('home-products-grid');
+            productGrid.innerHTML = products.slice(0, 5).map((p) => `
+                <a href="product-detail.html?slug=${encodeURIComponent(p.slug)}" class="flavor-card">
+                    <div class="flavor-badge">${p.badge || ''}</div>
+                    <div class="flavor-img-wrapper">
+                        <img src="${p.image}" alt="${p.name}" class="flavor-img">
+                        <img src="阴影.png" alt="阴影" class="flavor-shadow">
+                    </div>
+                    <div class="flavor-info">
+                        <h3 class="flavor-name">${p.name}</h3>
+                        <span class="flavor-tag">${p.desc || ''}</span>
+                    </div>
+                </a>
+            `).join('');
+
+            const featuredNews = siteData.getFeaturedNews();
+            const allNews = siteData.getPublicNews();
+            const heroNews = featuredNews[0] || allNews[0];
+            const sideNews = (featuredNews.length > 1 ? featuredNews.slice(1, 3) : allNews.slice(1, 3));
+            const newsRoot = document.getElementById('home-news-grid');
+            if (heroNews) {
+                newsRoot.innerHTML = `
+                    <a href="news-detail.html?slug=${encodeURIComponent(heroNews.slug)}" class="mag-featured">
+                        <img src="${heroNews.coverImage || 'hero4.png'}" alt="${heroNews.title}" class="mag-featured-img">
+                        <div class="mag-glass-wrapper">
+                            <div class="mag-glass-content">
+                                <span class="news-date-pill" style="background: var(--hero-orange); color: white;">${heroNews.category}</span>
+                                <div style="margin-top: 20px;">
+                                    <div class="news-date" style="font-weight: 800; font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 12px; letter-spacing: 2px;">${heroNews.date}</div>
+                                    <h3 class="mag-item-title" style="font-size: 32px; color: white; margin-bottom: 16px;">${heroNews.title}</h3>
+                                    <p class="mag-item-desc" style="color: rgba(255,255,255,0.7); font-size: 16px; -webkit-line-clamp: 3;">${heroNews.excerpt || ''}</p>
+                                </div>
+                                <div class="mag-action-row" style="color: white; opacity: 1; transform: none; margin-top: 24px;">阅读全文</div>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="mag-list">
+                        ${sideNews.map((n) => `
+                            <a href="news-detail.html?slug=${encodeURIComponent(n.slug)}" class="mag-item">
+                                <div class="mag-item-thumb">
+                                    <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:40px;background:#f5f5f5;">${n.emoji || '📰'}</div>
+                                </div>
+                                <div class="mag-item-body">
+                                    <div class="news-date-pill">${n.category}</div>
+                                    <h3 class="mag-item-title">${n.title}</h3>
+                                    <p class="mag-item-desc">${n.excerpt || ''}</p>
+                                    <div class="mag-action-row" style="opacity:1;transform:none;">查看详情</div>
+                                </div>
+                            </a>
+                        `).join('')}
+                        <a href="news.html" class="btn btn-primary" style="display: flex; align-items: center; justify-content: center; min-height: 80px; width: 100%; font-size: 18px; border-radius: 32px; margin-top: auto;">前往新闻中心查看所有资讯</a>
+                    </div>
+                `;
+            }
+
+            initHeroCarousel();
+        });
+
+        function initHeroCarousel() {
+            const heroCarousel = document.querySelector('.hero-carousel');
+            if (!heroCarousel) return;
+            const images = heroCarousel.querySelectorAll('.carousel-img');
+            const dots = heroCarousel.querySelectorAll('.dot');
+            const prevBtn = heroCarousel.querySelector('.prev');
+            const nextBtn = heroCarousel.querySelector('.next');
+            if (!images.length) return;
+            let currentIndex = 0;
+            let autoPlayTimer;
+
+            const updateCarousel = (index, direction = 'next') => {
+                images.forEach((img) => {
+                    img.classList.remove('active');
+                    img.style.transform = direction === 'next' ? 'translateX(-20px)' : 'translateX(20px)';
+                });
+                dots.forEach((dot) => dot.classList.remove('active'));
+                currentIndex = index;
+                images[currentIndex].classList.add('active');
+                if (dots[currentIndex]) dots[currentIndex].classList.add('active');
+            };
+            const nextSlide = () => updateCarousel((currentIndex + 1) % images.length, 'next');
+            const prevSlide = () => updateCarousel((currentIndex - 1 + images.length) % images.length, 'prev');
+            nextBtn?.addEventListener('click', () => { nextSlide(); resetTimer(); });
+            prevBtn?.addEventListener('click', () => { prevSlide(); resetTimer(); });
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    updateCarousel(index, index > currentIndex ? 'next' : 'prev');
+                    resetTimer();
+                });
+            });
+            const startTimer = () => { autoPlayTimer = setInterval(nextSlide, 5000); };
+            const resetTimer = () => { clearInterval(autoPlayTimer); startTimer(); };
+            updateCarousel(0);
+            startTimer();
+            heroCarousel.addEventListener('mouseenter', () => clearInterval(autoPlayTimer));
+            heroCarousel.addEventListener('mouseleave', () => startTimer());
+        }
+    </script>
+</body>
+</html>

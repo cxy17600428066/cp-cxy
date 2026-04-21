@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const heroCarousel = document.querySelector('.hero-carousel');
-    if (heroCarousel) {
+    if (heroCarousel && heroCarousel.dataset.managedCarousel !== 'true') {
         const images = heroCarousel.querySelectorAll('.carousel-img');
         const dots = heroCarousel.querySelectorAll('.dot');
         const prevBtn = heroCarousel.querySelector('.prev');

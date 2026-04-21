@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 | 卓希集团</title>
+    <meta name="description" content="卓希集团 — 国内首家无骨鸡爪全链路食品集团，旗下拥有脱骨侠、马商食品等头部品牌，年GMV超20亿。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ════ About Page Exclusive Styles ════ */
+
+        .about-page-wrap {
+            max-width: 1440px;
+            margin: 0 auto;
+            fuga padding: 0 5%;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        /* ── Cinematic Hero Banner ── */
+        .about-hero-banner {
+            position: relative;
+            border-radius: 64px;
+            overflow: hidden;
+            height: 520px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15);
+        }
+
+        .about-hero-banner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            filter: brightness(0.7) saturate(1.1);
+            transition: transform 1.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .about-hero-banner:hover img {
+            transform: scale(1.04);
+        }
+
+        .about-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(18, 18, 18, 0.75) 0%, rgba(18, 18, 18, 0.3) 60%, transparent 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 64px;
+        }
+
+        .about-hero-eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--hero-orange);
+            margin-bottom: 16px;
+            opacity: 0.9;
+        }
+
+        .about-hero-title {
+            font-size: clamp(36px, 5vw, 64px);
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 24px;
+        }
+
+        .about-hero-title em {
+            font-style: normal;
+            color: var(--hero-orange);
+        }
+
+        .about-hero-tags {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .about-hero-tag {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 99px;
+            padding: 8px 20px;
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* ── KPI Stats Row ── */
+        .about-kpi-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .about-kpi-card {
+            background: #fff;
+            border-radius: 40px;
+            padding: 40px 32px;
+            box-shadow: var(--island-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-kpi-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--hero-orange), var(--zesty-yellow));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: left;
+        }
+
+        .about-kpi-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.08);
+        }
+
+        .about-kpi-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .kpi-number {
+            font-size: 52px;
+            font-weight: 900;
+            color: var(--hero-orange);
+            line-height: 1;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-suffix {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .kpi-label {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* ── Brand Architecture Bento ── */
+        .bento-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .about-bento-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 20px;
+        }
+
+        .bento-entity {
+            background: #fff;
+            border-radius: 40px;
+            padding: 48px;
+            box-shadow: var(--island-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bento-entity.span-2 {
+            grid-column: span 2;
+        }
+
+        .bento-entity::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            top: -60px;
+            right: -60px;
+            transition: all 0.6s ease;
+            opacity: 0.06;
+        }
+
+        .bento-entity.orange::after {
+            background: var(--hero-orange);
+        }
+
+        .bento-entity.yellow::after {
+            background: var(--zesty-yellow);
+        }
+
+        .bento-entity.dark::after {
+            background: var(--shadow-black);
+        }
+
+        .bento-entity:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.08);
+        }
+
+        .bento-entity:hover::after {
+            opacity: 0.12;
+            transform: scale(1.2);
+        }
+
+        .entity-emoji {
+            font-size: 40px;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .entity-name {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--shadow-black);
+            margin-bottom: 6px;
+        }
+
+        .entity-tagline {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .entity-highlights {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .entity-highlight-item {
+            font-size: 14px;
+            color: var(--shadow-black);
+            opacity: 0.8;
+            padding-left: 16px;
+            position: relative;
+            line-height: 1.5;
+        }
+
+        .entity-highlight-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--hero-orange);
+        }
+
+        .entity-stat-pills {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 24px;
+        }
+
+        .entity-stat-pill {
+            background: rgba(243, 79, 1, 0.06);
+            border: 1px solid rgba(243, 79, 1, 0.12);
+            border-radius: 16px;
+            padding: 10px 20px;
+            text-align: center;
+        }
+
+        .entity-stat-pill.yellow-pill {
+            background: rgba(245, 228, 106, 0.15);
+            border-color: rgba(245, 228, 106, 0.4);
+        }
+
+        .entity-stat-pill-value {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--hero-orange);
+            line-height: 1.1;
+        }
+
+        .entity-stat-pill.yellow-pill .entity-stat-pill-value {
+            color: var(--shadow-black);
+        }
+
+        .entity-stat-pill-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        /* ── Philosophy Triptych ── */
+        .philosophy-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .philosophy-card {
+            background: #fff;
+            border-radius: 40px;
+            padding: 48px 40px;
+            box-shadow: var(--island-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 32px 64px rgba(0, 0, 0, 0.08);
+        }
+
+        .philosophy-icon-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 24px;
+            background: var(--hero-orange-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 24px;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .philosophy-card:hover .philosophy-icon-wrap {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .philosophy-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--hero-orange);
+            margin-bottom: 12px;
+        }
+
+        .philosophy-heading {
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--shadow-black);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .philosophy-body {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+
+        /* ── Timeline Section (Horizontal Hover) ── */
+        .about-timeline-wrap {
+            background: #fff;
+            border-radius: 64px;
+            padding: 64px 72px;
+            box-shadow: var(--island-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            overflow: visible;
+            /* Allow popover to overflow */
+            position: relative;
+        }
+
+        .timeline-section-header {
+            margin-bottom: 56px;
+            text-align: center;
+        }
+
+        .timeline-eyebrow {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--hero-orange);
+            margin-bottom: 10px;
+        }
+
+        .timeline-section-title {
+            font-size: 40px;
+            font-weight: 900;
+            color: var(--shadow-black);
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .timeline-subtitle {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        /* Horizontal track */
+        .tl-track {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 0;
+        }
+
+        /* Continuous spine line */
+        .tl-track::before {
+            content: '';
+            position: absolute;
+            top: 22px;
+            /* Vertically aligned with dot center */
+            left: 22px;
+            right: 22px;
+            height: 2px;
+            background: linear-gradient(90deg,
+                    var(--hero-orange) 0%,
+                    rgba(243, 79, 1, 0.3) 80%,
+                    rgba(243, 79, 1, 0.1) 100%);
+            z-index: 0;
+        }
+
+        .tl-node {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            cursor: pointer;
+        }
+
+        /* Dot */
+        .tl-node-dot {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid var(--hero-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: 900;
+            color: var(--hero-orange);
+            position: relative;
+            z-index: 2;
+            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+            flex-shrink: 0;
+        }
+
+        .tl-node:hover .tl-node-dot,
+        .tl-node:focus-within .tl-node-dot {
+            background: var(--hero-orange);
+            color: #fff;
+            transform: scale(1.25);
+            box-shadow: 0 0 0 8px rgba(243, 79, 1, 0.12);
+        }
+
+        /* Last node (2025) special dot */
+        .tl-node.is-latest .tl-node-dot {
+            background: linear-gradient(135deg, var(--hero-orange), var(--zesty-yellow));
+            border-color: transparent;
+            color: #121212;
+        }
+
+        .tl-node.is-latest:hover .tl-node-dot {
+            background: linear-gradient(135deg, var(--hero-orange), var(--zesty-yellow));
+            color: #121212;
+        }
+
+        /* Date label below dot */
+        .tl-node-date {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--hero-orange);
+            margin-top: 10px;
+            white-space: nowrap;
+            letter-spacing: 0.5px;
+        }
+
+        /* Short title below date */
+        .tl-node-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--shadow-black);
+            margin-top: 4px;
+            text-align: center;
+            max-width: 80px;
+            line-height: 1.3;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .tl-node:hover .tl-node-label {
+            opacity: 1;
+            color: var(--hero-orange);
+        }
+
+        /* Hover popover card */
+        .tl-popover {
+            position: absolute;
+            bottom: calc(100% + 20px);
+            left: 50%;
+            transform: translateX(-50%) translateY(8px);
+            width: 280px;
+            background: #fff;
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow:
+                0 20px 60px rgba(0, 0, 0, 0.12),
+                0 4px 12px rgba(0, 0, 0, 0.06),
+                0 0 0 1px rgba(0, 0, 0, 0.04);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .tl-popover::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 8px;
+            background: #fff;
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
+        }
+
+        .tl-node:hover .tl-popover,
+        .tl-node:focus-within .tl-popover {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        /* Clamp edge popovers to stay in view */
+        .tl-node:first-child .tl-popover {
+            left: 0;
+            transform: translateX(0) translateY(8px);
+        }
+
+        .tl-node:first-child:hover .tl-popover {
+            transform: translateX(0) translateY(0);
+        }
+
+        .tl-node:first-child .tl-popover::after {
+            left: 22px;
+        }
+
+        .tl-node:last-child .tl-popover {
+            left: auto;
+            right: 0;
+            transform: translateX(0) translateY(8px);
+        }
+
+        .tl-node:last-child:hover .tl-popover {
+            transform: translateX(0) translateY(0);
+        }
+
+        .tl-node:last-child .tl-popover::after {
+            left: auto;
+            right: 22px;
+        }
+
+        .tl-pop-date {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--hero-orange);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .tl-pop-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--shadow-black);
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .tl-pop-body {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .tl-pop-badges {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tl-badge {
+            background: rgba(243, 79, 1, 0.08);
+            border: 1px solid rgba(243, 79, 1, 0.15);
+            border-radius: 99px;
+            padding: 3px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--hero-orange);
+            white-space: nowrap;
+        }
+
+        .tl-badge.gold {
+            background: rgba(245, 228, 106, 0.2);
+            border-color: rgba(200, 160, 0, 0.25);
+            color: #a07800;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ Floating Navbar ═══ -->
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 120px; padding-bottom: 80px;">
+        <div class="about-page-wrap">
+
+            <!-- ═══ 1. Cinematic Hero Banner ═══ -->
+            <div class="about-hero-banner reveal">
+                <img src="factory.jpg" alt="卓希集团现代工厂">
+                <div class="about-hero-overlay">
+                    <div class="about-hero-eyebrow">ZHUOXI GROUP · EST. 2020</div>
+                    <h1 class="about-hero-title">
+                        卓希集团 <br> 国内首家无骨鸡爪-<em>全链路</em>食品集团
+                    </h1>
+                    <div class="about-hero-tags">
+                        <span class="about-hero-tag">国内首家无骨鸡爪全链路集团</span>
+                        <span class="about-hero-tag">大型运营与生产体系</span>
+                        <span class="about-hero-tag">孵化脱骨侠、忆小萌等头部品牌</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ 2. KPI Stats Row ═══ -->
+            <div class="about-kpi-row">
+                <div class="about-kpi-card reveal" style="transition-delay: 0.05s;">
+                    <div class="kpi-number">20<span class="kpi-suffix">+</span></div>
+                    <div class="kpi-label">覆盖省份</div>
+                </div>
+                <div class="about-kpi-card reveal" style="transition-delay: 0.1s;">
+                    <div class="kpi-number">20<span class="kpi-suffix">亿</span></div>
+                    <div class="kpi-label">年GMV</div>
+                </div>
+                <div class="about-kpi-card reveal" style="transition-delay: 0.15s;">
+                    <div class="kpi-number">1<span class="kpi-suffix">亿+</span></div>
+                    <div class="kpi-label">累计热销（罐）</div>
+                </div>
+                <div class="about-kpi-card reveal" style="transition-delay: 0.2s;">
+                    <div class="kpi-number">200<span class="kpi-suffix">+</span></div>
+                    <div class="kpi-label">专业员工</div>
+                </div>
+            </div>
+
+            <!-- ═══ 3. Brand Architecture Bento ═══ -->
+            <div>
+                <div class="bento-section-title reveal">集团业务版图</div>
+                <div class="about-bento-grid">
+
+                    <!-- 卓希食品 — Large Card -->
+                    <div class="bento-entity orange span-2 reveal">
+                        <span class="entity-emoji">🔥</span>
+                        <div class="entity-name">卓希食品</div>
+                        <div class="entity-tagline">行业第一品牌孵化 · 全平台销售终端触达</div>
+                        <div class="entity-highlights">
+                            <div class="entity-highlight-item">孵化「脱骨侠」品牌，无骨鸡爪连续四年<strong>全国销量第一</strong></div>
+                            <div class="entity-highlight-item">连续登顶抖音、快手等各大社交媒体平台爆款榜 <strong
+                                    style="color: var(--hero-orange);">TOP 1</strong></div>
+                            <div class="entity-highlight-item">多元品牌矩阵覆盖忆小萌、乐食汇等子品牌</div>
+                        </div>
+                        <div class="entity-stat-pills">
+                            <div class="entity-stat-pill">
+                                <div class="entity-stat-pill-value">超20亿</div>
+                                <div class="entity-stat-pill-label">年GMV</div>
+                            </div>
+                            <div class="entity-stat-pill">
+                                <div class="entity-stat-pill-value">1亿+</div>
+                                <div class="entity-stat-pill-label">单系列累计热销（罐）</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 马商食品 — Tall Card -->
+                    <div class="bento-entity yellow reveal" style="transition-delay: 0.1s;">
+                        <span class="entity-emoji">🏭</span>
+                        <div class="entity-name">马商食品</div>
+                        <div class="entity-tagline">多核认证生产 · 全温层产品线覆盖</div>
+                        <div class="entity-highlights">
+                            <div class="entity-highlight-item">智能化、数字化、自动化先进生产车间</div>
+                            <div class="entity-highlight-item">FSSC22000 · HACCP · ISO9001 三大体系认证</div>
+                            <div class="entity-highlight-item">冷冻冷藏全品类，全面支持线上电商平台</div>
+                        </div>
+                        <div class="entity-stat-pills" style="margin-top: 24px;">
+                            <div class="entity-stat-pill yellow-pill">
+                                <div class="entity-stat-pill-value">14.6万吨</div>
+                                <div class="entity-stat-pill-label">规划年产能</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══ 4. Philosophy Triptych ═══ -->
+            <div id="culture">
+                <div class="bento-section-title reveal">企业文化</div>
+                <div class="philosophy-grid">
+                    <div class="philosophy-card reveal" style="transition-delay: 0.05s;">
+                        <div class="philosophy-icon-wrap">🎯</div>
+                        <div class="philosophy-label">MISSION</div>
+                        <div class="philosophy-heading">企业使命</div>
+                        <p class="philosophy-body">让每一份食品都成为放心的选择，以极致标准守护每一位消费者的舌尖安全。</p>
+                    </div>
+                    <div class="philosophy-card reveal" style="transition-delay: 0.1s;">
+                        <div class="philosophy-icon-wrap" style="background: rgba(245, 228, 106, 0.15);">🔭</div>
+                        <div class="philosophy-label">VISION</div>
+                        <div class="philosophy-heading">发展愿景</div>
+                        <p class="philosophy-body">成为全球领先的肉制品专家，将中国零食的极致爽感带向世界的每一个角落。</p>
+                    </div>
+                    <div class="philosophy-card reveal" style="transition-delay: 0.15s;">
+                        <div class="philosophy-icon-wrap" style="background: rgba(18, 18, 18, 0.06);">💎</div>
+                        <div class="philosophy-label">VALUES</div>
+                        <div class="philosophy-heading">核心价值观</div>
+                        <p class="philosophy-body">做实事、讲实话、守初心。每一个决策背后，都是对品质与诚信的深度承诺。</p>
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="timeline" class="about-timeline-wrap reveal" style="overflow: visible;">
+                <div class="timeline-section-header">
+                    <div class="timeline-eyebrow">OUR JOURNEY · 2020 — 2025</div>
+                    <div class="timeline-section-title">发展历程</div>
+                    <div class="timeline-subtitle">悬停在每个节点，阅读卓希的成长足迹</div>
+                </div>
+
+                <div class="tl-track">
+
+                    <!-- 01 · 2020.06 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">01</div>
+                        <div class="tl-node-date">2020.06</div>
+                        <div class="tl-node-label">建厂投产</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2020年6月</div>
+                            <div class="tl-pop-title">安徽工厂建成投产</div>
+                            <div class="tl-pop-body">马商食品安徽现代化工厂正式建成投产，以智能化生产线开创行业新标准。</div>
+                        </div>
+                    </div>
+
+                    <!-- 02 · 2021.10 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">02</div>
+                        <div class="tl-node-date">2021.10</div>
+                        <div class="tl-node-label">脱骨侠上线</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2021年10月</div>
+                            <div class="tl-pop-title">脱骨侠品牌正式上线</div>
+                            <div class="tl-pop-body">主营无骨鸡爪，以极致口感迅速引爆消费市场，开启品类新赛道。</div>
+                            <div class="tl-pop-badges"><span class="tl-badge">无骨鸡爪</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 03 · 2022.06 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">03</div>
+                        <div class="tl-node-date">2022.06</div>
+                        <div class="tl-node-label">集团化运营</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2022年6月</div>
+                            <div class="tl-pop-title">成立卓希食品，集团化运营</div>
+                            <div class="tl-pop-body">整合旗下品牌与渠道资源，卓希集团正式启动多品牌、多市场的集团化战略布局。</div>
+                        </div>
+                    </div>
+
+                    <!-- 04 · 2022.12 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">04</div>
+                        <div class="tl-node-date">2022.12</div>
+                        <div class="tl-node-label">全网引爆</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2022年12月</div>
+                            <div class="tl-pop-title">销量引爆全网</div>
+                            <div class="tl-pop-body">脱骨侠无骨鸡爪全年火爆全网，销售额突破8亿，社交媒体话题量破10亿。</div>
+                            <div class="tl-pop-badges"><span class="tl-badge gold">全年销额 8亿+</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 05 · 2023.05 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">05</div>
+                        <div class="tl-node-date">2023.05</div>
+                        <div class="tl-node-label">全国建厂</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2023年5月</div>
+                            <div class="tl-pop-title">全国布局，多地建厂</div>
+                            <div class="tl-pop-body">安徽、吉林、四川等地陆续投资建厂，构建全国化生产与供应链网络。</div>
+                            <div class="tl-pop-badges"><span class="tl-badge">安徽</span><span
+                                    class="tl-badge">吉林</span><span class="tl-badge">四川</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 06 · 2023.12 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">06</div>
+                        <div class="tl-node-date">2023.12</div>
+                        <div class="tl-node-label">年销 20亿</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2023年12月</div>
+                            <div class="tl-pop-title">年销超20亿，连续两年全国第一</div>
+                            <div class="tl-pop-body">年销售额突破20亿，累计热销5000万罐，连续两年蝉联全网无骨鸡爪销量第一。</div>
+                            <div class="tl-pop-badges"><span class="tl-badge gold">年GMV 20亿+</span><span
+                                    class="tl-badge gold">5000万罐</span><span class="tl-badge">连续两年 #1</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 07 · 2024.06 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">07</div>
+                        <div class="tl-node-date">2024.06</div>
+                        <div class="tl-node-label">超级工厂</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2024年6月</div>
+                            <div class="tl-pop-title">超级工厂落成，全球产能第一</div>
+                            <div class="tl-pop-body">安徽70,000㎡超级工厂落成，年产能破14万吨，成为全球最大规模鸡爪食品生产基地。</div>
+                            <div class="tl-pop-badges"><span class="tl-badge gold">70,000㎡</span><span
+                                    class="tl-badge gold">全球产能 #1</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 08 · 2024.12 -->
+                    <div class="tl-node">
+                        <div class="tl-node-dot">08</div>
+                        <div class="tl-node-date">2024.12</div>
+                        <div class="tl-node-label">累计 1亿罐</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">2024年12月</div>
+                            <div class="tl-pop-title">累计销量破1亿罐</div>
+                            <div class="tl-pop-body">累计销量历史性突破1亿罐，连续三年蝉联全国销量第一，线下销售额突破2亿。</div>
+                            <div class="tl-pop-badges"><span class="tl-badge gold">1亿+ 罐</span><span
+                                    class="tl-badge">连续三年 #1</span><span class="tl-badge">线下 2亿+</span></div>
+                        </div>
+                    </div>
+
+                    <!-- 09 · 2025 -->
+                    <div class="tl-node is-latest">
+                        <div class="tl-node-dot">09</div>
+                        <div class="tl-node-date" style="color: #a07800;">2025</div>
+                        <div class="tl-node-label">🌏 全球化</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date" style="color: #a07800;">2025年</div>
+                            <div class="tl-pop-title">全球化运营启动</div>
+                            <div class="tl-pop-body">国内线上线下份额持续增长；越南gleeglee品牌及工厂落地；连续四年无骨鸡爪全国销量第一，线下销售额突破6亿。</div>
+                            <div class="tl-pop-badges"><span class="tl-badge gold">线下 6亿+</span><span
+                                    class="tl-badge">连续四年 #1</span><span class="tl-badge">越南 gleeglee</span></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </main>
+
+    <!-- ═══ Footer ═══ -->
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

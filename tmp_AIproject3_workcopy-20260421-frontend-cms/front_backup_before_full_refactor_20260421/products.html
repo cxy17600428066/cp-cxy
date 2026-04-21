@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>产品中心 | 脱骨侠 — 全系列风味矩阵</title>
+    <meta name="description" content="探索脱骨侠集团的全系列产品。从经典的柠檬系列到川香红油等创新口味，18 道脱骨工艺带来极致爽感体验。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        /* ════════════════════════════════════
+           DESIGN SYSTEM TOKENS (DESIGN.md)
+        ════════════════════════════════════ */
+        :root {
+            --bg-base: #faf8f5;
+            --surface: #ffffff;
+            --text-primary: #171717;
+            --text-muted: #888888;
+            --primary: #ffaa00;
+            --primary-dark: #e69900;
+            --shadow-card: 0 12px 32px rgba(0, 0, 0, 0.05);
+            --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.03);
+            --shadow-raised: 0 12px 40px rgba(0, 0, 0, 0.10);
+            --shadow-cta: 0 8px 24px rgba(255, 170, 0, 0.35);
+            --r-pill: 999px;
+            --r-card: 32px;
+            --r-panel: 20px;
+            --r-inner: 12px;
+        }
+
+        /* ── Base ── */
+        body {
+            background: var(--bg-base);
+            font-family: 'Inter', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+            color: var(--text-primary);
+        }
+
+        /* ════ Page Layout ════ */
+        .products-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px 120px;
+        }
+
+        /* ════ HERO — Brand Orange ════ */
+        .products-hero {
+            background: linear-gradient(145deg, #ff7200 0%, #ffaa00 65%, #ffc300 100%);
+            border-radius: var(--r-card);
+            box-shadow: var(--shadow-raised);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            margin-top: 40px;
+            margin-bottom: 24px;
+        }
+
+        /* ── Top area: 2-col grid ── */
+        .hero-main-area {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 32px;
+            padding: 52px 56px 0;
+            align-items: start;
+        }
+
+        /* ── Left column: category tags ── */
+        .hero-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+            padding-top: 4px;
+        }
+
+        .hero-cat-tag {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: var(--r-pill);
+            padding: 9px 22px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hero-cat-tag:hover,
+        .hero-cat-tag.active {
+            background: #fff;
+            transform: translateX(6px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero-cat-dots {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 18px;
+            letter-spacing: 4px;
+            margin-top: 4px;
+            margin-left: 12px;
+        }
+
+        /* ── Right column: title ── */
+        .hero-title-area {
+            text-align: right;
+        }
+
+        .hero-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.65);
+            margin-bottom: 14px;
+        }
+
+        .hero-title {
+            font-size: clamp(44px, 5.5vw, 76px);
+            font-weight: 900;
+            color: #fff;
+            line-height: 0.95;
+            letter-spacing: -2.5px;
+            margin-bottom: 16px;
+        }
+
+        .hero-title em {
+            font-style: normal;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .hero-subtitle {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.72);
+            line-height: 1.75;
+            font-weight: 500;
+        }
+
+        /* ── Nucleus: product image ── */
+        .hero-product-lineup-wrap {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 0 56px;
+            margin-top: -12px;
+            z-index: 5;
+            flex-shrink: 0;
+        }
+
+        .hero-lineup-img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            object-position: bottom;
+            /* Blend white pkg background into amber bg */
+            mix-blend-mode: multiply;
+            transition: transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .products-hero:hover .hero-lineup-img {
+            transform: scale(1.03) translateY(-6px);
+        }
+
+        /* ── Bottom white brand bar ── */
+        .hero-brand-bar {
+            background: #fff;
+            padding: 14px 56px;
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            align-items: center;
+            gap: 28px;
+            flex-shrink: 0;
+            margin-top: 0;
+        }
+
+        .hero-brand-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            white-space: nowrap;
+        }
+
+        .hero-brand-name-cn {
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: 1px;
+        }
+
+        .hero-brand-divider {
+            color: var(--text-muted);
+            font-weight: 300;
+            font-size: 18px;
+        }
+
+        .hero-brand-tagline {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .hero-brand-en {
+            font-size: 10px;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            border: 2px solid var(--text-primary);
+            padding: 5px 10px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        /* ── Inline Marquee Ticker ── */
+        .hero-ticker {
+            overflow: hidden;
+        }
+
+        .hero-ticker-track {
+            display: flex;
+            width: max-content;
+            animation: tickerScroll 20s linear infinite;
+            will-change: transform;
+        }
+
+        .hero-ticker:hover .hero-ticker-track {
+            animation-play-state: paused;
+        }
+
+        @keyframes tickerScroll {
+            from {
+                transform: translateX(0);
+            }
+
+            to {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Hero Switch Animation - GPU-composited only (no blur/repaint) */
+        @keyframes heroSwitch {
+            0%   { opacity: 1; transform: scale(1); }
+            30%  { opacity: 0; transform: scale(0.94) translateY(10px); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .hero-lineup-img.switching {
+            animation: heroSwitch 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 32px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .ticker-item b {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        .ticker-item b em {
+            color: var(--primary);
+            font-style: normal;
+        }
+
+        .ticker-sep {
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: 300;
+            opacity: 0.4;
+            padding: 0 2px;
+        }
+
+
+        /* ════ Filter Bar ════ */
+        .filter-bar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .filter-btn {
+            padding: 11px 24px;
+            border-radius: var(--r-pill);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            background: var(--surface);
+            color: var(--text-muted);
+            box-shadow: var(--shadow-soft);
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: inherit;
+        }
+
+        .filter-btn:hover {
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+        }
+
+        .filter-btn:active {
+            transform: scale(0.97) translateY(0);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: var(--shadow-cta);
+        }
+
+        /* ════ Section Header ════ */
+        .section-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+
+        /* ════ Products Grid ════ */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .product-card-wide {
+            grid-column: span 2;
+        }
+
+        /* ── Base Card ── */
+        .product-card {
+            background: var(--surface);
+            border-radius: var(--r-card);
+            box-shadow: var(--shadow-card);
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.09);
+        }
+
+        /* Wide card has horizontal inner layout */
+        .product-card-wide {
+            flex-direction: row;
+        }
+
+        /* ── Image Zone ── */
+        .product-img-zone {
+            flex-shrink: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Standard card image zone */
+        .product-card:not(.product-card-wide) .product-img-zone {
+            height: 240px;
+        }
+
+        /* Wide card image zone */
+        .product-card-wide .product-img-zone {
+            width: 320px;
+            height: auto;
+        }
+
+        .product-img-zone img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .product-card:hover .product-img-zone img {
+            transform: scale(1.07) translateY(-4px);
+        }
+
+        /* Warm tinted backgrounds per flavor */
+        .bg-lemon {
+            background: #fffef0;
+        }
+
+        .bg-red {
+            background: #fff5f0;
+        }
+
+        .bg-spicy {
+            background: #fff0ee;
+        }
+
+        .bg-garlic {
+            background: #f5faf5;
+        }
+
+        .bg-pepper {
+            background: #f5f0fd;
+        }
+
+        /* Floating badge */
+        .product-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 5px 12px;
+            border-radius: var(--r-pill);
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 3;
+        }
+
+        .badge-top {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .badge-new {
+            background: var(--text-primary);
+            color: #fff;
+        }
+
+        .badge-limited {
+            background: #171717;
+            color: var(--primary);
+        }
+
+        /* Heat dots */
+        .heat-meter {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            display: flex;
+            gap: 3px;
+        }
+
+        .heat-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .heat-dot.on {
+            background: var(--primary);
+        }
+
+        /* ── Card Body ── */
+        .product-card-body {
+            padding: 24px 28px 28px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card-wide .product-card-body {
+            padding: 36px 40px;
+            justify-content: center;
+        }
+
+        .product-flavor-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+            line-height: 1.25;
+            margin-bottom: 10px;
+        }
+
+        .product-card-wide .product-name {
+            font-size: 26px;
+        }
+
+        .product-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            flex: 1;
+            margin-bottom: 20px;
+        }
+
+        /* Attribute chips */
+        .product-attrs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .attr-chip {
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: var(--r-pill);
+            padding: 5px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        /* Card footer */
+        .product-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid rgba(0, 0, 0, 0.04);
+        }
+
+        .product-weight {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Primary CTA button */
+        .btn-primary-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: var(--r-pill);
+            padding: 10px 22px;
+            font-size: 13px;
+            font-weight: 700;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s ease,
+                transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.2s ease;
+        }
+
+        .btn-primary-pill:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-cta);
+        }
+
+        .btn-primary-pill:active {
+            transform: translateY(2px) scale(0.97);
+            box-shadow: none;
+        }
+
+        .btn-arrow {
+            transition: transform 0.25s ease;
+        }
+
+        .btn-primary-pill:hover .btn-arrow {
+            transform: translateX(4px);
+        }
+
+        /* ════ Brand CTA Strip ════ */
+        .brand-strip {
+            margin-top: 56px;
+            background: var(--text-primary);
+            border-radius: var(--r-card);
+            padding: 52px 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 40px;
+            flex-wrap: wrap;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-strip-heading {
+            font-size: 30px;
+            font-weight: 900;
+            color: #fff;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+
+        .brand-strip-heading em {
+            font-style: normal;
+            color: var(--primary);
+        }
+
+        .brand-strip-sub {
+            font-size: 15px;
+            color: rgba(255, 255, 255, 0.45);
+            max-width: 380px;
+            line-height: 1.6;
+        }
+
+        .brand-strip-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary);
+            color: #fff;
+            border-radius: var(--r-pill);
+            padding: 16px 36px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            position: relative;
+            z-index: 2;
+            transition: background 0.2s ease,
+                transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.2s ease;
+        }
+
+        .brand-strip-cta:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-cta);
+        }
+
+        .brand-strip-cta:active {
+            transform: translateY(1px) scale(0.97);
+        }
+
+        /* ════ Responsive ════ */
+        @media (max-width: 1100px) {
+            .hero-lineup-img {
+                width: 100%;
+                transform: none !important;
+            }
+
+            .hero-kpis {
+                position: relative;
+                inset: auto;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 12px;
+                margin-top: 32px;
+            }
+
+            .hero-kpi {
+                position: relative !important;
+                inset: auto !important;
+                transform: none !important;
+            }
+
+            .products-hero {
+                min-height: auto;
+                padding-top: 60px;
+            }
+        }
+
+        @media (max-width: 960px) {
+            .products-wrap {
+                padding: 0 20px 80px;
+            }
+
+            .products-hero {
+                padding: 40px 20px 40px;
+            }
+
+            .hero-product-lineup-wrap {
+                padding: 0;
+            }
+
+            .hero-title {
+                font-size: 44px;
+                letter-spacing: -1.5px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .product-card-wide {
+                grid-column: span 2;
+                flex-direction: column;
+            }
+
+            .product-card-wide .product-img-zone {
+                width: 100%;
+                height: 220px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-card-wide {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ═══ Navbar ═══ -->
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 80px;">
+        <div class="products-wrap">
+
+            <!-- ═══ Hero ═══ -->
+            <div class="products-hero reveal">
+
+                <!-- ── Main content: Left tags + Right title ── -->
+                <div class="hero-main-area">
+
+                    <!-- Left: Category / series tags -->
+                    <div class="hero-categories">
+                        <span class="hero-cat-tag active" onclick="switchHeroTheme(this, 'all')">全品矩阵</span>
+                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'spicy')">无骨系列</span>
+                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'sour')">虎皮系列</span>
+                        <span class="hero-cat-tag" onclick="switchHeroTheme(this, 'fragrant')">老卤系列</span>
+                    </div>
+
+                    <!-- Right: Title area -->
+                    <div class="hero-title-area">
+                        <div class="hero-eyebrow">PREMIUM SHOWCASE</div>
+                        <h1 class="hero-title">大爆品带动<br><em>多品类矩阵</em></h1>
+                        <p class="hero-subtitle">从经典柠檬到跨界联名，20+ 全线集结。每一口，毫不妥协。</p>
+                    </div>
+
+                </div>
+
+                <!-- ── Nucleus: Products lineup image ── -->
+                <div class="hero-product-lineup-wrap">
+                    <img class="hero-lineup-img" src="products_lineup.png" alt="脱骨侠全系列产品矩阵">
+                </div>
+
+                <!-- ── Bottom white brand bar ── -->
+                <div class="hero-brand-bar">
+                    <div class="hero-brand-left">
+                        <img src="brand_logo2.png" alt="脱骨侠"
+                            style="height:28px;width:auto;object-fit:contain;display:block;">
+                        <span class="hero-brand-divider">|</span>
+                        <span class="hero-brand-tagline">全球鸡爪专家</span>
+                    </div>
+
+                    <!-- Inline scrolling ticker -->
+                    <div class="hero-ticker">
+                        <div class="hero-ticker-track">
+                            <span class="ticker-item"><b>18道</b> 大师级脱骨工艺</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>1.4<em>亿+</em></b> 累计热销罐数</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>No.<em>1</em></b> 全网销量冠军</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>4连冠</b> 全国销量第一</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>20+</b> 爆款口味阵容</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>14万吐</b> 年产能全球第一</span>
+                            <span class="ticker-sep">•</span>
+                            <!-- Duplicate for seamless loop -->
+                            <span class="ticker-item"><b>18道</b> 大师级脱骨工艺</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>1.4<em>亿+</em></b> 累计热销罐数</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>No.<em>1</em></b> 全网销量冠军</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>4连冠</b> 全国销量第一</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>20+</b> 爆款口味阵容</span>
+                            <span class="ticker-sep">•</span>
+                            <span class="ticker-item"><b>14万吐</b> 年产能全球第一</span>
+                            <span class="ticker-sep">•</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-brand-en">BONELESS<br>CHICKEN FEET</div>
+                </div>
+
+            </div>
+
+            <!-- ═══ Filter ═══ -->
+            <div class="filter-bar reveal">
+                <button class="filter-btn active" onclick="filterProducts(this,'all')">全部口味</button>
+                <button class="filter-btn" onclick="filterProducts(this,'spicy')">无骨系列</button>
+                <button class="filter-btn" onclick="filterProducts(this,'sour')">虎皮系列</button>
+                <button class="filter-btn" onclick="filterProducts(this,'fragrant')">老卤系列</button>
+            </div>
+
+            <!-- ═══ Section label ═══ -->
+            <div class="section-eyebrow reveal">脱骨侠 · 主力单品</div>
+
+            <!-- ═══ Products Grid (Dynamically rendered) ═══ -->
+            <div class="products-grid"></div>
+
+            <!-- ═══ Brand Strip ═══ -->
+            <div class="brand-strip reveal">
+                <div>
+                    <div class="brand-strip-heading">渠道合作 <em>共赢未来</em></div>
+                    <p class="brand-strip-sub">全系列产品现已在抖音、淘宝、京东全渠道开售，更多联名限定款即将发布，欢迎商务洽谈。</p>
+                </div>
+                <a href="contact.html" class="brand-strip-cta">立即洽谈 <span>→</span></a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ═══ Footer ═══ -->
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+
+    <script src="main.js"></script>
+    <script>
+        // ═══ Dynamic Product Renderer ═══
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const products = siteData.getProducts();
+            const grid = document.querySelector('.products-grid');
+            if (grid && products.length > 0) {
+                const bgColors = ['bg-lemon', 'bg-red', 'bg-spicy', 'bg-garlic', 'bg-pepper'];
+                grid.innerHTML = products.map((p, i) => {
+                    const isWide = i === 0;
+                    const bg = bgColors[i % bgColors.length];
+                    const specsHtml = (p.specs || []).map(s => `<span class="attr-chip">${s}</span>`).join('');
+                    // Map flavor to category key if possible, otherwise use 'all'
+                    const flavorKey = p.categoryKey || 'all'; 
+                    return `
+                        <div class="product-card${isWide ? ' product-card-wide' : ''} reveal" style="transition-delay:${i*0.05}s" data-flavor="${flavorKey}">
+                            <div class="product-img-zone ${bg}">
+                                ${p.badge ? `<span class="product-badge badge-top">${p.badge}</span>` : ''}
+                                <img src="${p.image}" alt="${p.name}">
+                            </div>
+                            <div class="product-card-body">
+                                <div class="product-flavor-label">${p.badge || p.flavor || ''}</div>
+                                <div class="product-name">${p.name}无骨凤爪</div>
+                                <div class="product-desc">${p.desc}</div>
+                                ${specsHtml ? `<div class="product-attrs">${specsHtml}</div>` : ''}
+                                <div class="product-card-footer">
+                                    <span class="product-weight">${(p.specs && p.specs[0]) || ''}</span>
+                                    <a href="${p.link || '#'}" target="_blank" class="btn-primary-pill">了解详情 <span class="btn-arrow">→</span></a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                // ═══ Trigger initial filter to show products ═══
+                const activeBtn = document.querySelector('.filter-btn.active');
+                if (activeBtn) {
+                    const flavor = activeBtn.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    filterProducts(activeBtn, flavor);
+                } else {
+                    filterProducts(document.querySelector('.filter-btn'), 'all');
+                }
+            }
+        });
+
+        function switchHeroTheme(el, type) {
+            document.querySelectorAll('.hero-cat-tag').forEach(tag => tag.classList.remove('active'));
+            el.classList.add('active');
+            const heroImg = document.querySelector('.hero-lineup-img');
+            heroImg.classList.remove('switching');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    heroImg.classList.add('switching');
+                    heroImg.addEventListener('animationend', () => {
+                        heroImg.classList.remove('switching');
+                    }, { once: true });
+                });
+            });
+            setTimeout(() => {
+                const filterMap = { 'all': '全部口味', 'spicy': '无骨系列', 'sour': '虎皮系列', 'fragrant': '老卤系列' };
+                const targetText = filterMap[type];
+                const mainFilterBtn = Array.from(document.querySelectorAll('.filter-btn')).find(btn => btn.innerText === targetText);
+                if (mainFilterBtn) filterProducts(mainFilterBtn, type);
+            }, 0);
+        }
+
+        function filterProducts(btn, flavor) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cards = document.querySelectorAll('.product-card[data-flavor]');
+            cards.forEach(card => {
+                const match = flavor === 'all' || card.dataset.flavor === flavor;
+                if (match) {
+                    card.style.display = '';
+                    requestAnimationFrame(() => { card.style.opacity = '1'; card.style.transform = ''; });
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.96) translateY(8px)';
+                    setTimeout(() => { if (card.style.opacity === '0') card.style.display = 'none'; }, 350);
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Join Us | ZHUOXI GROUP</title>
+    <meta id="page-description" name="description" content="View open roles and apply from this page.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        .careers-wrap {
+            max-width: 1220px;
+            margin: 0 auto;
+            padding: 40px 0 100px;
+            display: grid;
+            gap: 28px;
+        }
+        .careers-hero {
+            background: #fff;
+            border-radius: 64px;
+            box-shadow: var(--island-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            padding: 56px 64px;
+            position: relative;
+            overflow: hidden;
+        }
+        .careers-hero::after {
+            content: '';
+            position: absolute;
+            right: -120px;
+            top: -120px;
+            width: 340px;
+            height: 340px;
+            background: radial-gradient(circle at center, rgba(243, 79, 1, 0.12), rgba(243, 79, 1, 0));
+            pointer-events: none;
+        }
+        .careers-title {
+            font-size: 44px;
+            font-weight: 900;
+            letter-spacing: -0.8px;
+            line-height: 1.1;
+            margin-bottom: 8px;
+        }
+        .careers-desc {
+            color: var(--text-muted);
+            font-size: 17px;
+            line-height: 1.8;
+            max-width: 760px;
+        }
+        .careers-section {
+            background: #fff;
+            border-radius: 48px;
+            box-shadow: var(--island-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            padding: 40px;
+        }
+        .careers-section-head {
+            margin-bottom: 20px;
+        }
+        .careers-section-title {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+        .careers-section-desc {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+        .jobs-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .job-card {
+            background: #faf8f5;
+            border: 1px solid rgba(0, 0, 0, 0.04);
+            border-radius: 18px;
+            padding: 16px 18px;
+            display: grid;
+            gap: 8px;
+        }
+        .job-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+        .job-title {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.3;
+        }
+        .job-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .job-chip {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(243, 79, 1, 0.1);
+            color: var(--hero-orange);
+            font-weight: 700;
+            font-size: 11px;
+        }
+        .job-summary {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+        .job-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+        .job-apply-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: none;
+            border-radius: 999px;
+            background: var(--terracotta-base);
+            color: #fff;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 10px 18px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--transition-snappy);
+        }
+        .job-apply-btn:hover {
+            transform: translateY(-2px);
+            background: var(--hero-orange);
+        }
+        .careers-empty {
+            text-align: center;
+            color: var(--text-muted);
+            padding: 28px 12px;
+            background: #faf8f5;
+            border-radius: 18px;
+        }
+        .careers-cta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 22px;
+            background: #121212;
+            color: #fff;
+            border-radius: 20px;
+            margin-top: 18px;
+            flex-wrap: wrap;
+        }
+        .careers-cta p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 14px;
+        }
+        .careers-cta .btn {
+            margin: 0;
+        }
+        @media (max-width: 960px) {
+            .careers-wrap { padding: 20px 0 70px; }
+            .careers-hero { padding: 34px 24px; border-radius: 36px; }
+            .careers-title { font-size: 34px; }
+            .careers-section { padding: 22px; border-radius: 28px; }
+            .careers-section-title { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 120px;">
+        <div class="careers-wrap">
+            <section class="careers-hero reveal">
+                <h1 id="careers-hero-title" class="careers-title">Join Us</h1>
+                <div class="title-accent"></div>
+                <p id="careers-hero-desc" class="careers-desc">We are looking for people who care about craft and execution.</p>
+            </section>
+
+            <section class="careers-section reveal">
+                <div class="careers-section-head">
+                    <h2 id="careers-section-title" class="careers-section-title">Open Positions</h2>
+                    <p id="careers-section-desc" class="careers-section-desc">The list below is synced from the admin careers module.</p>
+                </div>
+                <div id="jobs-grid" class="jobs-grid"></div>
+                <div class="careers-cta">
+                    <div>
+                        <strong id="careers-hr-title">HR</strong>
+                        <p id="careers-hr-email">hr@zhuoxi-hero.com</p>
+                    </div>
+                    <a id="careers-cta-link" class="btn btn-secondary" href="contact.html#cooperative">Contact Business Team</a>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        function escapeHtml(value) {
+            return String(value ?? '').replace(/[&<>"']/g, (ch) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[ch]));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const seo = siteData.getSeoPage('careers');
+            if (seo.title) document.getElementById('page-title').textContent = seo.title;
+            if (seo.description) document.getElementById('page-description').setAttribute('content', seo.description);
+
+            const page = siteData.getPageConfig('careers');
+            const profile = siteData.getProfile();
+            const careers = siteData.getPublicCareers();
+
+            document.getElementById('careers-hero-title').textContent = page.heroTitle || 'Join Us';
+            document.getElementById('careers-hero-desc').textContent = page.heroDesc || '';
+            document.getElementById('careers-section-title').textContent = page.sectionTitle || 'Open Positions';
+            document.getElementById('careers-section-desc').textContent = page.sectionDesc || '';
+
+            const hrEmail = profile.hrEmail || 'hr@zhuoxi-hero.com';
+            document.getElementById('careers-hr-title').textContent = page.applyPrefix || 'Apply';
+            document.getElementById('careers-hr-email').textContent = hrEmail;
+
+            const ctaLink = document.getElementById('careers-cta-link');
+            ctaLink.textContent = page.ctaLabel || 'Contact Business Team';
+            ctaLink.href = page.ctaHref || 'contact.html#cooperative';
+
+            const jobsRoot = document.getElementById('jobs-grid');
+            if (!careers.length) {
+                jobsRoot.innerHTML = `<div class="careers-empty">${escapeHtml(page.emptyText || 'No published positions yet.')}</div>`;
+                return;
+            }
+
+            jobsRoot.innerHTML = careers.map((job) => `
+                <article class="job-card">
+                    <div class="job-head">
+                        <h3 class="job-title">${escapeHtml(job.title || '')}</h3>
+                        <div class="job-meta">
+                            <span class="job-chip">${escapeHtml(job.type || '')}</span>
+                            <span>${escapeHtml(job.location || '')}</span>
+                        </div>
+                    </div>
+                    <p class="job-summary">${escapeHtml(job.summary || '')}</p>
+                    <div class="job-actions">
+                        <a href="mailto:${escapeHtml(hrEmail)}?subject=${encodeURIComponent('Apply - ' + (job.title || 'Position'))}" class="job-apply-btn">${escapeHtml(page.applyPrefix || 'Apply')}</a>
+                    </div>
+                </article>
+            `).join('');
+        });
+    </script>
+</body>
+</html>

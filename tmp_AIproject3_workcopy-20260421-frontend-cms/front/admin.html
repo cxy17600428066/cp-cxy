@@ -142,6 +142,26 @@
         .admin-hidden {
             display: none !important;
         }
+        @media (max-width: 992px) {
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            .admin-kv {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .admin-auth {
+                padding: 14px;
+            }
+            .admin-auth-card {
+                max-width: none;
+                padding: 20px;
+                border-radius: 18px;
+            }
+            .admin-auth-title {
+                font-size: 22px;
+            }
+        }
         @media (max-width: 1200px) {
             .admin-main {
                 padding: 28px;

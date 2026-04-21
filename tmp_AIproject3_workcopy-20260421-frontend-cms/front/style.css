@@ -1141,10 +1141,12 @@ margin-left: 2px;
 /* ════ Flavor Matrix UI (5-Column Layout) ════ */
 .flavor-grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 24px;
+    width: 100%;
     max-width: 1440px;
     margin: 0 auto;
+    align-items: stretch;
 }
 
 .flavor-card {
@@ -1162,6 +1164,7 @@ margin-left: 2px;
     border: 1px solid rgba(0, 0, 0, 0.02);
     /* Changed to visible to allow image to rise above background */
     overflow: visible;
+    min-height: 100%;
 }
 
 .flavor-card:hover {
@@ -1222,6 +1225,11 @@ margin-left: 2px;
     z-index: 10;
     /* Ensure text is always on top of the image */
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100%;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .flavor-name {
@@ -1230,6 +1238,11 @@ margin-left: 2px;
     color: var(--shadow-black);
     margin-bottom: 8px;
     transition: color 0.3s ease;
+    line-height: 1.35;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .flavor-card:hover .flavor-name {
@@ -1242,12 +1255,14 @@ margin-left: 2px;
 }
 
 .flavor-tag {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.7;
+    font-weight: 600;
     color: var(--text-muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    opacity: 0.6;
+    letter-spacing: 0;
+    text-transform: none;
+    opacity: 0.85;
+    min-height: 52px;
 }
 
 .flavor-badge {
@@ -1901,3 +1916,4 @@ margin-left: 2px;
 @keyframes toast-in { 0% { transform: translateY(-30px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
 @keyframes toast-out { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(0.9); opacity: 0; } }
 .toast-item.leaving { animation: toast-out 0.3s ease forwards; }
+

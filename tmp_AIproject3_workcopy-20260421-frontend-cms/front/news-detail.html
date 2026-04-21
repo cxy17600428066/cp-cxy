@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">新闻详情 | 卓曦集团</title>
+    <meta id="page-description" name="description" content="新闻详情页面。">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        .detail-wrap { max-width: 980px; margin: 0 auto; padding: 120px 20px 80px; }
+        .detail-card { background: #fff; border-radius: 36px; box-shadow: var(--island-shadow); padding: 40px; }
+        .detail-cat { display: inline-block; padding: 6px 12px; border-radius: 999px; background: var(--hero-orange-soft); color: var(--hero-orange); font-size: 12px; font-weight: 700; margin-bottom: 12px; }
+        .detail-title { font-size: 34px; font-weight: 900; line-height: 1.25; margin-bottom: 12px; }
+        .detail-date { color: var(--text-muted); margin-bottom: 24px; }
+        .detail-body { color: #333; line-height: 1.9; font-size: 16px; }
+        .detail-body p { margin-bottom: 16px; }
+        .detail-back { margin-top: 24px; display: inline-block; color: var(--hero-orange); text-decoration: none; font-weight: 700; }
+    </style>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+    <main>
+        <div class="detail-wrap">
+            <div class="detail-card">
+                <div id="news-cat" class="detail-cat">新闻</div>
+                <h1 id="news-title" class="detail-title">标题</h1>
+                <div id="news-date" class="detail-date">日期</div>
+                <div id="news-body" class="detail-body"></div>
+                <a class="detail-back" href="news.html">← 返回新闻中心</a>
+            </div>
+        </div>
+    </main>
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('slug') || '';
+            const news = siteData.getNewsBySlug(slug);
+            if (!news || news.status !== 'published') {
+                document.getElementById('news-title').textContent = '内容不存在或未发布';
+                document.getElementById('news-body').innerHTML = '<p>请返回新闻中心查看已发布内容。</p>';
+                return;
+            }
+            document.getElementById('news-cat').textContent = news.category || '新闻';
+            document.getElementById('news-title').textContent = news.title;
+            document.getElementById('news-date').textContent = news.date || '';
+            document.getElementById('news-body').innerHTML = (news.detail || '').split('\n').map((p) => `<p>${p}</p>`).join('');
+            document.title = `${news.title} | 卓曦集团`;
+            document.getElementById('page-description').setAttribute('content', news.excerpt || '');
+        });
+    </script>
+</body>
+</html>

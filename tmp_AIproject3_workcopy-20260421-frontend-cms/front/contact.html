@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">联系我们 | 卓曦集团</title>
+    <meta id="page-description" name="description" content="联系我们。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        .contact-layout { max-width: 1220px; margin: 0 auto; display: grid; gap: 40px; padding: 40px 0; }
+        .recruitment-block { background: #fff; border-radius: 64px; padding: 40px 80px; box-shadow: var(--island-shadow); display: flex; gap: 80px; align-items: center; border: 1px solid rgba(0,0,0,0.03); width: 100%; }
+        .recruitment-content { flex: 1.5; }
+        .career-image-wrap { flex: 1; display: flex; justify-content: center; }
+        .career-image-wrap img { max-width: 200px; height: auto; transition: transform .6s cubic-bezier(.34,1.56,.64,1); filter: drop-shadow(0 20px 40px rgba(0,0,0,.1)); }
+        .career-image-wrap:hover img { transform: scale(1.08) rotate(3deg); }
+        .job-list { margin-top: 18px; display: grid; gap: 10px; }
+        .job-item { background: #faf8f5; border-radius: 14px; padding: 12px 14px; }
+        .job-title { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+        .job-meta { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+        .job-summary { font-size: 13px; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 120px;">
+        <div class="contact-layout">
+            <section id="cooperative" class="contact-section">
+                <div class="contact-island reveal" style="padding: 60px 80px; display: flex; justify-content: space-between; align-items: flex-start; overflow: hidden; position: relative;">
+                    <div style="position: relative; z-index: 2;">
+                        <h2 id="contact-biz-title" class="section-title" style="font-size: 36px; margin-bottom: 4px;">商务合作</h2>
+                        <p id="contact-biz-subtitle" style="opacity: 0.8; margin-bottom: 24px;">全渠道合作 · 全球分销 · 媒体联系</p>
+                        <div style="display: flex; gap: 32px; align-items: center;">
+                            <a id="contact-biz-email" href="javascript:void(0)" onclick="copyToClipboard(this.dataset.value, '合作邮箱')" style="color: inherit; text-decoration: none; opacity: 0.8; cursor: pointer; font-size: 16px;">📮 biz@zhuoxi-hero.com</a>
+                            <a id="contact-biz-phone" href="javascript:void(0)" onclick="copyToClipboard(this.dataset.value, '联系电话')" style="color: inherit; text-decoration: none; opacity: 0.8; cursor: pointer; font-size: 16px;">📓 400-888-XXXX</a>
+                        </div>
+                    </div>
+                    <div class="contact-visual" style="opacity: 0.05; transform: rotate(-8deg); pointer-events: none; user-select: none;">
+                        <h1 style="font-size: 110px; font-weight: 900; margin: 0; line-height: 0.8; letter-spacing: -2px; white-space: nowrap;">ZHUOXI</h1>
+                    </div>
+                </div>
+            </section>
+
+            <section id="careers" class="careers-section">
+                <div class="recruitment-block reveal">
+                    <div class="recruitment-content">
+                        <h2 id="contact-career-title" class="section-title" style="font-size: 32px;">加入我们</h2>
+                        <div class="title-accent"></div>
+                        <p id="contact-career-desc" class="body-text"></p>
+                        <p style="margin-top: 16px; font-size: 16px; font-weight: 500;">
+                            投递简历：<a id="contact-hr-email" href="javascript:void(0)" onclick="copyToClipboard(this.dataset.value, '招聘邮箱')" style="color: var(--hero-orange); text-decoration: none; cursor: pointer;">📮 hr@zhuoxi-hero.com</a>
+                        </p>
+                        <div id="career-list" class="job-list"></div>
+                    </div>
+                    <div class="career-image-wrap">
+                        <img id="contact-mascot" src="喇叭脱脱.png" alt="卓曦吉祥物">
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const seo = siteData.getSeoPage('contact');
+            if (seo.title) document.getElementById('page-title').textContent = seo.title;
+            if (seo.description) document.getElementById('page-description').setAttribute('content', seo.description);
+
+            const profile = siteData.getProfile();
+            const page = siteData.getPageConfig('contact');
+
+            document.getElementById('contact-biz-title').textContent = page.bizTitle || '商务合作';
+            document.getElementById('contact-biz-subtitle').textContent = page.bizSubtitle || '';
+            document.getElementById('contact-career-title').textContent = page.careerTitle || '加入我们';
+            document.getElementById('contact-career-desc').textContent = page.careerDesc || '';
+
+            const bizEmail = profile.businessEmail || 'biz@zhuoxi-hero.com';
+            const phone = profile.phone || '400-888-XXXX';
+            const hrEmail = profile.hrEmail || 'hr@zhuoxi-hero.com';
+
+            const bizEmailEl = document.getElementById('contact-biz-email');
+            bizEmailEl.dataset.value = bizEmail;
+            bizEmailEl.textContent = `📮 ${bizEmail}`;
+
+            const bizPhoneEl = document.getElementById('contact-biz-phone');
+            bizPhoneEl.dataset.value = phone;
+            bizPhoneEl.textContent = `📓 ${phone}`;
+
+            const hrEl = document.getElementById('contact-hr-email');
+            hrEl.dataset.value = hrEmail;
+            hrEl.textContent = `📮 ${hrEmail}`;
+
+            document.getElementById('contact-mascot').setAttribute('src', page.mascotImage || '喇叭脱脱.png');
+            document.getElementById('contact-mascot').setAttribute('alt', page.mascotAlt || '卓曦吉祥物');
+
+            const jobs = siteData.getPublicCareers();
+            document.getElementById('career-list').innerHTML = jobs.map((job) => `
+                <div class="job-item">
+                    <div class="job-title">${job.title}</div>
+                    <div class="job-meta">${job.location} · ${job.type}</div>
+                    <div class="job-summary">${job.summary || ''}</div>
+                </div>
+            `).join('');
+        });
+    </script>
+</body>
+</html>

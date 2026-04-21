@@ -16,7 +16,7 @@
         .about-page-wrap {
             max-width: 1440px;
             margin: 0 auto;
-            fuga padding: 0 5%;
+            padding: 0 5%;
             display: flex;
             flex-direction: column;
             gap: 32px;
@@ -892,6 +892,15 @@
     <script src="components/footer.js"></script>
 
     <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const seo = siteData.getSeoPage('about');
+            if (seo.title) document.title = seo.title;
+            const meta = document.querySelector('meta[name="description"]');
+            if (meta && seo.description) meta.setAttribute('content', seo.description);
+        });
+    </script>
 </body>
 
 </html>

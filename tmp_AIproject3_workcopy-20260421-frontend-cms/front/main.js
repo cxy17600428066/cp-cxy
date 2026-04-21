@@ -1,32 +1,27 @@
-/* 
+﻿/* 
    Zhuoxi Group Portal - Interaction Engine v3.1
    Core: Visual Awakening, Staggered Reveals, Smooth Track Control
 */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 1. Visual Awakening - Scroll Observer
     const revealOptions = {
         threshold: 0.15,
-        rootMargin: "0px 0px -50px 0px"
+        rootMargin: '0px 0px -50px 0px'
     };
 
     const revealObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
             if (entry.isIntersecting) {
                 entry.target.classList.add('in-view');
-                // Optional: stop observing once revealed for performance
-                // revealObserver.unobserve(entry.target);
             }
         });
     }, revealOptions);
 
-    // Apply reveal to standard blocks and staggered items
-    document.querySelectorAll('.reveal, .reveal-item').forEach(el => {
+    document.querySelectorAll('.reveal, .reveal-item').forEach((el) => {
         revealObserver.observe(el);
     });
 
-    // 2. Navbar Shrink & Glass Logic
     const mainNav = document.getElementById('main-nav');
     const backToTop = document.getElementById('back-to-top');
 
@@ -40,34 +35,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // 3. Horizontal Timeline - Mouse Wheel Hijack
     const timelineContainer = document.querySelector('.timeline-horizontal-container');
-    
     if (timelineContainer) {
         timelineContainer.addEventListener('wheel', (e) => {
-            // Only hijack if we are not on mobile (touch handles naturally)
-            if (window.innerWidth > 1024) {
-                if (e.deltaY !== 0) {
-                    e.preventDefault();
-                    timelineContainer.scrollLeft += e.deltaY;
-                }
+            if (window.innerWidth > 1024 && e.deltaY !== 0) {
+                e.preventDefault();
+                timelineContainer.scrollLeft += e.deltaY;
             }
         }, { passive: false });
     }
 
-    // 4. Back to Top Smooth Logic
     if (backToTop) {
         backToTop.addEventListener('click', () => {
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
 
-    // 5. Interactive Cards - Physical Feedback (Soft Scale)
     const cards = document.querySelectorAll('.product-card, .news-card, .culture-card, .btn');
-    cards.forEach(card => {
+    cards.forEach((card) => {
         card.addEventListener('mousedown', () => {
             card.style.transform = 'scale(0.96)';
         });
@@ -79,109 +64,96 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 6. Navbar Minimize Toggle (Zen Mode)
-    document.querySelectorAll('.nav-toggle-btn').forEach(btn => {
+    document.querySelectorAll('.nav-toggle-btn').forEach((btn) => {
         btn.addEventListener('click', () => {
-            mainNav.classList.toggle('is-minimized');
+            if (mainNav) mainNav.classList.toggle('is-minimized');
         });
     });
 
-    // 7. Anchor Link Smooth Scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
-            
+            if (!targetId || targetId === '#') return;
+
             const targetEl = document.querySelector(targetId);
             if (targetEl) {
                 e.preventDefault();
-                const navHeight = mainNav.offsetHeight + 40;
+                const navHeight = (mainNav ? mainNav.offsetHeight : 0) + 40;
                 const targetPosition = targetEl.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
             }
         });
     });
 
-    // 8. Hero Carousel Engine (Left-Right Fade)
     const heroCarousel = document.querySelector('.hero-carousel');
     if (heroCarousel) {
         const images = heroCarousel.querySelectorAll('.carousel-img');
         const dots = heroCarousel.querySelectorAll('.dot');
         const prevBtn = heroCarousel.querySelector('.prev');
         const nextBtn = heroCarousel.querySelector('.next');
-        let currentIndex = 0;
-        let autoPlayTimer;
 
-        const updateCarousel = (index, direction = 'next') => {
-            // Remove active status from all
-            images.forEach(img => {
-                img.classList.remove('active');
-                img.style.transform = direction === 'next' ? 'translateX(-20px)' : 'translateX(20px)';
-            });
-            dots.forEach(dot => dot.classList.remove('active'));
+        if (images.length > 0) {
+            let currentIndex = 0;
+            let autoPlayTimer;
 
-            // Set current
-            currentIndex = index;
-            const currentImg = images[currentIndex];
-            currentImg.classList.add('active');
-            dots[currentIndex].classList.add('active');
-            
-            // Note: the transform: translateX(0) is handled by the .active CSS rule
-        };
+            const updateCarousel = (index, direction = 'next') => {
+                images.forEach((img) => {
+                    img.classList.remove('active');
+                    img.style.transform = direction === 'next' ? 'translateX(-20px)' : 'translateX(20px)';
+                });
+                dots.forEach((dot) => dot.classList.remove('active'));
 
-        const nextSlide = () => {
-            let nextIndex = (currentIndex + 1) % images.length;
-            updateCarousel(nextIndex, 'next');
-        };
+                currentIndex = index;
+                const currentImg = images[currentIndex];
+                currentImg.classList.add('active');
+                if (dots[currentIndex]) dots[currentIndex].classList.add('active');
+            };
 
-        const prevSlide = () => {
-            let prevIndex = (currentIndex - 1 + images.length) % images.length;
-            updateCarousel(prevIndex, 'prev');
-        };
+            const nextSlide = () => {
+                const nextIndex = (currentIndex + 1) % images.length;
+                updateCarousel(nextIndex, 'next');
+            };
 
-        // Event Listeners
-        nextBtn?.addEventListener('click', () => {
-            nextSlide();
-            resetTimer();
-        });
+            const prevSlide = () => {
+                const prevIndex = (currentIndex - 1 + images.length) % images.length;
+                updateCarousel(prevIndex, 'prev');
+            };
 
-        prevBtn?.addEventListener('click', () => {
-            prevSlide();
-            resetTimer();
-        });
-
-        dots.forEach((dot, index) => {
-            dot.addEventListener('click', () => {
-                const direction = index > currentIndex ? 'next' : 'prev';
-                updateCarousel(index, direction);
+            nextBtn?.addEventListener('click', () => {
+                nextSlide();
                 resetTimer();
             });
-        });
 
-        // AutoPlay Logic
-        const startTimer = () => {
-            autoPlayTimer = setInterval(nextSlide, 5000); // 5 seconds interval
-        };
+            prevBtn?.addEventListener('click', () => {
+                prevSlide();
+                resetTimer();
+            });
 
-        const resetTimer = () => {
-            clearInterval(autoPlayTimer);
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    const direction = index > currentIndex ? 'next' : 'prev';
+                    updateCarousel(index, direction);
+                    resetTimer();
+                });
+            });
+
+            const startTimer = () => {
+                autoPlayTimer = setInterval(nextSlide, 5000);
+            };
+
+            const resetTimer = () => {
+                clearInterval(autoPlayTimer);
+                startTimer();
+            };
+
+            updateCarousel(0);
             startTimer();
-        };
 
-        // Initialize display
-        updateCarousel(0);
-        startTimer();
-
-        // Pause on hover
-        heroCarousel.addEventListener('mouseenter', () => clearInterval(autoPlayTimer));
-        heroCarousel.addEventListener('mouseleave', () => startTimer());
+            heroCarousel.addEventListener('mouseenter', () => clearInterval(autoPlayTimer));
+            heroCarousel.addEventListener('mouseleave', () => startTimer());
+        }
     }
 
-    // 9. Contact Interactions: Copy to Clipboard & Toast
     window.showToast = (message) => {
         let container = document.querySelector('.toast-container');
         if (!container) {
@@ -195,7 +167,6 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.innerHTML = `<span>✓</span> ${message}`;
         container.appendChild(toast);
 
-        // Auto remove
         setTimeout(() => {
             toast.classList.add('leaving');
             setTimeout(() => {
@@ -207,8 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.copyToClipboard = (text, label) => {
         if (!navigator.clipboard) {
-            // Fallback
-            const textArea = document.createElement("textarea");
+            const textArea = document.createElement('textarea');
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
@@ -216,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.execCommand('copy');
                 window.showToast(`${label}已复制到剪贴板`);
             } catch (err) {
-                console.error('Fallback: Oops, unable to copy', err);
+                console.error('Fallback copy failed', err);
             }
             document.body.removeChild(textArea);
             return;
@@ -224,10 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         navigator.clipboard.writeText(text).then(() => {
             window.showToast(`${label}已复制到剪贴板`);
-        }, (err) => {
-            console.error('Async: Could not copy text: ', err);
+        }).catch((err) => {
+            console.error('Async copy failed', err);
         });
     };
-
 });
-

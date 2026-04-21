@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">使用条款 | 卓曦集团</title>
+    <meta id="page-description" name="description" content="使用条款页面。">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        .legal-wrap { max-width: 980px; margin: 0 auto; padding: 120px 20px 80px; }
+        .legal-card { background: #fff; border-radius: 36px; box-shadow: var(--island-shadow); padding: 40px; }
+        .legal-title { font-size: 34px; font-weight: 900; margin-bottom: 10px; }
+        .legal-date { color: var(--text-muted); margin-bottom: 24px; }
+        .legal-body { color: #333; line-height: 1.9; font-size: 16px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+    <main>
+        <div class="legal-wrap">
+            <div class="legal-card">
+                <h1 id="legal-title" class="legal-title">使用条款</h1>
+                <div id="legal-date" class="legal-date"></div>
+                <div id="legal-body" class="legal-body"></div>
+            </div>
+        </div>
+    </main>
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const seo = siteData.getSeoPage('terms');
+            if (seo.title) document.getElementById('page-title').textContent = seo.title;
+            if (seo.description) document.getElementById('page-description').setAttribute('content', seo.description);
+            const legal = siteData.getLegal();
+            document.getElementById('legal-title').textContent = legal.termsTitle || '使用条款';
+            document.getElementById('legal-date').textContent = `更新日期：${legal.termsUpdatedAt || ''}`;
+            document.getElementById('legal-body').textContent = legal.termsContent || '';
+        });
+    </script>
+</body>
+</html>

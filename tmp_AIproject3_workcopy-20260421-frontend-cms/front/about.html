@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
     <style>
         /* ════ About Page Exclusive Styles ════ */
 
@@ -899,6 +900,62 @@
             if (seo.title) document.title = seo.title;
             const meta = document.querySelector('meta[name="description"]');
             if (meta && seo.description) meta.setAttribute('content', seo.description);
+
+            const page = siteData.getPageConfig('about');
+            const hero = page.hero || {};
+            const heroEyebrow = document.querySelector('.about-hero-eyebrow');
+            const heroTitle = document.querySelector('.about-hero-title');
+            const heroImg = document.querySelector('.about-hero-banner img');
+            if (heroEyebrow && hero.eyebrow) heroEyebrow.textContent = hero.eyebrow;
+            if (heroTitle) {
+                const title = hero.title || '卓曦集团';
+                const highlight = hero.titleHighlight || '全链路';
+                const subtitle = hero.subtitle || '';
+                heroTitle.innerHTML = `${title} <br>${subtitle.replace(highlight, `<em>${highlight}</em>`)}`;
+            }
+            if (heroImg && hero.image) heroImg.setAttribute('src', hero.image);
+
+            const kpiRoot = document.querySelector('.about-kpi-row');
+            const kpis = page.kpis || [];
+            if (kpiRoot && kpis.length) {
+                kpiRoot.innerHTML = kpis.sort((a, b) => a.order - b.order).map((k, idx) => `
+                    <div class="about-kpi-card reveal in-view" style="transition-delay:${idx * 0.05}s;">
+                        <div class="kpi-number">${k.value}</div>
+                        <div class="kpi-label">${k.label}</div>
+                    </div>
+                `).join('');
+            }
+
+            const cultureRoot = document.querySelector('#culture .philosophy-grid');
+            const cultures = page.culture || [];
+            if (cultureRoot && cultures.length) {
+                cultureRoot.innerHTML = cultures.sort((a, b) => a.order - b.order).map((c, idx) => `
+                    <div class="philosophy-card reveal in-view" style="transition-delay:${idx * 0.05}s;">
+                        <div class="philosophy-icon-wrap">${c.icon || '✨'}</div>
+                        <div class="philosophy-label">${c.label || ''}</div>
+                        <div class="philosophy-heading">${c.title || ''}</div>
+                        <p class="philosophy-body">${c.body || ''}</p>
+                    </div>
+                `).join('');
+            }
+
+            const timelineRoot = document.querySelector('.tl-track');
+            const timeline = page.timeline || [];
+            if (timelineRoot && timeline.length) {
+                timelineRoot.innerHTML = timeline.sort((a, b) => a.order - b.order).map((t, idx) => `
+                    <div class="tl-node ${idx === timeline.length - 1 ? 'is-latest' : ''}">
+                        <div class="tl-node-dot">${t.idx || String(idx + 1).padStart(2, '0')}</div>
+                        <div class="tl-node-date">${t.date || ''}</div>
+                        <div class="tl-node-label">${t.label || ''}</div>
+                        <div class="tl-popover">
+                            <div class="tl-pop-date">${t.date || ''}</div>
+                            <div class="tl-pop-title">${t.title || ''}</div>
+                            <div class="tl-pop-body">${t.body || ''}</div>
+                            <div class="tl-pop-badges">${(t.badges || []).map((b) => `<span class="tl-badge">${b}</span>`).join('')}</div>
+                        </div>
+                    </div>
+                `).join('');
+            }
         });
     </script>
 </body>

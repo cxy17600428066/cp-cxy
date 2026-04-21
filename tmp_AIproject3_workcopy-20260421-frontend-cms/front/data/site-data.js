@@ -886,6 +886,10 @@ class SiteDataManager {
         return this.getModule('news', { publishedOnly: true });
     }
 
+    getNews() {
+        return this.getModule('news', { publishedOnly: false });
+    }
+
     getFeaturedNews() {
         return this.getPublicNews().filter((item) => item.isFeatured);
     }
@@ -894,12 +898,40 @@ class SiteDataManager {
         return this.getModule('products', { publishedOnly: true });
     }
 
+    getProducts() {
+        return this.getModule('products', { publishedOnly: false });
+    }
+
     getPublicCarousel() {
         return this.getModule('carousel', { publishedOnly: true });
     }
 
+    getCarousel() {
+        return this.getModule('carousel', { publishedOnly: false });
+    }
+
     getPublicCareers() {
         return this.getModule('careers', { publishedOnly: true });
+    }
+
+    getCareers() {
+        return this.getModule('careers', { publishedOnly: false });
+    }
+
+    getNewsById(id) {
+        return this.getModuleItem('news', id);
+    }
+
+    getProductById(id) {
+        return this.getModuleItem('products', id);
+    }
+
+    getNewsBySlug(slug) {
+        return this.getModuleItemBySlug('news', slug);
+    }
+
+    getProductBySlug(slug) {
+        return this.getModuleItemBySlug('products', slug);
     }
 
     static generateId(prefix = 'id') {

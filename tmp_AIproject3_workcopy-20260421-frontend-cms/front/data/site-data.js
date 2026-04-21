@@ -541,7 +541,7 @@ class SiteDataManager {
                 logs: Array.isArray(oldData.logs) ? oldData.logs : [],
                 versions: Array.isArray(oldData.versions) ? oldData.versions : []
             };
-            return result;
+            return this._normalizeBrandNaming(result);
         }
 
         const legacy = oldData;
@@ -588,7 +588,21 @@ class SiteDataManager {
         })), 'products');
 
         merged.navigation = this._normalizeNavigation(merged.navigation);
-        return merged;
+        return this._normalizeBrandNaming(merged);
+    }
+
+    _normalizeBrandNaming(payload) {
+        const walk = (value) => {
+            if (typeof value === 'string') return value.replace(/卓曦/g, '卓希');
+            if (Array.isArray(value)) return value.map(walk);
+            if (value && typeof value === 'object') {
+                Object.keys(value).forEach((key) => {
+                    value[key] = walk(value[key]);
+                });
+            }
+            return value;
+        };
+        return walk(payload);
     }
 
     _normalizeNavigation(navigation) {

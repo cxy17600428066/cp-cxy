@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">产品中心 | 卓曦集团</title>
+    <meta id="page-description" name="description" content="卓曦集团产品中心。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800;900&family=Noto+Sans+SC:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="data/site-data.js"></script>
+    <style>
+        :root{--bg-base:#faf8f5;--surface:#fff;--text-primary:#171717;--text-muted:#888;--primary:#ffaa00;--primary-dark:#e69900;--shadow-card:0 12px 32px rgba(0,0,0,.05);--shadow-soft:0 8px 30px rgba(0,0,0,.03);--shadow-raised:0 12px 40px rgba(0,0,0,.10);--shadow-cta:0 8px 24px rgba(255,170,0,.35);--r-pill:999px;--r-card:32px;}
+        body{background:var(--bg-base);font-family:'Inter','Noto Sans SC',system-ui,-apple-system,sans-serif;color:var(--text-primary)}
+        .products-wrap{max-width:1200px;margin:0 auto;padding:0 40px 120px}
+        .products-hero{background:linear-gradient(145deg,#ff7200 0%,#ffaa00 65%,#ffc300 100%);border-radius:var(--r-card);box-shadow:var(--shadow-raised);overflow:hidden;display:flex;flex-direction:column;position:relative;margin-top:40px;margin-bottom:24px}
+        .hero-main-area{display:grid;grid-template-columns:200px 1fr;gap:32px;padding:52px 56px 0;align-items:start}
+        .hero-categories{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding-top:4px}
+        .hero-cat-tag{background:rgba(255,255,255,.92);border-radius:var(--r-pill);padding:9px 22px;font-size:13px;font-weight:700;color:var(--text-primary);cursor:pointer;white-space:nowrap}
+        .hero-cat-tag.active{background:#fff;transform:translateX(6px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+        .hero-title-area{text-align:right}
+        .hero-eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.65);margin-bottom:14px}
+        .hero-title{font-size:clamp(44px,5.5vw,76px);font-weight:900;color:#fff;line-height:.95;letter-spacing:-2.5px;margin-bottom:16px}
+        .hero-subtitle{font-size:15px;color:rgba(255,255,255,.72);line-height:1.75;font-weight:500}
+        .hero-product-lineup-wrap{width:100%;display:flex;justify-content:center;align-items:flex-end;padding:0 56px;margin-top:-12px;z-index:5;flex-shrink:0}
+        .hero-lineup-img{width:100%;max-height:300px;object-fit:contain;object-position:bottom;mix-blend-mode:multiply}
+        .hero-brand-bar{background:#fff;padding:14px 56px;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:28px;flex-shrink:0;margin-top:0}
+        .hero-brand-left{display:flex;align-items:center;gap:10px;white-space:nowrap}
+        .hero-brand-tagline{font-size:13px;font-weight:700;color:var(--text-muted)}
+        .hero-brand-en{font-size:10px;font-weight:900;color:var(--text-primary);letter-spacing:1.5px;text-transform:uppercase;border:2px solid var(--text-primary);padding:5px 10px;border-radius:4px;white-space:nowrap}
+        .hero-ticker{overflow:hidden}
+        .hero-ticker-track{display:flex;width:max-content;animation:tickerScroll 20s linear infinite;will-change:transform}
+        @keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        .ticker-item{display:inline-flex;align-items:center;gap:8px;padding:0 32px;font-size:12px;font-weight:600;color:var(--text-muted);white-space:nowrap}
+        .ticker-sep{color:var(--primary);font-size:16px;font-weight:300;opacity:.4;padding:0 2px}
+        .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:40px}
+        .filter-btn{padding:11px 24px;border-radius:var(--r-pill);font-size:13px;font-weight:700;cursor:pointer;border:none;background:var(--surface);color:var(--text-muted);box-shadow:var(--shadow-soft)}
+        .filter-btn.active{background:var(--primary);color:#fff;box-shadow:var(--shadow-cta)}
+        .section-eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-muted);margin-bottom:24px}
+        .products-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+        .product-card{background:var(--surface);border-radius:var(--r-card);box-shadow:var(--shadow-card);overflow:hidden;display:flex;flex-direction:column;text-decoration:none;color:inherit}
+        .product-img-zone{height:240px;display:flex;align-items:center;justify-content:center;position:relative}
+        .product-img-zone img{width:100%;height:100%;object-fit:contain;padding:20px;box-sizing:border-box}
+        .bg-lemon{background:#fffef0}.bg-red{background:#fff5f0}.bg-spicy{background:#fff0ee}.bg-garlic{background:#f5faf5}.bg-pepper{background:#f5f0fd}
+        .product-badge{position:absolute;top:14px;left:14px;padding:5px 12px;border-radius:var(--r-pill);font-size:11px;font-weight:700;z-index:3;background:var(--primary);color:#fff}
+        .product-card-body{padding:24px 28px 28px;flex:1;display:flex;flex-direction:column}
+        .product-flavor-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--primary);margin-bottom:8px}
+        .product-name{font-size:20px;font-weight:800;letter-spacing:-.3px;line-height:1.25;margin-bottom:10px}
+        .product-desc{font-size:14px;color:var(--text-muted);line-height:1.7;flex:1;margin-bottom:20px}
+        .product-attrs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+        .attr-chip{background:rgba(0,0,0,.04);border-radius:var(--r-pill);padding:5px 12px;font-size:12px;font-weight:600;color:#555}
+        .product-card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:16px;border-top:1px solid rgba(0,0,0,.04)}
+        .product-weight{font-size:13px;color:var(--text-muted);font-weight:500}
+        .btn-primary-pill{display:inline-flex;align-items:center;gap:8px;background:var(--primary);color:#fff;border-radius:var(--r-pill);padding:10px 22px;font-size:13px;font-weight:700;text-decoration:none;border:none;cursor:pointer}
+        .brand-strip{margin-top:56px;background:var(--text-primary);border-radius:var(--r-card);padding:52px 60px;display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap}
+        .brand-strip-heading{font-size:30px;font-weight:900;color:#fff;letter-spacing:-.5px;margin-bottom:8px}
+        .brand-strip-sub{font-size:15px;color:rgba(255,255,255,.45);max-width:380px;line-height:1.6}
+        .brand-strip-cta{display:inline-flex;align-items:center;gap:10px;background:var(--primary);color:#fff;border-radius:var(--r-pill);padding:16px 36px;font-size:15px;font-weight:700;text-decoration:none;white-space:nowrap}
+        @media (max-width:960px){.products-wrap{padding:0 20px 80px}.products-grid{grid-template-columns:repeat(2,1fr)}}
+        @media (max-width:640px){.products-grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+    <zhuoxi-navbar></zhuoxi-navbar>
+    <script src="components/navbar.js"></script>
+
+    <main style="padding-top: 80px;">
+        <div class="products-wrap">
+            <div class="products-hero reveal">
+                <div class="hero-main-area">
+                    <div id="hero-categories" class="hero-categories"></div>
+                    <div class="hero-title-area">
+                        <div id="products-hero-eyebrow" class="hero-eyebrow">PREMIUM SHOWCASE</div>
+                        <h1 class="hero-title"><span id="products-hero-title">大爆品带动</span><br><em id="products-hero-title-highlight">多品类矩阵</em></h1>
+                        <p id="products-hero-subtitle" class="hero-subtitle"></p>
+                    </div>
+                </div>
+                <div class="hero-product-lineup-wrap">
+                    <img id="products-lineup-image" class="hero-lineup-img" src="products_lineup.png" alt="产品矩阵">
+                </div>
+                <div class="hero-brand-bar">
+                    <div class="hero-brand-left">
+                        <img src="brand_logo2.png" alt="品牌" style="height:28px;width:auto;object-fit:contain;display:block;">
+                        <span style="color: var(--text-muted);">|</span>
+                        <span id="products-hero-slogan" class="hero-brand-tagline">全球鸡爪专家</span>
+                    </div>
+                    <div class="hero-ticker"><div id="products-ticker-track" class="hero-ticker-track"></div></div>
+                    <div class="hero-brand-en">BONELESS<br>CHICKEN FEET</div>
+                </div>
+            </div>
+
+            <div id="filter-bar" class="filter-bar reveal"></div>
+            <div class="section-eyebrow reveal">脱骨侠 · 主力单品</div>
+            <div id="products-grid" class="products-grid"></div>
+
+            <div class="brand-strip reveal">
+                <div>
+                    <div id="products-cta-title" class="brand-strip-heading">渠道合作 <em>共赢未来</em></div>
+                    <p id="products-cta-desc" class="brand-strip-sub"></p>
+                </div>
+                <a href="contact.html" id="products-cta-btn" class="brand-strip-cta">立即洽谈 <span>→</span></a>
+            </div>
+        </div>
+    </main>
+
+    <zhuoxi-footer></zhuoxi-footer>
+    <script src="components/footer.js"></script>
+    <script src="main.js"></script>
+    <script>
+        const productPageState = { category: 'all' };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            siteData.load();
+            const seo = siteData.getSeoPage('products');
+            if (seo.title) document.getElementById('page-title').textContent = seo.title;
+            if (seo.description) document.getElementById('page-description').setAttribute('content', seo.description);
+
+            const profile = siteData.getProfile();
+            document.getElementById('products-hero-slogan').textContent = profile.slogan || '全球鸡爪专家';
+
+            const page = siteData.getPageConfig('products');
+            const hero = page.hero || {};
+            document.getElementById('products-hero-eyebrow').textContent = hero.eyebrow || 'PREMIUM SHOWCASE';
+            document.getElementById('products-hero-title').textContent = hero.title || '大爆品带动';
+            document.getElementById('products-hero-title-highlight').textContent = hero.titleHighlight || '多品类矩阵';
+            document.getElementById('products-hero-subtitle').textContent = hero.subtitle || '';
+            document.getElementById('products-lineup-image').setAttribute('src', hero.lineupImage || 'products_lineup.png');
+
+            document.getElementById('products-cta-title').innerHTML = `${(page.ctaTitle || '渠道合作 共赢未来').replace(' ', ' <em>').replace('<em>', '<em>')}${(page.ctaTitle || '').includes(' ') ? '</em>' : ''}`;
+            document.getElementById('products-cta-desc').textContent = page.ctaDesc || '';
+            document.getElementById('products-cta-btn').childNodes[0].nodeValue = `${page.ctaButton || '立即洽谈'} `;
+
+            renderTicker(page.ticker || []);
+            renderFilters();
+            renderHeroCategories();
+            renderProducts();
+        });
+
+        function listProducts() {
+            const all = siteData.getPublicProducts();
+            if (productPageState.category === 'all') return all;
+            return all.filter((p) => p.categoryKey === productPageState.category);
+        }
+
+        function renderTicker(tickerItems) {
+            const arr = tickerItems.length ? tickerItems : ['18道 大师级脱骨工艺', '1.4亿 累计热销罐数', 'No.1 全网销量冠军'];
+            const full = [...arr, ...arr];
+            document.getElementById('products-ticker-track').innerHTML = full.map((item) => `<span class="ticker-item">${item}</span><span class="ticker-sep">•</span>`).join('');
+        }
+
+        function renderHeroCategories() {
+            const map = [
+                { key: 'all', label: '全品矩阵' },
+                { key: 'spicy', label: '无骨系列' },
+                { key: 'sour', label: '虎皮系列' },
+                { key: 'fragrant', label: '老卤系列' }
+            ];
+            const root = document.getElementById('hero-categories');
+            root.innerHTML = map.map((f) => `<span class="hero-cat-tag ${productPageState.category === f.key ? 'active' : ''}" data-hero-filter="${f.key}">${f.label}</span>`).join('');
+            root.querySelectorAll('[data-hero-filter]').forEach((el) => {
+                el.addEventListener('click', () => {
+                    productPageState.category = el.getAttribute('data-hero-filter');
+                    renderHeroCategories();
+                    renderFilters();
+                    renderProducts();
+                });
+            });
+        }
+
+        function renderFilters() {
+            const map = [
+                { key: 'all', label: '全部口味' },
+                { key: 'spicy', label: '无骨系列' },
+                { key: 'sour', label: '虎皮系列' },
+                { key: 'fragrant', label: '老卤系列' }
+            ];
+            const root = document.getElementById('filter-bar');
+            root.innerHTML = map.map((f) => `<button class="filter-btn ${productPageState.category === f.key ? 'active' : ''}" data-filter="${f.key}">${f.label}</button>`).join('');
+            root.querySelectorAll('[data-filter]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    productPageState.category = btn.getAttribute('data-filter');
+                    renderHeroCategories();
+                    renderFilters();
+                    renderProducts();
+                });
+            });
+        }
+
+        function renderProducts() {
+            const list = listProducts();
+            const root = document.getElementById('products-grid');
+            root.innerHTML = list.map((p) => `
+                <a class="product-card reveal in-view" href="product-detail.html?slug=${encodeURIComponent(p.slug)}">
+                    <div class="product-img-zone ${p.bgClass || ''}">
+                        ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+                        <img src="${p.image}" alt="${p.name}">
+                    </div>
+                    <div class="product-card-body">
+                        <div class="product-flavor-label">${p.flavor || p.badge || ''}</div>
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-desc">${p.desc || ''}</div>
+                        <div class="product-attrs">${(p.specs || []).map((s) => `<span class="attr-chip">${s}</span>`).join('')}</div>
+                        <div class="product-card-footer">
+                            <span class="product-weight">${(p.specs || [])[0] || ''}</span>
+                            <span class="btn-primary-pill">了解详情 <span>→</span></span>
+                        </div>
+                    </div>
+                </a>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

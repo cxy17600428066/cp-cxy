@@ -361,6 +361,7 @@ const AdminUI = {
             siteData.updatePageConfig('news', JSON.parse(this.val('pages_news')), this.getSession()?.username || 'system');
             siteData.updatePageConfig('products', JSON.parse(this.val('pages_products')), this.getSession()?.username || 'system');
             siteData.updatePageConfig('contact', JSON.parse(this.val('pages_contact')), this.getSession()?.username || 'system');
+            siteData.updatePageConfig('careers', JSON.parse(this.val('pages_careers')), this.getSession()?.username || 'system');
             this.renderAll();
             alert('页面配置已保存');
         } catch (e) {

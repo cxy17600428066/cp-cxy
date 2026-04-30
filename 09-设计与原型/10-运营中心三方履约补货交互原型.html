@@ -1,0 +1,2168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>运营中心三方履约补货交互原型</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --line: #dbe4ef;
+      --line-strong: #b8c6d8;
+      --ink: #102033;
+      --muted: #607086;
+      --brand: #0f766e;
+      --brand-dark: #0b5f58;
+      --brand-soft: #e8f5f3;
+      --blue: #1d4ed8;
+      --blue-soft: #eaf1ff;
+      --green: #047857;
+      --green-soft: #e8f7ef;
+      --amber: #b45309;
+      --amber-soft: #fff4e5;
+      --red: #b91c1c;
+      --red-soft: #fff0f0;
+      --gray-soft: #eef2f7;
+      --shadow: 0 16px 42px rgba(16, 32, 51, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Source Han Sans SC", "Segoe UI", sans-serif;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 22px;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 10px 28px rgba(16, 32, 51, 0.05);
+    }
+
+    .brand {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .brand strong {
+      font-size: 20px;
+      line-height: 1.25;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions,
+    .role-switch,
+    .toolbar,
+    .filters,
+    .row-actions,
+    .inline-actions,
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .role-switch {
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .role-switch button,
+    .nav button,
+    .seg button,
+    .btn,
+    .icon-btn {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      border-radius: 8px;
+      min-height: 36px;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    }
+
+    .role-switch button {
+      padding: 8px 12px;
+      border-color: transparent;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .role-switch button.active,
+    .nav button.active,
+    .seg button.active {
+      color: var(--brand-dark);
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.32);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .btn.blue {
+      background: var(--blue-soft);
+      border-color: rgba(29, 78, 216, 0.2);
+      color: var(--blue);
+    }
+
+    .btn.warn {
+      background: var(--amber-soft);
+      border-color: rgba(180, 83, 9, 0.24);
+      color: var(--amber);
+    }
+
+    .btn.danger {
+      background: var(--red-soft);
+      border-color: rgba(185, 28, 28, 0.24);
+      color: var(--red);
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.52;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      line-height: 1;
+      font-weight: 900;
+      flex: 0 0 auto;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 236px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .sidebar {
+      padding: 16px 12px;
+      border-right: 1px solid var(--line);
+      background: #fbfdff;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .nav-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-title {
+      padding: 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      width: 100%;
+      padding: 10px;
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .nav small {
+      min-width: 24px;
+      height: 22px;
+      display: inline-grid;
+      place-items: center;
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--gray-soft);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .page {
+      display: none;
+      gap: 14px;
+    }
+
+    .page.active { display: grid; }
+
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(16, 32, 51, 0.04);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-title {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .panel-title h1,
+    .panel-title h2,
+    .panel-title h3 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .panel-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .panel-body {
+      padding: 15px 16px;
+    }
+
+    .kpis {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .metric {
+      min-height: 92px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      display: grid;
+      align-content: space-between;
+      gap: 8px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    .metric strong {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .metric.good strong { color: var(--green); }
+    .metric.warn strong { color: var(--amber); }
+    .metric.danger strong { color: var(--red); }
+    .metric.brand strong { color: var(--brand-dark); }
+    .metric.blue strong { color: var(--blue); }
+
+    .seg {
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .seg button {
+      padding: 7px 10px;
+      min-height: 32px;
+      border-color: transparent;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 36px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .field textarea {
+      min-height: 96px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .search {
+      min-width: 260px;
+    }
+
+    .table-wrap {
+      width: 100%;
+      overflow: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 980px;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: var(--surface-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    tr {
+      transition: background 0.16s ease;
+    }
+
+    tbody tr:hover {
+      background: #f8fbfd;
+    }
+
+    tbody tr.selected {
+      background: var(--brand-soft);
+    }
+
+    .link {
+      border: 0;
+      background: transparent;
+      color: var(--blue);
+      padding: 0;
+      font-weight: 900;
+      text-align: left;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      line-height: 1;
+      border: 1px solid transparent;
+    }
+
+    .status.blue { color: var(--blue); background: var(--blue-soft); border-color: rgba(29, 78, 216, 0.14); }
+    .status.green { color: var(--green); background: var(--green-soft); border-color: rgba(4, 120, 87, 0.14); }
+    .status.amber { color: var(--amber); background: var(--amber-soft); border-color: rgba(180, 83, 9, 0.16); }
+    .status.red { color: var(--red); background: var(--red-soft); border-color: rgba(185, 28, 28, 0.16); }
+    .status.gray { color: var(--muted); background: var(--gray-soft); border-color: rgba(96, 112, 134, 0.14); }
+    .status.brand { color: var(--brand-dark); background: var(--brand-soft); border-color: rgba(15, 118, 110, 0.18); }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .summary-item {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      min-width: 0;
+    }
+
+    .summary-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.4;
+      font-weight: 800;
+    }
+
+    .summary-item strong {
+      display: block;
+      margin-top: 6px;
+      font-size: 14px;
+      line-height: 1.45;
+      word-break: break-word;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .task {
+      padding: 14px;
+      min-height: 118px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      display: grid;
+      align-content: space-between;
+      gap: 10px;
+    }
+
+    .task h3 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .task p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .task strong {
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .config-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .center-list,
+    .timeline,
+    .log-list,
+    .customer-flow {
+      display: grid;
+      gap: 8px;
+    }
+
+    .center-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .center-row strong {
+      display: block;
+      font-size: 14px;
+    }
+
+    .center-row span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      pointer-events: none;
+      background: rgba(16, 32, 51, 0);
+      transition: background 0.18s ease;
+    }
+
+    .drawer.open {
+      pointer-events: auto;
+      background: rgba(16, 32, 51, 0.28);
+    }
+
+    .drawer-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(620px, calc(100vw - 24px));
+      height: 100%;
+      background: var(--surface);
+      border-left: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      transform: translateX(100%);
+      transition: transform 0.2s ease;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .drawer.open .drawer-panel { transform: translateX(0); }
+
+    .drawer-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .drawer-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .drawer-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .drawer-body {
+      padding: 16px;
+      overflow: auto;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+
+    .section-title {
+      margin: 0 0 9px;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .detail-section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 12px;
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 18px minmax(0, 1fr);
+      gap: 9px;
+    }
+
+    .timeline-item:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 18px;
+      bottom: -8px;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 4px solid var(--gray-soft);
+      background: var(--line-strong);
+      margin-top: 2px;
+      z-index: 1;
+    }
+
+    .dot.done { border-color: var(--green-soft); background: var(--green); }
+    .dot.now { border-color: var(--brand-soft); background: var(--brand); }
+    .dot.warn { border-color: var(--amber-soft); background: var(--amber); }
+
+    .timeline-item strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .timeline-item span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .log-item {
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      display: grid;
+      gap: 4px;
+    }
+
+    .log-item strong {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .log-item span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 80;
+      display: none;
+      place-items: center;
+      padding: 16px;
+      background: rgba(16, 32, 51, 0.36);
+    }
+
+    .modal-backdrop.open { display: grid; }
+
+    .modal {
+      width: min(560px, 100%);
+      max-height: calc(100vh - 32px);
+      overflow: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-head,
+    .modal-foot {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-head h3 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .modal-body {
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .modal-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      justify-content: flex-end;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 100;
+      display: none;
+      width: min(360px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(15, 118, 110, 0.24);
+      background: #f3fbf9;
+      color: var(--brand-dark);
+      box-shadow: var(--shadow);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.6;
+    }
+
+    .toast.show { display: block; }
+
+    .flow-line {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      align-items: stretch;
+    }
+
+    .flow-step {
+      position: relative;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      min-height: 86px;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: ">";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      z-index: 2;
+    }
+
+    .flow-step strong {
+      display: block;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .flow-step span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .customer-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .proof-box {
+      display: grid;
+      gap: 8px;
+    }
+
+    .proof-preview {
+      min-height: 180px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      background: repeating-linear-gradient(135deg, #f8fafc, #f8fafc 10px, #eef2f7 10px, #eef2f7 20px);
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .empty {
+      padding: 24px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.7;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1280px) {
+      .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .task-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .flow-line { grid-template-columns: 1fr; }
+      .flow-step::after { display: none !important; }
+      .config-grid,
+      .customer-card { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 900px) {
+      .topbar { grid-template-columns: 1fr; }
+      .workspace { grid-template-columns: 1fr; }
+      .sidebar { border-right: 0; border-bottom: 1px solid var(--line); }
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .main { padding: 12px; }
+      .kpis,
+      .task-grid,
+      .summary-grid { grid-template-columns: 1fr; }
+      .toolbar { align-items: stretch; }
+      .toolbar .field,
+      .toolbar .search { width: 100%; min-width: 0; }
+    }
+
+    @media (max-width: 560px) {
+      .role-switch,
+      .top-actions,
+      .filters,
+      .inline-actions,
+      .row-actions { width: 100%; }
+      .role-switch button,
+      .seg button,
+      .btn { flex: 1; }
+      .nav { grid-template-columns: 1fr; }
+      .panel-head { display: grid; }
+      .drawer-panel { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <strong>运营中心三方履约与补货</strong>
+        <span>卓希集团、合作商运营中心、客户之间的订单发货、签收凭证和补货闭环原型</span>
+      </div>
+      <div class="top-actions">
+        <div class="role-switch" aria-label="角色切换">
+          <button type="button" data-role="zhuoxi" class="active">卓希集团</button>
+          <button type="button" data-role="center">运营中心</button>
+          <button type="button" data-role="customer">客户视角</button>
+        </div>
+        <button type="button" class="btn blue" data-action="reset-demo"><span class="icon">↻</span>重置演示</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="nav-group">
+          <div class="nav-title">三方履约主线</div>
+          <nav class="nav" id="mainNav"></nav>
+        </div>
+        <div class="panel">
+          <div class="panel-body">
+            <div class="flow-line" style="grid-template-columns: 1fr;">
+              <div class="flow-step">
+                <strong>客户下单</strong>
+                <span>订单确认后进入履约判断。</span>
+              </div>
+              <div class="flow-step">
+                <strong>运营中心发货</strong>
+                <span>有货合作商先行履约。</span>
+              </div>
+              <div class="flow-step">
+                <strong>凭证审核</strong>
+                <span>签收凭证通过后形成补货依据。</span>
+              </div>
+              <div class="flow-step">
+                <strong>卓希补货</strong>
+                <span>补回运营中心消耗库存。</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="panel">
+          <div class="panel-body">
+            <div class="kpis" id="kpis"></div>
+          </div>
+        </section>
+
+        <section class="page active" id="page-orders"></section>
+        <section class="page" id="page-review"></section>
+        <section class="page" id="page-restock"></section>
+        <section class="page" id="page-config"></section>
+        <section class="page" id="page-center"></section>
+        <section class="page" id="page-customer"></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="drawer-panel">
+      <div class="drawer-head" id="drawerHead"></div>
+      <div class="drawer-body" id="drawerBody"></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="modalRoot"></div>
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const initialOrders = [
+      {
+        id: "OC-20260430-001",
+        customerOrder: "SO-20260430-8421",
+        customer: "盒马杭州滨江店",
+        contact: "林经理 138****6521",
+        address: "浙江省杭州市滨江区江南大道 1888 号",
+        center: "华东运营中心",
+        region: "华东",
+        items: [
+          { sku: "ZX-SKU-1008", name: "川香红油钵钵鸡", spec: "240g*24", qty: 80 },
+          { sku: "ZX-SKU-1012", name: "蒜香酸甜辣", spec: "220g*24", qty: 48 }
+        ],
+        qty: 128,
+        amount: "18,560",
+        orderStatus: "待接单",
+        shipStatus: "待发货",
+        signStatus: "待签收",
+        proofStatus: "待上传",
+        restockStatus: "未生成",
+        abnormal: "",
+        assignedAt: "2026-04-30 09:18",
+        logistics: null,
+        proofNote: "",
+        history: [
+          { title: "客户下单", time: "2026-04-30 08:52", note: "订单已确认，商品支持运营中心履约。" },
+          { title: "分配运营中心", time: "2026-04-30 09:18", note: "系统推荐华东运营中心，卓希订单运营确认分配。" }
+        ]
+      },
+      {
+        id: "OC-20260430-002",
+        customerOrder: "SO-20260430-8428",
+        customer: "南京社区团购渠道",
+        contact: "周主管 139****7790",
+        address: "江苏省南京市雨花台区软件大道 66 号",
+        center: "华东运营中心",
+        region: "华东",
+        items: [
+          { sku: "ZX-SKU-1020", name: "麻辣藤椒脱骨凤爪", spec: "500g*12", qty: 60 }
+        ],
+        qty: 60,
+        amount: "12,900",
+        orderStatus: "已发货",
+        shipStatus: "已发货",
+        signStatus: "运输中",
+        proofStatus: "待上传",
+        restockStatus: "未生成",
+        abnormal: "",
+        assignedAt: "2026-04-30 09:06",
+        logistics: { company: "顺丰速运", no: "SF7391028831", shippedAt: "2026-04-30 10:12", packages: 5 },
+        proofNote: "",
+        history: [
+          { title: "客户下单", time: "2026-04-30 08:40", note: "客户订单完成确认。" },
+          { title: "运营中心接单", time: "2026-04-30 09:24", note: "华东运营中心确认库存充足。" },
+          { title: "运营中心发货", time: "2026-04-30 10:12", note: "顺丰速运 SF7391028831。" }
+        ]
+      },
+      {
+        id: "OC-20260430-003",
+        customerOrder: "SO-20260430-8460",
+        customer: "武汉区域经销商",
+        contact: "胡经理 137****1120",
+        address: "湖北省武汉市江汉区发展大道 99 号",
+        center: "华中运营中心",
+        region: "华中",
+        items: [
+          { sku: "ZX-SKU-1031", name: "香辣泡椒脆笋", spec: "180g*30", qty: 90 },
+          { sku: "ZX-SKU-1036", name: "酸辣柠檬凤爪", spec: "220g*24", qty: 36 }
+        ],
+        qty: 126,
+        amount: "16,380",
+        orderStatus: "凭证待审核",
+        shipStatus: "已发货",
+        signStatus: "已签收",
+        proofStatus: "待审核",
+        restockStatus: "待生成",
+        abnormal: "",
+        assignedAt: "2026-04-29 15:12",
+        logistics: { company: "京东物流", no: "JDVC9928312", shippedAt: "2026-04-29 16:20", packages: 8 },
+        proofNote: "客户签收单已上传，签收数量与发货数量一致。",
+        history: [
+          { title: "客户下单", time: "2026-04-29 14:40", note: "订单已进入运营中心履约。" },
+          { title: "运营中心发货", time: "2026-04-29 16:20", note: "京东物流 JDVC9928312。" },
+          { title: "客户签收", time: "2026-04-30 09:42", note: "物流显示客户已签收。" },
+          { title: "上传凭证", time: "2026-04-30 10:03", note: "运营中心上传客户签收单。" }
+        ]
+      },
+      {
+        id: "OC-20260429-018",
+        customerOrder: "SO-20260429-7902",
+        customer: "成都连锁便利系统",
+        contact: "赵经理 136****9011",
+        address: "四川省成都市高新区天府大道 399 号",
+        center: "西南运营中心",
+        region: "西南",
+        items: [
+          { sku: "ZX-SKU-1044", name: "青椒脱脱拌饭酱", spec: "210g*24", qty: 100 }
+        ],
+        qty: 100,
+        amount: "15,200",
+        orderStatus: "履约完成",
+        shipStatus: "已发货",
+        signStatus: "已签收",
+        proofStatus: "审核通过",
+        restockStatus: "待确认",
+        abnormal: "",
+        assignedAt: "2026-04-29 10:22",
+        logistics: { company: "德邦快递", no: "DB8839201182", shippedAt: "2026-04-29 13:05", packages: 6 },
+        proofNote: "物流签收记录和客户盖章签收单一致。",
+        history: [
+          { title: "客户下单", time: "2026-04-29 09:51", note: "订单完成确认。" },
+          { title: "运营中心发货", time: "2026-04-29 13:05", note: "德邦快递 DB8839201182。" },
+          { title: "凭证审核通过", time: "2026-04-30 08:58", note: "审核通过，允许生成补货单。" },
+          { title: "生成补货单", time: "2026-04-30 09:02", note: "补货单 RP-20260430-001 已生成。" }
+        ]
+      },
+      {
+        id: "OC-20260429-021",
+        customerOrder: "SO-20260429-8010",
+        customer: "广州餐饮供应链客户",
+        contact: "陈主管 135****4210",
+        address: "广东省广州市番禺区兴南大道 18 号",
+        center: "华南运营中心",
+        region: "华南",
+        items: [
+          { sku: "ZX-SKU-1058", name: "喇叭脱脱经典款", spec: "1kg*8", qty: 40 }
+        ],
+        qty: 40,
+        amount: "9,800",
+        orderStatus: "异常",
+        shipStatus: "部分发货",
+        signStatus: "待签收",
+        proofStatus: "待上传",
+        restockStatus: "暂停",
+        abnormal: "库存不足，剩余 12 件未发",
+        assignedAt: "2026-04-29 11:06",
+        logistics: { company: "中通快运", no: "ZT5519007233", shippedAt: "2026-04-29 15:30", packages: 3 },
+        proofNote: "",
+        history: [
+          { title: "客户下单", time: "2026-04-29 10:37", note: "订单分配给华南运营中心。" },
+          { title: "部分发货", time: "2026-04-29 15:30", note: "实际发货 28 件，剩余库存不足。" },
+          { title: "标记异常", time: "2026-04-29 15:44", note: "待卓希订单运营改派或回退总部发货。" }
+        ]
+      }
+    ];
+
+    const initialRestocks = [
+      {
+        id: "RP-20260430-001",
+        orderId: "OC-20260429-018",
+        center: "西南运营中心",
+        status: "待确认",
+        qty: 100,
+        source: "签收凭证审核通过",
+        createdAt: "2026-04-30 09:02",
+        logistics: null
+      }
+    ];
+
+    const centers = [
+      { name: "华东运营中心", region: "上海、杭州、南京", status: "正常", stock: 1260, sla: "接单 2 小时内，发货 24 小时内" },
+      { name: "华中运营中心", region: "武汉、长沙、南昌", status: "正常", stock: 840, sla: "接单 2 小时内，发货 24 小时内" },
+      { name: "西南运营中心", region: "成都、重庆、贵阳", status: "正常", stock: 620, sla: "接单 4 小时内，发货 24 小时内" },
+      { name: "华南运营中心", region: "广州、深圳、佛山", status: "预警", stock: 188, sla: "接单 2 小时内，发货 24 小时内" }
+    ];
+
+    let orders = structuredClone(initialOrders);
+    let restocks = structuredClone(initialRestocks);
+    let state = {
+      role: "zhuoxi",
+      page: "orders",
+      orderFilter: "全部",
+      reviewFilter: "待审核",
+      restockFilter: "全部",
+      search: "",
+      selectedOrderId: orders[0].id,
+      selectedRestockId: restocks[0].id,
+      centerName: "华东运营中心",
+      modal: null
+    };
+
+    const navByRole = {
+      zhuoxi: [
+        { page: "orders", icon: "□", label: "运营中心订单", count: () => orders.length },
+        { page: "review", icon: "✓", label: "签收凭证审核", count: () => orders.filter(o => o.proofStatus === "待审核").length },
+        { page: "restock", icon: "+", label: "补货单管理", count: () => restocks.length },
+        { page: "config", icon: "⚙", label: "运营中心配置", count: () => centers.length }
+      ],
+      center: [
+        { page: "center", icon: "□", label: "运营中心工作台", count: () => orders.filter(o => o.center === state.centerName).length },
+        { page: "orders", icon: "↗", label: "我的履约订单", count: () => orders.filter(o => o.center === state.centerName).length },
+        { page: "restock", icon: "+", label: "我的补货进度", count: () => restocks.filter(r => r.center === state.centerName).length }
+      ],
+      customer: [
+        { page: "customer", icon: "→", label: "客户订单物流", count: () => 1 }
+      ]
+    };
+
+    function $(selector) {
+      return document.querySelector(selector);
+    }
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function getOrder(id) {
+      return orders.find(order => order.id === id);
+    }
+
+    function getRestock(id) {
+      return restocks.find(item => item.id === id);
+    }
+
+    function statusTone(value) {
+      if (["履约完成", "审核通过", "已签收", "已入库", "正常"].includes(value)) return "green";
+      if (["待接单", "待发货", "待上传", "待生成", "待确认"].includes(value)) return "blue";
+      if (["凭证待审核", "待审核", "运输中", "部分发货", "补货在途"].includes(value)) return "amber";
+      if (["异常", "审核驳回", "暂停", "预警"].includes(value)) return "red";
+      if (["已发货"].includes(value)) return "brand";
+      return "gray";
+    }
+
+    function statusTag(value) {
+      return `<span class="status ${statusTone(value)}">${value || "无"}</span>`;
+    }
+
+    function totalQty(order) {
+      return order.items.reduce((sum, item) => sum + item.qty, 0);
+    }
+
+    function nowText() {
+      return "2026-04-30 " + new Date().toTimeString().slice(0, 5);
+    }
+
+    function orderVisibleForRole(order) {
+      return state.role !== "center" || order.center === state.centerName;
+    }
+
+    function restockVisibleForRole(restock) {
+      return state.role !== "center" || restock.center === state.centerName;
+    }
+
+    function filteredOrders() {
+      const keyword = state.search.trim().toLowerCase();
+      return orders.filter(order => {
+        if (!orderVisibleForRole(order)) return false;
+        if (state.orderFilter !== "全部") {
+          const hit = order.orderStatus === state.orderFilter || order.shipStatus === state.orderFilter || order.proofStatus === state.orderFilter || order.restockStatus === state.orderFilter;
+          if (!hit) return false;
+        }
+        if (!keyword) return true;
+        const haystack = [order.id, order.customerOrder, order.customer, order.center, order.region, order.items.map(i => i.name).join(" ")].join(" ").toLowerCase();
+        return haystack.includes(keyword);
+      });
+    }
+
+    function render() {
+      renderRoleSwitch();
+      renderNav();
+      renderKpis();
+      renderPages();
+      renderDrawer();
+      renderModal();
+    }
+
+    function renderRoleSwitch() {
+      document.querySelectorAll("[data-role]").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.role === state.role);
+      });
+    }
+
+    function renderNav() {
+      const nav = byId("mainNav");
+      nav.innerHTML = navByRole[state.role].map(item => `
+        <button type="button" data-page="${item.page}" class="${state.page === item.page ? "active" : ""}">
+          <span class="icon">${item.icon}</span>
+          <span>${item.label}</span>
+          <small>${item.count()}</small>
+        </button>
+      `).join("");
+    }
+
+    function renderKpis() {
+      const visible = orders.filter(orderVisibleForRole);
+      const waiting = visible.filter(o => o.orderStatus === "待接单").length;
+      const shipped = visible.filter(o => o.shipStatus === "已发货" || o.shipStatus === "部分发货").length;
+      const review = visible.filter(o => o.proofStatus === "待审核").length;
+      const done = visible.filter(o => o.orderStatus === "履约完成").length;
+      const abnormal = visible.filter(o => o.orderStatus === "异常" || o.abnormal).length;
+      const restockTodo = restocks.filter(restockVisibleForRole).filter(r => r.status !== "已入库").length;
+      const data = [
+        ["运营中心订单", visible.length, "brand"],
+        ["待接单", waiting, "blue"],
+        ["已发货", shipped, "brand"],
+        ["凭证待审核", review, "warn"],
+        ["待处理补货", restockTodo, "green"],
+        ["异常订单", abnormal, "danger"]
+      ];
+      byId("kpis").innerHTML = data.map(([label, value, tone]) => `
+        <div class="metric ${tone}">
+          <span>${label}</span>
+          <strong>${value}</strong>
+        </div>
+      `).join("");
+    }
+
+    function renderPages() {
+      const pages = ["orders", "review", "restock", "config", "center", "customer"];
+      pages.forEach(page => byId(`page-${page}`).classList.toggle("active", state.page === page));
+      renderOrdersPage();
+      renderReviewPage();
+      renderRestockPage();
+      renderConfigPage();
+      renderCenterPage();
+      renderCustomerPage();
+    }
+
+    function renderOrdersPage() {
+      const list = filteredOrders();
+      byId("page-orders").innerHTML = `
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h1>${state.role === "center" ? "我的履约订单" : "运营中心订单"}</h1>
+              <p>用于查看合作商承接的客户订单、物流、签收凭证与补货状态。</p>
+            </div>
+            <div class="inline-actions">
+              <button type="button" class="btn blue" data-action="export"><span class="icon">↓</span>导出演示数据</button>
+              <button type="button" class="btn primary" data-action="create-demo-order"><span class="icon">+</span>模拟新订单</button>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="toolbar">
+              <div class="seg" data-filter-group="order">
+                ${["全部", "待接单", "待发货", "已发货", "待审核", "待生成", "异常"].map(filter => `
+                  <button type="button" data-order-filter="${filter}" class="${state.orderFilter === filter ? "active" : ""}">${filter}</button>
+                `).join("")}
+              </div>
+              <div class="field search">
+                <input type="search" placeholder="搜索订单号、客户、运营中心、商品" value="${state.search}" data-action="search-input" />
+              </div>
+              ${state.role === "center" ? `
+                <div class="field">
+                  <select data-action="center-select" aria-label="运营中心选择">
+                    ${centers.map(center => `<option value="${center.name}" ${center.name === state.centerName ? "selected" : ""}>${center.name}</option>`).join("")}
+                  </select>
+                </div>
+              ` : ""}
+            </div>
+          </div>
+          ${renderOrderTable(list)}
+        </section>
+      `;
+    }
+
+    function renderOrderTable(list) {
+      if (!list.length) {
+        return `<div class="panel-body"><div class="empty">没有符合条件的运营中心订单，请调整筛选条件。</div></div>`;
+      }
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>运营中心订单</th>
+                <th>客户订单</th>
+                <th>客户</th>
+                <th>运营中心</th>
+                <th>商品/数量</th>
+                <th>履约状态</th>
+                <th>物流</th>
+                <th>凭证</th>
+                <th>补货</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map(order => `
+                <tr class="${state.selectedOrderId === order.id ? "selected" : ""}">
+                  <td><button type="button" class="link" data-order="${order.id}">${order.id}</button></td>
+                  <td>${order.customerOrder}</td>
+                  <td>${order.customer}</td>
+                  <td>${order.center}</td>
+                  <td>${order.items.length} SKU / ${totalQty(order)} 件</td>
+                  <td>${statusTag(order.orderStatus)}</td>
+                  <td>${statusTag(order.shipStatus)}</td>
+                  <td>${statusTag(order.proofStatus)}</td>
+                  <td>${statusTag(order.restockStatus)}</td>
+                  <td>
+                    <div class="row-actions">
+                      <button type="button" class="btn" data-order="${order.id}">查看</button>
+                      ${quickActionButton(order)}
+                    </div>
+                  </td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function quickActionButton(order) {
+      if (order.orderStatus === "待接单") return `<button type="button" class="btn blue" data-action="accept" data-id="${order.id}">接单</button>`;
+      if (order.orderStatus === "待发货") return `<button type="button" class="btn blue" data-action="ship" data-id="${order.id}">发货</button>`;
+      if (order.shipStatus === "已发货" && order.proofStatus === "待上传") return `<button type="button" class="btn blue" data-action="upload-proof" data-id="${order.id}">传凭证</button>`;
+      if (order.proofStatus === "待审核") return `<button type="button" class="btn primary" data-action="approve-proof" data-id="${order.id}">审核</button>`;
+      if (order.proofStatus === "审核通过" && order.restockStatus === "待生成") return `<button type="button" class="btn primary" data-action="create-restock" data-id="${order.id}">生成补货</button>`;
+      return `<button type="button" class="btn ghost" data-action="urge" data-id="${order.id}">催办</button>`;
+    }
+
+    function renderReviewPage() {
+      const list = orders.filter(order => orderVisibleForRole(order)).filter(order => {
+        if (state.reviewFilter === "全部") return true;
+        return order.proofStatus === state.reviewFilter;
+      });
+      byId("page-review").innerHTML = `
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h1>签收凭证审核</h1>
+              <p>凭证审核通过后才允许生成补货单，确保补货有据可依。</p>
+            </div>
+            <div class="seg">
+              ${["待审核", "审核通过", "审核驳回", "全部"].map(filter => `
+                <button type="button" data-review-filter="${filter}" class="${state.reviewFilter === filter ? "active" : ""}">${filter}</button>
+              `).join("")}
+            </div>
+          </div>
+          ${list.length ? `
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>订单</th>
+                    <th>客户</th>
+                    <th>运营中心</th>
+                    <th>物流</th>
+                    <th>签收状态</th>
+                    <th>凭证状态</th>
+                    <th>凭证说明</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${list.map(order => `
+                    <tr>
+                      <td><button type="button" class="link" data-order="${order.id}">${order.id}</button></td>
+                      <td>${order.customer}</td>
+                      <td>${order.center}</td>
+                      <td>${order.logistics ? `${order.logistics.company} ${order.logistics.no}` : "未发货"}</td>
+                      <td>${statusTag(order.signStatus)}</td>
+                      <td>${statusTag(order.proofStatus)}</td>
+                      <td>${order.proofNote || "暂无凭证说明"}</td>
+                      <td>
+                        <div class="row-actions">
+                          ${order.proofStatus === "待审核" ? `
+                            <button type="button" class="btn primary" data-action="approve-proof" data-id="${order.id}">通过</button>
+                            <button type="button" class="btn danger" data-action="reject-proof" data-id="${order.id}">驳回</button>
+                          ` : `<button type="button" class="btn" data-order="${order.id}">查看</button>`}
+                        </div>
+                      </td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          ` : `<div class="panel-body"><div class="empty">当前没有该状态的签收凭证。</div></div>`}
+        </section>
+      `;
+    }
+
+    function renderRestockPage() {
+      const list = restocks.filter(restockVisibleForRole).filter(restock => state.restockFilter === "全部" || restock.status === state.restockFilter);
+      byId("page-restock").innerHTML = `
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h1>${state.role === "center" ? "我的补货进度" : "补货单管理"}</h1>
+              <p>补货单关联客户订单、运营中心订单、签收凭证和实际发货数量。</p>
+            </div>
+            <div class="seg">
+              ${["全部", "待确认", "待发货", "补货在途", "已入库"].map(filter => `
+                <button type="button" data-restock-filter="${filter}" class="${state.restockFilter === filter ? "active" : ""}">${filter}</button>
+              `).join("")}
+            </div>
+          </div>
+          ${list.length ? `
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>补货单号</th>
+                    <th>来源运营中心订单</th>
+                    <th>运营中心</th>
+                    <th>补货数量</th>
+                    <th>生成依据</th>
+                    <th>状态</th>
+                    <th>生成时间</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${list.map(restock => `
+                    <tr class="${state.selectedRestockId === restock.id ? "selected" : ""}">
+                      <td><button type="button" class="link" data-restock="${restock.id}">${restock.id}</button></td>
+                      <td><button type="button" class="link" data-order="${restock.orderId}">${restock.orderId}</button></td>
+                      <td>${restock.center}</td>
+                      <td>${restock.qty} 件</td>
+                      <td>${restock.source}</td>
+                      <td>${statusTag(restock.status)}</td>
+                      <td>${restock.createdAt}</td>
+                      <td>${renderRestockActions(restock)}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          ` : `<div class="panel-body"><div class="empty">当前没有符合条件的补货单。</div></div>`}
+        </section>
+        ${renderRestockDetail()}
+      `;
+    }
+
+    function renderRestockActions(restock) {
+      if (state.role === "center") {
+        if (restock.status === "补货在途") return `<button type="button" class="btn primary" data-action="receive-restock" data-id="${restock.id}">确认入库</button>`;
+        return `<button type="button" class="btn" data-restock="${restock.id}">查看</button>`;
+      }
+      if (restock.status === "待确认") return `<button type="button" class="btn primary" data-action="confirm-restock" data-id="${restock.id}">确认补货</button>`;
+      if (restock.status === "待发货") return `<button type="button" class="btn blue" data-action="ship-restock" data-id="${restock.id}">补货发货</button>`;
+      return `<button type="button" class="btn" data-restock="${restock.id}">查看</button>`;
+    }
+
+    function renderRestockDetail() {
+      const restock = getRestock(state.selectedRestockId) || restocks[0];
+      if (!restock) return "";
+      const order = getOrder(restock.orderId);
+      return `
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h2>补货依据详情</h2>
+              <p>${restock.id} 来源于 ${restock.orderId}，默认补货数量按审核通过的实际签收数量生成。</p>
+            </div>
+            <div class="inline-actions">${renderRestockActions(restock)}</div>
+          </div>
+          <div class="panel-body">
+            <div class="summary-grid">
+              <div class="summary-item"><span>运营中心</span><strong>${restock.center}</strong></div>
+              <div class="summary-item"><span>补货数量</span><strong>${restock.qty} 件</strong></div>
+              <div class="summary-item"><span>当前状态</span><strong>${statusTag(restock.status)}</strong></div>
+              <div class="summary-item"><span>补货物流</span><strong>${restock.logistics ? `${restock.logistics.company} ${restock.logistics.no}` : "未发货"}</strong></div>
+            </div>
+            <div style="height: 10px;"></div>
+            <div class="summary-grid">
+              <div class="summary-item"><span>客户</span><strong>${order ? order.customer : "-"}</strong></div>
+              <div class="summary-item"><span>来源客户订单</span><strong>${order ? order.customerOrder : "-"}</strong></div>
+              <div class="summary-item"><span>凭证状态</span><strong>${order ? statusTag(order.proofStatus) : "-"}</strong></div>
+              <div class="summary-item"><span>审核说明</span><strong>${order ? (order.proofNote || "暂无") : "-"}</strong></div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderConfigPage() {
+      byId("page-config").innerHTML = `
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h1>运营中心配置</h1>
+              <p>首版建议用配置控制服务区域、可履约商品和库存维护口径，降低错误派单风险。</p>
+            </div>
+            <button type="button" class="btn primary" data-action="save-config"><span class="icon">✓</span>保存配置</button>
+          </div>
+          <div class="panel-body">
+            <div class="config-grid">
+              <div class="detail-section">
+                <h3 class="section-title">运营中心清单</h3>
+                <div class="center-list">
+                  ${centers.map(center => `
+                    <div class="center-row">
+                      <div>
+                        <strong>${center.name}</strong>
+                        <span>服务区域：${center.region}<br>履约 SLA：${center.sla}</span>
+                      </div>
+                      <div>${statusTag(center.status)}<br><span class="status gray" style="margin-top: 6px;">库存 ${center.stock}</span></div>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+              <div class="detail-section">
+                <h3 class="section-title">V1 分配策略</h3>
+                <div class="flow-line" style="grid-template-columns: 1fr;">
+                  <div class="flow-step"><strong>系统推荐</strong><span>按区域、商品范围、可用库存筛出候选运营中心。</span></div>
+                  <div class="flow-step"><strong>卓希确认</strong><span>订单运营确认后才生成运营中心订单。</span></div>
+                  <div class="flow-step"><strong>运营中心接单</strong><span>合作商确认库存和发货能力，拒单需填写原因。</span></div>
+                  <div class="flow-step"><strong>凭证后补货</strong><span>签收凭证审核通过后生成补货单，补货数量以实际签收为准。</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderCenterPage() {
+      const myOrders = orders.filter(o => o.center === state.centerName);
+      const tasks = [
+        ["待确认订单", myOrders.filter(o => o.orderStatus === "待接单").length, "确认库存后接单"],
+        ["待发货订单", myOrders.filter(o => o.orderStatus === "待发货").length, "填写物流并发出"],
+        ["待传凭证", myOrders.filter(o => o.shipStatus === "已发货" && o.proofStatus === "待上传").length, "签收后上传凭证"],
+        ["待入库补货", restocks.filter(r => r.center === state.centerName && r.status === "补货在途").length, "收到卓希补货后确认"]
+      ];
+      byId("page-center").innerHTML = `
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h1>运营中心工作台</h1>
+              <p>合作商人员在这里处理自己的接单、发货、凭证上传和补货入库任务。</p>
+            </div>
+            <div class="field">
+              <select data-action="center-select" aria-label="运营中心选择">
+                ${centers.map(center => `<option value="${center.name}" ${center.name === state.centerName ? "selected" : ""}>${center.name}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="task-grid">
+              ${tasks.map(([label, value, desc]) => `
+                <button type="button" class="task" data-page="orders">
+                  <h3>${label}</h3>
+                  <strong>${value}</strong>
+                  <p>${desc}</p>
+                </button>
+              `).join("")}
+            </div>
+          </div>
+        </section>
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h2>本运营中心订单</h2>
+              <p>当前展示 ${state.centerName} 的履约任务。</p>
+            </div>
+          </div>
+          ${renderOrderTable(myOrders)}
+        </section>
+      `;
+    }
+
+    function renderCustomerPage() {
+      const order = orders.find(o => o.shipStatus !== "待发货") || orders[0];
+      byId("page-customer").innerHTML = `
+        <section class="panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <h1>客户订单物流视角</h1>
+              <p>客户侧不暴露复杂三方协同，只需要看到清晰的订单进度和物流状态。</p>
+            </div>
+            <button type="button" class="btn blue" data-order="${order.id}">查看后台关联</button>
+          </div>
+          <div class="panel-body">
+            <div class="customer-card">
+              <div class="detail-section">
+                <h3 class="section-title">订单信息</h3>
+                <div class="summary-grid">
+                  <div class="summary-item"><span>客户订单</span><strong>${order.customerOrder}</strong></div>
+                  <div class="summary-item"><span>客户</span><strong>${order.customer}</strong></div>
+                  <div class="summary-item"><span>商品数量</span><strong>${totalQty(order)} 件</strong></div>
+                  <div class="summary-item"><span>订单状态</span><strong>${statusTag(order.signStatus)}</strong></div>
+                </div>
+                <div style="height: 12px;"></div>
+                <div class="flow-line">
+                  <div class="flow-step"><strong>订单确认</strong><span>卓希已确认客户订单。</span></div>
+                  <div class="flow-step"><strong>仓配处理</strong><span>就近履约方备货发出。</span></div>
+                  <div class="flow-step"><strong>物流运输</strong><span>${order.logistics ? `${order.logistics.company} ${order.logistics.no}` : "等待发货"}</span></div>
+                  <div class="flow-step"><strong>客户签收</strong><span>${order.signStatus}</span></div>
+                  <div class="flow-step"><strong>售后服务</strong><span>如有问题可从原订单进入售后。</span></div>
+                </div>
+              </div>
+              <div class="detail-section">
+                <h3 class="section-title">客户可见物流</h3>
+                <div class="customer-flow">
+                  ${customerTimeline(order).map(item => `
+                    <div class="timeline-item">
+                      <i class="dot ${item.done ? "done" : "now"}"></i>
+                      <div><strong>${item.title}</strong><span>${item.note}</span></div>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function customerTimeline(order) {
+      return [
+        { title: "订单已确认", note: order.customerOrder, done: true },
+        { title: order.shipStatus === "待发货" ? "等待发货" : "商品已发出", note: order.logistics ? `${order.logistics.company} ${order.logistics.no}` : "仓配处理中", done: order.shipStatus !== "待发货" },
+        { title: order.signStatus === "已签收" ? "客户已签收" : "运输中", note: order.signStatus === "已签收" ? "感谢签收，如需售后请从订单进入。" : "物流运输中，请留意收货通知。", done: order.signStatus === "已签收" }
+      ];
+    }
+
+    function renderDrawer() {
+      const drawer = byId("drawer");
+      const order = getOrder(state.selectedOrderId);
+      if (!order) {
+        drawer.classList.remove("open");
+        drawer.setAttribute("aria-hidden", "true");
+        return;
+      }
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden", "false");
+      byId("drawerHead").innerHTML = `
+        <div>
+          <h2>${order.id}</h2>
+          <p>${order.customer} · ${order.center} · 来源 ${order.customerOrder}</p>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-drawer" aria-label="关闭详情">×</button>
+      `;
+      byId("drawerBody").innerHTML = `
+        <div class="inline-actions">${detailActions(order)}</div>
+        ${order.abnormal ? `<div class="detail-section" style="border-color: rgba(185, 28, 28, 0.24); background: var(--red-soft);"><strong>异常提示</strong><br><span style="color: var(--red); line-height: 1.8;">${order.abnormal}</span></div>` : ""}
+        <div class="detail-section">
+          <h3 class="section-title">关键状态</h3>
+          <div class="summary-grid">
+            <div class="summary-item"><span>履约状态</span><strong>${statusTag(order.orderStatus)}</strong></div>
+            <div class="summary-item"><span>物流状态</span><strong>${statusTag(order.shipStatus)}</strong></div>
+            <div class="summary-item"><span>凭证状态</span><strong>${statusTag(order.proofStatus)}</strong></div>
+            <div class="summary-item"><span>补货状态</span><strong>${statusTag(order.restockStatus)}</strong></div>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3 class="section-title">订单信息</h3>
+          <div class="summary-grid">
+            <div class="summary-item"><span>客户联系人</span><strong>${order.contact}</strong></div>
+            <div class="summary-item"><span>收货地址</span><strong>${order.address}</strong></div>
+            <div class="summary-item"><span>订单金额</span><strong>${order.amount} 元</strong></div>
+            <div class="summary-item"><span>分配时间</span><strong>${order.assignedAt}</strong></div>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3 class="section-title">商品明细</h3>
+          <div class="table-wrap">
+            <table style="min-width: 520px;">
+              <thead><tr><th>SKU</th><th>商品</th><th>规格</th><th>数量</th></tr></thead>
+              <tbody>
+                ${order.items.map(item => `<tr><td>${item.sku}</td><td>${item.name}</td><td>${item.spec}</td><td>${item.qty}</td></tr>`).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3 class="section-title">物流与签收凭证</h3>
+          <div class="proof-box">
+            <div class="summary-grid">
+              <div class="summary-item"><span>物流公司</span><strong>${order.logistics ? order.logistics.company : "未填写"}</strong></div>
+              <div class="summary-item"><span>物流单号</span><strong>${order.logistics ? order.logistics.no : "未填写"}</strong></div>
+              <div class="summary-item"><span>发货时间</span><strong>${order.logistics ? order.logistics.shippedAt : "未发货"}</strong></div>
+              <div class="summary-item"><span>包裹数</span><strong>${order.logistics ? `${order.logistics.packages} 件` : "未填写"}</strong></div>
+            </div>
+            <div class="proof-preview">
+              ${order.proofStatus === "待上传" ? "暂无签收凭证。运营中心发货并客户签收后，需要上传凭证。" : `签收凭证已提交<br>${order.proofNote || "凭证说明待补充"}`}
+            </div>
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3 class="section-title">履约时间线</h3>
+          <div class="timeline">
+            ${buildTimeline(order).map(item => `
+              <div class="timeline-item">
+                <i class="dot ${item.tone}"></i>
+                <div><strong>${item.title}</strong><span>${item.time}<br>${item.note}</span></div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+        <div class="detail-section">
+          <h3 class="section-title">操作日志</h3>
+          <div class="log-list">
+            ${order.history.slice().reverse().map(item => `<div class="log-item"><strong>${item.title}</strong><span>${item.time} · ${item.note}</span></div>`).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function detailActions(order) {
+      const actions = [];
+      if (order.orderStatus === "待接单") actions.push(`<button type="button" class="btn primary" data-action="accept" data-id="${order.id}"><span class="icon">✓</span>确认接单</button>`);
+      if (order.orderStatus === "待发货") actions.push(`<button type="button" class="btn primary" data-action="ship" data-id="${order.id}"><span class="icon">↗</span>填写物流</button>`);
+      if (order.shipStatus === "已发货" && order.proofStatus === "待上传") actions.push(`<button type="button" class="btn primary" data-action="upload-proof" data-id="${order.id}"><span class="icon">↑</span>上传凭证</button>`);
+      if (order.proofStatus === "待审核") {
+        actions.push(`<button type="button" class="btn primary" data-action="approve-proof" data-id="${order.id}"><span class="icon">✓</span>审核通过</button>`);
+        actions.push(`<button type="button" class="btn danger" data-action="reject-proof" data-id="${order.id}"><span class="icon">×</span>驳回凭证</button>`);
+      }
+      if (order.proofStatus === "审核通过" && order.restockStatus === "待生成") actions.push(`<button type="button" class="btn primary" data-action="create-restock" data-id="${order.id}"><span class="icon">+</span>生成补货单</button>`);
+      actions.push(`<button type="button" class="btn warn" data-action="mark-abnormal" data-id="${order.id}"><span class="icon">!</span>标记异常</button>`);
+      actions.push(`<button type="button" class="btn ghost" data-action="urge" data-id="${order.id}"><span class="icon">→</span>催办</button>`);
+      return actions.join("");
+    }
+
+    function buildTimeline(order) {
+      const base = [
+        { title: "客户下单", time: order.history[0]?.time || order.assignedAt, note: "客户订单已确认。", tone: "done" },
+        { title: "分配运营中心", time: order.assignedAt, note: `${order.center} 承接履约。`, tone: "done" },
+        { title: "运营中心接单", time: findHistory(order, "接单") || "待处理", note: order.orderStatus === "待接单" ? "等待运营中心确认。" : "运营中心已确认履约。", tone: order.orderStatus === "待接单" ? "now" : "done" },
+        { title: "运营中心发货", time: order.logistics?.shippedAt || "待处理", note: order.logistics ? `${order.logistics.company} ${order.logistics.no}` : "等待填写物流。", tone: order.shipStatus === "待发货" ? "now" : "done" },
+        { title: "客户签收/凭证", time: findHistory(order, "上传凭证") || "待处理", note: order.proofStatus === "待上传" ? "等待签收凭证。" : order.proofStatus, tone: order.proofStatus === "审核通过" ? "done" : "now" },
+        { title: "生成补货单", time: findHistory(order, "生成补货单") || "待处理", note: order.restockStatus, tone: order.restockStatus === "未生成" ? "now" : "done" }
+      ];
+      if (order.abnormal) base.push({ title: "异常处理", time: findHistory(order, "标记异常") || "待处理", note: order.abnormal, tone: "warn" });
+      return base;
+    }
+
+    function findHistory(order, keyword) {
+      const item = order.history.find(h => h.title.includes(keyword));
+      return item ? item.time : "";
+    }
+
+    function renderModal() {
+      const root = byId("modalRoot");
+      if (!state.modal) {
+        root.classList.remove("open");
+        root.innerHTML = "";
+        return;
+      }
+      root.classList.add("open");
+      root.innerHTML = `
+        <div class="modal" role="dialog" aria-modal="true">
+          <div class="modal-head">
+            <h3>${state.modal.title}</h3>
+            <button type="button" class="icon-btn" data-action="close-modal" aria-label="关闭弹窗">×</button>
+          </div>
+          <div class="modal-body">${state.modal.body}</div>
+          <div class="modal-foot">
+            <button type="button" class="btn" data-action="close-modal">取消</button>
+            <button type="button" class="btn primary" data-action="modal-primary">${state.modal.primary}</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function openModal(kind, id) {
+      if (kind === "ship") {
+        state.modal = {
+          kind, id, title: "填写物流信息", primary: "确认发货",
+          body: `
+            <div class="field"><label>物流公司</label><input id="modalCompany" value="顺丰速运"></div>
+            <div class="field"><label>物流单号</label><input id="modalNo" value="SF${Math.floor(7000000000 + Math.random() * 999999999)}"></div>
+            <div class="field"><label>包裹数</label><input id="modalPackages" type="number" min="1" value="4"></div>
+          `
+        };
+      }
+      if (kind === "upload-proof") {
+        state.modal = {
+          kind, id, title: "上传签收凭证", primary: "提交审核",
+          body: `
+            <div class="field"><label>凭证类型</label><select id="modalProofType"><option>客户签收单</option><option>物流签收截图</option><option>盖章收货单</option></select></div>
+            <div class="field"><label>凭证说明</label><textarea id="modalProofNote">客户已签收，签收数量与发货数量一致。</textarea></div>
+            <div class="proof-preview">演示原型：此处模拟上传凭证文件，真实系统支持图片/PDF。</div>
+          `
+        };
+      }
+      if (kind === "reject-proof") {
+        state.modal = {
+          kind, id, title: "驳回签收凭证", primary: "确认驳回",
+          body: `
+            <div class="field"><label>驳回原因</label><select id="modalRejectReason"><option>凭证不清晰</option><option>凭证信息不完整</option><option>数量不一致</option><option>未体现客户签收</option><option>其他</option></select></div>
+            <div class="field"><label>补充说明</label><textarea id="modalRejectNote">请重新上传包含客户签收信息和数量的凭证。</textarea></div>
+          `
+        };
+      }
+      if (kind === "mark-abnormal") {
+        state.modal = {
+          kind, id, title: "标记异常", primary: "确认标记",
+          body: `
+            <div class="field"><label>异常类型</label><select id="modalAbnormalType"><option>库存不足</option><option>超时未接单</option><option>超时未发货</option><option>物流异常</option><option>凭证异常</option></select></div>
+            <div class="field"><label>异常说明</label><textarea id="modalAbnormalNote">需要卓希订单运营介入处理。</textarea></div>
+          `
+        };
+      }
+      if (kind === "ship-restock") {
+        state.modal = {
+          kind, id, title: "补货发货", primary: "确认补货发货",
+          body: `
+            <div class="field"><label>补货物流公司</label><input id="modalCompany" value="德邦快递"></div>
+            <div class="field"><label>补货物流单号</label><input id="modalNo" value="DB${Math.floor(8000000000 + Math.random() * 999999999)}"></div>
+          `
+        };
+      }
+      render();
+    }
+
+    function handleModalPrimary() {
+      const modal = state.modal;
+      if (!modal) return;
+      if (modal.kind === "ship") {
+        const order = getOrder(modal.id);
+        order.logistics = {
+          company: byId("modalCompany").value || "顺丰速运",
+          no: byId("modalNo").value || "SF0000000000",
+          packages: Number(byId("modalPackages").value || 1),
+          shippedAt: nowText()
+        };
+        order.orderStatus = "已发货";
+        order.shipStatus = "已发货";
+        order.signStatus = "运输中";
+        order.history.push({ title: "运营中心发货", time: nowText(), note: `${order.logistics.company} ${order.logistics.no}` });
+        toast("物流已回填，订单进入运输中。");
+      }
+      if (modal.kind === "upload-proof") {
+        const order = getOrder(modal.id);
+        order.signStatus = "已签收";
+        order.proofStatus = "待审核";
+        order.orderStatus = "凭证待审核";
+        order.proofNote = byId("modalProofNote").value || "签收凭证已上传。";
+        order.history.push({ title: "上传凭证", time: nowText(), note: order.proofNote });
+        state.page = "review";
+        toast("签收凭证已提交，等待卓希审核。");
+      }
+      if (modal.kind === "reject-proof") {
+        const order = getOrder(modal.id);
+        const reason = byId("modalRejectReason").value;
+        const note = byId("modalRejectNote").value;
+        order.proofStatus = "审核驳回";
+        order.orderStatus = "异常";
+        order.abnormal = `凭证驳回：${reason}`;
+        order.history.push({ title: "驳回凭证", time: nowText(), note: note || reason });
+        toast("凭证已驳回，运营中心需重新上传。");
+      }
+      if (modal.kind === "mark-abnormal") {
+        const order = getOrder(modal.id);
+        const type = byId("modalAbnormalType").value;
+        const note = byId("modalAbnormalNote").value;
+        order.orderStatus = "异常";
+        order.abnormal = `${type}：${note}`;
+        order.history.push({ title: "标记异常", time: nowText(), note: order.abnormal });
+        toast("异常已记录，后台可继续改派或关闭。");
+      }
+      if (modal.kind === "ship-restock") {
+        const restock = getRestock(modal.id);
+        restock.status = "补货在途";
+        restock.logistics = {
+          company: byId("modalCompany").value || "德邦快递",
+          no: byId("modalNo").value || "DB0000000000",
+          shippedAt: nowText()
+        };
+        const order = getOrder(restock.orderId);
+        if (order) order.restockStatus = "补货在途";
+        toast("补货物流已填写，等待运营中心确认入库。");
+      }
+      state.modal = null;
+      render();
+    }
+
+    function acceptOrder(id) {
+      const order = getOrder(id);
+      order.orderStatus = "待发货";
+      order.history.push({ title: "运营中心接单", time: nowText(), note: `${order.center} 已确认库存并接单。` });
+      toast("运营中心已接单，下一步填写物流发货。");
+      render();
+    }
+
+    function approveProof(id) {
+      const order = getOrder(id);
+      order.proofStatus = "审核通过";
+      order.orderStatus = "履约完成";
+      order.restockStatus = "待生成";
+      order.history.push({ title: "凭证审核通过", time: nowText(), note: "签收凭证有效，允许生成补货单。" });
+      toast("凭证审核通过，可以生成补货单。");
+      render();
+    }
+
+    function createRestock(id) {
+      const order = getOrder(id);
+      if (restocks.some(r => r.orderId === id && r.status !== "已关闭")) {
+        toast("该运营中心订单已有有效补货单，系统已阻断重复生成。");
+        return;
+      }
+      const nextId = "RP-20260430-" + String(restocks.length + 1).padStart(3, "0");
+      restocks.unshift({
+        id: nextId,
+        orderId: order.id,
+        center: order.center,
+        status: "待确认",
+        qty: totalQty(order),
+        source: "签收凭证审核通过",
+        createdAt: nowText(),
+        logistics: null
+      });
+      order.restockStatus = "待确认";
+      order.history.push({ title: "生成补货单", time: nowText(), note: `补货单 ${nextId} 已生成。` });
+      state.selectedRestockId = nextId;
+      state.page = "restock";
+      toast("补货单已生成，等待卓希供应链确认。");
+      render();
+    }
+
+    function confirmRestock(id) {
+      const restock = getRestock(id);
+      restock.status = "待发货";
+      const order = getOrder(restock.orderId);
+      if (order) order.restockStatus = "待发货";
+      toast("补货单已确认，下一步安排补货发货。");
+      render();
+    }
+
+    function receiveRestock(id) {
+      const restock = getRestock(id);
+      restock.status = "已入库";
+      const order = getOrder(restock.orderId);
+      if (order) {
+        order.restockStatus = "已完成";
+        order.history.push({ title: "补货入库", time: nowText(), note: `${restock.center} 已确认收到补货。` });
+      }
+      toast("运营中心已确认入库，履约补货闭环完成。");
+      render();
+    }
+
+    function createDemoOrder() {
+      const id = "OC-20260430-" + String(orders.length + 1).padStart(3, "0");
+      orders.unshift({
+        id,
+        customerOrder: "SO-20260430-" + Math.floor(8600 + Math.random() * 300),
+        customer: "新增长沙渠道客户",
+        contact: "测试客户 138****0000",
+        address: "湖南省长沙市岳麓区测试地址 1 号",
+        center: "华中运营中心",
+        region: "华中",
+        items: [{ sku: "ZX-SKU-1099", name: "测试商品组合", spec: "240g*24", qty: 72 }],
+        qty: 72,
+        amount: "10,800",
+        orderStatus: "待接单",
+        shipStatus: "待发货",
+        signStatus: "待签收",
+        proofStatus: "待上传",
+        restockStatus: "未生成",
+        abnormal: "",
+        assignedAt: nowText(),
+        logistics: null,
+        proofNote: "",
+        history: [
+          { title: "客户下单", time: nowText(), note: "模拟客户订单已确认。" },
+          { title: "分配运营中心", time: nowText(), note: "系统推荐华中运营中心，卓希确认分配。" }
+        ]
+      });
+      state.selectedOrderId = id;
+      toast("已模拟生成一条新的运营中心订单。");
+      render();
+    }
+
+    function toast(text) {
+      const el = byId("toast");
+      el.textContent = text;
+      el.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => el.classList.remove("show"), 2400);
+    }
+
+    document.addEventListener("click", event => {
+      const roleBtn = event.target.closest("[data-role]");
+      if (roleBtn) {
+        state.role = roleBtn.dataset.role;
+        state.page = state.role === "zhuoxi" ? "orders" : state.role === "center" ? "center" : "customer";
+        state.selectedOrderId = null;
+        render();
+        return;
+      }
+
+      const pageBtn = event.target.closest("[data-page]");
+      if (pageBtn) {
+        state.page = pageBtn.dataset.page;
+        render();
+        return;
+      }
+
+      const filterBtn = event.target.closest("[data-order-filter]");
+      if (filterBtn) {
+        state.orderFilter = filterBtn.dataset.orderFilter;
+        render();
+        return;
+      }
+
+      const reviewBtn = event.target.closest("[data-review-filter]");
+      if (reviewBtn) {
+        state.reviewFilter = reviewBtn.dataset.reviewFilter;
+        render();
+        return;
+      }
+
+      const restockFilterBtn = event.target.closest("[data-restock-filter]");
+      if (restockFilterBtn) {
+        state.restockFilter = restockFilterBtn.dataset.restockFilter;
+        render();
+        return;
+      }
+
+      const orderBtn = event.target.closest("[data-order]");
+      if (orderBtn) {
+        state.selectedOrderId = orderBtn.dataset.order;
+        renderDrawer();
+        return;
+      }
+
+      const restockBtn = event.target.closest("[data-restock]");
+      if (restockBtn) {
+        state.selectedRestockId = restockBtn.dataset.restock;
+        render();
+        return;
+      }
+
+      const actionBtn = event.target.closest("[data-action]");
+      if (!actionBtn) return;
+      const action = actionBtn.dataset.action;
+      const id = actionBtn.dataset.id;
+      if (action === "close-drawer") {
+        state.selectedOrderId = null;
+        byId("drawer").classList.remove("open");
+        return;
+      }
+      if (action === "close-modal") {
+        state.modal = null;
+        renderModal();
+        return;
+      }
+      if (action === "modal-primary") {
+        handleModalPrimary();
+        return;
+      }
+      if (action === "accept") acceptOrder(id);
+      if (action === "ship") openModal("ship", id);
+      if (action === "upload-proof") openModal("upload-proof", id);
+      if (action === "approve-proof") approveProof(id);
+      if (action === "reject-proof") openModal("reject-proof", id);
+      if (action === "create-restock") createRestock(id);
+      if (action === "confirm-restock") confirmRestock(id);
+      if (action === "ship-restock") openModal("ship-restock", id);
+      if (action === "receive-restock") receiveRestock(id);
+      if (action === "mark-abnormal") openModal("mark-abnormal", id);
+      if (action === "urge") toast("已记录催办动作，实际系统可通知运营中心。");
+      if (action === "export") toast("演示原型：已模拟导出当前列表。");
+      if (action === "save-config") toast("配置已模拟保存。");
+      if (action === "create-demo-order") createDemoOrder();
+      if (action === "reset-demo") {
+        orders = structuredClone(initialOrders);
+        restocks = structuredClone(initialRestocks);
+        state.selectedOrderId = orders[0].id;
+        state.selectedRestockId = restocks[0].id;
+        state.orderFilter = "全部";
+        state.search = "";
+        toast("演示数据已重置。");
+        render();
+      }
+    });
+
+    document.addEventListener("input", event => {
+      if (event.target.matches("[data-action='search-input']")) {
+        state.search = event.target.value;
+        renderPages();
+      }
+    });
+
+    document.addEventListener("change", event => {
+      if (event.target.matches("[data-action='center-select']")) {
+        state.centerName = event.target.value;
+        render();
+      }
+    });
+
+    byId("drawer").addEventListener("click", event => {
+      if (event.target.id === "drawer") {
+        state.selectedOrderId = null;
+        byId("drawer").classList.remove("open");
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

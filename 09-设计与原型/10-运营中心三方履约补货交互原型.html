@@ -816,6 +816,15 @@
       z-index: 2;
     }
 
+    .vertical-flow .flow-step:not(:last-child)::after {
+      content: "v";
+      left: 50%;
+      right: auto;
+      top: auto;
+      bottom: -12px;
+      transform: translateX(-50%);
+    }
+
     .flow-step strong {
       display: block;
       font-size: 13px;
@@ -931,7 +940,7 @@
         </div>
         <div class="panel">
           <div class="panel-body">
-            <div class="flow-line" style="grid-template-columns: 1fr;">
+            <div class="flow-line vertical-flow" style="grid-template-columns: 1fr;">
               <div class="flow-step">
                 <strong>客户下单</strong>
                 <span>订单确认后进入履约判断。</span>
@@ -1576,7 +1585,7 @@
               </div>
               <div class="detail-section">
                 <h3 class="section-title">V1 分配策略</h3>
-                <div class="flow-line" style="grid-template-columns: 1fr;">
+                <div class="flow-line vertical-flow" style="grid-template-columns: 1fr;">
                   <div class="flow-step"><strong>系统推荐</strong><span>按区域、商品范围、可用库存筛出候选运营中心。</span></div>
                   <div class="flow-step"><strong>卓希确认</strong><span>订单运营确认后才生成运营中心订单。</span></div>
                   <div class="flow-step"><strong>运营中心接单</strong><span>合作商确认库存和发货能力，拒单需填写原因。</span></div>

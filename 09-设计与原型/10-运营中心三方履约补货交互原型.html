@@ -1156,7 +1156,7 @@
       reviewFilter: "待审核",
       restockFilter: "全部",
       search: "",
-      selectedOrderId: orders[0].id,
+      selectedOrderId: null,
       selectedRestockId: restocks[0].id,
       centerName: "华东运营中心",
       modal: null
@@ -2132,7 +2132,7 @@
       if (action === "reset-demo") {
         orders = structuredClone(initialOrders);
         restocks = structuredClone(initialRestocks);
-        state.selectedOrderId = orders[0].id;
+        state.selectedOrderId = null;
         state.selectedRestockId = restocks[0].id;
         state.orderFilter = "全部";
         state.search = "";

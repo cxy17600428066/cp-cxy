@@ -1,0 +1,1787 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>代理发货管理交互原型</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --line: #d9e1eb;
+      --line-strong: #b8c4d2;
+      --ink: #102033;
+      --muted: #64748b;
+      --brand: #0f766e;
+      --brand-dark: #0b5f58;
+      --brand-soft: #e8f5f3;
+      --blue: #1d4ed8;
+      --blue-soft: #eaf1ff;
+      --green: #047857;
+      --green-soft: #e9f8ef;
+      --amber: #b45309;
+      --amber-soft: #fff4e5;
+      --red: #b91c1c;
+      --red-soft: #fff0f0;
+      --gray-soft: #edf2f7;
+      --shadow: 0 18px 42px rgba(16, 32, 51, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Source Han Sans SC", "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 22px;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 10px 26px rgba(16, 32, 51, 0.05);
+    }
+
+    .brand {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .brand strong {
+      font-size: 20px;
+      line-height: 1.25;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions,
+    .role-switch,
+    .toolbar,
+    .filters,
+    .row-actions,
+    .inline-actions,
+    .form-actions,
+    .tabbar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .role-switch,
+    .tabbar {
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .role-switch button,
+    .tabbar button,
+    .nav button,
+    .chip,
+    .btn,
+    .icon-btn {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    }
+
+    .role-switch button,
+    .tabbar button {
+      padding: 8px 12px;
+      border-color: transparent;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .role-switch button.active,
+    .tabbar button.active,
+    .nav button.active,
+    .chip.active {
+      color: var(--brand-dark);
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.32);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .btn.blue {
+      color: var(--blue);
+      border-color: rgba(29, 78, 216, 0.22);
+      background: var(--blue-soft);
+    }
+
+    .btn.warn {
+      color: var(--amber);
+      border-color: rgba(180, 83, 9, 0.26);
+      background: var(--amber-soft);
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: rgba(185, 28, 28, 0.24);
+      background: var(--red-soft);
+    }
+
+    .btn.ghost { background: transparent; }
+
+    .btn:disabled {
+      opacity: 0.52;
+      cursor: not-allowed;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 236px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .sidebar {
+      padding: 16px 12px;
+      border-right: 1px solid var(--line);
+      background: #fbfdff;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .nav-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-title {
+      padding: 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 10px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .badge {
+      min-width: 24px;
+      height: 22px;
+      padding: 0 7px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--gray-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    main {
+      min-width: 0;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .page-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .page-title {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin: 0; }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 17px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 14px;
+      line-height: 1.4;
+      letter-spacing: 0;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(132px, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      min-height: 86px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      display: grid;
+      gap: 8px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .stat strong {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .stat.brand { border-left: 4px solid var(--brand); }
+    .stat.blue { border-left: 4px solid var(--blue); }
+    .stat.green { border-left: 4px solid var(--green); }
+    .stat.amber { border-left: 4px solid var(--amber); }
+    .stat.red { border-left: 4px solid var(--red); }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      min-height: 58px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfdff;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .filters {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(15, 118, 110, 0.58);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    th {
+      color: var(--muted);
+      background: #fbfdff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    tr:hover td { background: #fcfdff; }
+
+    .mono {
+      font-family: "Cascadia Mono", "Consolas", monospace;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status.brand { color: var(--brand-dark); background: var(--brand-soft); }
+    .status.blue { color: var(--blue); background: var(--blue-soft); }
+    .status.green { color: var(--green); background: var(--green-soft); }
+    .status.amber { color: var(--amber); background: var(--amber-soft); }
+    .status.red { color: var(--red); background: var(--red-soft); }
+    .status.gray { color: var(--muted); background: var(--gray-soft); }
+
+    .chip {
+      min-height: 32px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .detail-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .summary-item {
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      display: grid;
+      gap: 6px;
+    }
+
+    .summary-item span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .summary-item strong {
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 0;
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 10px;
+      padding-bottom: 16px;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: 9px;
+      top: 22px;
+      bottom: 0;
+      width: 2px;
+      background: var(--line);
+    }
+
+    .timeline-item:last-child::before { display: none; }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 999px;
+      background: var(--line-strong);
+      border: 4px solid #fff;
+      box-shadow: 0 0 0 1px var(--line);
+    }
+
+    .dot.done { background: var(--green); }
+    .dot.warn { background: var(--amber); }
+    .dot.red { background: var(--red); }
+    .dot.brand { background: var(--brand); }
+
+    .timeline-copy {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .timeline-copy strong {
+      font-size: 13px;
+      line-height: 1.4;
+    }
+
+    .timeline-copy span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .task-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .task-main {
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .task-main strong {
+      font-size: 14px;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .task-main span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .empty {
+      min-height: 180px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 80;
+      display: none;
+      max-width: 360px;
+      padding: 12px 14px;
+      border: 1px solid rgba(15, 118, 110, 0.25);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      color: var(--brand-dark);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .toast.show { display: block; }
+
+    .drawer,
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      background: rgba(16, 32, 51, 0.38);
+    }
+
+    .drawer.open,
+    .modal.open { display: block; }
+
+    .drawer-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(520px, 100%);
+      height: 100%;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .modal-panel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(560px, calc(100% - 28px));
+      max-height: calc(100vh - 40px);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .overlay-head,
+    .overlay-foot {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .overlay-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .overlay-body {
+      padding: 16px;
+      overflow: auto;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .agent-option {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      display: grid;
+      gap: 7px;
+      text-align: left;
+    }
+
+    .agent-option.active {
+      border-color: rgba(15, 118, 110, 0.42);
+      background: var(--brand-soft);
+    }
+
+    .agent-option strong {
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .agent-option span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 1180px) {
+      .stats { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+      .detail-layout { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+      .agent-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 82px;
+        z-index: 20;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 10px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      main { padding: 14px; }
+
+      .page-head,
+      .panel-head {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .stats,
+      .summary-grid,
+      .nav {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions,
+      .toolbar,
+      .filters {
+        align-items: stretch;
+      }
+
+      .btn,
+      .field,
+      .role-switch,
+      .tabbar {
+        width: 100%;
+      }
+
+      .role-switch button,
+      .tabbar button {
+        flex: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <strong>代理发货管理</strong>
+        <span>订单履约 / 代理发货单 / 物流凭证 / 异常处理</span>
+      </div>
+      <div class="top-actions">
+        <div class="role-switch" aria-label="视角切换">
+          <button type="button" id="rolePlatform" class="active">平台端</button>
+          <button type="button" id="roleAgent">代理端</button>
+        </div>
+        <button class="btn primary" type="button" onclick="openAssign()"><span class="icon">+</span>新建派单</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="nav-group">
+          <div class="nav-title">订单履约</div>
+          <nav class="nav" id="nav"></nav>
+        </div>
+      </aside>
+
+      <main id="main"></main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <section class="modal" id="modal">
+    <div class="modal-panel">
+      <div class="overlay-head">
+        <h2 id="modalTitle">操作</h2>
+        <button class="close-btn" type="button" onclick="closeOverlay()">X</button>
+      </div>
+      <div class="overlay-body" id="modalBody"></div>
+      <div class="overlay-foot" id="modalFoot"></div>
+    </div>
+  </section>
+
+  <section class="drawer" id="drawer">
+    <div class="drawer-panel">
+      <div class="overlay-head">
+        <h2 id="drawerTitle">异常处理</h2>
+        <button class="close-btn" type="button" onclick="closeOverlay()">X</button>
+      </div>
+      <div class="overlay-body" id="drawerBody"></div>
+      <div class="overlay-foot" id="drawerFoot"></div>
+    </div>
+  </section>
+
+  <script>
+    const agents = [
+      { name: "华东代理仓", region: "上海、杭州、南京", stock: 280, sla: "24小时内发货", score: 96 },
+      { name: "华中代理仓", region: "武汉、长沙、南昌", stock: 160, sla: "36小时内发货", score: 91 },
+      { name: "西南代理仓", region: "成都、重庆、贵阳", stock: 92, sla: "48小时内发货", score: 88 }
+    ];
+
+    const orders = [
+      {
+        id: "AF20260504001",
+        customerOrder: "SO20260503061",
+        customer: "成都锦和商贸",
+        consignee: "林经理 138****4182",
+        address: "四川省成都市武侯区天府三街 88 号",
+        agent: "西南代理仓",
+        skuCount: 3,
+        qty: 48,
+        shippedQty: 0,
+        status: "待接单",
+        receiveStatus: "待接单",
+        shipStatus: "待发货",
+        logisticsStatus: "待填写",
+        proofStatus: "待上传",
+        restockStatus: "未关联",
+        exception: "无",
+        owner: "西南代理仓",
+        assignTime: "2026-05-04 09:20",
+        due: "接单剩余 2小时",
+        goods: [
+          { sku: "ZX-LY-001", name: "老卤鸭掌", spec: "散称单只", qty: 24, shipped: 0 },
+          { sku: "ZX-SN-009", name: "蒜香酸甜辣", spec: "180g/袋", qty: 12, shipped: 0 },
+          { sku: "ZX-QJ-016", name: "青椒脱脱", spec: "220g/盒", qty: 12, shipped: 0 }
+        ],
+        logistics: { company: "-", no: "-", time: "-", packages: "-" },
+        proofNote: "待代理上传发货凭证。",
+        history: [
+          { title: "客户订单确认", time: "2026-05-04 09:05", type: "done" },
+          { title: "平台派单", time: "2026-05-04 09:20", type: "brand" }
+        ]
+      },
+      {
+        id: "AF20260504002",
+        customerOrder: "SO20260503074",
+        customer: "杭州云嘉食品",
+        consignee: "周主管 136****7729",
+        address: "浙江省杭州市萧山区建设一路 126 号",
+        agent: "华东代理仓",
+        skuCount: 2,
+        qty: 36,
+        shippedQty: 36,
+        status: "已发货",
+        receiveStatus: "已接单",
+        shipStatus: "已发货",
+        logisticsStatus: "运输中",
+        proofStatus: "待审核",
+        restockStatus: "待补货",
+        exception: "无",
+        owner: "华东代理仓",
+        assignTime: "2026-05-04 08:42",
+        due: "预计今日签收",
+        goods: [
+          { sku: "ZX-ML-021", name: "麻辣藤椒", spec: "200g/盒", qty: 24, shipped: 24 },
+          { sku: "ZX-PJ-018", name: "香辣泡椒", spec: "180g/袋", qty: 12, shipped: 12 }
+        ],
+        logistics: { company: "顺丰速运", no: "SF7832910042", time: "2026-05-04 10:16", packages: "3件" },
+        proofNote: "发货面单和装箱照片已上传，待平台审核。",
+        history: [
+          { title: "客户订单确认", time: "2026-05-04 08:10", type: "done" },
+          { title: "平台派单", time: "2026-05-04 08:42", type: "done" },
+          { title: "代理接单", time: "2026-05-04 08:55", type: "done" },
+          { title: "代理发货", time: "2026-05-04 10:16", type: "brand" }
+        ]
+      },
+      {
+        id: "AF20260503018",
+        customerOrder: "SO20260502036",
+        customer: "武汉联采渠道",
+        consignee: "唐经理 137****3066",
+        address: "湖北省武汉市江汉区新华路 216 号",
+        agent: "华中代理仓",
+        skuCount: 1,
+        qty: 80,
+        shippedQty: 52,
+        status: "部分发货",
+        receiveStatus: "已接单",
+        shipStatus: "部分发货",
+        logisticsStatus: "运输中",
+        proofStatus: "待补充",
+        restockStatus: "未关联",
+        exception: "缺货",
+        owner: "华中代理仓",
+        assignTime: "2026-05-03 14:18",
+        due: "缺货待处理",
+        goods: [
+          { sku: "ZX-HY-032", name: "川香红油", spec: "1kg/桶", qty: 80, shipped: 52 }
+        ],
+        logistics: { company: "京东物流", no: "JD9820103156", time: "2026-05-03 17:40", packages: "4件" },
+        proofNote: "剩余 28 件未发，代理反馈临时缺货。",
+        history: [
+          { title: "客户订单确认", time: "2026-05-03 13:55", type: "done" },
+          { title: "平台派单", time: "2026-05-03 14:18", type: "done" },
+          { title: "代理接单", time: "2026-05-03 14:42", type: "done" },
+          { title: "部分发货", time: "2026-05-03 17:40", type: "warn" },
+          { title: "标记缺货", time: "2026-05-03 18:05", type: "red" }
+        ]
+      },
+      {
+        id: "AF20260502027",
+        customerOrder: "SO20260501088",
+        customer: "南京佰味连锁",
+        consignee: "赵店长 139****5081",
+        address: "江苏省南京市建邺区江东中路 98 号",
+        agent: "华东代理仓",
+        skuCount: 2,
+        qty: 30,
+        shippedQty: 30,
+        status: "已完成",
+        receiveStatus: "已接单",
+        shipStatus: "已发货",
+        logisticsStatus: "已签收",
+        proofStatus: "审核通过",
+        restockStatus: "已关联",
+        exception: "无",
+        owner: "华东代理仓",
+        assignTime: "2026-05-02 10:32",
+        due: "已闭环",
+        goods: [
+          { sku: "ZX-LM-010", name: "酸辣柠檬", spec: "180g/袋", qty: 18, shipped: 18 },
+          { sku: "ZX-LB-011", name: "喇叭脱脱", spec: "220g/盒", qty: 12, shipped: 12 }
+        ],
+        logistics: { company: "中通快运", no: "ZT6400931820", time: "2026-05-02 15:28", packages: "2件" },
+        proofNote: "签收凭证审核通过，已关联补货单 RH20260502009。",
+        history: [
+          { title: "客户订单确认", time: "2026-05-02 10:05", type: "done" },
+          { title: "平台派单", time: "2026-05-02 10:32", type: "done" },
+          { title: "代理接单", time: "2026-05-02 10:46", type: "done" },
+          { title: "代理发货", time: "2026-05-02 15:28", type: "done" },
+          { title: "客户签收", time: "2026-05-03 11:10", type: "done" },
+          { title: "凭证审核通过", time: "2026-05-03 14:20", type: "done" },
+          { title: "关联补货单", time: "2026-05-03 14:25", type: "brand" }
+        ]
+      },
+      {
+        id: "AF20260501013",
+        customerOrder: "SO20260430031",
+        customer: "重庆鼎鲜供应",
+        consignee: "黄经理 135****9090",
+        address: "重庆市渝北区金开大道 188 号",
+        agent: "西南代理仓",
+        skuCount: 2,
+        qty: 42,
+        shippedQty: 0,
+        status: "异常关闭",
+        receiveStatus: "已拒单",
+        shipStatus: "未发货",
+        logisticsStatus: "无",
+        proofStatus: "无",
+        restockStatus: "未关联",
+        exception: "拒单",
+        owner: "西南代理仓",
+        assignTime: "2026-05-01 11:12",
+        due: "已退回总部",
+        goods: [
+          { sku: "ZX-QJ-016", name: "青椒脱脱", spec: "220g/盒", qty: 30, shipped: 0 },
+          { sku: "ZX-SN-009", name: "蒜香酸甜辣", spec: "180g/袋", qty: 12, shipped: 0 }
+        ],
+        logistics: { company: "-", no: "-", time: "-", packages: "-" },
+        proofNote: "代理拒单，原因：库存不足。平台已退回总部发货。",
+        history: [
+          { title: "客户订单确认", time: "2026-05-01 10:50", type: "done" },
+          { title: "平台派单", time: "2026-05-01 11:12", type: "done" },
+          { title: "代理拒单", time: "2026-05-01 11:28", type: "red" },
+          { title: "异常关闭", time: "2026-05-01 11:40", type: "red" }
+        ]
+      }
+    ];
+
+    const state = {
+      role: "platform",
+      page: "orders",
+      status: "全部",
+      agent: "全部",
+      keyword: "",
+      selectedId: orders[0].id,
+      detailTab: "goods",
+      selectedAgent: agents[0].name
+    };
+
+    const navItems = {
+      platform: [
+        { page: "orders", icon: "D", label: "代理发货单" },
+        { page: "detail", icon: "L", label: "发货详情" },
+        { page: "exceptions", icon: "!", label: "异常处理" },
+        { page: "agents", icon: "A", label: "代理配置" }
+      ],
+      agent: [
+        { page: "workbench", icon: "W", label: "我的工作台" },
+        { page: "orders", icon: "D", label: "我的发货单" },
+        { page: "detail", icon: "L", label: "发货详情" }
+      ]
+    };
+
+    function visibleOrders() {
+      let list = orders.slice();
+      if (state.role === "agent") {
+        list = list.filter(order => order.owner === "华东代理仓");
+      }
+      if (state.page === "exceptions") {
+        list = list.filter(order => order.exception !== "无");
+      }
+      if (state.status !== "全部") {
+        list = list.filter(order => order.status === state.status || order.exception === state.status);
+      }
+      if (state.agent !== "全部") {
+        list = list.filter(order => order.agent === state.agent);
+      }
+      const keyword = state.keyword.trim();
+      if (keyword) {
+        list = list.filter(order => [order.id, order.customerOrder, order.customer, order.agent].some(value => value.includes(keyword)));
+      }
+      return list;
+    }
+
+    function statusClass(value) {
+      if (["已完成", "审核通过", "已签收", "已关联"].includes(value)) return "green";
+      if (["待接单", "待发货", "待上传", "待补货", "待审核", "待补充"].includes(value)) return "blue";
+      if (["已发货", "部分发货", "运输中"].includes(value)) return "brand";
+      if (["缺货", "拒单", "接单超时", "发货超时"].includes(value)) return "amber";
+      if (["异常关闭", "物流异常", "已拒单", "审核驳回"].includes(value)) return "red";
+      return "gray";
+    }
+
+    function selectedOrder() {
+      return orders.find(order => order.id === state.selectedId) || visibleOrders()[0] || orders[0];
+    }
+
+    function setRole(role) {
+      state.role = role;
+      state.page = role === "agent" ? "workbench" : "orders";
+      state.status = "全部";
+      const first = visibleOrders()[0];
+      if (first) state.selectedId = first.id;
+      render();
+    }
+
+    function setPage(page) {
+      state.page = page;
+      if (page === "detail" && !state.selectedId) state.selectedId = orders[0].id;
+      render();
+    }
+
+    function setStatus(status) {
+      state.status = status;
+      render();
+    }
+
+    function viewDetail(id) {
+      state.selectedId = id;
+      state.page = "detail";
+      state.detailTab = "goods";
+      render();
+    }
+
+    function render() {
+      document.getElementById("rolePlatform").classList.toggle("active", state.role === "platform");
+      document.getElementById("roleAgent").classList.toggle("active", state.role === "agent");
+      renderNav();
+      const main = document.getElementById("main");
+      if (state.page === "workbench") main.innerHTML = renderWorkbench();
+      else if (state.page === "detail") main.innerHTML = renderDetail();
+      else if (state.page === "exceptions") main.innerHTML = renderOrdersPage("异常处理", "exception");
+      else if (state.page === "agents") main.innerHTML = renderAgents();
+      else main.innerHTML = renderOrdersPage(state.role === "agent" ? "我的发货单" : "代理发货单", "orders");
+    }
+
+    function renderNav() {
+      const nav = document.getElementById("nav");
+      nav.innerHTML = navItems[state.role].map(item => {
+        const count = navCount(item.page);
+        return `
+          <button type="button" class="${state.page === item.page ? "active" : ""}" onclick="setPage('${item.page}')">
+            <span class="icon">${item.icon}</span>
+            <span>${item.label}</span>
+            <span class="badge">${count}</span>
+          </button>
+        `;
+      }).join("");
+    }
+
+    function navCount(page) {
+      if (page === "exceptions") return orders.filter(order => order.exception !== "无").length;
+      if (page === "workbench") return orders.filter(order => order.owner === "华东代理仓" && ["待接单", "待发货", "已发货"].includes(order.status)).length;
+      if (page === "agents") return agents.length;
+      return state.role === "agent" ? orders.filter(order => order.owner === "华东代理仓").length : orders.length;
+    }
+
+    function statsFor(list) {
+      return [
+        ["全部发货单", list.length, "brand"],
+        ["待接单", list.filter(order => order.status === "待接单").length, "blue"],
+        ["待发货", list.filter(order => order.status === "待发货").length, "blue"],
+        ["已发货", list.filter(order => ["已发货", "部分发货"].includes(order.status)).length, "green"],
+        ["异常", list.filter(order => order.exception !== "无").length, "red"],
+        ["已完成", list.filter(order => order.status === "已完成").length, "green"]
+      ];
+    }
+
+    function renderStats(list) {
+      return `<section class="stats">
+        ${statsFor(list).map(item => `<div class="stat ${item[2]}"><span>${item[0]}</span><strong>${item[1]}</strong></div>`).join("")}
+      </section>`;
+    }
+
+    function renderOrdersPage(title, mode) {
+      const list = visibleOrders();
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>${title}</h1>
+            <p class="subtle">${state.role === "agent" ? "华东代理仓" : "平台订单运营"} · ${list.length} 条记录</p>
+          </div>
+          <div class="toolbar">
+            ${state.role === "platform" ? `<button class="btn primary" type="button" onclick="openAssign()"><span class="icon">+</span>新建派单</button>` : ""}
+            <button class="btn ghost" type="button" onclick="toast('已生成当前筛选结果导出任务。')"><span class="icon">↓</span>导出</button>
+          </div>
+        </section>
+
+        ${renderStats(list)}
+
+        <section class="panel">
+          <div class="filters">
+            <div class="field">
+              <label>状态</label>
+              <select onchange="state.status=this.value;render()">
+                ${["全部", "待接单", "待发货", "已发货", "部分发货", "已完成", "缺货", "拒单", "异常关闭"].map(value => `<option ${state.status === value ? "selected" : ""}>${value}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field">
+              <label>代理</label>
+              <select onchange="state.agent=this.value;render()" ${state.role === "agent" ? "disabled" : ""}>
+                ${["全部", ...agents.map(agent => agent.name)].map(value => `<option ${state.agent === value ? "selected" : ""}>${value}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field">
+              <label>关键词</label>
+              <input value="${state.keyword}" placeholder="单号 / 客户 / 代理" oninput="state.keyword=this.value;render()" />
+            </div>
+            <button class="btn ghost" type="button" onclick="state.status='全部';state.agent='全部';state.keyword='';render()">重置</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>代理发货单</th>
+                  <th>客户订单</th>
+                  <th>客户</th>
+                  <th>代理</th>
+                  <th>商品</th>
+                  <th>发货状态</th>
+                  <th>物流/凭证</th>
+                  <th>异常</th>
+                  <th>处理时限</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.length ? list.map(renderOrderRow).join("") : `<tr><td colspan="10"><div class="empty">没有符合条件的数据</div></td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderOrderRow(order) {
+      return `
+        <tr>
+          <td><button class="btn ghost mono" type="button" onclick="viewDetail('${order.id}')">${order.id}</button></td>
+          <td class="mono">${order.customerOrder}</td>
+          <td>${order.customer}</td>
+          <td>${order.agent}</td>
+          <td>${order.skuCount} SKU / ${order.qty} 件</td>
+          <td><span class="status ${statusClass(order.status)}">${order.status}</span></td>
+          <td>
+            <span class="status ${statusClass(order.logisticsStatus)}">${order.logisticsStatus}</span>
+            <span class="status ${statusClass(order.proofStatus)}">${order.proofStatus}</span>
+          </td>
+          <td><span class="status ${statusClass(order.exception)}">${order.exception}</span></td>
+          <td>${order.due}</td>
+          <td>
+            <div class="row-actions">
+              <button class="btn blue" type="button" onclick="viewDetail('${order.id}')">查看</button>
+              ${rowPrimaryAction(order)}
+              ${state.role === "platform" && order.exception !== "无" ? `<button class="btn warn" type="button" onclick="openException('${order.id}')">处理</button>` : ""}
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+
+    function rowPrimaryAction(order) {
+      if (state.role === "agent" && order.status === "待接单") {
+        return `<button class="btn primary" type="button" onclick="acceptOrder('${order.id}')">接单</button>`;
+      }
+      if (state.role === "agent" && order.status === "待发货") {
+        return `<button class="btn primary" type="button" onclick="openShip('${order.id}')">发货</button>`;
+      }
+      if (state.role === "platform" && order.status === "待接单") {
+        return `<button class="btn warn" type="button" onclick="toast('已发送接单提醒。')">催办</button>`;
+      }
+      if (state.role === "platform" && order.status === "已发货" && order.proofStatus === "待审核") {
+        return `<button class="btn primary" type="button" onclick="approveProof('${order.id}')">审凭证</button>`;
+      }
+      return "";
+    }
+
+    function renderWorkbench() {
+      const mine = orders.filter(order => order.owner === "华东代理仓");
+      const todo = mine.filter(order => ["待接单", "待发货", "已发货"].includes(order.status));
+      const tasks = [
+        ["待接单", mine.filter(order => order.status === "待接单").length, "blue"],
+        ["待发货", mine.filter(order => order.status === "待发货").length, "blue"],
+        ["待补充凭证", mine.filter(order => order.proofStatus === "待补充").length, "amber"],
+        ["已发货待审核", mine.filter(order => order.proofStatus === "待审核").length, "green"],
+        ["异常", mine.filter(order => order.exception !== "无").length, "red"],
+        ["已完成", mine.filter(order => order.status === "已完成").length, "green"]
+      ];
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>我的工作台</h1>
+            <p class="subtle">华东代理仓 · 今日待办 ${todo.length}</p>
+          </div>
+          <button class="btn ghost" type="button" onclick="setPage('orders')"><span class="icon">→</span>全部发货单</button>
+        </section>
+        <section class="stats">
+          ${tasks.map(item => `<div class="stat ${item[2]}"><span>${item[0]}</span><strong>${item[1]}</strong></div>`).join("")}
+        </section>
+        <section class="panel">
+          <div class="panel-head">
+            <h2>待处理任务</h2>
+            <span class="subtle">${todo.length} 条</span>
+          </div>
+          <div class="panel-body">
+            <div class="task-list">
+              ${todo.length ? todo.map(order => `
+                <div class="task-row">
+                  <div class="task-main">
+                    <strong>${order.id} · ${order.customer}</strong>
+                    <span>${order.skuCount} SKU / ${order.qty} 件 · ${order.due}</span>
+                  </div>
+                  <div class="row-actions">
+                    <span class="status ${statusClass(order.status)}">${order.status}</span>
+                    ${rowPrimaryAction(order)}
+                    <button class="btn ghost" type="button" onclick="viewDetail('${order.id}')">详情</button>
+                  </div>
+                </div>
+              `).join("") : `<div class="empty">当前没有待处理任务</div>`}
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderDetail() {
+      const order = selectedOrder();
+      if (!order) return `<div class="empty">暂无详情</div>`;
+      const tabs = [
+        ["goods", "商品明细"],
+        ["logistics", "物流凭证"],
+        ["exception", "异常记录"],
+        ["log", "操作日志"]
+      ];
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>${order.id}</h1>
+            <p class="subtle">${order.customer} · ${order.agent} · ${order.customerOrder}</p>
+          </div>
+          <div class="toolbar">
+            ${detailActions(order)}
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-body">
+            <div class="summary-grid">
+              <div class="summary-item"><span>主状态</span><strong><span class="status ${statusClass(order.status)}">${order.status}</span></strong></div>
+              <div class="summary-item"><span>接单状态</span><strong>${order.receiveStatus}</strong></div>
+              <div class="summary-item"><span>物流状态</span><strong>${order.logisticsStatus}</strong></div>
+              <div class="summary-item"><span>后续单据</span><strong>${order.restockStatus}</strong></div>
+              <div class="summary-item"><span>收货人</span><strong>${order.consignee}</strong></div>
+              <div class="summary-item"><span>收货地址</span><strong>${order.address}</strong></div>
+              <div class="summary-item"><span>派单时间</span><strong>${order.assignTime}</strong></div>
+              <div class="summary-item"><span>异常</span><strong><span class="status ${statusClass(order.exception)}">${order.exception}</span></strong></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="detail-layout">
+          <div class="panel">
+            <div class="panel-head">
+              <div class="tabbar">
+                ${tabs.map(tab => `<button type="button" class="${state.detailTab === tab[0] ? "active" : ""}" onclick="state.detailTab='${tab[0]}';render()">${tab[1]}</button>`).join("")}
+              </div>
+            </div>
+            <div class="panel-body">
+              ${renderDetailTab(order)}
+            </div>
+          </div>
+
+          <aside class="panel">
+            <div class="panel-head">
+              <h2>履约时间线</h2>
+            </div>
+            <div class="panel-body">
+              <div class="timeline">
+                ${order.history.map(item => `
+                  <div class="timeline-item">
+                    <span class="dot ${item.type}"></span>
+                    <div class="timeline-copy">
+                      <strong>${item.title}</strong>
+                      <span>${item.time}</span>
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </aside>
+        </section>
+      `;
+    }
+
+    function detailActions(order) {
+      const actions = [];
+      if (state.role === "agent" && order.status === "待接单") {
+        actions.push(`<button class="btn primary" type="button" onclick="acceptOrder('${order.id}')">确认接单</button>`);
+        actions.push(`<button class="btn danger" type="button" onclick="rejectOrder('${order.id}')">拒绝接单</button>`);
+      }
+      if (state.role === "agent" && ["待发货", "部分发货"].includes(order.status)) {
+        actions.push(`<button class="btn primary" type="button" onclick="openShip('${order.id}')">填写物流</button>`);
+      }
+      if (state.role === "platform" && order.proofStatus === "待审核") {
+        actions.push(`<button class="btn primary" type="button" onclick="approveProof('${order.id}')">审核通过</button>`);
+        actions.push(`<button class="btn warn" type="button" onclick="rejectProof('${order.id}')">驳回凭证</button>`);
+      }
+      if (state.role === "platform") {
+        actions.push(`<button class="btn warn" type="button" onclick="openException('${order.id}')">异常处理</button>`);
+        actions.push(`<button class="btn ghost" type="button" onclick="openAssign('${order.id}')">改派</button>`);
+      }
+      actions.push(`<button class="btn ghost" type="button" onclick="setPage('orders')">返回列表</button>`);
+      return actions.join("");
+    }
+
+    function renderDetailTab(order) {
+      if (state.detailTab === "logistics") {
+        return `
+          <div class="summary-grid">
+            <div class="summary-item"><span>物流公司</span><strong>${order.logistics.company}</strong></div>
+            <div class="summary-item"><span>物流单号</span><strong>${order.logistics.no}</strong></div>
+            <div class="summary-item"><span>发货时间</span><strong>${order.logistics.time}</strong></div>
+            <div class="summary-item"><span>发货件数</span><strong>${order.logistics.packages}</strong></div>
+            <div class="summary-item full"><span>凭证说明</span><strong>${order.proofNote}</strong></div>
+          </div>
+        `;
+      }
+      if (state.detailTab === "exception") {
+        return order.exception === "无"
+          ? `<div class="empty">当前没有异常记录</div>`
+          : `<div class="summary-grid">
+              <div class="summary-item"><span>异常类型</span><strong>${order.exception}</strong></div>
+              <div class="summary-item"><span>当前处理</span><strong>${order.due}</strong></div>
+              <div class="summary-item full"><span>说明</span><strong>${order.proofNote}</strong></div>
+            </div>`;
+      }
+      if (state.detailTab === "log") {
+        return `<div class="timeline">${order.history.map(item => `
+          <div class="timeline-item">
+            <span class="dot ${item.type}"></span>
+            <div class="timeline-copy"><strong>${item.title}</strong><span>${item.time}</span></div>
+          </div>`).join("")}</div>`;
+      }
+      return `
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>商品</th>
+                <th>规格</th>
+                <th>派单数量</th>
+                <th>已发数量</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${order.goods.map(item => `
+                <tr>
+                  <td class="mono">${item.sku}</td>
+                  <td>${item.name}</td>
+                  <td>${item.spec}</td>
+                  <td>${item.qty}</td>
+                  <td>${item.shipped}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderAgents() {
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>代理配置</h1>
+            <p class="subtle">${agents.length} 个可发货代理</p>
+          </div>
+          <button class="btn primary" type="button" onclick="toast('已打开新增代理表单。')"><span class="icon">+</span>新增代理</button>
+        </section>
+        <section class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>代理名称</th>
+                  <th>服务区域</th>
+                  <th>可发库存</th>
+                  <th>承诺时效</th>
+                  <th>履约评分</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${agents.map(agent => `
+                  <tr>
+                    <td>${agent.name}</td>
+                    <td>${agent.region}</td>
+                    <td>${agent.stock} 件</td>
+                    <td>${agent.sla}</td>
+                    <td><span class="status ${agent.score >= 92 ? "green" : "amber"}">${agent.score}</span></td>
+                    <td><button class="btn blue" type="button" onclick="toast('已进入 ${agent.name} 配置。')">配置</button></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function openAssign(id) {
+      if (id) state.selectedId = id;
+      document.getElementById("modalTitle").textContent = id ? "改派代理" : "新建派单";
+      state.selectedAgent = selectedOrder()?.agent || agents[0].name;
+      document.getElementById("modalBody").innerHTML = `
+        <div class="form-grid">
+          <div class="field">
+            <label>来源客户订单</label>
+            <input value="${selectedOrder()?.customerOrder || "SO20260504090"}" />
+          </div>
+          <div class="field">
+            <label>派单数量</label>
+            <input value="${selectedOrder()?.qty || 24}" />
+          </div>
+          <div class="field full">
+            <label>选择代理</label>
+            <div class="agent-grid">
+              ${agents.map(agent => `
+                <button class="agent-option ${state.selectedAgent === agent.name ? "active" : ""}" type="button" onclick="state.selectedAgent='${agent.name}';openAssign('${id || ""}')">
+                  <strong>${agent.name}</strong>
+                  <span>${agent.region}</span>
+                  <span>库存 ${agent.stock} 件 · ${agent.sla}</span>
+                </button>
+              `).join("")}
+            </div>
+          </div>
+          <div class="field full">
+            <label>派单原因</label>
+            <textarea>区域匹配，代理可发库存满足，本次人工确认派单。</textarea>
+          </div>
+        </div>
+      `;
+      document.getElementById("modalFoot").innerHTML = `
+        <button class="btn ghost" type="button" onclick="closeOverlay()">取消</button>
+        <button class="btn primary" type="button" onclick="confirmAssign('${id || ""}')">确认派单</button>
+      `;
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function openShip(id) {
+      state.selectedId = id;
+      const order = selectedOrder();
+      document.getElementById("modalTitle").textContent = "填写物流";
+      document.getElementById("modalBody").innerHTML = `
+        <div class="form-grid">
+          <div class="field">
+            <label>物流公司</label>
+            <input id="shipCompany" value="顺丰速运" />
+          </div>
+          <div class="field">
+            <label>物流单号</label>
+            <input id="shipNo" value="SF${Math.floor(7000000000 + Math.random() * 999999999)}" />
+          </div>
+          <div class="field">
+            <label>发货件数</label>
+            <input id="shipPackages" value="${Math.max(1, Math.ceil(order.qty / 12))}件" />
+          </div>
+          <div class="field">
+            <label>实际发货数量</label>
+            <input id="shipQty" value="${order.qty}" />
+          </div>
+          <div class="field full">
+            <label>发货凭证</label>
+            <input value="面单照片、装箱照片" />
+          </div>
+          <div class="field full">
+            <label>备注</label>
+            <textarea>按派单数量发出，物流信息已核对。</textarea>
+          </div>
+        </div>
+      `;
+      document.getElementById("modalFoot").innerHTML = `
+        <button class="btn ghost" type="button" onclick="closeOverlay()">取消</button>
+        <button class="btn primary" type="button" onclick="confirmShip('${id}')">提交发货</button>
+      `;
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function openException(id) {
+      state.selectedId = id;
+      const order = selectedOrder();
+      document.getElementById("drawerTitle").textContent = "异常处理";
+      document.getElementById("drawerBody").innerHTML = `
+        <div class="summary-grid">
+          <div class="summary-item"><span>代理发货单</span><strong>${order.id}</strong></div>
+          <div class="summary-item"><span>当前异常</span><strong>${order.exception}</strong></div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label>异常类型</label>
+            <select id="exceptionType">
+              ${["缺货", "拒单", "接单超时", "发货超时", "物流异常", "数量不一致", "凭证异常"].map(value => `<option ${order.exception === value ? "selected" : ""}>${value}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label>处理动作</label>
+            <select id="exceptionAction">
+              <option>继续履约</option>
+              <option>改派代理</option>
+              <option>退回总部发货</option>
+              <option>异常关闭</option>
+            </select>
+          </div>
+          <div class="field full">
+            <label>处理说明</label>
+            <textarea id="exceptionNote">${order.proofNote}</textarea>
+          </div>
+        </div>
+      `;
+      document.getElementById("drawerFoot").innerHTML = `
+        <button class="btn ghost" type="button" onclick="closeOverlay()">取消</button>
+        <button class="btn primary" type="button" onclick="confirmException('${id}')">保存处理</button>
+      `;
+      document.getElementById("drawer").classList.add("open");
+    }
+
+    function confirmAssign(id) {
+      if (id) {
+        const order = selectedOrder();
+        order.agent = state.selectedAgent;
+        order.owner = state.selectedAgent;
+        order.exception = "无";
+        order.status = "待接单";
+        order.receiveStatus = "待接单";
+        order.due = "接单剩余 2小时";
+        order.history.push({ title: "平台改派", time: now(), type: "brand" });
+        toast("已完成改派，等待代理接单。");
+      } else {
+        const newId = "AF20260504" + String(orders.length + 6).padStart(3, "0");
+        orders.unshift({
+          id: newId,
+          customerOrder: "SO20260504090",
+          customer: "上海试点客户",
+          consignee: "许经理 138****0008",
+          address: "上海市闵行区申长路 600 号",
+          agent: state.selectedAgent,
+          skuCount: 1,
+          qty: 24,
+          shippedQty: 0,
+          status: "待接单",
+          receiveStatus: "待接单",
+          shipStatus: "待发货",
+          logisticsStatus: "待填写",
+          proofStatus: "待上传",
+          restockStatus: "未关联",
+          exception: "无",
+          owner: state.selectedAgent,
+          assignTime: now(),
+          due: "接单剩余 2小时",
+          goods: [{ sku: "ZX-TEST-001", name: "试点商品", spec: "标准件", qty: 24, shipped: 0 }],
+          logistics: { company: "-", no: "-", time: "-", packages: "-" },
+          proofNote: "待代理上传发货凭证。",
+          history: [{ title: "平台派单", time: now(), type: "brand" }]
+        });
+        state.selectedId = newId;
+        toast("已生成代理发货单。");
+      }
+      closeOverlay();
+      render();
+    }
+
+    function acceptOrder(id) {
+      const order = orders.find(item => item.id === id);
+      order.status = "待发货";
+      order.receiveStatus = "已接单";
+      order.due = "发货剩余 6小时";
+      order.history.push({ title: "代理接单", time: now(), type: "done" });
+      toast("已接单，下一步填写物流。");
+      render();
+    }
+
+    function rejectOrder(id) {
+      const order = orders.find(item => item.id === id);
+      order.status = "异常关闭";
+      order.receiveStatus = "已拒单";
+      order.exception = "拒单";
+      order.due = "待平台改派";
+      order.proofNote = "代理拒单，原因：库存不足。";
+      order.history.push({ title: "代理拒单", time: now(), type: "red" });
+      toast("已拒单，平台端可改派或退回原流程。");
+      render();
+    }
+
+    function confirmShip(id) {
+      const order = orders.find(item => item.id === id);
+      const qty = Math.min(Number(document.getElementById("shipQty").value) || order.qty, order.qty);
+      order.shippedQty = qty;
+      order.goods.forEach(item => item.shipped = Math.min(item.qty, qty));
+      order.status = qty < order.qty ? "部分发货" : "已发货";
+      order.shipStatus = order.status;
+      order.logisticsStatus = "运输中";
+      order.proofStatus = "待审核";
+      order.logistics = {
+        company: document.getElementById("shipCompany").value || "顺丰速运",
+        no: document.getElementById("shipNo").value || "SF0000000000",
+        time: now(),
+        packages: document.getElementById("shipPackages").value || "1件"
+      };
+      order.proofNote = qty < order.qty ? `实际发货 ${qty} 件，剩余 ${order.qty - qty} 件待处理。` : "发货凭证已上传，待平台审核。";
+      order.history.push({ title: order.status, time: now(), type: qty < order.qty ? "warn" : "brand" });
+      closeOverlay();
+      toast("物流已提交，平台端可审核凭证。");
+      render();
+    }
+
+    function approveProof(id) {
+      const order = orders.find(item => item.id === id);
+      order.proofStatus = "审核通过";
+      order.logisticsStatus = "已签收";
+      order.status = "已完成";
+      order.restockStatus = "待补货";
+      order.exception = "无";
+      order.due = "待关联补货";
+      order.proofNote = "凭证审核通过，可作为补货或对账依据。";
+      order.history.push({ title: "凭证审核通过", time: now(), type: "done" });
+      toast("凭证审核通过。");
+      render();
+    }
+
+    function rejectProof(id) {
+      const order = orders.find(item => item.id === id);
+      order.proofStatus = "审核驳回";
+      order.exception = "凭证异常";
+      order.due = "待代理重传";
+      order.proofNote = "凭证信息不完整，请补充客户签收记录或清晰面单。";
+      order.history.push({ title: "凭证驳回", time: now(), type: "red" });
+      toast("已驳回凭证。");
+      render();
+    }
+
+    function confirmException(id) {
+      const order = orders.find(item => item.id === id);
+      const type = document.getElementById("exceptionType").value;
+      const action = document.getElementById("exceptionAction").value;
+      const note = document.getElementById("exceptionNote").value;
+      order.exception = action === "继续履约" ? "无" : type;
+      order.proofNote = note;
+      if (action === "异常关闭" || action === "退回总部发货") {
+        order.status = "异常关闭";
+        order.due = action;
+      } else if (action === "改派代理") {
+        order.status = "待接单";
+        order.receiveStatus = "待接单";
+        order.due = "待改派确认";
+      } else {
+        order.due = "继续履约";
+      }
+      order.history.push({ title: `异常处理：${action}`, time: now(), type: order.exception === "无" ? "brand" : "warn" });
+      closeOverlay();
+      toast("异常处理已保存。");
+      render();
+    }
+
+    function closeOverlay() {
+      document.getElementById("modal").classList.remove("open");
+      document.getElementById("drawer").classList.remove("open");
+    }
+
+    function toast(message) {
+      const node = document.getElementById("toast");
+      node.textContent = message;
+      node.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => node.classList.remove("show"), 2200);
+    }
+
+    function now() {
+      return "2026-05-04 " + new Date().toTimeString().slice(0, 5);
+    }
+
+    document.getElementById("rolePlatform").addEventListener("click", () => setRole("platform"));
+    document.getElementById("roleAgent").addEventListener("click", () => setRole("agent"));
+    render();
+  </script>
+</body>
+</html>

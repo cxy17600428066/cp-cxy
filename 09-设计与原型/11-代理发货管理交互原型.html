@@ -1509,10 +1509,12 @@
       `;
     }
 
-    function openAssign(id) {
+    function openAssign(id, keepSelection = false) {
       if (id) state.selectedId = id;
       document.getElementById("modalTitle").textContent = id ? "改派代理" : "新建派单";
-      state.selectedAgent = selectedOrder()?.agent || agents[0].name;
+      if (!keepSelection) {
+        state.selectedAgent = id ? (selectedOrder()?.agent || agents[0].name) : agents[0].name;
+      }
       document.getElementById("modalBody").innerHTML = `
         <div class="form-grid">
           <div class="field">
@@ -1527,7 +1529,7 @@
             <label>选择代理</label>
             <div class="agent-grid">
               ${agents.map(agent => `
-                <button class="agent-option ${state.selectedAgent === agent.name ? "active" : ""}" type="button" onclick="state.selectedAgent='${agent.name}';openAssign('${id || ""}')">
+                <button class="agent-option ${state.selectedAgent === agent.name ? "active" : ""}" type="button" onclick="state.selectedAgent='${agent.name}';openAssign('${id || ""}', true)">
                   <strong>${agent.name}</strong>
                   <span>${agent.region}</span>
                   <span>库存 ${agent.stock} 件 · ${agent.sla}</span>

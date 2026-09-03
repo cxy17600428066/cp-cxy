@@ -9,6 +9,9 @@ if ([string]::IsNullOrWhiteSpace($Message)) {
 }
 
 git add .
+if ($LASTEXITCODE -ne 0) {
+  throw "git add failed with exit code $LASTEXITCODE"
+}
 
 $status = git status --porcelain
 if ([string]::IsNullOrWhiteSpace(($status | Out-String))) {
@@ -17,6 +20,9 @@ if ([string]::IsNullOrWhiteSpace(($status | Out-String))) {
 }
 
 git commit -m $Message
+if ($LASTEXITCODE -ne 0) {
+  throw "git commit failed with exit code $LASTEXITCODE"
+}
 
 $branch = git rev-parse --abbrev-ref HEAD
 $upstream = git config --get "branch.$branch.merge"
@@ -25,4 +31,8 @@ if ([string]::IsNullOrWhiteSpace(($upstream | Out-String))) {
 }
 else {
   git push
+}
+
+if ($LASTEXITCODE -ne 0) {
+  throw "git push failed with exit code $LASTEXITCODE"
 }

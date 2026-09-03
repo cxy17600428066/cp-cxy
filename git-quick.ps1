@@ -13,10 +13,13 @@ if ($LASTEXITCODE -ne 0) {
   throw "git add failed with exit code $LASTEXITCODE"
 }
 
-$status = git status --porcelain
-if ([string]::IsNullOrWhiteSpace(($status | Out-String))) {
+$null = git diff --cached --quiet
+if ($LASTEXITCODE -eq 0) {
   Write-Host "No changes to commit."
   exit 0
+}
+if ($LASTEXITCODE -ne 1) {
+  throw "git diff --cached failed with exit code $LASTEXITCODE"
 }
 
 git commit -m $Message

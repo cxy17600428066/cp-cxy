@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>订单售后督办交互原型</title>
+  <style>
+    :root {
+      --bg: #f3f6fb;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --line: #d8e1ec;
+      --line-strong: #b8c5d6;
+      --ink: #102033;
+      --muted: #607086;
+      --brand: #0f766e;
+      --brand-soft: #e8f5f3;
+      --blue: #1d4ed8;
+      --blue-soft: #eaf1ff;
+      --amber: #b45309;
+      --amber-soft: #fff4e5;
+      --red: #b91c1c;
+      --red-soft: #fff0f0;
+      --green: #047857;
+      --green-soft: #e9f8ef;
+      --shadow: 0 14px 34px rgba(16, 32, 51, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Segoe UI", sans-serif;
+    }
+
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 22px;
+      background: rgba(255, 255, 255, 0.95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+    }
+
+    .title {
+      display: grid;
+      gap: 4px;
+    }
+
+    .title strong {
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .title span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .shell {
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .sidebar {
+      border-right: 1px solid var(--line);
+      background: #fbfcfe;
+      padding: 16px 12px;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .nav-title {
+      padding: 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button,
+    .seg button,
+    .btn {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 36px;
+      transition: 0.18s ease;
+    }
+
+    .nav button {
+      padding: 10px 12px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .nav button small {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+      font-weight: 600;
+    }
+
+    .nav button.active,
+    .seg button.active {
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.3);
+      color: var(--brand);
+    }
+
+    .main {
+      padding: 18px;
+      overflow: auto;
+    }
+
+    .page {
+      display: none;
+      gap: 16px;
+    }
+
+    .page.active {
+      display: grid;
+    }
+
+    .hero,
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 18px 20px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .hero h1,
+    .card h2,
+    .card h3 {
+      margin: 0;
+    }
+
+    .hero p,
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 14px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .stat strong {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .layout-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.8fr);
+      gap: 16px;
+    }
+
+    .card {
+      padding: 16px;
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .row,
+    .toolbar,
+    .seg,
+    .actions,
+    .tag-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .toolbar {
+      justify-content: space-between;
+    }
+
+    .seg {
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .seg button {
+      padding: 8px 10px;
+      border-color: transparent;
+      background: transparent;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .btn {
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .btn.blue {
+      background: var(--blue-soft);
+      border-color: rgba(29, 78, 216, 0.2);
+      color: var(--blue);
+    }
+
+    .btn.warn {
+      background: var(--amber-soft);
+      border-color: rgba(180, 83, 9, 0.22);
+      color: var(--amber);
+    }
+
+    .btn.danger {
+      background: var(--red-soft);
+      border-color: rgba(185, 28, 28, 0.22);
+      color: var(--red);
+    }
+
+    .btn.ghost {
+      background: transparent;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      padding: 9px 11px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 88px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 980px;
+      border-collapse: collapse;
+      background: var(--surface);
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    th {
+      background: #f9fbfd;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .name {
+      display: grid;
+      gap: 3px;
+    }
+
+    .name strong {
+      font-size: 13px;
+    }
+
+    .name span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .gray { color: #475569; background: #edf2f7; }
+    .blue { color: var(--blue); background: var(--blue-soft); }
+    .amber { color: var(--amber); background: var(--amber-soft); }
+    .red { color: var(--red); background: var(--red-soft); }
+    .green { color: var(--green); background: var(--green-soft); }
+
+    .list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .list-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .list-item h3 {
+      font-size: 14px;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .list-item p {
+      font-size: 12px;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(100px, 1fr));
+      gap: 8px;
+    }
+
+    .flow-node {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      padding: 10px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .flow-node.active {
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.3);
+    }
+
+    .flow-node strong {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .flow-node span {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+    }
+
+    .timeline-item {
+      border-left: 3px solid var(--brand);
+      padding-left: 12px;
+      display: grid;
+      gap: 4px;
+    }
+
+    .timeline-item strong {
+      font-size: 13px;
+    }
+
+    .timeline-item span,
+    .timeline-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .drawer {
+      position: fixed;
+      inset: 0;
+      background: rgba(16, 32, 51, 0.34);
+      display: none;
+      justify-content: flex-end;
+      z-index: 20;
+    }
+
+    .drawer.open {
+      display: flex;
+    }
+
+    .drawer-panel {
+      width: min(520px, 100%);
+      height: 100%;
+      background: var(--surface);
+      box-shadow: -20px 0 36px rgba(16, 32, 51, 0.18);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .drawer-head,
+    .drawer-body,
+    .drawer-foot {
+      padding: 16px;
+    }
+
+    .drawer-head,
+    .drawer-foot {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .drawer-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: none;
+    }
+
+    .drawer-body {
+      overflow: auto;
+      display: grid;
+      gap: 16px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: rgba(16, 32, 51, 0.92);
+      color: #fff;
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: 0.2s ease;
+      pointer-events: none;
+      z-index: 30;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 1080px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .layout-2,
+      .stats,
+      .field-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .flow {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="title">
+        <strong>订单售后督办交互原型</strong>
+        <span>单页演示版，先保证页面稳定、清晰、可切换、可操作</span>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" data-action="reset">重置数据</button>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar">
+        <div class="nav-title">页面</div>
+        <div class="nav" id="nav"></div>
+        <div class="card">
+          <h3>督办规则</h3>
+          <p>受理 2 小时，普通 24 小时，紧急 8 小时，重大 4 小时响应。</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="page active" data-page="overview"></section>
+        <section class="page" data-page="create"></section>
+        <section class="page" data-page="accept"></section>
+        <section class="page" data-page="approval"></section>
+        <section class="page" data-page="execute"></section>
+        <section class="page" data-page="callback"></section>
+        <section class="page" data-page="closed"></section>
+        <section class="page" data-page="dashboard"></section>
+      </main>
+    </div>
+  </div>
+
+  <div class="drawer" id="drawer">
+    <div class="drawer-panel">
+      <div class="drawer-head" id="drawerHead"></div>
+      <div class="drawer-body" id="drawerBody"></div>
+      <div class="drawer-foot" id="drawerFoot"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const pages = [
+      { id: "overview", label: "督办台账", note: "总览全部节点督办单" },
+      { id: "create", label: "卡点建督", note: "关联原审批单和卡住节点" },
+      { id: "accept", label: "督办受理", note: "确认卡点和督办对象" },
+      { id: "approval", label: "升级处理", note: "超期或重大卡点升级" },
+      { id: "execute", label: "节点处理", note: "被督办人处理原审批节点" },
+      { id: "callback", label: "反馈确认", note: "确认原审批是否恢复流转" },
+      { id: "closed", label: "督办办结", note: "闭环与复盘" },
+      { id: "dashboard", label: "领导看板", note: "查看预警和指标" }
+    ];
+
+    const flow = ["发现卡点", "生成督办", "督办受理", "节点催办", "责任人反馈", "确认流转", "督办办结"];
+
+    const oaApprovals = [
+      {
+        approvalNo: "SHOA-20260527-0091",
+        title: "售后退款审批 - 郑州经销商质量投诉",
+        orderNo: "SO-20260525-0962",
+        customer: "郑州经销商",
+        type: "退款赔付",
+        issue: "质量问题",
+        amount: 3200,
+        currentNode: "销售总监审批",
+        nodeOwner: "销售总监 孙毅",
+        stuckHours: 26,
+        nodeDeadline: "2026-05-27 12:00",
+        priority: "重大",
+        reason: "重大质量客诉审批节点已超过承诺响应时间，客户催促退款结论。",
+        plan: "请销售总监在 2 小时内完成审批或明确补充材料要求。"
+      },
+      {
+        approvalNo: "SHOA-20260527-0104",
+        title: "售后补发审批 - 杭州西湖门店漏发",
+        orderNo: "SO-20260526-1184",
+        customer: "杭州西湖门店",
+        type: "补发",
+        issue: "漏发",
+        amount: 0,
+        currentNode: "仓储主管确认",
+        nodeOwner: "华东仓 李峰",
+        stuckHours: 7,
+        nodeDeadline: "2026-05-27 16:00",
+        priority: "紧急",
+        reason: "仓储主管确认节点停留 7 小时，门店缺货影响次日陈列。",
+        plan: "请仓储主管确认漏发数量并回填补发单号。"
+      },
+      {
+        approvalNo: "SHOA-20260526-0076",
+        title: "售后换货审批 - 苏州直营门店错发",
+        orderNo: "SO-20260524-0725",
+        customer: "苏州直营门店",
+        type: "换货",
+        issue: "错发",
+        amount: 480,
+        currentNode: "客服回访确认",
+        nodeOwner: "客服 陈珊",
+        stuckHours: 4,
+        nodeDeadline: "2026-05-27 18:00",
+        priority: "普通",
+        reason: "原审批单已完成换货执行，但客服回访确认节点未提交。",
+        plan: "请客服完成客户回访，并在原审批单中提交确认结果。"
+      }
+    ];
+
+    const seedCases = [
+      {
+        id: "DB-20260527-001",
+        approvalNo: "SHOA-20260527-0104",
+        approvalTitle: "售后补发审批 - 杭州西湖门店漏发",
+        stuckNode: "仓储主管确认",
+        stuckOwner: "华东仓 李峰",
+        stuckHours: 7,
+        orderNo: "SO-20260526-1184",
+        customer: "杭州西湖门店",
+        type: "补发",
+        issue: "漏发",
+        priority: "紧急",
+        amount: 0,
+        dept: "仓储",
+        owner: "华东仓 李峰",
+        status: "节点处理",
+        stage: 4,
+        deadline: "剩余 1小时40分",
+        level: "amber",
+        plan: "补发 6 箱并减免本次运费",
+        reason: "客户反馈签收数量少 6 箱",
+        customerResult: "",
+        logs: [
+          { title: "发现卡点", time: "2026-05-27 15:10", note: "原审批单停留在仓储主管确认节点超过 7 小时。" },
+          { title: "生成督办", time: "2026-05-27 15:12", note: "已关联原审批单 SHOA-20260527-0104，并指向卡点人华东仓李峰。" }
+        ]
+      },
+      {
+        id: "DB-20260527-002",
+        approvalNo: "SHOA-20260527-0091",
+        approvalTitle: "售后退款审批 - 郑州经销商质量投诉",
+        stuckNode: "销售总监审批",
+        stuckOwner: "销售总监 孙毅",
+        stuckHours: 26,
+        orderNo: "SO-20260525-0962",
+        customer: "郑州经销商",
+        type: "退款赔付",
+        issue: "质量问题",
+        priority: "重大",
+        amount: 3200,
+        dept: "质检 / 财务",
+        owner: "质检 周敏",
+        status: "升级处理",
+        stage: 3,
+        deadline: "已超期 26分钟",
+        level: "red",
+        plan: "全额退款 3200 元并追加质量复检",
+        reason: "客户反馈同批次产品胀包",
+        customerResult: "",
+        logs: [
+          { title: "发现卡点", time: "2026-05-27 12:26", note: "销售总监审批节点超期 26 分钟，客户已二次催促。" },
+          { title: "超期升级", time: "2026-05-27 12:46", note: "重大客诉自动升级到售后负责人和销售总监。" }
+        ]
+      },
+      {
+        id: "DB-20260527-003",
+        approvalNo: "SHOA-20260526-0076",
+        approvalTitle: "售后换货审批 - 苏州直营门店错发",
+        stuckNode: "客服回访确认",
+        stuckOwner: "客服 陈珊",
+        stuckHours: 4,
+        orderNo: "SO-20260524-0725",
+        customer: "苏州直营门店",
+        type: "换货",
+        issue: "错发",
+        priority: "普通",
+        amount: 480,
+        dept: "仓储",
+        owner: "苏州仓 赵青",
+        status: "反馈确认",
+        stage: 5,
+        deadline: "待客户确认",
+        level: "blue",
+        plan: "回收错发货品并安排换货",
+        reason: "客户下单 A，仓库发成 B",
+        customerResult: "待确认",
+        logs: [
+          { title: "节点处理完成", time: "2026-05-27 10:08", note: "仓库已在原审批单回传快递单号。" },
+          { title: "待确认", time: "2026-05-27 14:08", note: "客服回访确认节点停留 4 小时。" }
+        ]
+      },
+      {
+        id: "DB-20260527-004",
+        approvalNo: "SHOA-20260525-0038",
+        approvalTitle: "售后退货退款审批 - 深圳连锁商超物流破损",
+        stuckNode: "督办办结确认",
+        stuckOwner: "售后主管 林雪",
+        stuckHours: 0,
+        orderNo: "SO-20260523-0668",
+        customer: "深圳连锁商超",
+        type: "退货退款",
+        issue: "物流破损",
+        priority: "普通",
+        amount: 1260,
+        dept: "物流 / 财务",
+        owner: "物流 张衡",
+        status: "督办办结",
+        stage: 6,
+        deadline: "已办结",
+        level: "green",
+        plan: "整单退货退款并追偿承运商",
+        reason: "签收时发现外箱破损",
+        customerResult: "接受",
+        logs: [
+          { title: "原审批恢复流转", time: "2026-05-26 16:18", note: "客户确认退款到账，原审批单完成。" },
+          { title: "督办办结", time: "2026-05-26 17:20", note: "确认卡点解除，纳入承运商月度考核。" }
+        ]
+      }
+    ];
+
+    let cases = structuredClone(seedCases);
+
+    const state = {
+      page: "overview",
+      filter: "全部",
+      selectedId: "",
+      search: "",
+      form: {
+        approvalNo: "SHOA-20260527-0091",
+        superviseLevel: "紧急督办",
+        dueTime: "2026-05-27 17:30",
+        urgeMethod: "系统消息 + 短信",
+        plan: "请节点处理人在 2 小时内完成原审批单处理，或提交明确卡点原因。",
+        reason: "当前节点已超过承诺处理时间，需要生成督办单跟进。"
+      }
+    };
+
+    function byId(id) {
+      return document.getElementById(id);
+    }
+
+    function statusClass(level) {
+      return level || "gray";
+    }
+
+    function priorityClass(priority) {
+      if (priority === "重大") return "red";
+      if (priority === "紧急") return "amber";
+      return "blue";
+    }
+
+    function countClosed() {
+      return cases.filter(item => item.status === "督办办结").length;
+    }
+
+    function countOpen() {
+      return cases.filter(item => item.status !== "督办办结").length;
+    }
+
+    function countOverdue() {
+      return cases.filter(item => item.level === "red").length;
+    }
+
+    function onePassRate() {
+      const closed = countClosed();
+      if (!closed) return 0;
+      return Math.round(cases.filter(item => item.customerResult === "接受").length / closed * 100);
+    }
+
+    function visibleCases() {
+      return cases.filter(item => {
+        const hitFilter = state.filter === "全部" || item.status === state.filter;
+        const q = state.search.trim();
+        const hitSearch = !q || [item.id, item.approvalNo, item.orderNo, item.customer, item.type, item.issue, item.owner, item.stuckNode].join(" ").includes(q);
+        return hitFilter && hitSearch;
+      });
+    }
+
+    function getSelectedApproval() {
+      return oaApprovals.find(item => item.approvalNo === state.form.approvalNo) || oaApprovals[0];
+    }
+
+    function toast(text) {
+      const el = byId("toast");
+      el.textContent = text;
+      el.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+    }
+
+    function renderNav() {
+      byId("nav").innerHTML = pages.map(page => `
+        <button class="${state.page === page.id ? "active" : ""}" data-page="${page.id}">
+          ${page.label}
+          <small>${page.note}</small>
+        </button>
+      `).join("");
+    }
+
+    function renderOverview() {
+      const page = document.querySelector('.page[data-page="overview"]');
+      const list = visibleCases();
+      page.innerHTML = `
+        <div class="hero">
+          <h1>订单售后督办台账</h1>
+          <p>这个页面给主管日常使用，重点是筛单、看超期、催办和进入详情处理。</p>
+          <div class="stats">
+            <div class="stat"><span>督办总量</span><strong>${cases.length}</strong></div>
+            <div class="stat"><span>处理中</span><strong>${countOpen()}</strong></div>
+            <div class="stat"><span>超期单</span><strong>${countOverdue()}</strong></div>
+            <div class="stat"><span>一次解决率</span><strong>${onePassRate()}%</strong></div>
+          </div>
+        </div>
+
+        <div class="layout-2">
+          <div class="card">
+            <div class="toolbar">
+              <div class="seg">
+                ${["全部", "督办受理", "升级处理", "节点处理", "反馈确认", "督办办结"].map(item => `
+                  <button class="${state.filter === item ? "active" : ""}" data-filter="${item}">${item}</button>
+                `).join("")}
+              </div>
+              <div class="actions">
+                <input id="searchInput" placeholder="搜索督办单、原审批单、卡点节点、责任人" value="${state.search}" />
+              </div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>督办单</th>
+                    <th>原审批单 / 卡点节点</th>
+                    <th>卡点人</th>
+                    <th>督办状态</th>
+                    <th>时效</th>
+                    <th>动作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${list.map(item => `
+                    <tr>
+                      <td>
+                        <div class="name">
+                          <strong>${item.id}</strong>
+                          <span>${item.orderNo} · ${item.customer}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="name">
+                          <strong>${item.approvalNo || "-"}</strong>
+                          <span>${item.stuckNode || item.status} · <span class="badge ${priorityClass(item.priority)}">${item.priority}</span></span>
+                        </div>
+                      </td>
+                      <td>${item.stuckOwner || item.owner}</td>
+                      <td><span class="badge ${statusClass(item.level)}">${item.status}</span></td>
+                      <td><span class="badge ${statusClass(item.level)}">${item.deadline}</span></td>
+                      <td>
+                        <div class="actions">
+                          <button class="btn ghost" data-open="${item.id}">查看</button>
+                          <button class="btn warn" data-action="urge" data-id="${item.id}">催办</button>
+                        </div>
+                      </td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>重点单</h2>
+            <div class="list">
+              ${cases.filter(item => item.level === "red" || item.priority === "重大").map(item => `
+                <div class="list-item" data-open="${item.id}">
+                  <h3>${item.customer}</h3>
+                  <p>${item.reason}</p>
+                  <div class="tag-row">
+                    <span class="badge ${priorityClass(item.priority)}">${item.priority}</span>
+                    <span class="badge ${statusClass(item.level)}">${item.deadline}</span>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCreate() {
+      const page = document.querySelector('.page[data-page="create"]');
+      const approval = getSelectedApproval();
+      page.innerHTML = `
+        <div class="hero">
+          <h1>卡点建督</h1>
+          <p>前置条件是已有一条正常的售后 OA 审批单正在流转。当前节点长时间未处理时，选择原审批单和卡住节点，生成一条独立督办单。</p>
+          <div class="flow">
+            ${flow.map((item, index) => `
+              <div class="flow-node ${index === 1 ? "active" : ""}">
+                <strong>${item}</strong>
+                <span>${index === 1 ? "当前页面" : index === 0 ? "前置条件" : "后续节点"}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+
+        <div class="layout-2">
+          <div class="card">
+            <h2>关联原 OA 审批单</h2>
+            <div class="field-grid">
+              <div class="field">
+                <label>原审批单</label>
+                <select data-form="approvalNo">
+                  ${oaApprovals.map(item => `
+                    <option value="${item.approvalNo}" ${state.form.approvalNo === item.approvalNo ? "selected" : ""}>${item.approvalNo} · ${item.customer}</option>
+                  `).join("")}
+                </select>
+              </div>
+              <div class="field"><label>原审批标题</label><input readonly value="${approval.title}" /></div>
+              <div class="field"><label>订单号</label><input readonly value="${approval.orderNo}" /></div>
+              <div class="field"><label>客户名称</label><input readonly value="${approval.customer}" /></div>
+              <div class="field"><label>售后类型</label><input readonly value="${approval.type}" /></div>
+              <div class="field"><label>问题分类</label><input readonly value="${approval.issue}" /></div>
+              <div class="field"><label>当前卡住节点</label><input readonly value="${approval.currentNode}" /></div>
+              <div class="field"><label>当前处理人</label><input readonly value="${approval.nodeOwner}" /></div>
+              <div class="field"><label>节点停留时长</label><input readonly value="${approval.stuckHours} 小时" /></div>
+              <div class="field"><label>原节点截止时间</label><input readonly value="${approval.nodeDeadline}" /></div>
+              <div class="field">
+                <label>督办等级</label>
+                <select data-form="superviseLevel">
+                  ${["普通督办", "紧急督办", "重大升级"].map(item => `
+                    <option value="${item}" ${state.form.superviseLevel === item ? "selected" : ""}>${item}</option>
+                  `).join("")}
+                </select>
+              </div>
+              <div class="field"><label>督办截止时间</label><input data-form="dueTime" value="${state.form.dueTime}" /></div>
+              <div class="field"><label>通知方式</label><input data-form="urgeMethod" value="${state.form.urgeMethod}" /></div>
+            </div>
+            <div class="field">
+              <label>卡点说明</label>
+              <textarea data-form="reason">${state.form.reason}</textarea>
+            </div>
+            <div class="field">
+              <label>督办要求</label>
+              <textarea data-form="plan">${state.form.plan}</textarea>
+            </div>
+            <div class="actions">
+              <button class="btn primary" data-action="submit">生成督办单</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>原审批单卡点快照</h2>
+            <div class="list">
+              <div class="list-item">
+                <h3>审批单状态</h3>
+                <p>${approval.currentNode} · ${approval.nodeOwner} · 已停留 ${approval.stuckHours} 小时</p>
+              </div>
+              <div class="list-item">
+                <h3>督办对象</h3>
+                <p>督办单会指向当前卡住节点的处理人，同时保留原审批单编号，便于回到原流程处理。</p>
+              </div>
+              <div class="list-item">
+                <h3>解除条件</h3>
+                <p>卡点人完成原审批节点，或提交明确卡点原因后，督办进入反馈确认。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAccept() {
+      const page = document.querySelector('.page[data-page="accept"]');
+      const list = cases.filter(item => item.status === "督办受理");
+      page.innerHTML = `
+        <div class="hero">
+          <h1>督办受理</h1>
+          <p>售后主管确认原审批单、卡住节点、当前处理人和停留时长是否准确。确认后，督办进入节点处理或升级处理。</p>
+        </div>
+        <div class="layout-2">
+          <div class="card">
+            <h2>待受理督办单</h2>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>督办单</th>
+                    <th>原审批单 / 卡点节点</th>
+                    <th>卡点人</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${(list.length ? list : [{ id: "-", orderNo: "-", customer: "当前无待受理单", issue: "-", dept: "-", status: "-" }]).map(item => `
+                    <tr>
+                      <td>${item.id}</td>
+                      <td>${item.customer === "当前无待受理单" ? item.customer : `${item.approvalNo} · ${item.stuckNode}`}</td>
+                      <td>${item.stuckOwner || item.owner}</td>
+                      <td>${item.id === "-" ? "" : `<button class="btn primary" data-action="accept" data-id="${item.id}">确认督办</button>`}</td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <h2>节点说明</h2>
+            <div class="timeline">
+                <div class="timeline-item"><strong>关联校验</strong><span>确认督办单必须绑定一个原售后 OA 审批单。</span></div>
+                <div class="timeline-item"><strong>节点校验</strong><span>确认卡点节点、处理人、停留时长和原审批单一致。</span></div>
+                <div class="timeline-item"><strong>督办派发</strong><span>普通卡点进入节点处理，重大或超期卡点进入升级处理。</span></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderApproval() {
+      const page = document.querySelector('.page[data-page="approval"]');
+      const list = cases.filter(item => item.status === "升级处理");
+      page.innerHTML = `
+        <div class="hero">
+          <h1>升级处理</h1>
+          <p>处理超期、重大客诉、跨部门争议等高风险卡点。通过后督办对象继续处理原审批节点。</p>
+        </div>
+        <div class="card">
+          <h2>待升级处理单</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>督办单</th>
+                  <th>客户</th>
+                  <th>卡点节点</th>
+                  <th>时效</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(item => `
+                  <tr>
+                    <td>${item.id}</td>
+                    <td>${item.customer}</td>
+                    <td>${item.approvalNo} · ${item.stuckNode}</td>
+                    <td><span class="badge ${statusClass(item.level)}">${item.deadline}</span></td>
+                    <td>
+                      <div class="actions">
+                        <button class="btn primary" data-action="approve" data-id="${item.id}">确认升级</button>
+                        <button class="btn warn" data-action="reject" data-id="${item.id}">退回受理</button>
+                      </div>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderExecute() {
+      const page = document.querySelector('.page[data-page="execute"]');
+      const list = cases.filter(item => item.status === "节点处理");
+      page.innerHTML = `
+        <div class="hero">
+          <h1>节点处理</h1>
+          <p>被督办人回到原售后 OA 审批单，处理当前卡住节点，并在督办单中反馈处理结果。</p>
+        </div>
+        <div class="card">
+          <h2>处理中卡点</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>督办单</th>
+                  <th>客户</th>
+                  <th>原审批单 / 卡点节点</th>
+                  <th>卡点人</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(item => `
+                  <tr>
+                    <td>${item.id}</td>
+                    <td>${item.customer}</td>
+                    <td>${item.approvalNo} · ${item.stuckNode}</td>
+                    <td>${item.stuckOwner || item.owner}</td>
+                    <td><button class="btn primary" data-action="complete" data-id="${item.id}">原节点已处理</button></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCallback() {
+      const page = document.querySelector('.page[data-page="callback"]');
+      const list = cases.filter(item => item.status === "反馈确认");
+      page.innerHTML = `
+        <div class="hero">
+          <h1>反馈确认</h1>
+          <p>售后主管确认原审批单是否已经恢复流转。确认恢复则督办办结，未恢复则退回节点处理。</p>
+        </div>
+        <div class="card">
+          <h2>待确认督办单</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>督办单</th>
+                  <th>客户</th>
+                  <th>卡点处理反馈</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(item => `
+                  <tr>
+                    <td>${item.id}</td>
+                    <td>${item.customer}</td>
+                    <td>${item.approvalNo} · ${item.stuckNode}</td>
+                    <td>
+                      <div class="actions">
+                        <button class="btn primary" data-action="accept-result" data-id="${item.id}">确认已流转</button>
+                        <button class="btn warn" data-action="return-result" data-id="${item.id}">仍未处理</button>
+                      </div>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderClosed() {
+      const page = document.querySelector('.page[data-page="closed"]');
+      const list = cases.filter(item => item.status === "督办办结");
+      page.innerHTML = `
+        <div class="hero">
+          <h1>督办办结</h1>
+          <p>记录原审批单是否恢复流转、卡点原因和复盘意见。</p>
+        </div>
+        <div class="card">
+          <h2>已办结</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>督办单</th>
+                  <th>客户</th>
+                  <th>原审批单 / 卡点节点</th>
+                  <th>确认状态</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(item => `
+                  <tr>
+                    <td>${item.id}</td>
+                    <td>${item.customer}</td>
+                    <td>${item.approvalNo} · ${item.stuckNode}</td>
+                    <td><span class="badge green">${item.customerResult}</span></td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDashboard() {
+      const page = document.querySelector('.page[data-page="dashboard"]');
+      page.innerHTML = `
+        <div class="hero">
+          <h1>领导看板</h1>
+          <p>只看核心指标和重点预警，重点关注哪些原审批单、哪些节点、哪些处理人发生卡点。</p>
+          <div class="stats">
+            <div class="stat"><span>重大客诉</span><strong>${cases.filter(item => item.priority === "重大").length}</strong></div>
+            <div class="stat"><span>超期率</span><strong>${Math.round(countOverdue() / cases.length * 100)}%</strong></div>
+            <div class="stat"><span>赔付金额</span><strong>¥${cases.reduce((sum, item) => sum + item.amount, 0).toLocaleString("zh-CN")}</strong></div>
+            <div class="stat"><span>一次解决率</span><strong>${onePassRate()}%</strong></div>
+          </div>
+        </div>
+        <div class="layout-2">
+          <div class="card">
+            <h2>重点预警</h2>
+            <div class="list">
+              ${cases.filter(item => item.level === "red" || item.priority === "重大").map(item => `
+                <div class="list-item" data-open="${item.id}">
+                  <h3>${item.id} · ${item.customer}</h3>
+                  <p>${item.approvalNo} · ${item.stuckNode} · ${item.stuckOwner || item.owner}</p>
+                  <div class="tag-row">
+                    <span class="badge ${priorityClass(item.priority)}">${item.priority}</span>
+                    <span class="badge ${statusClass(item.level)}">${item.deadline}</span>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+          <div class="card">
+            <h2>问题分布</h2>
+            <div class="timeline">
+              ${["销售总监审批", "仓储主管确认", "客服回访确认", "督办办结确认"].map(name => `
+                <div class="timeline-item">
+                  <strong>${name}</strong>
+                  <span>${cases.filter(item => item.stuckNode === name).length} 单</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDrawer() {
+      const drawer = byId("drawer");
+      if (!state.selectedId) {
+        drawer.classList.remove("open");
+        return;
+      }
+      const item = cases.find(entry => entry.id === state.selectedId);
+      if (!item) {
+        drawer.classList.remove("open");
+        return;
+      }
+      byId("drawerHead").innerHTML = `
+        <div class="row" style="justify-content:space-between;">
+          <div class="name">
+            <strong>${item.id}</strong>
+            <span>${item.orderNo} · ${item.customer}</span>
+          </div>
+          <button class="btn ghost" data-action="close-drawer">关闭</button>
+        </div>
+      `;
+      byId("drawerBody").innerHTML = `
+        <div class="flow">
+          ${flow.map((name, index) => `
+            <div class="flow-node ${index === item.stage ? "active" : ""}">
+              <strong>${name}</strong>
+              <span>${index < item.stage ? "已完成" : index === item.stage ? "当前节点" : "待处理"}</span>
+            </div>
+          `).join("")}
+        </div>
+        <div class="card" style="box-shadow:none;">
+          <h3>原审批单</h3>
+          <p>${item.approvalNo || "-"} · ${item.approvalTitle || item.type}</p>
+          <h3>卡点节点</h3>
+          <p>${item.stuckNode || item.status} · ${item.stuckOwner || item.owner} · 停留 ${item.stuckHours || 0} 小时</p>
+          <h3>督办要求</h3>
+          <p>${item.plan}</p>
+        </div>
+        <div class="card" style="box-shadow:none;">
+          <h3>处理轨迹</h3>
+          <div class="timeline">
+            ${item.logs.map(log => `
+              <div class="timeline-item">
+                <strong>${log.title}</strong>
+                <span>${log.time}</span>
+                <p>${log.note}</p>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+      byId("drawerFoot").innerHTML = `
+        <div class="actions">
+          <button class="btn warn" data-action="urge" data-id="${item.id}">催办</button>
+          ${item.status === "升级处理" ? `<button class="btn primary" data-action="approve" data-id="${item.id}">确认升级</button>` : ""}
+          ${item.status === "节点处理" ? `<button class="btn primary" data-action="complete" data-id="${item.id}">原节点已处理</button>` : ""}
+          ${item.status === "反馈确认" ? `<button class="btn primary" data-action="accept-result" data-id="${item.id}">确认已流转</button>` : ""}
+        </div>
+      `;
+      drawer.classList.add("open");
+    }
+
+    function renderPages() {
+      renderOverview();
+      renderCreate();
+      renderAccept();
+      renderApproval();
+      renderExecute();
+      renderCallback();
+      renderClosed();
+      renderDashboard();
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.toggle("active", page.dataset.page === state.page);
+      });
+      const input = byId("searchInput");
+      if (input) {
+        input.addEventListener("input", event => {
+          state.search = event.target.value;
+          renderOverview();
+        });
+      }
+    }
+
+    function submitCase() {
+      const nextId = "DB-20260527-" + String(cases.length + 1).padStart(3, "0");
+      const approval = getSelectedApproval();
+      cases.unshift({
+        id: nextId,
+        approvalNo: approval.approvalNo,
+        approvalTitle: approval.title,
+        stuckNode: approval.currentNode,
+        stuckOwner: approval.nodeOwner,
+        stuckHours: approval.stuckHours,
+        orderNo: approval.orderNo,
+        customer: approval.customer,
+        type: approval.type,
+        issue: approval.issue,
+        priority: state.form.superviseLevel === "重大升级" ? "重大" : approval.priority,
+        amount: approval.amount,
+        dept: approval.currentNode,
+        owner: approval.nodeOwner,
+        status: "督办受理",
+        stage: 1,
+        deadline: state.form.dueTime,
+        level: state.form.superviseLevel === "重大升级" ? "red" : "amber",
+        plan: state.form.plan,
+        reason: state.form.reason,
+        customerResult: "",
+        logs: [
+          { title: "发现卡点", time: "2026-05-27 14:30", note: `原审批单 ${approval.approvalNo} 停留在 ${approval.currentNode} 节点 ${approval.stuckHours} 小时。` },
+          { title: "生成督办", time: "2026-05-27 14:31", note: `督办对象为 ${approval.nodeOwner}，通知方式为 ${state.form.urgeMethod}。` }
+        ]
+      });
+      state.page = "accept";
+      toast("已关联原审批单并生成节点督办单");
+      render();
+    }
+
+    function acceptCase(id) {
+      const item = cases.find(entry => entry.id === id);
+      if (!item) return;
+      item.owner = item.stuckOwner || item.owner;
+      item.status = item.level === "red" || item.priority === "重大" ? "升级处理" : "节点处理";
+      item.stage = item.status === "升级处理" ? 3 : 4;
+      item.deadline = item.status === "升级处理" ? "升级处理中" : "节点处理剩余 2小时";
+      item.logs.push({ title: "督办受理", time: "2026-05-27 14:36", note: "售后主管确认原审批单、卡点节点和督办对象无误。" });
+      state.page = item.status === "升级处理" ? "approval" : "execute";
+      render();
+      toast("受理完成");
+    }
+
+    function approveCase(id) {
+      const item = cases.find(entry => entry.id === id);
+      if (!item) return;
+      item.status = "节点处理";
+      item.stage = 4;
+      item.deadline = "节点处理剩余 2小时";
+      item.level = "blue";
+      item.logs.push({ title: "升级确认", time: "2026-05-27 14:42", note: "升级处理完成，已通知卡点人回到原审批单处理当前节点。" });
+      state.page = "execute";
+      render();
+      toast("升级处理已确认");
+    }
+
+    function completeCase(id) {
+      const item = cases.find(entry => entry.id === id);
+      if (!item) return;
+      item.status = "反馈确认";
+      item.stage = 5;
+      item.deadline = "待确认原审批流转";
+      item.level = "blue";
+      item.customerResult = "待确认";
+      item.logs.push({ title: "原节点已处理", time: "2026-05-27 15:10", note: `卡点人已反馈 ${item.stuckNode} 节点处理完成，等待主管确认原审批单是否恢复流转。` });
+      state.page = "callback";
+      render();
+      toast("已进入反馈确认");
+    }
+
+    function acceptResult(id) {
+      const item = cases.find(entry => entry.id === id);
+      if (!item) return;
+      item.status = "督办办结";
+      item.stage = 6;
+      item.deadline = "已办结";
+      item.level = "green";
+      item.customerResult = "原审批已流转";
+      item.logs.push({ title: "确认流转", time: "2026-05-27 15:26", note: "售后主管确认原审批单已离开卡点节点，督办闭环。" });
+      state.page = "closed";
+      render();
+      toast("督办单已办结");
+    }
+
+    function returnResult(id) {
+      const item = cases.find(entry => entry.id === id);
+      if (!item) return;
+      item.status = "节点处理";
+      item.stage = 4;
+      item.deadline = "退回后剩余 1小时";
+      item.level = "red";
+      item.customerResult = "原审批未流转";
+      item.logs.push({ title: "确认退回", time: "2026-05-27 15:28", note: "原审批单仍停留在卡点节点，退回卡点人继续处理。" });
+      state.page = "execute";
+      render();
+      toast("已退回节点处理");
+    }
+
+    function urgeCase(id) {
+      const item = cases.find(entry => entry.id === id);
+      if (!item) return;
+      item.logs.push({ title: "人工催办", time: "2026-05-27 15:00", note: "主管已发起催办提醒。" });
+      toast("已记录催办动作");
+      renderDrawer();
+    }
+
+    function render() {
+      renderNav();
+      renderPages();
+      renderDrawer();
+    }
+
+    document.addEventListener("click", event => {
+      const pageBtn = event.target.closest("button[data-page]");
+      if (pageBtn) {
+        state.page = pageBtn.dataset.page;
+        render();
+        return;
+      }
+
+      const filterBtn = event.target.closest("[data-filter]");
+      if (filterBtn) {
+        state.filter = filterBtn.dataset.filter;
+        renderOverview();
+        return;
+      }
+
+      const openBtn = event.target.closest("[data-open]");
+      if (openBtn) {
+        state.selectedId = openBtn.dataset.open;
+        renderDrawer();
+        return;
+      }
+
+      const actionBtn = event.target.closest("[data-action]");
+      if (!actionBtn) return;
+      const action = actionBtn.dataset.action;
+      const id = actionBtn.dataset.id;
+
+      if (action === "close-drawer") {
+        state.selectedId = "";
+        renderDrawer();
+        return;
+      }
+      if (action === "submit") {
+        submitCase();
+        return;
+      }
+      if (action === "accept") {
+        acceptCase(id);
+        return;
+      }
+      if (action === "approve") {
+        approveCase(id);
+        return;
+      }
+      if (action === "reject") {
+        toast("已模拟驳回，实际可退回受理节点");
+        return;
+      }
+      if (action === "complete") {
+        completeCase(id);
+        return;
+      }
+      if (action === "accept-result") {
+        acceptResult(id);
+        return;
+      }
+      if (action === "return-result") {
+        returnResult(id);
+        return;
+      }
+      if (action === "urge") {
+        urgeCase(id);
+        return;
+      }
+      if (action === "reset") {
+        cases = structuredClone(seedCases);
+        state.page = "overview";
+        state.filter = "全部";
+        state.selectedId = "";
+        state.search = "";
+        state.form = {
+          approvalNo: "SHOA-20260527-0091",
+          superviseLevel: "紧急督办",
+          dueTime: "2026-05-27 17:30",
+          urgeMethod: "系统消息 + 短信",
+          plan: "请节点处理人在 2 小时内完成原审批单处理，或提交明确卡点原因。",
+          reason: "当前节点已超过承诺处理时间，需要生成督办单跟进。"
+        };
+        render();
+        toast("数据已重置");
+      }
+    });
+
+    document.addEventListener("input", event => {
+      if (!event.target.matches("[data-form]")) return;
+      state.form[event.target.dataset.form] = event.target.value;
+      renderCreate();
+    });
+
+    byId("drawer").addEventListener("click", event => {
+      if (event.target.id === "drawer") {
+        state.selectedId = "";
+        renderDrawer();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>

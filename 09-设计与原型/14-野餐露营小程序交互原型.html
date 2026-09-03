@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>野餐露营小程序交互原型</title>
+  <style>
+    :root {
+      --bg: #eef4f1;
+      --screen: #f7faf7;
+      --surface: #ffffff;
+      --surface-soft: #f2f7f4;
+      --ink: #1b2a22;
+      --muted: #66756b;
+      --line: #d9e4dc;
+      --brand: #2f7d4f;
+      --brand-dark: #1f5f3b;
+      --brand-soft: #e3f3e9;
+      --sun: #f0a53a;
+      --sun-soft: #fff0d5;
+      --water: #2d8fa3;
+      --red: #c24130;
+      --shadow: 0 20px 48px rgba(31, 95, 59, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 12% 12%, rgba(240, 165, 58, 0.2), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(45, 143, 163, 0.18), transparent 26%),
+        linear-gradient(180deg, #e7f0ec 0%, #f8faf7 100%);
+      color: var(--ink);
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    textarea,
+    select { font: inherit; }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .canvas {
+      width: min(1240px, calc(100vw - 28px));
+      margin: 18px auto;
+      display: grid;
+      grid-template-columns: 300px 430px minmax(300px, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel,
+    .phone-shell {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.86);
+      box-shadow: var(--shadow);
+    }
+
+    .panel {
+      border-radius: 18px;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel h1,
+    .panel h2,
+    .panel h3,
+    .panel p { margin: 0; }
+
+    .panel h1 {
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .panel p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .flow-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .flow-btn {
+      min-height: 72px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--ink);
+      text-align: left;
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .flow-btn.active {
+      background: var(--brand-soft);
+      border-color: rgba(47, 125, 79, 0.34);
+    }
+
+    .flow-no {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #edf4ef;
+      color: var(--brand-dark);
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .flow-btn.active .flow-no {
+      background: var(--brand);
+      color: #ffffff;
+    }
+
+    .flow-copy strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    .flow-copy span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .phone-shell {
+      border-radius: 34px;
+      padding: 14px;
+      background: linear-gradient(180deg, #17251d, #26392d);
+    }
+
+    .phone {
+      width: 100%;
+      height: 844px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--screen);
+      position: relative;
+      border: 5px solid #0d1711;
+    }
+
+    .notch {
+      position: absolute;
+      left: 50%;
+      top: 9px;
+      transform: translateX(-50%);
+      width: 146px;
+      height: 26px;
+      border-radius: 0 0 16px 16px;
+      background: #0d1711;
+      z-index: 30;
+    }
+
+    .screen {
+      height: 100%;
+      padding: 44px 0 78px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wxbar {
+      padding: 0 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--muted);
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+
+    .capsule {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(27, 42, 34, 0.06);
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .view {
+      display: none;
+      flex: 1;
+      overflow: auto;
+      padding: 0 16px 18px;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .view.active {
+      display: grid;
+    }
+
+    .hero {
+      min-height: 220px;
+      border-radius: 24px;
+      padding: 18px;
+      color: #fffaf0;
+      background:
+        linear-gradient(180deg, rgba(20, 41, 29, 0.1), rgba(20, 41, 29, 0.58)),
+        url("https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=80");
+      background-size: cover;
+      background-position: center;
+      display: grid;
+      align-content: end;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .hero small {
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(6px);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .hero h1 {
+      margin: 0;
+      max-width: 300px;
+      font-size: 30px;
+      line-height: 1.12;
+      letter-spacing: 0;
+    }
+
+    .hero p {
+      margin: 0;
+      color: rgba(255, 250, 240, 0.9);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .search {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 13px;
+      font-size: 13px;
+    }
+
+    .quick-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .quick {
+      min-height: 74px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      gap: 5px;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .quick .ico {
+      width: 32px;
+      height: 32px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--brand);
+      font-size: 17px;
+    }
+
+    .section {
+      display: grid;
+      gap: 10px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .section-head button {
+      background: transparent;
+      color: var(--brand-dark);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .card {
+      border-radius: 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 12px;
+    }
+
+    .camp-card,
+    .package-card,
+    .order-card {
+      display: grid;
+      gap: 10px;
+    }
+
+    .camp-card {
+      grid-template-columns: 104px minmax(0, 1fr);
+      cursor: pointer;
+    }
+
+    .thumb {
+      width: 104px;
+      min-height: 106px;
+      border-radius: 14px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .camp-meta,
+    .package-meta,
+    .order-meta {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .camp-meta strong,
+    .package-meta strong,
+    .order-meta strong {
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .tag-row,
+    .chip-row,
+    .stats-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tag {
+      padding: 5px 8px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .tag.sun {
+      background: var(--sun-soft);
+      color: #8a4f0e;
+    }
+
+    .price {
+      color: var(--red);
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .price small {
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .filter {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .filter button,
+    .chip {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink);
+      white-space: nowrap;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .filter button.active,
+    .chip.active {
+      border-color: rgba(47, 125, 79, 0.34);
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+    }
+
+    .cover {
+      height: 210px;
+      border-radius: 22px;
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      padding: 16px;
+      display: grid;
+      align-content: end;
+      gap: 8px;
+      background-image:
+        linear-gradient(180deg, transparent 25%, rgba(0, 0, 0, 0.62)),
+        var(--img);
+    }
+
+    .cover h1 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .info {
+      border-radius: 14px;
+      padding: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      display: grid;
+      gap: 5px;
+    }
+
+    .info span {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .info strong {
+      font-size: 14px;
+    }
+
+    .package-card {
+      cursor: pointer;
+    }
+
+    .package-card.selected {
+      border-color: rgba(47, 125, 79, 0.45);
+      background: #fbfffc;
+      box-shadow: 0 0 0 2px rgba(47, 125, 79, 0.1) inset;
+    }
+
+    .equip {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stepper {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .stepper button {
+      width: 30px;
+      height: 30px;
+      background: #fff;
+      color: var(--brand-dark);
+      font-weight: 900;
+    }
+
+    .stepper span {
+      width: 28px;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      min-height: 42px;
+      padding: 10px 12px;
+      background: var(--surface);
+      color: var(--ink);
+    }
+
+    .field textarea {
+      min-height: 72px;
+      resize: none;
+    }
+
+    .date-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .date-btn {
+      min-height: 58px;
+      border-radius: 13px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      color: var(--ink);
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .date-btn span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .date-btn.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .date-btn.active span {
+      color: rgba(255, 255, 255, 0.86);
+    }
+
+    .total-bar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 76px;
+      min-height: 64px;
+      padding: 10px 16px;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      z-index: 12;
+    }
+
+    .primary-btn {
+      min-height: 42px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .ghost-btn {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .tabbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 76px;
+      background: rgba(255, 255, 255, 0.96);
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      padding: 7px 8px 9px;
+      z-index: 20;
+    }
+
+    .tabbar button {
+      display: grid;
+      place-items: center;
+      gap: 3px;
+      background: transparent;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .tabbar button.active {
+      color: var(--brand-dark);
+    }
+
+    .tab-ico {
+      width: 24px;
+      height: 24px;
+      border-radius: 9px;
+      display: grid;
+      place-items: center;
+      background: #edf4ef;
+      color: inherit;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .tabbar button.active .tab-ico {
+      background: var(--brand-soft);
+    }
+
+    .profile-head {
+      border-radius: 22px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, rgba(47, 125, 79, 0.95), rgba(45, 143, 163, 0.92)),
+        url("https://images.unsplash.com/photo-1510312305653-8ed496efae75?auto=format&fit=crop&w=800&q=80");
+      background-size: cover;
+      background-position: center;
+      color: #fff;
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .avatar {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.22);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .menu {
+      display: grid;
+      gap: 8px;
+    }
+
+    .menu-row {
+      min-height: 48px;
+      border-radius: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 0 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .toast {
+      position: absolute;
+      left: 50%;
+      bottom: 100px;
+      transform: translateX(-50%);
+      max-width: 280px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(27, 42, 34, 0.88);
+      color: #fff;
+      font-size: 12px;
+      z-index: 50;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .toast.show { opacity: 1; }
+
+    @media (max-width: 1080px) {
+      .canvas {
+        grid-template-columns: 1fr;
+        width: min(430px, calc(100vw - 20px));
+      }
+
+      .panel { display: none; }
+      .phone-shell { padding: 0; border-radius: 0; box-shadow: none; border: 0; background: transparent; }
+      .phone { height: 100vh; border: 0; border-radius: 0; }
+      .notch { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="canvas">
+    <aside class="panel">
+      <h1>野餐露营小程序</h1>
+      <p>面向城市周边休闲用户，覆盖营地浏览、套餐选择、装备租赁、预约下单和订单管理。</p>
+      <div class="flow-list" id="flowList"></div>
+    </aside>
+
+    <div class="phone-shell">
+      <div class="phone">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="wxbar">
+            <span id="wxTitle">周末野餐营地</span>
+            <span class="capsule">•••  ○</span>
+          </div>
+
+          <main class="view active" id="homeView"></main>
+          <main class="view" id="campsView"></main>
+          <main class="view" id="detailView"></main>
+          <main class="view" id="bookingView"></main>
+          <main class="view" id="ordersView"></main>
+          <main class="view" id="profileView"></main>
+
+          <div class="total-bar" id="totalBar" style="display:none"></div>
+          <nav class="tabbar" id="tabbar"></nav>
+          <div class="toast" id="toast"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <h2>原型说明</h2>
+      <p id="insight">首页提供城市、日期、分类和推荐营地入口，用户可以快速进入营地详情或预约流程。</p>
+      <div class="card">
+        <strong>V1 核心能力</strong>
+        <p>营地发现、套餐详情、装备加购、预约信息填写、订单状态展示。</p>
+      </div>
+      <div class="card">
+        <strong>后续可扩展</strong>
+        <p>微信支付、地图导航、商户后台、库存锁定、优惠券、活动报名和露营攻略内容。</p>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    const camps = [
+      {
+        id: "lake",
+        name: "湖畔松影营地",
+        area: "青浦 · 淀山湖",
+        distance: "18.6km",
+        rating: "4.9",
+        price: 298,
+        tags: ["亲子友好", "可烧烤", "宠物友好"],
+        cover: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?auto=format&fit=crop&w=900&q=80",
+        desc: "临湖草坪、大片松林和独立天幕位，适合半日野餐、亲子露营和小型生日布置。",
+        facilities: ["天幕", "桌椅", "电源", "卫生间", "停车", "热水"],
+        slots: ["上午 10:00-14:00", "下午 15:00-19:00", "夜营 18:00-22:00"]
+      },
+      {
+        id: "forest",
+        name: "森氧溪谷营地",
+        area: "余杭 · 径山",
+        distance: "36.2km",
+        rating: "4.8",
+        price: 368,
+        tags: ["森林", "溪水", "团建"],
+        cover: "https://images.unsplash.com/photo-1478131143081-80f7f84ca84d?auto=format&fit=crop&w=900&q=80",
+        desc: "溪谷旁的轻奢营位，适合朋友聚会、公司团建和全天深度露营。",
+        facilities: ["天幕", "炉具", "投影", "停车", "洗手间", "咖啡吧"],
+        slots: ["全天 10:00-18:00", "夜营 18:00-23:00"]
+      },
+      {
+        id: "flower",
+        name: "花田白帐野餐区",
+        area: "浦东 · 乡野公园",
+        distance: "12.4km",
+        rating: "4.7",
+        price: 238,
+        tags: ["拍照", "情侣", "轻野餐"],
+        cover: "https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?auto=format&fit=crop&w=900&q=80",
+        desc: "白帐篷、花田、木桌和灯串布置，适合拍照、约会和轻量野餐。",
+        facilities: ["白帐", "桌椅", "花艺", "灯串", "停车"],
+        slots: ["下午 14:00-18:00", "黄昏 17:00-20:00"]
+      }
+    ];
+
+    const packages = [
+      { id: "couple", name: "双人湖畔野餐", people: "2人", price: 298, desc: "天幕位、野餐篮、双人轻食、折叠桌椅、拍照布置", tags: ["约会", "拍照"] },
+      { id: "family", name: "亲子半日露营", people: "2大1小", price: 428, desc: "亲子营位、儿童椅、飞盘、轻食套餐、基础保险", tags: ["亲子", "半日"] },
+      { id: "party", name: "好友多人烧烤", people: "4-6人", price: 688, desc: "天幕桌椅、烧烤炉、食材组合、氛围灯、垃圾清运", tags: ["聚会", "烧烤"] }
+    ];
+
+    const equips = [
+      { id: "chair", name: "折叠露营椅", price: 20, unit: "把" },
+      { id: "canopy", name: "加大天幕", price: 80, unit: "顶" },
+      { id: "stove", name: "卡式炉套装", price: 58, unit: "套" },
+      { id: "projector", name: "户外投影", price: 128, unit: "套" }
+    ];
+
+    const state = {
+      page: "home",
+      campId: "lake",
+      packageId: "family",
+      date: "06/08",
+      slot: "下午 15:00-19:00",
+      adults: 2,
+      kids: 1,
+      contact: "陈女士",
+      phone: "138****6678",
+      note: "",
+      equipQty: { chair: 2, canopy: 0, stove: 0, projector: 0 },
+      orders: [
+        { id: "OC20260605001", camp: "湖畔松影营地", date: "06/08", slot: "下午 15:00-19:00", status: "待出行", amount: 508 },
+        { id: "OC20260526008", camp: "花田白帐野餐区", date: "05/30", slot: "黄昏 17:00-20:00", status: "已完成", amount: 298 }
+      ]
+    };
+
+    const flows = [
+      ["home", "首页发现", "城市、日期、搜索、分类和推荐营地。"],
+      ["camps", "营地列表", "按距离、价格、设施和可预约状态筛选。"],
+      ["detail", "营地详情", "查看场景、设施、时段和套餐。"],
+      ["booking", "预约下单", "选择日期、时段、人数、套餐和装备。"],
+      ["orders", "订单管理", "查看待支付、待出行、已完成订单。"],
+      ["profile", "个人中心", "优惠券、收藏、联系人和会员权益。"]
+    ];
+
+    const tabs = [
+      ["home", "⌂", "首页"],
+      ["camps", "△", "营地"],
+      ["booking", "+", "预约"],
+      ["orders", "□", "订单"],
+      ["profile", "○", "我的"]
+    ];
+
+    function camp() {
+      return camps.find(item => item.id === state.campId) || camps[0];
+    }
+
+    function pack() {
+      return packages.find(item => item.id === state.packageId) || packages[0];
+    }
+
+    function money(value) {
+      return `¥${value}`;
+    }
+
+    function equipTotal() {
+      return equips.reduce((sum, item) => sum + item.price * (state.equipQty[item.id] || 0), 0);
+    }
+
+    function total() {
+      return pack().price + equipTotal();
+    }
+
+    function setPage(page) {
+      state.page = page;
+      render();
+    }
+
+    function selectCamp(id, target = "detail") {
+      state.campId = id;
+      state.page = target;
+      render();
+    }
+
+    function selectPackage(id) {
+      state.packageId = id;
+      render();
+    }
+
+    function adjustEquip(id, delta) {
+      state.equipQty[id] = Math.max(0, (state.equipQty[id] || 0) + delta);
+      render();
+    }
+
+    function setDate(date) {
+      state.date = date;
+      render();
+    }
+
+    function setSlot(slot) {
+      state.slot = slot;
+      render();
+    }
+
+    function changePeople(type, delta) {
+      state[type] = Math.max(type === "adults" ? 1 : 0, state[type] + delta);
+      render();
+    }
+
+    function createOrder() {
+      const newOrder = {
+        id: `OC20260605${String(state.orders.length + 11).padStart(3, "0")}`,
+        camp: camp().name,
+        date: state.date,
+        slot: state.slot,
+        status: "待支付",
+        amount: total()
+      };
+      state.orders.unshift(newOrder);
+      state.page = "orders";
+      showToast("预约单已生成，可继续支付");
+      render();
+    }
+
+    function showToast(message) {
+      const el = document.getElementById("toast");
+      el.textContent = message;
+      el.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => el.classList.remove("show"), 1800);
+    }
+
+    function renderFlow() {
+      document.getElementById("flowList").innerHTML = flows.map((item, index) => `
+        <button type="button" class="flow-btn ${state.page === item[0] ? "active" : ""}" onclick="setPage('${item[0]}')">
+          <span class="flow-no">${index + 1}</span>
+          <span class="flow-copy"><strong>${item[1]}</strong><span>${item[2]}</span></span>
+        </button>
+      `).join("");
+    }
+
+    function renderTabbar() {
+      document.getElementById("tabbar").innerHTML = tabs.map(tab => `
+        <button type="button" class="${state.page === tab[0] || (state.page === "detail" && tab[0] === "camps") ? "active" : ""}" onclick="setPage('${tab[0]}')">
+          <span class="tab-ico">${tab[1]}</span>
+          <span>${tab[2]}</span>
+        </button>
+      `).join("");
+    }
+
+    function renderHome() {
+      document.getElementById("homeView").innerHTML = `
+        <section class="hero">
+          <small>上海 · 本周末可约</small>
+          <h1>把周末搬到草地和湖边</h1>
+          <p>营地、餐食、装备、布置一站预约，到场直接开玩。</p>
+        </section>
+        <div class="search">⌕ 搜索营地、区域、亲子、烧烤</div>
+        <div class="quick-grid">
+          <button class="quick" onclick="setPage('camps')"><span class="ico">△</span>订营地</button>
+          <button class="quick" onclick="setPage('booking')"><span class="ico">☼</span>选套餐</button>
+          <button class="quick" onclick="setPage('booking')"><span class="ico">□</span>租装备</button>
+          <button class="quick" onclick="showToast('活动报名模块后续接入')"><span class="ico">☆</span>活动</button>
+        </div>
+        <section class="section">
+          <div class="section-head"><h2>推荐营地</h2><button onclick="setPage('camps')">全部</button></div>
+          ${camps.slice(0, 2).map(renderCampCard).join("")}
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>今日可约</h2><button onclick="setPage('booking')">立即约</button></div>
+          ${renderPackageCard(pack(), false)}
+        </section>
+      `;
+    }
+
+    function renderCampCard(item) {
+      return `
+        <article class="card camp-card" onclick="selectCamp('${item.id}')">
+          <div class="thumb" style="background-image:url('${item.cover}')"></div>
+          <div class="camp-meta">
+            <strong>${item.name}</strong>
+            <span class="muted">${item.area} · ${item.distance} · ★ ${item.rating}</span>
+            <div class="tag-row">${item.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+            <span class="price">${money(item.price)}<small> 起</small></span>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderCamps() {
+      document.getElementById("campsView").innerHTML = `
+        <div class="search">⌕ 请输入营地名或区域</div>
+        <div class="filter">
+          <button class="active">可预约</button>
+          <button>距离近</button>
+          <button>亲子</button>
+          <button>可烧烤</button>
+          <button>宠物友好</button>
+        </div>
+        <section class="section">
+          <div class="section-head"><h2>全部营地</h2><button>${camps.length} 个</button></div>
+          ${camps.map(renderCampCard).join("")}
+        </section>
+      `;
+    }
+
+    function renderDetail() {
+      const item = camp();
+      document.getElementById("detailView").innerHTML = `
+        <section class="cover" style="--img:url('${item.cover}')">
+          <div class="tag-row">${item.tags.map(tag => `<span class="tag sun">${tag}</span>`).join("")}</div>
+          <h1>${item.name}</h1>
+          <span>${item.area} · ${item.distance} · ★ ${item.rating}</span>
+        </section>
+        <section class="card">
+          <strong>营地介绍</strong>
+          <p class="muted">${item.desc}</p>
+        </section>
+        <section class="info-grid">
+          <div class="info"><span>起订价格</span><strong>${money(item.price)} 起</strong></div>
+          <div class="info"><span>适合人数</span><strong>2-8 人</strong></div>
+          <div class="info"><span>开放时间</span><strong>10:00-22:00</strong></div>
+          <div class="info"><span>取消规则</span><strong>提前24小时</strong></div>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>设施服务</h2></div>
+          <div class="tag-row">${item.facilities.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>推荐套餐</h2><button onclick="setPage('booking')">去预约</button></div>
+          ${packages.map(pkg => renderPackageCard(pkg, pkg.id === state.packageId)).join("")}
+        </section>
+      `;
+    }
+
+    function renderPackageCard(pkg, selectable = true) {
+      return `
+        <article class="card package-card ${selectable && pkg.id === state.packageId ? "selected" : ""}" onclick="selectPackage('${pkg.id}')">
+          <div class="package-meta">
+            <div class="section-head">
+              <strong>${pkg.name}</strong>
+              <span class="price">${money(pkg.price)}</span>
+            </div>
+            <span class="muted">${pkg.people} · ${pkg.desc}</span>
+            <div class="tag-row">${pkg.tags.map(tag => `<span class="tag">${tag}</span>`).join("")}</div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderBooking() {
+      const item = camp();
+      document.getElementById("bookingView").innerHTML = `
+        <section class="card">
+          <strong>${item.name}</strong>
+          <span class="muted">${item.area} · ${state.date} · ${state.slot}</span>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>选择日期</h2></div>
+          <div class="date-grid">
+            ${["06/08", "06/09", "06/10"].map((date, index) => `
+              <button class="date-btn ${state.date === date ? "active" : ""}" onclick="setDate('${date}')">${date}<span>${["周六", "周日", "周一"][index]}</span></button>
+            `).join("")}
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>选择时段</h2></div>
+          <div class="filter">
+            ${item.slots.map(slot => `<button class="${state.slot === slot ? "active" : ""}" onclick="setSlot('${slot}')">${slot}</button>`).join("")}
+          </div>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>选择套餐</h2></div>
+          ${packages.map(pkg => renderPackageCard(pkg, true)).join("")}
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>人数</h2></div>
+          <div class="card equip"><span>成人 <b>${state.adults}</b> 人</span><span class="stepper"><button onclick="changePeople('adults',-1)">-</button><span>${state.adults}</span><button onclick="changePeople('adults',1)">+</button></span></div>
+          <div class="card equip"><span>儿童 <b>${state.kids}</b> 人</span><span class="stepper"><button onclick="changePeople('kids',-1)">-</button><span>${state.kids}</span><button onclick="changePeople('kids',1)">+</button></span></div>
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>装备加购</h2></div>
+          ${equips.map(eq => `
+            <div class="card equip">
+              <span><strong>${eq.name}</strong><br><span class="muted">${money(eq.price)} / ${eq.unit}</span></span>
+              <span class="stepper"><button onclick="adjustEquip('${eq.id}',-1)">-</button><span>${state.equipQty[eq.id] || 0}</span><button onclick="adjustEquip('${eq.id}',1)">+</button></span>
+            </div>
+          `).join("")}
+        </section>
+        <section class="section">
+          <div class="section-head"><h2>联系人</h2></div>
+          <div class="form">
+            <div class="field"><label>姓名</label><input value="${state.contact}" oninput="state.contact=this.value"></div>
+            <div class="field"><label>手机号</label><input value="${state.phone}" oninput="state.phone=this.value"></div>
+            <div class="field"><label>备注</label><textarea placeholder="是否带宠物、是否需要生日布置等" oninput="state.note=this.value">${state.note}</textarea></div>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderOrders() {
+      document.getElementById("ordersView").innerHTML = `
+        <div class="filter">
+          <button class="active">全部</button>
+          <button>待支付</button>
+          <button>待出行</button>
+          <button>已完成</button>
+        </div>
+        <section class="section">
+          <div class="section-head"><h2>我的订单</h2><button>${state.orders.length} 单</button></div>
+          ${state.orders.map(order => `
+            <article class="card order-card">
+              <div class="section-head">
+                <strong>${order.camp}</strong>
+                <span class="tag ${order.status === "待支付" ? "sun" : ""}">${order.status}</span>
+              </div>
+              <span class="muted">${order.id}</span>
+              <div class="stats-row">
+                <span class="tag">${order.date}</span>
+                <span class="tag">${order.slot}</span>
+                <span class="price">${money(order.amount)}</span>
+              </div>
+              <div class="tag-row">
+                <button class="ghost-btn" onclick="showToast('已打开订单详情')">查看详情</button>
+                <button class="ghost-btn" onclick="showToast('已复制营地地址')">导航</button>
+                ${order.status === "待支付" ? `<button class="primary-btn" onclick="showToast('支付能力待接入')">去支付</button>` : ""}
+              </div>
+            </article>
+          `).join("")}
+        </section>
+      `;
+    }
+
+    function renderProfile() {
+      document.getElementById("profileView").innerHTML = `
+        <section class="profile-head">
+          <div class="avatar">C</div>
+          <div>
+            <strong>草地生活会员</strong>
+            <div style="height:6px"></div>
+            <span>优惠券 3 张 · 收藏营地 5 个</span>
+          </div>
+        </section>
+        <section class="info-grid">
+          <div class="info"><span>待出行</span><strong>${state.orders.filter(item => item.status === "待出行").length}</strong></div>
+          <div class="info"><span>优惠券</span><strong>3</strong></div>
+          <div class="info"><span>收藏</span><strong>5</strong></div>
+          <div class="info"><span>露营次数</span><strong>8</strong></div>
+        </section>
+        <section class="menu">
+          ${["常用联系人", "我的优惠券", "收藏营地", "退款/改期", "联系客服", "商家入驻"].map(item => `
+            <button class="menu-row" onclick="showToast('${item} 后续接入')"><span>${item}</span><span>›</span></button>
+          `).join("")}
+        </section>
+      `;
+    }
+
+    function renderTotalBar() {
+      const bar = document.getElementById("totalBar");
+      if (state.page !== "booking") {
+        bar.style.display = "none";
+        return;
+      }
+      bar.style.display = "flex";
+      bar.innerHTML = `
+        <div>
+          <div class="price">${money(total())}</div>
+          <div class="muted">套餐 ${money(pack().price)} · 装备 ${money(equipTotal())}</div>
+        </div>
+        <button class="primary-btn" onclick="createOrder()">提交预约</button>
+      `;
+    }
+
+    function render() {
+      const titleMap = {
+        home: "周末野餐营地",
+        camps: "选择营地",
+        detail: camp().name,
+        booking: "预约下单",
+        orders: "我的订单",
+        profile: "我的"
+      };
+      const insightMap = {
+        home: "首页提供城市、日期、分类和推荐营地入口，用户可以快速进入营地详情或预约流程。",
+        camps: "营地列表支持筛选和卡片浏览，卡片展示价格、距离、评分和适合场景。",
+        detail: "详情页展示场景图、营地信息、设施服务和推荐套餐，底部保留预约入口。",
+        booking: "预约页串联日期、时段、套餐、人数、装备和联系人，并实时计算费用。",
+        orders: "订单页展示待支付、待出行和已完成订单，预留支付、导航、售后能力。",
+        profile: "个人中心承载优惠券、收藏、联系人、客服和会员能力。"
+      };
+
+      document.getElementById("wxTitle").textContent = titleMap[state.page] || "野餐露营";
+      document.getElementById("insight").textContent = insightMap[state.page] || "";
+      document.querySelectorAll(".view").forEach(view => view.classList.remove("active"));
+      const activeId = `${state.page}View`;
+      const target = document.getElementById(activeId) || document.getElementById("homeView");
+      target.classList.add("active");
+
+      renderFlow();
+      renderTabbar();
+      renderHome();
+      renderCamps();
+      renderDetail();
+      renderBooking();
+      renderOrders();
+      renderProfile();
+      renderTotalBar();
+    }
+
+    render();
+  </script>
+</body>
+</html>

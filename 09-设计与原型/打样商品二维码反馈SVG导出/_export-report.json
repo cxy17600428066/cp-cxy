@@ -1,0 +1,74 @@
+[
+  {
+    "name": "PC-统计看板",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\01-PC-统计看板.svg",
+    "width": 1440,
+    "height": 900,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "PC-打样商品",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\02-PC-打样商品.svg",
+    "width": 1440,
+    "height": 900,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "PC-样品批次",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\03-PC-样品批次.svg",
+    "width": 1440,
+    "height": 900,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "PC-反馈列表",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\04-PC-反馈列表.svg",
+    "width": 1440,
+    "height": 951,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "PC-批次二维码弹窗",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\05-PC-批次二维码弹窗.svg",
+    "width": 1440,
+    "height": 900,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "PC-反馈详情抽屉",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\06-PC-反馈详情抽屉.svg",
+    "width": 1440,
+    "height": 951,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "PC-新建样品批次弹窗",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\07-PC-新建样品批次弹窗.svg",
+    "width": 1440,
+    "height": 900,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "移动端-扫码反馈表单",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\08-移动端-扫码反馈表单.svg",
+    "width": 430,
+    "height": 1595,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  },
+  {
+    "name": "移动端-提交成功页",
+    "svgPath": "E:\\cxy\\09-设计与原型\\打样商品二维码反馈SVG导出\\09-移动端-提交成功页.svg",
+    "width": 430,
+    "height": 978,
+    "title": "打样商品二维码反馈交互原型",
+    "mode": "figma-compatible-image-svg"
+  }
+]

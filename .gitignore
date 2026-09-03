@@ -1,4 +1,8 @@
 node_modules/
+.whisper_deps/
+.whisper_models/
+.hf_cache/
+.pnpm-store/
 .DS_Store
 Thumbs.db
 portfolio-build/figma-svg/portfolio-long-scroll-hires.svg

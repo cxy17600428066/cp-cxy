@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>打样商品二维码反馈交互原型</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --surface-soft: #f8fafc;
+      --line: #d9e1eb;
+      --line-strong: #b8c4d2;
+      --ink: #102033;
+      --muted: #64748b;
+      --brand: #0f766e;
+      --brand-dark: #0b5f58;
+      --brand-soft: #e8f5f3;
+      --blue: #1d4ed8;
+      --blue-soft: #eaf1ff;
+      --green: #047857;
+      --green-soft: #e9f8ef;
+      --amber: #b45309;
+      --amber-soft: #fff4e5;
+      --red: #b91c1c;
+      --red-soft: #fff0f0;
+      --gray-soft: #edf2f7;
+      --shadow: 0 18px 42px rgba(16, 32, 51, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--bg);
+      font-family: "Microsoft YaHei UI", "PingFang SC", "Source Han Sans SC", "Segoe UI", sans-serif;
+    }
+
+    button,
+    input,
+    select,
+    textarea { font: inherit; }
+
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: grid;
+      grid-template-columns: minmax(240px, 1fr) auto;
+      gap: 16px;
+      align-items: center;
+      padding: 14px 22px;
+      background: rgba(255, 255, 255, 0.96);
+      border-bottom: 1px solid var(--line);
+      box-shadow: 0 10px 26px rgba(16, 32, 51, 0.05);
+    }
+
+    .brand {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .brand strong {
+      font-size: 20px;
+      line-height: 1.25;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .brand span {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-actions,
+    .view-switch,
+    .toolbar,
+    .filters,
+    .row-actions,
+    .inline-actions,
+    .form-actions,
+    .tabbar,
+    .tag-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .view-switch,
+    .tabbar {
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .view-switch button,
+    .tabbar button,
+    .nav button,
+    .chip,
+    .btn {
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      color: var(--ink);
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+    }
+
+    .view-switch button,
+    .tabbar button {
+      padding: 8px 12px;
+      border-color: transparent;
+      background: transparent;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .view-switch button.active,
+    .tabbar button.active,
+    .nav button.active,
+    .chip.active {
+      color: var(--brand-dark);
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.32);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn.primary {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .btn.blue {
+      color: var(--blue);
+      border-color: rgba(29, 78, 216, 0.22);
+      background: var(--blue-soft);
+    }
+
+    .btn.warn {
+      color: var(--amber);
+      border-color: rgba(180, 83, 9, 0.26);
+      background: var(--amber-soft);
+    }
+
+    .btn.danger {
+      color: var(--red);
+      border-color: rgba(185, 28, 28, 0.24);
+      background: var(--red-soft);
+    }
+
+    .btn.ghost { background: transparent; }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      display: inline-grid;
+      place-items: center;
+      flex: 0 0 auto;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: 236px minmax(0, 1fr);
+      min-height: 0;
+    }
+
+    .sidebar {
+      padding: 16px 12px;
+      border-right: 1px solid var(--line);
+      background: #fbfdff;
+      display: grid;
+      align-content: start;
+      gap: 14px;
+    }
+
+    .nav-group {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-title {
+      padding: 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 24px 1fr auto;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      text-align: left;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .badge {
+      min-width: 24px;
+      height: 22px;
+      padding: 0 7px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: var(--gray-soft);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    main {
+      min-width: 0;
+      padding: 20px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .page-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .page-title {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin: 0; }
+
+    h1 {
+      font-size: 24px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      font-size: 17px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      font-size: 14px;
+      line-height: 1.4;
+      letter-spacing: 0;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(136px, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      min-height: 88px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      display: grid;
+      gap: 8px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .stat strong {
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .stat.brand { border-left: 4px solid var(--brand); }
+    .stat.blue { border-left: 4px solid var(--blue); }
+    .stat.green { border-left: 4px solid var(--green); }
+    .stat.amber { border-left: 4px solid var(--amber); }
+    .stat.red { border-left: 4px solid var(--red); }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      min-height: 58px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfdff;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .filters {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--surface-soft);
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      min-width: 160px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+
+    textarea {
+      min-height: 96px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: rgba(15, 118, 110, 0.58);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      min-width: 1020px;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    th {
+      color: var(--muted);
+      background: #fbfdff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    tr:hover td { background: #fcfdff; }
+
+    .mono {
+      font-family: "Cascadia Mono", "Consolas", monospace;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .status.brand { color: var(--brand-dark); background: var(--brand-soft); }
+    .status.blue { color: var(--blue); background: var(--blue-soft); }
+    .status.green { color: var(--green); background: var(--green-soft); }
+    .status.amber { color: var(--amber); background: var(--amber-soft); }
+    .status.red { color: var(--red); background: var(--red-soft); }
+    .status.gray { color: var(--muted); background: var(--gray-soft); }
+
+    .chip {
+      min-height: 32px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(140px, 1fr));
+      gap: 10px;
+    }
+
+    .summary-item {
+      min-height: 72px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      display: grid;
+      gap: 6px;
+    }
+
+    .summary-item span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .summary-item strong {
+      font-size: 14px;
+      line-height: 1.35;
+      font-weight: 900;
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+      gap: 16px;
+      align-items: start;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .bar-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .bar-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .bar-track {
+      height: 10px;
+      border-radius: 999px;
+      background: var(--gray-soft);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--brand);
+    }
+
+    .phone-wrap {
+      display: grid;
+      place-items: start center;
+      padding: 10px;
+    }
+
+    .phone {
+      width: min(390px, 100%);
+      min-height: 720px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background: #0f172a;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .phone-screen {
+      min-height: 694px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: #f7fafc;
+      display: grid;
+      grid-template-rows: auto 1fr;
+    }
+
+    .mobile-head {
+      padding: 18px 16px;
+      background: var(--brand);
+      color: #fff;
+      display: grid;
+      gap: 8px;
+    }
+
+    .mobile-head h2 {
+      font-size: 20px;
+    }
+
+    .mobile-head p {
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .mobile-body {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      overflow: auto;
+    }
+
+    .mobile-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .rating {
+      display: grid;
+      gap: 8px;
+    }
+
+    .stars {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+    }
+
+    .star-btn {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      font-size: 18px;
+      color: var(--amber);
+    }
+
+    .star-btn.active {
+      background: var(--amber-soft);
+      border-color: rgba(180, 83, 9, 0.28);
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .choice {
+      min-height: 38px;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .choice.active {
+      color: var(--brand-dark);
+      background: var(--brand-soft);
+      border-color: rgba(15, 118, 110, 0.32);
+    }
+
+    .qr {
+      width: 180px;
+      height: 180px;
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      grid-template-rows: repeat(9, 1fr);
+      gap: 3px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .qr span {
+      border-radius: 2px;
+      background: var(--ink);
+    }
+
+    .qr span.off { background: transparent; }
+
+    .empty {
+      min-height: 180px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      border: 1px dashed var(--line-strong);
+      border-radius: 8px;
+      background: var(--surface-soft);
+    }
+
+    .toast {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 80;
+      display: none;
+      max-width: 360px;
+      padding: 12px 14px;
+      border: 1px solid rgba(15, 118, 110, 0.25);
+      border-radius: 8px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      color: var(--brand-dark);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .toast.show { display: block; }
+
+    .drawer,
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      display: none;
+      background: rgba(16, 32, 51, 0.38);
+    }
+
+    .drawer.open,
+    .modal.open { display: block; }
+
+    .drawer-panel {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(560px, 100%);
+      height: 100%;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .modal-panel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(560px, calc(100% - 28px));
+      max-height: calc(100vh - 40px);
+      border-radius: 8px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .overlay-head,
+    .overlay-foot {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .overlay-foot {
+      border-top: 1px solid var(--line);
+      border-bottom: 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .overlay-body {
+      padding: 16px;
+      overflow: auto;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .close-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      display: inline-grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--surface-soft);
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    @media (max-width: 1180px) {
+      .stats { grid-template-columns: repeat(3, minmax(150px, 1fr)); }
+      .dashboard-grid { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(140px, 1fr)); }
+    }
+
+    @media (max-width: 860px) {
+      .topbar {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .workspace { grid-template-columns: 1fr; }
+
+      .sidebar {
+        position: sticky;
+        top: 82px;
+        z-index: 20;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 10px;
+      }
+
+      .nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      main { padding: 14px; }
+
+      .page-head,
+      .panel-head {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .stats,
+      .summary-grid,
+      .nav,
+      .choice-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .top-actions,
+      .toolbar,
+      .filters {
+        align-items: stretch;
+      }
+
+      .btn,
+      .field,
+      .view-switch,
+      .tabbar {
+        width: 100%;
+      }
+
+      .view-switch button,
+      .tabbar button { flex: 1; }
+
+      .phone {
+        border-radius: 8px;
+        padding: 0;
+      }
+
+      .phone-screen { border-radius: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <strong>打样商品二维码反馈</strong>
+        <span>卓希食品 / 无骨鸡爪新品打样 / 扫码反馈 / 批次复盘</span>
+      </div>
+      <div class="top-actions">
+        <div class="view-switch" aria-label="端切换">
+          <button type="button" id="viewAdmin" class="active">后台管理</button>
+          <button type="button" id="viewMobile">扫码反馈</button>
+        </div>
+        <button class="btn primary" type="button" onclick="openBatchModal()"><span class="icon">+</span>新建批次</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="sidebar">
+        <div class="nav-group">
+          <div class="nav-title">样品反馈</div>
+          <nav class="nav" id="nav"></nav>
+        </div>
+      </aside>
+      <main id="main"></main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <section class="modal" id="modal">
+    <div class="modal-panel">
+      <div class="overlay-head">
+        <h2 id="modalTitle">操作</h2>
+        <button class="close-btn" type="button" onclick="closeOverlay()">X</button>
+      </div>
+      <div class="overlay-body" id="modalBody"></div>
+      <div class="overlay-foot" id="modalFoot"></div>
+    </div>
+  </section>
+
+  <section class="drawer" id="drawer">
+    <div class="drawer-panel">
+      <div class="overlay-head">
+        <h2 id="drawerTitle">反馈详情</h2>
+        <button class="close-btn" type="button" onclick="closeOverlay()">X</button>
+      </div>
+      <div class="overlay-body" id="drawerBody"></div>
+      <div class="overlay-foot" id="drawerFoot"></div>
+    </div>
+  </section>
+
+  <script>
+    const products = [
+      { id: "SPU202605001", name: "藤椒无骨鸡爪", category: "无骨鸡爪", flavor: "藤椒微麻", spec: "180g/袋", stage: "复样中", owner: "产品-林敏", latestBatch: "SP20260513001" },
+      { id: "SPU202605002", name: "柠檬酸辣无骨鸡爪", category: "无骨鸡爪", flavor: "酸辣柠檬", spec: "200g/盒", stage: "打样中", owner: "研发-周琪", latestBatch: "SP20260512003" },
+      { id: "SPU202605003", name: "蒜香酸甜无骨鸡爪", category: "无骨鸡爪", flavor: "蒜香酸甜", spec: "150g/袋", stage: "小批量试产", owner: "产品-陈涛", latestBatch: "SP20260509002" }
+    ];
+
+    const batches = [
+      { id: "SP20260513001", productId: "SPU202605001", productName: "藤椒无骨鸡爪", formula: "V0.3", packageVersion: "手贴标签版", produceDate: "2026-05-13", audience: "经销商/内部试吃", quantity: 120, mailCount: 5, qrStatus: "收集中", scans: 86, feedbacks: 42, sensoryRate: 88, tasteRate: 81, overallRate: 79, conclusion: "待观察" },
+      { id: "SP20260512003", productId: "SPU202605002", productName: "柠檬酸辣无骨鸡爪", formula: "V0.2", packageVersion: "透明盒测试版", produceDate: "2026-05-12", audience: "门店/消费者", quantity: 80, mailCount: 3, qrStatus: "收集中", scans: 61, feedbacks: 31, sensoryRate: 74, tasteRate: 65, overallRate: 61, conclusion: "继续优化" },
+      { id: "SP20260509002", productId: "SPU202605003", productName: "蒜香酸甜无骨鸡爪", formula: "V1.0", packageVersion: "彩袋试产版", produceDate: "2026-05-09", audience: "渠道客户", quantity: 200, mailCount: 8, qrStatus: "已复盘", scans: 156, feedbacks: 92, sensoryRate: 93, tasteRate: 91, overallRate: 89, conclusion: "小批量试产" }
+    ];
+
+    const feedbacks = [
+      { id: "FB202605130001", batchId: "SP20260513001", productName: "藤椒无骨鸡爪", sampleDate: "2026-05-13", evaluationDate: "2026-05-13", evaluator: "四川经销商", sensory: "认可", sensoryAdvice: "色泽和藤椒香气有辨识度。", taste: "认可", tasteAdvice: "麻味比较舒服，后味可以再清爽一点。", comprehensive: "认可", finalConclusion: "直接推进", status: "跟进中", submitTime: "2026-05-13 10:28" },
+      { id: "FB202605130002", batchId: "SP20260513001", productName: "藤椒无骨鸡爪", sampleDate: "2026-05-13", evaluationDate: "2026-05-13", evaluator: "内部试吃", sensory: "认可", sensoryAdvice: "外观完整，汤汁挂料均匀。", taste: "不认可", tasteAdvice: "第一口香，但吃到后面偏咸，建议降低盐度。", comprehensive: "不认可", finalConclusion: "优化后再评", status: "未读", submitTime: "2026-05-13 11:06" },
+      { id: "FB202605120017", batchId: "SP20260512003", productName: "柠檬酸辣无骨鸡爪", sampleDate: "2026-05-12", evaluationDate: "2026-05-12", evaluator: "杭州门店", sensory: "认可", sensoryAdvice: "包装透明，陈列效果较好。", taste: "认可", tasteAdvice: "柠檬味比现有竞品自然。", comprehensive: "认可", finalConclusion: "直接推进", status: "已采纳", submitTime: "2026-05-12 16:44" },
+      { id: "FB202605120019", batchId: "SP20260512003", productName: "柠檬酸辣无骨鸡爪", sampleDate: "2026-05-12", evaluationDate: "2026-05-12", evaluator: "上海消费者", sensory: "认可", sensoryAdvice: "包装清爽，但品名还可以更突出。", taste: "不认可", tasteAdvice: "酸味太冲，辣味不明显。", comprehensive: "不认可", finalConclusion: "优化后再评", status: "跟进中", submitTime: "2026-05-12 18:20" },
+      { id: "FB202605090051", batchId: "SP20260509002", productName: "蒜香酸甜无骨鸡爪", sampleDate: "2026-05-09", evaluationDate: "2026-05-10", evaluator: "南京渠道客户", sensory: "认可", sensoryAdvice: "颜色稳定，包装识别度可接受。", taste: "认可", tasteAdvice: "蒜香足，酸甜平衡。", comprehensive: "认可", finalConclusion: "直接推进", status: "已采纳", submitTime: "2026-05-10 09:12" }
+    ];
+
+    const state = {
+      view: "admin",
+      page: "dashboard",
+      batch: "全部",
+      product: "全部",
+      status: "全部",
+      selectedFeedback: feedbacks[0].id,
+      mobileSubmitted: false,
+      mobileForm: {
+        sensory: "认可",
+        taste: "认可",
+        comprehensive: "认可",
+        finalConclusion: "优化后再评"
+      }
+    };
+
+    const navItems = [
+      { page: "dashboard", icon: "K", label: "统计看板" },
+      { page: "products", icon: "P", label: "打样商品" },
+      { page: "batches", icon: "B", label: "样品批次" },
+      { page: "feedbacks", icon: "F", label: "反馈列表" }
+    ];
+
+    function productById(id) {
+      return products.find(product => product.id === id);
+    }
+
+    function visibleFeedbacks() {
+      return feedbacks.filter(item => {
+        if (state.batch !== "全部" && item.batchId !== state.batch) return false;
+        if (state.product !== "全部" && item.productName !== state.product) return false;
+        if (state.status !== "全部" && item.status !== state.status) return false;
+        return true;
+      });
+    }
+
+    function statusClass(value) {
+      if (["已采纳", "已复盘", "小批量试产", "认可", "直接推进"].includes(value)) return "green";
+      if (["收集中", "跟进中", "复样中", "打样中"].includes(value)) return "blue";
+      if (["待观察", "未读", "继续优化", "优化后再评"].includes(value)) return "amber";
+      if (["无效", "已停用", "不认可", "放弃开发"].includes(value)) return "red";
+      return "gray";
+    }
+
+    function setView(view) {
+      state.view = view;
+      document.getElementById("app").style.display = view === "admin" ? "grid" : "none";
+      document.getElementById("viewAdmin").classList.toggle("active", view === "admin");
+      document.getElementById("viewMobile").classList.toggle("active", view === "mobile");
+      if (view === "mobile") renderMobileStandalone();
+      else {
+        const mobileRoot = document.getElementById("mobileRoot");
+        if (mobileRoot) mobileRoot.remove();
+        render();
+      }
+    }
+
+    function setPage(page) {
+      state.page = page;
+      render();
+    }
+
+    function render() {
+      renderNav();
+      const main = document.getElementById("main");
+      if (state.page === "products") main.innerHTML = renderProducts();
+      else if (state.page === "batches") main.innerHTML = renderBatches();
+      else if (state.page === "feedbacks") main.innerHTML = renderFeedbacks();
+      else main.innerHTML = renderDashboard();
+    }
+
+    function renderNav() {
+      const nav = document.getElementById("nav");
+      nav.innerHTML = navItems.map(item => `
+        <button type="button" class="${state.page === item.page ? "active" : ""}" onclick="setPage('${item.page}')">
+          <span class="icon">${item.icon}</span>
+          <span>${item.label}</span>
+          <span class="badge">${navCount(item.page)}</span>
+        </button>
+      `).join("");
+    }
+
+    function navCount(page) {
+      if (page === "products") return products.length;
+      if (page === "batches") return batches.length;
+      if (page === "feedbacks") return feedbacks.length;
+      return batches.filter(batch => batch.qrStatus === "收集中").length;
+    }
+
+    function renderStats() {
+      const list = visibleFeedbacks();
+      const sensoryRate = rate(list, item => item.sensory === "认可");
+      const tasteRate = rate(list, item => item.taste === "认可");
+      const comprehensiveRate = rate(list, item => item.comprehensive === "认可");
+      return `
+        <section class="stats">
+          <div class="stat brand"><span>反馈总数</span><strong>${list.length}</strong></div>
+          <div class="stat green"><span>感官认可率</span><strong>${sensoryRate}</strong></div>
+          <div class="stat blue"><span>口味认可率</span><strong>${tasteRate}</strong></div>
+          <div class="stat amber"><span>综合认可率</span><strong>${comprehensiveRate}</strong></div>
+          <div class="stat amber"><span>待处理反馈</span><strong>${list.filter(item => ["未读", "跟进中"].includes(item.status)).length}</strong></div>
+          <div class="stat red"><span>不认可反馈</span><strong>${list.filter(item => [item.sensory, item.taste, item.comprehensive].includes("不认可")).length}</strong></div>
+        </section>
+      `;
+    }
+
+    function rate(list, predicate) {
+      if (!list.length) return "-";
+      return Math.round(list.filter(predicate).length / list.length * 100) + "%";
+    }
+
+    function renderDashboard() {
+      const conclusion = conclusionSummary();
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>统计看板</h1>
+            <p class="subtle">按样品批次查看反馈数量、认可率和最终结论分布</p>
+          </div>
+          <div class="toolbar">
+            <button class="btn blue" type="button" onclick="setPage('feedbacks')">查看反馈</button>
+            <button class="btn ghost" type="button" onclick="toast('已生成当前看板导出任务。')"><span class="icon">↓</span>导出</button>
+          </div>
+        </section>
+        ${renderStats()}
+        <section class="dashboard-grid">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>批次表现</h2>
+              <span class="subtle">${batches.length} 个批次</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>批次</th>
+                    <th>商品</th>
+                    <th>配方</th>
+                    <th>投放</th>
+                    <th>邮寄次数</th>
+                    <th>扫码/反馈</th>
+                    <th>认可率</th>
+                    <th>结论</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${batches.map(batch => `
+                    <tr>
+                      <td class="mono">${batch.id}</td>
+                      <td>${batch.productName}</td>
+                      <td>${batch.formula}</td>
+                      <td>${batch.audience}</td>
+                      <td>${batch.mailCount} 次</td>
+                      <td>${batch.scans} / ${batch.feedbacks}</td>
+                      <td>感官 ${batch.sensoryRate}% / 口味 ${batch.tasteRate}% / 综合 ${batch.overallRate}%</td>
+                      <td><span class="status ${statusClass(batch.conclusion)}">${batch.conclusion}</span></td>
+                      <td><button class="btn blue" type="button" onclick="state.batch='${batch.id}';setPage('feedbacks')">反馈</button></td>
+                    </tr>
+                  `).join("")}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-head">
+              <h2>最终结论分布</h2>
+              <span class="subtle">按样品品尝评定表统计</span>
+            </div>
+            <div class="panel-body">
+              <div class="bar-list">
+                ${conclusion.map(item => `
+                  <div class="bar-row">
+                    <div class="bar-meta"><span>${item.name}</span><strong>${item.count} 条</strong></div>
+                    <div class="bar-track"><div class="bar-fill" style="width:${item.percent}%"></div></div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+        </section>
+      `;
+    }
+
+    function conclusionSummary() {
+      const counts = { "直接推进": 0, "优化后再评": 0, "放弃开发": 0 };
+      feedbacks.forEach(item => counts[item.finalConclusion] = (counts[item.finalConclusion] || 0) + 1);
+      const max = Math.max(...Object.values(counts), 1);
+      return Object.entries(counts)
+        .map(([name, count]) => ({ name, count, percent: Math.round(count / max * 100) }))
+        .sort((a, b) => b.count - a.count)
+    }
+
+    function renderProducts() {
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>打样商品</h1>
+            <p class="subtle">管理新品打样对象，批次二维码从商品下创建</p>
+          </div>
+          <button class="btn primary" type="button" onclick="openProductModal()"><span class="icon">+</span>新建商品</button>
+        </section>
+        <section class="panel">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>商品编号</th>
+                  <th>商品名称</th>
+                  <th>分类/口味</th>
+                  <th>规格</th>
+                  <th>阶段</th>
+                  <th>负责人</th>
+                  <th>最新批次</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${products.map(product => `
+                  <tr>
+                    <td class="mono">${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.category} / ${product.flavor}</td>
+                    <td>${product.spec}</td>
+                    <td><span class="status ${statusClass(product.stage)}">${product.stage}</span></td>
+                    <td>${product.owner}</td>
+                    <td class="mono">${product.latestBatch}</td>
+                    <td>
+                      <div class="row-actions">
+                        <button class="btn blue" type="button" onclick="state.product='${product.name}';setPage('batches')">批次</button>
+                        <button class="btn ghost" type="button" onclick="openBatchModal('${product.id}')">建批次</button>
+                      </div>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderBatches() {
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>样品批次</h1>
+            <p class="subtle">二维码绑定到批次，用于区分配方版本和包装版本</p>
+          </div>
+          <button class="btn primary" type="button" onclick="openBatchModal()"><span class="icon">+</span>新建批次</button>
+        </section>
+        <section class="panel">
+          <div class="filters">
+            <div class="field">
+              <label>商品</label>
+              <select onchange="state.product=this.value;render()">
+                ${["全部", ...products.map(product => product.name)].map(value => `<option ${state.product === value ? "selected" : ""}>${value}</option>`).join("")}
+              </select>
+            </div>
+            <button class="btn ghost" type="button" onclick="state.product='全部';render()">重置</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>批次编号</th>
+                  <th>商品</th>
+                  <th>配方/包装</th>
+                  <th>生产日期</th>
+                  <th>投放对象</th>
+                  <th>邮寄次数</th>
+                  <th>二维码</th>
+                  <th>扫码/反馈</th>
+                  <th>认可率</th>
+                  <th>结论</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${batches.filter(batch => state.product === "全部" || batch.productName === state.product).map(batch => `
+                  <tr>
+                    <td class="mono">${batch.id}</td>
+                    <td>${batch.productName}</td>
+                    <td>${batch.formula} / ${batch.packageVersion}</td>
+                    <td>${batch.produceDate}</td>
+                    <td>${batch.audience}</td>
+                    <td>${batch.mailCount} 次</td>
+                    <td><span class="status ${statusClass(batch.qrStatus)}">${batch.qrStatus}</span></td>
+                    <td>${batch.scans} / ${batch.feedbacks}</td>
+                    <td>感官 ${batch.sensoryRate}%<br><span class="subtle">口味 ${batch.tasteRate}% / 综合 ${batch.overallRate}%</span></td>
+                    <td><span class="status ${statusClass(batch.conclusion)}">${batch.conclusion}</span></td>
+                    <td>
+                      <div class="row-actions">
+                        <button class="btn blue" type="button" onclick="openQr('${batch.id}')">二维码</button>
+                        <button class="btn ghost" type="button" onclick="state.batch='${batch.id}';setPage('feedbacks')">反馈</button>
+                      </div>
+                    </td>
+                  </tr>
+                `).join("")}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderFeedbacks() {
+      const list = visibleFeedbacks();
+      return `
+        <section class="page-head">
+          <div class="page-title">
+            <h1>反馈列表</h1>
+            <p class="subtle">按商品、批次、评定结果、最终结论和处理状态筛选</p>
+          </div>
+          <button class="btn ghost" type="button" onclick="toast('已导出当前筛选结果。')"><span class="icon">↓</span>导出</button>
+        </section>
+        ${renderStats()}
+        <section class="panel">
+          <div class="filters">
+            <div class="field">
+              <label>商品</label>
+              <select onchange="state.product=this.value;render()">
+                ${["全部", ...products.map(product => product.name)].map(value => `<option ${state.product === value ? "selected" : ""}>${value}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field">
+              <label>批次</label>
+              <select onchange="state.batch=this.value;render()">
+                ${["全部", ...batches.map(batch => batch.id)].map(value => `<option ${state.batch === value ? "selected" : ""}>${value}</option>`).join("")}
+              </select>
+            </div>
+            <div class="field">
+              <label>处理状态</label>
+              <select onchange="state.status=this.value;render()">
+                ${["全部", "未读", "已读", "跟进中", "已采纳", "无效"].map(value => `<option ${state.status === value ? "selected" : ""}>${value}</option>`).join("")}
+              </select>
+            </div>
+            <button class="btn ghost" type="button" onclick="state.product='全部';state.batch='全部';state.status='全部';render()">重置</button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>反馈编号</th>
+                  <th>商品/批次</th>
+                  <th>评定人</th>
+                  <th>感官</th>
+                  <th>口味</th>
+                  <th>综合/结论</th>
+                  <th>建议摘要</th>
+                  <th>提交时间</th>
+                  <th>状态</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.length ? list.map(item => `
+                  <tr>
+                    <td class="mono">${item.id}</td>
+                    <td>${item.productName}<br><span class="subtle mono">${item.batchId}</span></td>
+                    <td>${item.evaluator}<br><span class="subtle">评定日 ${item.evaluationDate}</span></td>
+                    <td><span class="status ${statusClass(item.sensory)}">${item.sensory}</span></td>
+                    <td><span class="status ${statusClass(item.taste)}">${item.taste}</span></td>
+                    <td><span class="status ${statusClass(item.comprehensive)}">${item.comprehensive}</span><br><span class="status ${statusClass(item.finalConclusion)}">${item.finalConclusion}</span></td>
+                    <td>${adviceSummary(item).slice(0, 34)}${adviceSummary(item).length > 34 ? "..." : ""}</td>
+                    <td>${item.submitTime}</td>
+                    <td><span class="status ${statusClass(item.status)}">${item.status}</span></td>
+                    <td><button class="btn blue" type="button" onclick="openFeedback('${item.id}')">详情</button></td>
+                  </tr>
+                `).join("") : `<tr><td colspan="10"><div class="empty">没有符合条件的反馈</div></td></tr>`}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      `;
+    }
+
+    function adviceSummary(item) {
+      return `感官：${item.sensoryAdvice} 口味：${item.tasteAdvice}`;
+    }
+
+    function openProductModal() {
+      document.getElementById("modalTitle").textContent = "新建打样商品";
+      document.getElementById("modalBody").innerHTML = `
+        <div class="form-grid">
+          <div class="field"><label>商品名称</label><input value="藤椒无骨鸡爪" /></div>
+          <div class="field"><label>商品分类</label><input value="无骨鸡爪" /></div>
+          <div class="field"><label>口味方向</label><input value="藤椒微麻" /></div>
+          <div class="field"><label>规格</label><input value="180g/袋" /></div>
+          <div class="field"><label>产品负责人</label><input value="产品-林敏" /></div>
+          <div class="field"><label>当前阶段</label><select><option>打样中</option><option>复样中</option><option>小批量试产</option></select></div>
+        </div>
+      `;
+      document.getElementById("modalFoot").innerHTML = `
+        <button class="btn ghost" type="button" onclick="closeOverlay()">取消</button>
+        <button class="btn primary" type="button" onclick="closeOverlay();toast('已创建打样商品。')">保存</button>
+      `;
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function openBatchModal(productId) {
+      const product = productById(productId) || products[0];
+      document.getElementById("modalTitle").textContent = "新建样品批次";
+      document.getElementById("modalBody").innerHTML = `
+        <div class="form-grid">
+          <div class="field"><label>关联商品</label><input value="${product.name}" /></div>
+          <div class="field"><label>批次编号</label><input value="SP20260513004" /></div>
+          <div class="field"><label>配方版本</label><input value="V0.4" /></div>
+          <div class="field"><label>包装版本</label><input value="手贴标签版" /></div>
+          <div class="field"><label>生产日期</label><input value="2026-05-13" /></div>
+          <div class="field"><label>投放数量</label><input value="100" /></div>
+          <div class="field"><label>邮寄次数</label><input value="1" /></div>
+          <div class="field full"><label>投放对象</label><input value="内部试吃、经销商、重点门店" /></div>
+        </div>
+      `;
+      document.getElementById("modalFoot").innerHTML = `
+        <button class="btn ghost" type="button" onclick="closeOverlay()">取消</button>
+        <button class="btn primary" type="button" onclick="closeOverlay();toast('已创建批次并生成二维码。')">保存并生成二维码</button>
+      `;
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function openQr(batchId) {
+      const batch = batches.find(item => item.id === batchId);
+      document.getElementById("modalTitle").textContent = "批次二维码";
+      document.getElementById("modalBody").innerHTML = `
+        <div class="summary-grid">
+          <div class="summary-item"><span>批次编号</span><strong>${batch.id}</strong></div>
+          <div class="summary-item"><span>商品</span><strong>${batch.productName}</strong></div>
+          <div class="summary-item"><span>状态</span><strong><span class="status ${statusClass(batch.qrStatus)}">${batch.qrStatus}</span></strong></div>
+          <div class="summary-item"><span>邮寄次数</span><strong>${batch.mailCount} 次</strong></div>
+          <div class="summary-item"><span>扫码/反馈</span><strong>${batch.scans} / ${batch.feedbacks}</strong></div>
+        </div>
+        <div style="display:grid;place-items:center;gap:12px;padding:10px">
+          ${qrHtml()}
+          <span class="subtle mono">https://feedback.zhuoxi.test/sample/${batch.id}</span>
+        </div>
+      `;
+      document.getElementById("modalFoot").innerHTML = `
+        <button class="btn ghost" type="button" onclick="toast('二维码链接已复制。')">复制链接</button>
+        <button class="btn blue" type="button" onclick="toast('二维码 PNG 已下载。')">下载二维码</button>
+        <button class="btn warn" type="button" onclick="closeOverlay();toast('二维码已停用。')">停用</button>
+      `;
+      document.getElementById("modal").classList.add("open");
+    }
+
+    function openFeedback(id) {
+      const item = feedbacks.find(feedback => feedback.id === id);
+      document.getElementById("drawerTitle").textContent = "反馈详情";
+      document.getElementById("drawerBody").innerHTML = `
+        <div class="summary-grid">
+          <div class="summary-item"><span>反馈编号</span><strong>${item.id}</strong></div>
+          <div class="summary-item"><span>商品</span><strong>${item.productName}</strong></div>
+          <div class="summary-item"><span>批次</span><strong>${item.batchId}</strong></div>
+          <div class="summary-item"><span>状态</span><strong><span class="status ${statusClass(item.status)}">${item.status}</span></strong></div>
+          <div class="summary-item"><span>产品名称</span><strong>${item.productName}</strong></div>
+          <div class="summary-item"><span>制样日期</span><strong>${item.sampleDate}</strong></div>
+          <div class="summary-item"><span>评定日期</span><strong>${item.evaluationDate}</strong></div>
+          <div class="summary-item"><span>评定人</span><strong>${item.evaluator}</strong></div>
+          <div class="summary-item"><span>感官</span><strong><span class="status ${statusClass(item.sensory)}">${item.sensory}</span></strong></div>
+          <div class="summary-item"><span>口味</span><strong><span class="status ${statusClass(item.taste)}">${item.taste}</span></strong></div>
+          <div class="summary-item"><span>综合评定</span><strong><span class="status ${statusClass(item.comprehensive)}">${item.comprehensive}</span></strong></div>
+          <div class="summary-item"><span>最终结论</span><strong><span class="status ${statusClass(item.finalConclusion)}">${item.finalConclusion}</span></strong></div>
+          <div class="summary-item full"><span>感官优化建议</span><strong>${item.sensoryAdvice}</strong></div>
+          <div class="summary-item full"><span>口味优化建议</span><strong>${item.tasteAdvice}</strong></div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label>处理状态</label>
+            <select id="feedbackStatus">
+              ${["未读", "已读", "跟进中", "已采纳", "无效"].map(value => `<option ${item.status === value ? "selected" : ""}>${value}</option>`).join("")}
+            </select>
+          </div>
+          <div class="field">
+            <label>后台标签</label>
+            <input value="${item.taste === "不认可" ? "口味优化" : "可推进"}" />
+          </div>
+          <div class="field full">
+            <label>处理备注</label>
+            <textarea>按样品品尝评定表结果复核感官、口味和综合结论，必要时进入下一轮复样。</textarea>
+          </div>
+        </div>
+      `;
+      document.getElementById("drawerFoot").innerHTML = `
+        <button class="btn ghost" type="button" onclick="closeOverlay()">取消</button>
+        <button class="btn primary" type="button" onclick="updateFeedback('${id}')">保存处理</button>
+      `;
+      document.getElementById("drawer").classList.add("open");
+    }
+
+    function updateFeedback(id) {
+      const item = feedbacks.find(feedback => feedback.id === id);
+      item.status = document.getElementById("feedbackStatus").value;
+      closeOverlay();
+      toast("反馈处理状态已更新。");
+      render();
+    }
+
+    function renderMobileStandalone() {
+      const existing = document.getElementById("mobileRoot");
+      if (existing) existing.remove();
+      const root = document.createElement("div");
+      root.id = "mobileRoot";
+      root.innerHTML = `
+        <header class="topbar">
+          <div class="brand">
+            <strong>扫码反馈预览</strong>
+            <span>移动端用户扫码后的表单页面</span>
+          </div>
+          <div class="top-actions">
+            <div class="view-switch">
+              <button type="button" onclick="setView('admin')">后台管理</button>
+              <button type="button" class="active">扫码反馈</button>
+            </div>
+          </div>
+        </header>
+        <main>
+          <section class="page-head">
+            <div class="page-title">
+              <h1>用户扫码反馈页</h1>
+              <p class="subtle">按《样品品尝评定表》收集 · 绑定批次 SP20260513001</p>
+            </div>
+          </section>
+          <section class="phone-wrap">
+            <div class="phone">
+              <div class="phone-screen">
+                ${state.mobileSubmitted ? renderMobileSuccess() : renderMobileForm()}
+              </div>
+            </div>
+          </section>
+        </main>
+      `;
+      document.body.appendChild(root);
+    }
+
+    function renderMobileForm() {
+      return `
+        <div class="mobile-head">
+          <h2>样品品尝评定表</h2>
+          <p>藤椒无骨鸡爪 · 批次 SP20260513001 · 配方 V0.3</p>
+        </div>
+        <div class="mobile-body">
+          <div class="mobile-card">
+            <h3>基础信息</h3>
+            <div class="summary-grid" style="grid-template-columns:1fr 1fr">
+              <div class="summary-item"><span>产品名称</span><strong>藤椒无骨鸡爪</strong></div>
+              <div class="summary-item"><span>制样日期</span><strong>2026-05-13</strong></div>
+              <div class="summary-item"><span>评定日期</span><strong>2026-05-13</strong></div>
+              <div class="summary-item"><span>规格</span><strong>180g/袋</strong></div>
+            </div>
+          </div>
+          <div class="mobile-card">
+            <h3>评测维度</h3>
+            ${approvalBlock("sensory", "感官")}
+            <div class="field">
+              <label>感官优化建议</label>
+              <textarea>色泽和气味认可，建议包装标签上更突出藤椒风味。</textarea>
+            </div>
+            ${approvalBlock("taste", "口味")}
+            <div class="field">
+              <label>口味优化建议</label>
+              <textarea>藤椒香明显，后味可以再清爽一点。</textarea>
+            </div>
+          </div>
+          <div class="mobile-card">
+            <h3>综合评定</h3>
+            ${approvalBlock("comprehensive", "综合评定")}
+            <h3>最终结论</h3>
+            <div class="choice-grid">
+              ${["直接推进", "优化后再评", "放弃开发"].map(value => `
+                <button class="choice ${state.mobileForm.finalConclusion === value ? "active" : ""}" type="button" onclick="state.mobileForm.finalConclusion='${value}';renderMobileStandalone()">${value}</button>
+              `).join("")}
+            </div>
+            <div class="field">
+              <label>评定人（选填）</label>
+              <input placeholder="姓名/部门/客户名称" />
+            </div>
+          </div>
+          <button class="btn primary" type="button" onclick="submitMobileFeedback()">提交反馈</button>
+        </div>
+      `;
+    }
+
+    function approvalBlock(key, label) {
+      return `
+        <div class="rating">
+          <label>${label}</label>
+          <div class="choice-grid">
+            ${["认可", "不认可"].map(value => `
+              <button class="choice ${state.mobileForm[key] === value ? "active" : ""}" type="button" onclick="state.mobileForm.${key}='${value}';renderMobileStandalone()">${value}</button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderMobileSuccess() {
+      return `
+        <div class="mobile-head">
+          <h2>反馈已提交</h2>
+          <p>感谢参与卓希食品新品试吃反馈</p>
+        </div>
+        <div class="mobile-body">
+          <div class="mobile-card">
+            <h3>反馈编号</h3>
+            <p class="mono">FB202605130099</p>
+            <p class="subtle">你的样品品尝评定已关联到藤椒无骨鸡爪 SP20260513001 批次。</p>
+          </div>
+          <button class="btn ghost" type="button" onclick="state.mobileSubmitted=false;renderMobileStandalone()">再提交一条</button>
+        </div>
+      `;
+    }
+
+    function submitMobileFeedback() {
+      state.mobileSubmitted = true;
+      renderMobileStandalone();
+    }
+
+    function qrHtml() {
+      const on = [0,1,2,6,7,8,9,11,15,17,18,19,20,24,25,26,30,32,34,37,40,43,46,48,50,52,56,58,60,62,64,66,70,72,73,74,78,80];
+      return `<div class="qr">${Array.from({ length: 81 }, (_, index) => `<span class="${on.includes(index) ? "" : "off"}"></span>`).join("")}</div>`;
+    }
+
+    function closeOverlay() {
+      document.getElementById("modal").classList.remove("open");
+      document.getElementById("drawer").classList.remove("open");
+    }
+
+    function toast(message) {
+      const node = document.getElementById("toast");
+      node.textContent = message;
+      node.classList.add("show");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => node.classList.remove("show"), 2200);
+    }
+
+    document.getElementById("viewAdmin").addEventListener("click", () => setView("admin"));
+    document.getElementById("viewMobile").addEventListener("click", () => setView("mobile"));
+    render();
+  </script>
+</body>
+</html>

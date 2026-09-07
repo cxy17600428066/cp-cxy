@@ -161,8 +161,6 @@ function toggleSla(id,btn){const r=slaConfig.rules.find(x=>x.id===id);r.on=!r.on
 function markSlaDirty(){const s=document.getElementById('slaSaveState');s.textContent='有未保存的修改';s.classList.add('sla-dirty')}
 function saveSla(){localStorage.setItem('tgx-sla-config',JSON.stringify(slaConfig));const s=document.getElementById('slaSaveState');s.textContent='已保存并生效 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});s.classList.remove('sla-dirty');toast('时效预警策略已保存并生效')}
 function resetSla(){slaConfig=structuredClone(slaDefaults);renderSla(slaGroup);markSlaDirty();toast('已恢复默认配置，请保存后生效')}
-installSignoffView();installOrderLinkedSignoffUpgrade();installSlaView();
-const switchWithSla=switchAdminView;switchAdminView=function(view){if(view==='sla'){['orders','companies','drivers','exceptions','signoffs','sla'].forEach(name=>{const panel=document.getElementById(`${name}View`),nav=document.getElementById(`nav${name[0].toUpperCase()+name.slice(1)}`);if(panel)panel.hidden=name!==view;if(nav)nav.classList.toggle('active',name===view)});document.getElementById('adminPageTitle').textContent='时效预警策略';renderSla(slaGroup)}else switchWithSla(view)};
-prepareCreateFlow();prepareFleetSelectors();refreshCompanySelectors();renderCompanyManagement();renderDriverManagement();renderExceptionManagement();render();
+installSignoffView();installOrderLinkedSignoffUpgrade();prepareCreateFlow();prepareFleetSelectors();refreshCompanySelectors();renderCompanyManagement();renderDriverManagement();renderExceptionManagement();render();
 </script>
 </body></html>

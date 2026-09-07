@@ -14,7 +14,7 @@ const { pathToFileURL } = require('url');
   await page.waitForSelector('text=实际发货单明细');
   await page.screenshot({ path: 'E:/cxy/.codex-tools/qa-return-modal.png', fullPage: true });
   await page.getByRole('button', { name: '关闭' }).click();
-  await page.getByRole('button', { name: /拆单/ }).filter({ hasText: '拆单' }).nth(1).click();
+  await page.locator('button[onclick^="openShippingSplit"]').first().click();
   await page.waitForSelector('#simulateAfterSaleChange');
   await page.locator('#simulateAfterSaleChange').check();
   await page.getByRole('button', { name: '确认拆单并生成子单' }).click();

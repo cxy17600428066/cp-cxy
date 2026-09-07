@@ -405,6 +405,51 @@ def make_relation_diagram(path):
     img.save(path)
 
 
+def make_return_relation_diagram(path):
+    img = Image.new("RGB", (1800, 860), "white")
+    d = ImageDraw.Draw(img)
+    title_font = ImageFont.truetype(font_path(True), 38)
+    lane_font = ImageFont.truetype(font_path(True), 25)
+    small = ImageFont.truetype(font_path(False), 22)
+    note_font = ImageFont.truetype(font_path(True), 21)
+    d.text((60, 38), "退货与原订单、实际发货单关系", fill="#173A5E", font=title_font)
+    d.text((60, 92), "售后业务归原订单商品行，退货履约定位到拆合后的实际发货单商品行。", fill="#5D6B78", font=small)
+
+    d.text((65, 172), "发货前退款 / 取消", fill="#B35C00", font=lane_font)
+    before_boxes = [
+        ((245, 140, 515, 285), "原订单商品行", "售后业务归属"),
+        ((610, 140, 880, 285), "退款 / 取消占用", "扣减可履约数量"),
+        ((975, 140, 1245, 285), "计算剩余履约量", "原数量－有效占用"),
+        ((1340, 140, 1610, 285), "剩余数量 ＞ 0", "可继续拆合或同步"),
+    ]
+    before_fills = ["#F4F6F9", "#FFF3E8", "#EAF4FD", "#EAF6EC"]
+    before_outlines = ["#AAB4BE", "#E8A55A", "#77B5E8", "#77B980"]
+    for (b, t, s), fill, outline in zip(before_boxes, before_fills, before_outlines):
+        draw_rounded_box(d, b, fill, outline, t, s)
+    for a, b in zip(before_boxes, before_boxes[1:]):
+        arrow(d, (a[0][2] + 10, 212), (b[0][0] - 10, 212))
+    arrow(d, (1108, 295), (1108, 390), color="#D98787")
+    draw_rounded_box(d, (975, 400, 1245, 505), "#FDECEC", "#D98787", "剩余数量 ＝ 0", "当前发货单失效")
+    d.text((1125, 350), "全量取消", fill="#9B1C1C", font=note_font, anchor="mm")
+
+    d.text((65, 617), "发货后退货", fill="#2E74B5", font=lane_font)
+    after_boxes = [
+        ((245, 570, 515, 715), "原订单商品行", "退款、财务、售后归属"),
+        ((610, 570, 880, 715), "拆 / 合来源映射", "保留每个数量来源"),
+        ((975, 570, 1245, 715), "实际发货单商品行", "累计已发数量"),
+        ((1340, 570, 1610, 715), "退货明细", "记录本次映射数量"),
+    ]
+    after_fills = ["#F4F6F9", "#F0EBFA", "#EAF4FD", "#EAF6EC"]
+    after_outlines = ["#AAB4BE", "#9D82CF", "#77B5E8", "#77B980"]
+    for (b, t, s), fill, outline in zip(after_boxes, after_fills, after_outlines):
+        draw_rounded_box(d, b, fill, outline, t, s)
+    for a, b in zip(after_boxes, after_boxes[1:]):
+        arrow(d, (a[0][2] + 10, 642), (b[0][0] - 10, 642))
+    d.rounded_rectangle((245, 770, 1610, 830), radius=14, fill="#F4F6F9", outline="#D9E1E8", width=2)
+    d.text((927, 800), "合单内相同SKU也按原订单商品行分别计算可退数量；退货完成不覆盖历史拆合关系。", fill="#4D5C6A", font=small, anchor="mm")
+    img.save(path)
+
+
 def add_page_number(paragraph):
     paragraph.alignment = WD_ALIGN_PARAGRAPH.RIGHT
     run = paragraph.add_run("第 ")
@@ -466,8 +511,10 @@ def setup_styles(doc):
 def build_doc():
     process_img = ASSET_DIR / "overall-process.png"
     relation_img = ASSET_DIR / "relation-chain.png"
+    return_relation_img = ASSET_DIR / "return-relation.png"
     make_process_diagram(process_img)
     make_relation_diagram(relation_img)
+    make_return_relation_diagram(return_relation_img)
 
     doc = Document()
     section = doc.sections[0]
@@ -638,7 +685,12 @@ def build_doc():
     doc.inline_shapes[-1]._inline.docPr.set("title", "多级拆合关系图")
     doc.inline_shapes[-1]._inline.docPr.set("descr", "展示原发货单拆成子单后，子单与其他未同步发货单合并，并保留原订单数量来源的关系链。")
     add_caption(doc, "图2  拆单子单与其他未同步发货单再次合单")
-    add_heading(doc, "6.3 页面原型对应关系", 2)
+    add_heading(doc, "6.3 退货关系流程", 2)
+    doc.add_picture(str(return_relation_img), width=Inches(6.45))
+    doc.inline_shapes[-1]._inline.docPr.set("title", "退货关系流程图")
+    doc.inline_shapes[-1]._inline.docPr.set("descr", "展示发货前退款或取消如何扣减剩余履约数量，以及发货后退货如何从原订单商品行经拆合来源映射定位到实际发货单商品行。")
+    add_caption(doc, "图3  退货与原订单、实际发货单关系流程")
+    add_heading(doc, "6.4 页面原型对应关系", 2)
     add_table(
         doc,
         ["原型页面", "核心交互"],

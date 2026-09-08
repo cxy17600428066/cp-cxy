@@ -18,7 +18,7 @@ body{font-size:16px}.page{max-width:1240px}.topbar{padding:0 24px}a{color:var(--
 <section class="box"><header class="box-head"><div><h2>查询商品适用方案</h2><p>输入商品编码，确认该商品实际使用的发货时效。</p></div></header><form class="box-body" id="lookupForm"><div class="checker"><div class="field"><label for="lookupSku">商品编码 / SKU</label><input id="lookupSku" required maxlength="80" placeholder="例如：TGX-001"></div><div class="field"><label for="lookupStock">库存状态</label><select id="lookupStock"><option value="stock">有货</option><option value="noStock">无货</option></select></div><button class="btn" type="submit">查询适用方案</button></div><div class="match-result" id="lookupResult" hidden aria-live="polite"></div></form></section>
 <p class="footnote">按商品编码精确匹配，忽略英文字母大小写；方案停用或删除后，其商品自动回到默认方案。当前未接入商品目录，商品编码由管理员录入。</p>
 </section>
-<section id="nodesView" hidden><div class="note">统一维护财务审核、接单、发货、揽收、物流信息获取和签收节点的通用时效。</div><form id="nodesForm"><div class="nodes-grid" id="nodeFields"></div><div class="save-node-footer"><span class="preview-note">保存后返回总览，示例订单按新阈值重新统计。</span><button class="btn primary" type="submit">保存节点配置</button></div><p class="error" id="nodesError" role="alert"></p></form></section>
+<section id="nodesView" hidden><div class="note">统一维护财务审核、接单、发货、揽收、签收和回执上传节点的通用时效。</div><form id="nodesForm"><div class="nodes-grid" id="nodeFields"></div><div class="save-node-footer"><span class="preview-note">保存后返回总览，示例订单按新阈值重新统计。</span><button class="btn primary" type="submit">保存节点配置</button></div><p class="error" id="nodesError" role="alert"></p></form></section>
 <p class="storage-status" id="storageStatus" role="status">配置仅保存在当前浏览器，尚未接入业务系统。</p>
 </main>
 <dialog class="editor" id="planEditor" aria-labelledby="editorTitle"><form id="planForm"><header class="editor-head"><h2 id="editorTitle">新增自定义方案</h2><button class="btn" type="button" onclick="closeEditor()">关闭</button></header><div class="form-grid">
@@ -30,7 +30,21 @@ body{font-size:16px}.page{max-width:1240px}.topbar{padding:0 24px}a{color:var(--
 </div><p class="error" id="planError" role="alert"></p><footer class="editor-actions"><button type="button" class="btn" onclick="closeEditor()">取消</button><button type="submit" class="btn primary">保存方案</button></footer></form></dialog>
 <dialog class="editor" id="deleteDialog" aria-labelledby="deleteTitle"><h2 id="deleteTitle">删除自定义方案</h2><p id="deleteMessage" style="line-height:1.8"></p><footer class="editor-actions"><button class="btn" onclick="document.getElementById('deleteDialog').close()">取消</button><button class="btn primary" onclick="confirmDelete()">确认删除</button></footer></dialog>
 <script>
-const defaults={product:{stock:24,noStock:72},rules:[{id:'finance',name:'财务审核',from:'订单提交',to:'财务审核通过',value:2,warn:80,on:true,note:'从订单提交开始计时，财务审核通过后停止。'},{id:'accept',name:'接单',from:'财务审核通过',to:'平台完成接单',value:1,warn:80,on:true,note:'仅统计财务审核通过且未接单的订单。'},{id:'ship',name:'发货',from:'平台接单',to:'旺店通审核订单',value:24,warn:75,on:true,note:'以旺店通“订单审核完成”时间作为发货节点完成时间。'},{id:'pickup',name:'揽收',from:'旺店通审核',to:'ERP同步WMS',value:4,warn:75,on:true,note:'ERP成功同步 WMS 后停止计时，失败重试不重置起算时间。'},{id:'logistics',name:'物流信息获取',from:'ERP同步WMS',to:'获取首条物流轨迹',value:6,warn:80,on:true,note:'按物流单号轮询，获取首条有效轨迹后视为完成。'},{id:'sign',name:'签收',from:'获取物流信息',to:'物流签收',value:72,warn:80,on:true,note:'有物流信息按签收状态判断；无物流信息时按配置时效预警。'}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
+const defaults={product:{stock:24,noStock:72},rules:[{id:'finance',name:'财务审核',from:'订单提交',to:'财务审核通过',value:2,warn:80,on:true,note:'从订单提交开始计时，财务审核通过后停止。'},{id:'accept',name:'接单',from:'财务审核通过',to:'平台完成接单',value:1,warn:80,on:true,note:'仅统计财务审核通过且未接单的订单。'},{id:'ship',name:'发货',from:'平台接单',to:'旺店通审核订单',value:24,warn:75,on:true,note:'以旺店通“订单审核完成”时间作为发货节点完成时间。'},{id:'pickup',name:'揽收',from:'旺店通审核',to:'ERP同步WMS',value:4,warn:75,on:true,note:'ERP成功同步 WMS 后停止计时，失败重试不重置起算时间。'},{id:'sign',name:'签收',from:'ERP同步WMS',to:'签收完成',value:72,warn:80,on:true,note:'ERP成功同步WMS后开始计时，签收完成后停止；有物流信息按签收状态判断，无物流信息按配置时效预警。'},{id:'receipt',name:'回执上传',from:'签收完成',to:'回执上传成功',value:24,warn:80,on:true,note:'订单签收完成后开始计时，回执上传成功后停止；超过配置时效仍未上传则触发预警。'}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
+
+function currentNodeRules(saved){
+ const previous=Array.isArray(saved)?saved:[];
+ return defaults.rules.map(base=>{
+  const old=previous.find(r=>r&&r.id===base.id);
+  if(!old)return {...base};
+  return {...base,
+   value:Number.isFinite(+old.value)&&+old.value>0?+old.value:base.value,
+   warn:Number.isFinite(+old.warn)&&+old.warn>0&&+old.warn<100?+old.warn:base.warn,
+   on:typeof old.on==='boolean'?old.on:base.on,
+   action:['创建异常工单','仅消息提醒','消息提醒并升级'].includes(old.action)?old.action:'创建异常工单'};
+ });
+}
+
 const PRODUCT_KEY='shipping-product-schemes-v1', NODE_KEY='shipping-sla-config';
 const copy=x=>JSON.parse(JSON.stringify(x));
 const el=id=>document.getElementById(id);
@@ -55,7 +69,7 @@ try{
  const existing=storageSnapshot?JSON.parse(storageSnapshot):null;
  const old=readJson(NODE_KEY);
  state=validateState(existing||{version:1,default:{stock:validHours(old?.product?.stock)?+old.product.stock:24,noStock:validHours(old?.product?.noStock)?+old.product.noStock:72},plans:[]});
- nodes=(Array.isArray(old?.rules)?old.rules:defaults.rules).map(copy);
+ nodes=currentNodeRules(old?.rules);
 }catch(e){
  storageReady=false;state={version:1,default:{stock:24,noStock:72},plans:[]};nodes=copy(defaults.rules);
  el('storageStatus').textContent='无法读取原配置，请检查浏览器存储后刷新。为保护原数据，当前禁止保存。';

@@ -21,14 +21,11 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 </style>
 <style>
 .inline-order-details{border-top:1px solid var(--line);margin-top:24px;padding-top:22px;min-width:0}.inline-list-tools{display:flex;align-items:center;gap:14px}.stage.selected,.metric.selected{border-color:#409eff;background:#ecf5ff;box-shadow:inset 0 0 0 1px #409eff}.stage.selected .stage-top{color:#409eff}.stage.selected .stage-foot b{font-weight:700}.metric{padding:14px 16px}.metric strong{font-size:28px;margin:8px 0}.stage{padding:14px}.stage-total{font-size:26px;margin:8px 0}.stage-foot{margin-top:10px;padding-top:10px}.stage-counts{gap:8px}.overview-head{margin-bottom:16px}.focus-note{margin-top:16px;padding:10px 14px}.inline-order-details>.overview-head h2{font-size:18px}.inline-order-details .detail-summary{margin:10px 0;padding:10px 14px}.inline-order-details .oms-summary{margin:12px 0}@media(min-width:1350px){.stage-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.stage-top{font-size:14px}.stage-counts{font-size:12px}}@media(max-width:680px){.inline-order-details{margin-top:18px;padding-top:18px}}
-</style><style>
-.import-note{border:1px solid #d9ecff;background:#ecf5ff;color:#44627f;font-size:13px;line-height:1.85;padding:12px 15px;margin-bottom:18px}.import-scope{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.import-scope button{border:1px solid var(--line);background:#fff;border-radius:4px;padding:8px 12px;font-size:14px;cursor:pointer;color:#606266}.import-scope button.selected{background:#ecf5ff;border-color:#409eff;color:#409eff}.import-pager{display:flex;justify-content:flex-end;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 0;font-size:14px}.import-pager button,.import-pager select{padding:7px 11px;background:white;border:1px solid var(--line);border-radius:4px;color:#606266;font:inherit}.import-pager button{cursor:pointer}.import-pager button:disabled{opacity:.45;cursor:default}.import-pager form{display:flex;gap:6px;align-items:center}.import-pager input{width:62px;border:1px solid var(--line);padding:7px;font:inherit;border-radius:4px}.stage .stage-total small{white-space:normal}.stage .stage-foot{gap:5px}.oms-order-head .sla-clock.unknown,.oms-order-head .sla-clock.cancelled{color:#909399}.import-missing{color:#909399;font-size:13px}.oms-product-tags{max-width:100%}.import-kv{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:20px}.import-kv dt{font-size:13px;color:#909399;margin-bottom:6px}.import-kv dd{margin:0;font-size:14px;overflow-wrap:anywhere;line-height:1.8}@media(max-width:720px){.import-kv{grid-template-columns:1fr}.import-pager{justify-content:flex-start}}
 </style></head>
 <body>
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="oms-system">OMS订单系统</span></div><small>经营管理视图</small></header>
-<main class="page"><header class="page-head"><div><h1>订单履约总览</h1><p>点击总览指标或履约节点，下方直接显示对应订单。</p></div><span class="badge gray">订单列表.xls · 导入快照</span></header><div class="layout"><nav class="nav"><button class="tab active" data-group="flow" onclick="selectGroup('flow',this)">订单履约总览 <small>6</small></button><a class="tab" style="text-decoration:none" href="商品发货时效配置.html">商品发货时效配置 ↗</a><a class="tab" style="text-decoration:none" href="商品发货时效配置.html#nodes">履约节点配置 ↗</a><button class="tab" data-group="driver" onclick="selectGroup('driver',this)">司机与车辆信息 <small>1</small></button></nav><section class="panel"><div id="content"></div><footer class="actions"><span id="saveState">上次保存：尚未保存</span><div><button class="btn" onclick="resetConfig()">恢复默认</button> <button class="btn primary" onclick="saveConfig()">保存并生效</button></div></footer></section></div></main><div class="toast" id="toast"></div>
+<main class="page"><header class="page-head"><div><h1>订单履约总览</h1><p>点击总览指标或履约节点，下方直接显示对应订单。</p></div><span class="badge gray">截图订单＋演示数据 · 未接入订单系统</span></header><div class="layout"><nav class="nav"><button class="tab active" data-group="flow" onclick="selectGroup('flow',this)">订单履约总览 <small>6</small></button><a class="tab" style="text-decoration:none" href="商品发货时效配置.html">商品发货时效配置 ↗</a><a class="tab" style="text-decoration:none" href="商品发货时效配置.html#nodes">履约节点配置 ↗</a><button class="tab" data-group="driver" onclick="selectGroup('driver',this)">司机与车辆信息 <small>1</small></button></nav><section class="panel"><div id="content"></div><footer class="actions"><span id="saveState">上次保存：尚未保存</span><div><button class="btn" onclick="resetConfig()">恢复默认</button> <button class="btn primary" onclick="saveConfig()">保存并生效</button></div></footer></section></div></main><div class="toast" id="toast"></div>
 <dialog id="orderDialog" class="order-dialog" aria-label="订单详情"><div id="orderDetail"></div></dialog>
-<script src="订单数据.js"></script>
 <script>
 const defaults={product:{stock:24,noStock:72},rules:[{id:'finance',name:'财务审核',from:'订单提交',to:'财务审核通过',value:2,warn:80,on:true,note:'从订单提交开始计时，财务审核通过后停止。'},{id:'accept',name:'接单',from:'财务审核通过',to:'平台完成接单',value:1,warn:80,on:true,note:'仅统计财务审核通过且未接单的订单。'},{id:'ship',name:'发货',from:'平台接单',to:'旺店通审核订单',value:24,warn:75,on:true,note:'以旺店通“订单审核完成”时间作为发货节点完成时间。'},{id:'pickup',name:'揽收',from:'旺店通审核',to:'ERP同步WMS',value:4,warn:75,on:true,note:'ERP成功同步 WMS 后停止计时，失败重试不重置起算时间。'},{id:'sign',name:'签收',from:'ERP同步WMS',to:'签收完成',value:72,warn:80,on:true,note:'ERP成功同步WMS后开始计时，签收完成后停止；有物流信息按签收状态判断，无物流信息按配置时效预警。'},{id:'receipt',name:'回执上传',from:'签收完成',to:'回执上传成功',value:24,warn:80,on:true,note:'订单签收完成后开始计时，回执上传成功后停止；超过配置时效仍未上传则触发预警。'}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
 
@@ -45,7 +42,7 @@ function currentNodeRules(saved){
  });
 }
 
-const nodeOrders={};
+const nodeOrders={finance:[['o202609080947211','临沂兰山区咔嚓食栈食品店（个体工商户）','¥2,184.00','2026-09-08 09:47:22',0.7,'normal'],['SO202609080119','上海玖亭冷链仓','¥36,820.00','今天 07:31',1.8,'warning'],['SO202609080103','杭州鲜食商贸','¥12,480.00','今天 05:56',3.4,'overdue']],accept:[['SO202609080098','武汉优鲜供应链','¥9,860.00','今天 09:12',0.5,'normal'],['SO202609080086','长沙味集食品','¥27,300.00','今天 08:26',1.3,'overdue']],ship:[['SO202609070682','西安饭团餐饮','¥42,680.00','昨天 18:20',15.7,'normal'],['SO202609070651','南京鲜选商贸','¥16,240.00','昨天 13:46',20.2,'warning'],['SO202609070608','成都食刻供应链','¥58,900.00','昨天 07:10',26.8,'overdue']],pickup:[['SO202609080071','河南永鲜商贸','¥23,500.00','今天 08:15',1.4,'normal'],['SO202609080052','河北佳食供应链','¥31,700.00','今天 06:48',3.1,'warning']],sign:[['SO202609060516','苏州味达商贸','¥14,680.00','09-06 16:30',41.6,'normal'],['SO202609050429','合肥餐聚供应链','¥38,720.00','09-05 11:18',68.4,'warning'],['SO202609040381','宁波鲜食配送','¥21,900.00','09-04 07:42',97.2,'overdue']],receipt:[['SO202609060288','青岛海岸食品','¥19,260.00','今天 03:30（已签收）',6.5,'normal'],['SO202609050207','济南玖味餐饮','¥45,100.00','昨天 07:00（已签收）',27,'overdue']]};
 const clone=x=>JSON.parse(JSON.stringify(x));let config=(()=>{try{const saved=JSON.parse(localStorage.getItem('shipping-sla-config'));return {...clone(defaults),...saved,rules:currentNodeRules(saved?.rules)}}catch(e){return clone(defaults)}})(),group='flow';
 function selectGroup(next,el){group=next;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');render()}
 function orderRows(r){const list=nodeOrders[r.id]||[];return list.map(o=>{const ratio=Math.round(o[4]/r.value*100),level=o[5],label=level==='overdue'?'已超时':level==='warning'?'临近预警':'正常',badge=level==='overdue'?'red':level==='warning'?'amber':'green';return `<tr><td><div class="order-no">${o[0]}</div><div class="order-sub">${o[1]}</div></td><td>${o[2]}</td><td>${o[3]}</td><td><span class="time-value ${level}">${o[4]} 小时 / ${r.value} 小时</span><div class="time-progress ${level}"><i style="width:${Math.min(ratio,100)}%"></i></div></td><td><span class="badge ${badge}">${label}</span></td><td><button class="orders-toggle" onclick="showToast('已打开订单 ${o[0]}')">查看订单</button></td></tr>`}).join('')}
@@ -74,13 +71,13 @@ function timing(x){
  return diff>=0?'超时 '+duration(diff):'剩余 '+duration(-diff);
 }
 function statusBadge(level){return '<span class="badge '+({normal:'green',warning:'amber',overdue:'red',paused:'gray'}[level])+'">'+statusNames[level]+'</span>'}
-function selectGroup(next,el){if(next==='product'){location.href='商品发货时效配置.html';return;}group=next;selectedNode=null;statusFilter='all';orderPage=1;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.group===next));render()}
+function selectGroup(next,el){if(next==='product'){location.href='商品发货时效配置.html';return;}group=next;selectedNode=null;statusFilter='all';document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.group===next));render()}
 function openNode(id,filter='all'){
- group='flow';selectedNode=id;statusFilter=filter;orderPage=1;
+ group='flow';selectedNode=id;statusFilter=filter;
  if(document.getElementById('inlineOrderDetails')){refreshOrderDetails();}else{render();}
 }
 function selectOrderStatus(status){
- statusFilter=status;orderPage=1;refreshOrderDetails();
+ statusFilter=status;refreshOrderDetails();
  const button=document.querySelector('[data-order-status="'+status+'"]');
  if(button)button.focus({preventScroll:true});
 }
@@ -147,6 +144,18 @@ function syncSavedRules(){try{const latest=JSON.parse(localStorage.getItem('ship
 window.addEventListener('pageshow',syncSavedRules);
 window.addEventListener('storage',e=>{if(e.key==='shipping-sla-config')syncSavedRules();});
 
+const omsProfiles={
+ 'o202609080947211':{
+  source:'截图录入',createdAt:'2026-09-08 09:47:22',channel:'CRM',type:'普通订单',creator:'朱佳琪',
+  originalCountdown:'03 天 14:12:22',paid:2184,receiver:'杨新满',phone:'15069809581',
+  address:'山东省济宁市梁山县龙城广场正信楼',salesperson:'马占伟',factoryRemark:'',
+  statuses:[['订单状态','待支付'],['审核状态','待复核'],['接单状态','待接单'],['开票状态','待开票'],['排产状态','待排产']],
+  products:[
+   {name:'【箱规】无骨鸡爪-脱骨侠-568克-酸辣柠檬-9个月（60%-无骨-冷冻-盒-线下）',pack:'12盒 × 1箱',price:218.4,qty:4,unit:'箱',tags:['保质期: 9个月','克重: 568g','口味: 酸辣柠檬','辣度: 无区分']},
+   {name:'【箱规】无骨鸡爪-脱骨侠-568克-蒜香中辣-9个月（60%-无骨-冷冻-盒-线下）',pack:'12盒 × 1箱',price:218.4,qty:6,unit:'箱',tags:['保质期: 9个月','克重: 568g','口味: 蒜香','辣度: 中辣']}
+  ]
+ }
+};
 function omsColumnHead(){return '<div class="oms-column-head"><div>商品信息</div><div>单价 / 数量</div><div>实付金额</div><div>买家 / 收货人</div><div>客户名称</div><div>状态</div><div>操作</div></div>'}
 function omsProduct(p){
  return '<div class="oms-product"><div class="oms-product-info"><div class="oms-product-name">'+safe(p.name)+'<br>（'+safe(p.pack)+'）</div><div class="oms-product-tags">'+p.tags.map(t=>'<span>'+safe(t)+'</span>').join('')+'</div></div><div class="oms-product-price">¥ '+p.price.toFixed(2)+'<br>×'+p.qty+' <em>'+safe(p.unit)+'</em></div></div>';
@@ -158,80 +167,6 @@ function omsOrderCard(x,inDialog=false){
  const receiver=p?'收货人：'+safe(p.receiver)+'<br>手机号：'+safe(p.phone)+'<br>收货地址：'+safe(p.address):unknown;
  const statuses=p?p.statuses.map(([k,v])=>'<div class="oms-status-row">'+safe(k)+'：<span class="'+(k==='订单状态'?'badge gray':'oms-blue-tag')+'">'+safe(v)+'</span></div>').join(''):'<div class="oms-unknown">业务状态未提供</div>';
  return '<article class="oms-order">'+header+'<div class="oms-order-body"><div class="oms-products">'+products+'</div><div class="oms-money">'+(p?'¥ '+p.paid.toFixed(2)+'元':unknown)+'</div><div class="oms-receiver">'+receiver+'</div><div class="oms-customer">客户：'+safe(x.o[1])+'<br><span style="margin-top:8px">销售人员：'+(p?safe(p.salesperson):unknown)+'</span></div><div>'+statuses+'<div class="oms-status-row">时效状态：'+statusBadge(x.level)+'</div></div><div class="oms-actions">'+(inDialog?'<span class="oms-node-tag">'+safe(x.r.name)+' · 当前</span>':'<button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">▤ 订单详情</button>')+'<span class="oms-unknown">'+(p?'截图录入':'演示订单')+'</span></div></div><div class="oms-order-foot">工厂备注：'+(p?(safe(p.factoryRemark)||'未填写'):'未提供')+'</div>'+(p?'<div class="oms-source-note" style="padding:10px 18px;margin:0">原订单剩余时间（截图值）：'+safe(p.originalCountdown)+'。节点已用时 '+duration(x.o[4])+' 为演示值；实付金额与业务状态按原图展示。</div>':'')+'</article>';
-}
-
-
-const importedData=window.OMS_IMPORT;
-if(!importedData||!Array.isArray(importedData.orders))throw Error('订单数据加载失败，请检查订单数据.js');
-const importedOrders=importedData.orders;
-const importSnapshotTime=Date.parse(importedData.asOf.replace(' ','T')+'+08:00');
-const importNodeNames={unassigned:'待确认节点',cancelled:'已取消'};
-Object.assign(statusNames,{unknown:'待补充数据',cancelled:'已取消'});
-let orderPage=1,orderPageSize=10;
-function importedHours(time){
- if(!time)return null;
- const stamp=Date.parse(time.replace(' ','T')+'+08:00');
- return Number.isFinite(stamp)&&stamp<=importSnapshotTime?(importSnapshotTime-stamp)/3600000:null;
-}
-function records(id='all'){
- return importedOrders.filter(d=>id==='all'||d.nodeId===id).map(d=>{
-  const r=config.rules.find(r=>r.id===d.nodeId)||{id:d.nodeId,name:importNodeNames[d.nodeId]||'待确认节点',value:null,warn:null,on:false};
-  const hours=importedHours(d.startAt);
-  const o=[d.id,d.customer,'¥'+(d.totalCents/100).toFixed(2),d.startAt||'未提供',hours];
-  const level=d.nodeId==='cancelled'?'cancelled':d.nodeId==='unassigned'||hours===null?'unknown':classify(o,r);
-  return {o,r,data:d,level};
- });
-}
-function tally(rows){return rows.reduce((a,x)=>{a[x.level]=(a[x.level]||0)+1;a.all++;return a},{all:0,normal:0,warning:0,overdue:0,paused:0,unknown:0,cancelled:0})}
-function amount(rows,key='totalCents'){return (rows.reduce((sum,x)=>sum+x.data[key],0)/100).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2})}
-function duration(n){return Number.isFinite(n)?Number(n.toFixed(1))+' 小时':'未提供'}
-function timing(x){
- if(x.level==='cancelled')return '已取消，不计预警';
- if(x.level==='unknown')return x.data.nodeId==='unassigned'?'待确认后续节点':'缺少节点起算时间';
- if(x.level==='paused')return '预警已关闭';
- const diff=x.o[4]-Number(x.r.value);
- return diff>=0?'超时 '+duration(diff):'剩余 '+duration(-diff);
-}
-function statusBadge(level){return '<span class="badge '+({normal:'green',warning:'amber',overdue:'red',paused:'gray',unknown:'gray',cancelled:'gray'}[level]||'gray')+'">'+safe(statusNames[level]||'待补充数据')+'</span>'}
-function overview(){
- const rows=records(),s=tally(rows),late=rows.filter(x=>x.level==='overdue');
- const cards=[['all','导入订单总数','',importedData.lineCount.toLocaleString()+' 条商品明细，按订单号归并'],['overdue','已超时订单','danger','订单金额 ¥ '+amount(late)],['warning','临近预警订单','caution','按当前节点阈值判断'],['unknown','待补充节点数据','','不纳入正常、临近或超时统计']];
- return '<div class="overview-head"><div><h2>履约总览</h2><p>订单下单日期：'+safe(importedData.createdFrom.slice(0,10))+' · 固定导入快照</p></div><span class="badge gray">'+safe(importedData.sourceName)+'</span></div><div class="import-note">时效计算基准：<b>'+safe(importedData.asOf)+'</b>（导入文件修改时间）。已发货订单缺少 WMS 同步、签收及回执上传记录，归入“待确认节点”；已取消订单不计预警。</div><div class="metrics">'+cards.map(([k,title,color,note])=>'<button class="metric '+color+'" data-metric-filter="'+k+'" aria-pressed="false" onclick="openNode(\'all\',\''+k+'\')"><span>'+title+'</span><strong>'+s[k].toLocaleString()+' <small>单</small></strong><small>'+note+'</small></button>').join('')+'</div><h3 class="section-title">各节点履约情况</h3><p class="section-caption">点击节点切换下方订单 · 当前可定位 '+(s.all-s.unknown-s.cancelled)+' 笔订单 · 已取消 '+s.cancelled+' 笔</p><div class="stage-grid">'+config.rules.map((r,i)=>{
- const c=tally(records(r.id)),missing=['pickup','sign','receipt'].includes(r.id);
- return '<button class="stage" data-node-card="'+r.id+'" aria-pressed="false" onclick="openNode(\''+r.id+'\')"><div class="stage-top"><span>'+safe(r.name)+'</span><span class="stage-index">0'+(i+1)+'</span></div><div class="stage-total">'+(missing?'—':c.all)+'<small>'+(missing?'节点数据缺失':'单待完成')+'</small></div><div class="segments">'+['normal','warning','overdue','paused','unknown'].map(k=>'<i class="'+k+'" style="width:'+(c.all?c[k]/c.all*100:0)+'%"></i>').join('')+'</div><div class="stage-counts">'+(missing?'<span class="import-missing">无法从导出表确认</span>':'<span>正常 '+c.normal+'</span><span class="warning">临近 '+c.warning+'</span><span class="overdue">超时 '+c.overdue+'</span>'+(c.paused?'<span>关闭 '+c.paused+'</span>':'')+(c.unknown?'<span>缺时间 '+c.unknown+'</span>':''))+'</div><div class="stage-foot"><span>'+ (r.on?'阈值 '+safe(r.value)+' 小时':'预警已关闭')+'</span><b>查看订单 ↓</b></div></button>';
- }).join('')+'</div><div class="import-scope"><button data-node-card="all" aria-pressed="false" onclick="openNode(\'all\')">全部订单 '+s.all+'</button><button data-node-card="unassigned" aria-pressed="false" onclick="openNode(\'unassigned\')">待确认节点 '+s.unknown+'</button><button data-node-card="cancelled" aria-pressed="false" onclick="openNode(\'cancelled\')">已取消 '+s.cancelled+'</button></div>';
-}
-function filteredImportRows(){
- const rank={overdue:0,warning:1,normal:2,unknown:3,paused:4,cancelled:5};
- return records(selectedNode||'all').filter(x=>statusFilter==='all'||x.level===statusFilter).sort((a,b)=>(rank[a.level]-rank[b.level])||((b.o[4]??0)-(a.o[4]??0))||b.data.createdAt.localeCompare(a.data.createdAt)||a.o[0].localeCompare(b.o[0]));
-}
-function orderPager(total){
- const maxPage=Math.max(1,Math.ceil(total/orderPageSize));
- return '<div class="import-pager"><span>共 '+total+' 笔</span><label>每页 <select aria-label="每页订单数" onchange="orderPageSize=+this.value;orderPage=1;refreshOrderDetails()">'+[10,20,50].map(n=>'<option '+(n===orderPageSize?'selected':'')+'>'+n+'</option>').join('')+'</select></label><button '+(orderPage<=1?'disabled':'')+' onclick="changeOrderPage(orderPage-1)">上一页</button><span>'+orderPage+' / '+maxPage+'</span><button '+(orderPage>=maxPage?'disabled':'')+' onclick="changeOrderPage(orderPage+1)">下一页</button><form onsubmit="event.preventDefault();changeOrderPage(+this.elements.page.value)"><label>到第 <input name="page" aria-label="跳转页码" type="number" min="1" max="'+maxPage+'" value="'+orderPage+'" required> 页</label><button type="submit">跳转</button></form></div>';
-}
-function changeOrderPage(n){orderPage=Math.max(1,Math.min(Math.ceil(filteredImportRows().length/orderPageSize)||1,Number.isFinite(n)?Math.floor(n):1));refreshOrderDetails()}
-function nodeDetail(){
- const rows=records(selectedNode||'all'),r=config.rules.find(x=>x.id===selectedNode),s=tally(rows),list=filteredImportRows();
- orderPage=Math.max(1,Math.min(orderPage,Math.ceil(list.length/orderPageSize)||1));
- const page=list.slice((orderPage-1)*orderPageSize,orderPage*orderPageSize);
- const name=r?r.name:importNodeNames[selectedNode]||'全部节点',missing=r&&['pickup','sign','receipt'].includes(r.id);
- return '<div class="overview-head"><div><h2>'+safe(name)+' · 订单列表</h2><p>按订单号展示商品明细与原始业务状态。</p></div><div class="inline-list-tools"><span class="badge gray">共 '+s.all+' 单</span>'+(selectedNode&&selectedNode!=='all'?'<button class="orders-toggle" onclick="openNode(\'all\')">全部订单</button>':'')+'</div></div>'+(r?'<div class="detail-summary">计时区间 <b>'+safe(r.from)+' → '+safe(r.to)+'</b>　时效阈值 <b>'+safe(r.value)+' 小时</b>　提前提醒 <b>'+safe(r.warn)+'%</b></div>':'')+'<div class="filter-tabs" aria-label="筛选订单时效状态">'+['all','overdue','warning','normal',...(s.unknown?['unknown']:[]),...(s.paused?['paused']:[]),...(s.cancelled?['cancelled']:[])].map(k=>'<button data-order-status="'+k+'" class="'+(statusFilter===k?'active':'')+'" aria-pressed="'+(statusFilter===k)+'" onclick="selectOrderStatus(\''+k+'\')">'+statusNames[k]+' '+s[k]+'</button>').join('')+'</div><div class="oms-summary"><span>筛选订单：<b>'+list.length+' 单</b></span><span>总金额：<b>¥ '+amount(list)+'</b></span><span>应付金额：<b>¥ '+amount(list,'dueCents')+'</b></span></div><p class="oms-source-note">金额按表内商品行汇总；支付渠道金额可能对应多笔订单，不作为本单实付金额。下单时间、客户、商品和状态均来自导出表。</p>'+orderPager(list.length)+'<div class="oms-order-scroll">'+omsColumnHead()+(page.length?page.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">'+(missing?'导出表未提供该节点记录。已发货订单已归入“待确认节点”，需补充 WMS、签收和回执数据。':'暂无符合当前条件的订单')+'</div>')+'</div>'+orderPager(list.length);
-}
-function omsColumnHead(){return '<div class="oms-column-head"><div>商品信息</div><div>单价 / 数量</div><div>应付金额</div><div>买家 / 收货人</div><div>客户名称</div><div>状态</div><div>操作</div></div>'}
-function omsProduct(p){
- const price=p.price===null?'未提供':p.price.toFixed(2);
- return '<div class="oms-product"><div class="oms-product-info"><div class="oms-product-name">'+safe(p.name||'未提供商品名称')+'<div class="order-sub">商品编码：'+safe(p.sku||'未提供')+'　联合编码：'+safe(p.jointSku||'未提供')+'</div></div><div class="oms-product-tags">'+p.tags.map(t=>'<span>'+safe(t)+'</span>').join('')+'</div></div><div class="oms-product-price">¥ '+price+'<br>×'+safe(p.qty??'未提供')+' <em>'+safe(p.unit)+'</em>'+(p.giftQty?'<div class="order-sub">赠 '+safe(p.giftQty)+' '+safe(p.unit)+'</div>':'')+'</div></div>';
-}
-function omsOrderCard(x,inDialog=false){
- const d=x.data,unknown='<span class="oms-unknown">未提供</span>',value=v=>v?safe(v):unknown;
- const statuses=[['订单状态',d.orderStatus],['支付状态',d.payStatus],['审核状态',d.auditStatus],['接单状态',d.acceptStatus],['开票状态',d.invoiceStatus]];
- return '<article class="oms-order"><div class="oms-order-head"><span>订单编号：<b>'+safe(d.id)+'</b></span><span>下单时间：'+value(d.createdAt)+'</span><span>订单来源：<span class="badge gray">'+safe(d.channel||'未提供')+'</span></span><span>订单类型：<span class="badge gray">'+safe(d.type||'未提供')+'</span></span><span>创建人：<span class="badge amber">'+safe(d.creator||'未提供')+'</span></span><span class="oms-node-tag">'+safe(x.r.name)+'</span><span class="sla-clock '+x.level+'">'+timing(x)+'</span></div><div class="oms-order-body"><div class="oms-products">'+d.products.map(omsProduct).join('')+'</div><div class="oms-money">¥ '+(d.dueCents/100).toFixed(2)+'<div class="order-sub">总金额<br>¥ '+(d.totalCents/100).toFixed(2)+'</div></div><div class="oms-receiver">收货人：'+value(d.receiver)+'<br>手机号：'+value(d.phone)+'<br>收货地址：'+value(d.address)+'</div><div class="oms-customer">客户：'+value(d.customer)+(d.customerGroup?'<br>集团客户：'+safe(d.customerGroup):'')+'<br>销售人员：'+value(d.salesperson)+'</div><div>'+statuses.map(([k,v])=>'<div class="oms-status-row">'+k+'：<span class="oms-blue-tag">'+safe(v||'未提供')+'</span></div>').join('')+'<div class="oms-status-row">时效状态：'+statusBadge(x.level)+'</div></div><div class="oms-actions">'+(inDialog?'<span class="oms-node-tag">'+safe(x.r.name)+'</span>':'<button class="orders-toggle" onclick="openOrder(this.dataset.orderId)" data-order-id="'+safe(d.id)+'">▤ 订单详情</button>')+'<span class="oms-unknown">导出表记录</span></div></div><div class="oms-order-foot">发货备注：'+value(d.shippingNote)+'</div></article>';
-}
-function openOrder(id){
- const x=records().find(x=>x.data.id===id);if(!x)return;const d=x.data;
- const fields=[['主订单编码',d.parentId],['财务审核时间',d.auditAt],['财务审核人',d.auditBy],['接单时间',d.acceptAt],['接单人',d.acceptBy],['付款时间',d.paidAt],['发货单号',d.shipments.join('、')],['物流单号',d.waybills.join('、')],['仓库名称',d.warehouse],['商家备注',d.merchantNote],['买家备注',d.buyerNote],['支付渠道金额（合并支付参考）',d.paymentReference]];
- document.getElementById('orderDetail').innerHTML='<div class="dialog-head"><h2>订单详情</h2><button class="btn" onclick="document.getElementById(\'orderDialog\').close()" aria-label="关闭订单详情">关闭</button></div><div class="oms-current-info"><span>当前归类：<b>'+safe(x.r.name)+'</b></span>'+(x.o[4]!==null?'<span>截至 '+safe(importedData.asOf)+' 已用时：'+duration(x.o[4])+'</span>':'<span>该订单没有可用的当前节点计时记录</span>')+statusBadge(x.level)+'</div><div class="oms-order-scroll">'+omsColumnHead()+omsOrderCard(x,true)+'</div><dl class="import-kv">'+fields.map(([k,v])=>'<div><dt>'+k+'</dt><dd>'+safe(v||'未提供')+'</dd></div>').join('')+'</dl><p class="oms-source-note">来源：'+safe(importedData.sourceName)+' · 商品明细行 '+d.products.map(p=>p.row).join('、')+'</p>';
- document.getElementById('orderDialog').showModal();
 }
 
 render();

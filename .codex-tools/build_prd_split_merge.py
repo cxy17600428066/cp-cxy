@@ -412,15 +412,15 @@ def make_return_relation_diagram(path):
     lane_font = ImageFont.truetype(font_path(True), 25)
     small = ImageFont.truetype(font_path(False), 22)
     note_font = ImageFont.truetype(font_path(True), 21)
-    d.text((60, 38), "退货与原订单、实际发货单关系", fill="#173A5E", font=title_font)
-    d.text((60, 92), "售后业务归原订单商品行，退货履约定位到拆合后的实际发货单商品行。", fill="#5D6B78", font=small)
+    d.text((60, 38), "售后订单与旺店通退款、退货推送关系", fill="#173A5E", font=title_font)
+    d.text((60, 92), "退款、退货均由售后订单发起；售后完成后，系统向旺店通推送1条售后数据。", fill="#5D6B78", font=small)
 
     d.multiline_text((65, 150), "发货前\n退款 / 取消", fill="#B35C00", font=lane_font, spacing=8)
     before_boxes = [
-        ((245, 140, 515, 285), "原订单商品行", "售后业务归属"),
-        ((610, 140, 880, 285), "退款 / 取消占用", "扣减可履约数量"),
-        ((975, 140, 1245, 285), "计算剩余履约量", "原数量－有效占用"),
-        ((1340, 140, 1610, 285), "剩余数量 ＞ 0", "可继续拆合或同步"),
+        ((245, 140, 515, 285), "原订单商品行", "发起售后订单"),
+        ((610, 140, 880, 285), "售后处理中", "数量占用，不推送"),
+        ((975, 140, 1245, 285), "售后已完成", "扣减剩余履约数量"),
+        ((1340, 140, 1610, 285), "推送旺店通", "仅1条售后数据"),
     ]
     before_fills = ["#F4F6F9", "#FFF3E8", "#EAF4FD", "#EAF6EC"]
     before_outlines = ["#AAB4BE", "#E8A55A", "#77B5E8", "#77B980"]
@@ -430,14 +430,14 @@ def make_return_relation_diagram(path):
         arrow(d, (a[0][2] + 10, 212), (b[0][0] - 10, 212))
     arrow(d, (1108, 295), (1108, 390), color="#D98787")
     draw_rounded_box(d, (975, 400, 1245, 505), "#FDECEC", "#D98787", "剩余数量 ＝ 0", "当前发货单失效")
-    d.text((1125, 350), "全量取消", fill="#9B1C1C", font=note_font, anchor="mm")
+    d.text((1125, 350), "若剩余履约量为0", fill="#9B1C1C", font=note_font, anchor="mm")
 
     d.text((65, 617), "发货后退货", fill="#2E74B5", font=lane_font)
     after_boxes = [
-        ((245, 570, 515, 715), "原订单商品行", "退款、财务、售后归属"),
-        ((610, 570, 880, 715), "拆 / 合来源映射", "保留每个数量来源"),
-        ((975, 570, 1245, 715), "实际发货单商品行", "累计已发数量"),
-        ((1340, 570, 1610, 715), "退货明细", "记录本次映射数量"),
+        ((245, 570, 515, 715), "原订单商品行", "发起售后订单"),
+        ((610, 570, 880, 715), "拆 / 合来源映射", "关联实际发货明细"),
+        ((975, 570, 1245, 715), "售后已完成", "汇总全部履约明细"),
+        ((1340, 570, 1610, 715), "推送旺店通", "仅1条售后数据"),
     ]
     after_fills = ["#F4F6F9", "#F0EBFA", "#EAF4FD", "#EAF6EC"]
     after_outlines = ["#AAB4BE", "#9D82CF", "#77B5E8", "#77B980"]
@@ -446,7 +446,7 @@ def make_return_relation_diagram(path):
     for a, b in zip(after_boxes, after_boxes[1:]):
         arrow(d, (a[0][2] + 10, 642), (b[0][0] - 10, 642))
     d.rounded_rectangle((245, 770, 1610, 830), radius=14, fill="#F4F6F9", outline="#D9E1E8", width=2)
-    d.text((927, 800), "合单内相同SKU也按原订单商品行分别计算可退数量；退货完成不覆盖历史拆合关系。", fill="#4D5C6A", font=small, anchor="mm")
+    d.text((927, 800), "一张售后订单完成只推送1条数据；多个拆单子单或合单来源作为同一条售后数据的履约明细。", fill="#4D5C6A", font=small, anchor="mm")
     img.save(path)
 
 

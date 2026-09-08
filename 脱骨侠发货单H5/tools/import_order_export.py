@@ -25,7 +25,9 @@ def text(frame, column):
 
 with warnings.catch_warnings():
     warnings.simplefilter('ignore')
-    frame = pd.read_excel(SOURCE, engine='openpyxl', dtype=str).fillna('')
+    workbook = pd.ExcelFile(SOURCE, engine='openpyxl')
+    sheet_name = workbook.sheet_names[0]
+    frame = pd.read_excel(workbook, sheet_name=sheet_name, dtype=str).fillna('')
 assert not (frame['订单编号'] == '').any(), 'Missing order identifier'
 orders = []
 for order_id, lines in frame.groupby('订单编号', sort=False):
@@ -80,7 +82,7 @@ assert sum(len(o['products']) for o in orders) == len(frame)
 assert sum(o['totalCents'] for o in orders) == sum(cents(v) for v in frame['总金额'])
 assert sum(o['dueCents'] for o in orders) == sum(cents(v) for v in frame['应付金额'])
 payload = {
-    'sourceName': SOURCE.name, 'sourceSheet': '订单',
+    'sourceName': SOURCE.name, 'sourceSheet': sheet_name,
     'asOf': datetime.fromtimestamp(SOURCE.stat().st_mtime).strftime('%Y-%m-%d %H:%M:%S'),
     'asOfBasis': '导入文件修改时间（固定快照，不代表实时状态）',
     'orderCount': len(orders), 'lineCount': len(frame),

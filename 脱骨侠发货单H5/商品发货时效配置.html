@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>商品发货时效配置</title>
+<style>
+:root{--red:#d92d20;--red-dark:#b42318;--ink:#25211f;--muted:#746d69;--line:#e9e4e1;--bg:#f5f3f1;--green:#12805c;--amber:#b75b08;--blue:#2869b2}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px}button,input,select{font:inherit}.topbar{height:68px;background:#211d1b;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100vw - 1240px)/2));box-shadow:0 2px 12px rgba(30,20,16,.12)}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px}.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--red);display:grid;place-items:center}.topbar small{color:#aaa19d}.page{max-width:1240px;margin:0 auto;padding:26px 24px 60px}.page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.page-head h1{font-size:24px;margin:0 0 7px}.page-head p{margin:0;color:var(--muted)}.badge{display:inline-flex;align-items:center;border-radius:99px;padding:6px 10px;font-size:12px;font-weight:700}.badge.green{background:#eaf7f1;color:var(--green)}.badge.gray{background:#eeeceb;color:#6f6966}.badge.amber{background:#fff1dc;color:var(--amber)}.badge.red{background:#fde9e6;color:var(--red)}.legend{display:flex;gap:8px;margin-bottom:16px}.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px}.nav,.panel{background:#fff;border:1px solid #eeeae8;border-radius:14px;box-shadow:0 4px 16px rgba(50,35,28,.035)}.nav{padding:10px;height:max-content;position:sticky;top:18px}.tab{width:100%;border:0;background:transparent;border-radius:9px;padding:13px 12px;text-align:left;color:#6f6763;cursor:pointer;display:flex;justify-content:space-between;align-items:center}.tab.active{background:#fff0ed;color:var(--red);font-weight:800}.tab small{background:#f2efed;border-radius:99px;padding:2px 7px}.tab.active small{background:#ffdcd6}.panel{padding:20px}.panel-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding-bottom:17px;border-bottom:1px solid var(--line)}.panel-head h2{margin:0 0 6px;font-size:18px}.panel-head p{margin:0;color:var(--muted);font-size:13px}.card{border:1px solid var(--line);border-radius:12px;margin-top:14px;overflow:hidden}.card-head{padding:13px 15px;background:#fbfaf9;display:flex;justify-content:space-between;align-items:center}.card-body{padding:15px;display:grid;grid-template-columns:1.5fr repeat(3,minmax(105px,.7fr));gap:14px;align-items:end}.card-body.two{grid-template-columns:1fr 1fr}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input,.field select{width:100%;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;outline:none}.field input:focus,.field select:focus{border-color:#d78378;box-shadow:0 0 0 3px #fff0ed}.input-unit{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.input-unit input{border:0;border-radius:0;min-width:0}.input-unit span{padding:0 10px;background:#faf8f7;color:#817874;display:flex;align-items:center}.note{grid-column:1/-1;background:#f5f8fb;border-radius:8px;padding:11px 12px;font-size:12px;color:#5f6c78}.toggle{width:44px;height:25px;border:0;border-radius:99px;background:#c9c2be;padding:3px;cursor:pointer}.toggle:after{content:'';display:block;width:19px;height:19px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px #777}.toggle.on{background:var(--green)}.toggle.on:after{transform:translateX(19px)}.driver-options{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.option{border:1px solid var(--line);border-radius:10px;padding:14px}.option label{font-weight:700}.option p{font-size:12px;color:var(--muted);margin:6px 0 0}.option input{margin-right:7px}.actions{position:sticky;bottom:0;margin:20px -20px -20px;padding:14px 20px;background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.actions span{font-size:12px;color:var(--muted)}.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 16px;cursor:pointer}.btn.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}.btn.primary:hover{background:var(--red-dark)}.dirty{color:var(--amber)!important;font-weight:700}.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#211d1b;color:#fff;border-radius:9px;padding:11px 18px;opacity:0;pointer-events:none;transition:.2s;z-index:5}@media(max-width:820px){.topbar{padding:0 16px}.page{padding:20px 14px 50px}.layout{grid-template-columns:1fr}.nav{position:static;display:flex;overflow:auto}.tab{min-width:150px}.card-body,.card-body.two{grid-template-columns:1fr 1fr}.driver-options{grid-template-columns:1fr}.page-head{gap:12px}.page-head h1{font-size:21px}}@media(max-width:560px){.card-body,.card-body.two{grid-template-columns:1fr}.legend{overflow:auto}.page-head{display:block}.page-head>.badge{margin-top:12px}.actions{align-items:flex-start;gap:10px}.actions>div{display:flex;gap:6px}.btn{padding:9px 11px}}
+
+body{font-size:16px}.page{max-width:1240px}.topbar{padding:0 24px}a{color:var(--blue);text-decoration:none}h2{font-size:18px;margin:0}h3{font-size:16px;margin:0}.page-head{align-items:center;gap:16px}.page-head p{font-size:14px;line-height:1.8}.tabs{display:flex;gap:8px;border-bottom:1px solid var(--line);margin-bottom:20px}.tabs a{padding:14px 20px;color:var(--muted);border-bottom:3px solid transparent}.tabs a.active{color:var(--red);border-color:var(--red);font-weight:700}.box{border:1px solid var(--line);background:#fff;border-radius:14px;margin-bottom:18px;overflow:hidden}.box-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px;border-bottom:1px solid var(--line)}.box-head p{font-size:14px;color:var(--muted);margin:6px 0 0;line-height:1.7}.box-body{padding:20px}.default-grid{display:grid;grid-template-columns:1fr 1fr auto;gap:20px;align-items:end}.field label{font-size:14px}.field input{font-size:16px}.note{font-size:14px;line-height:1.8;margin-bottom:20px;background:#f0f5fa}.rule-order{display:flex;gap:12px;align-items:center;flex-wrap:wrap}.rule-order b{color:var(--ink)}.sub{font-size:13px;color:var(--muted);line-height:1.6}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:830px;font-size:14px}th,td{padding:17px 20px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}th{font-weight:500;background:#fbfaf9;color:var(--muted)}tr:last-child td{border:0}.chip{display:inline-block;padding:4px 8px;border-radius:5px;background:#f2f4f7;margin:3px 5px 3px 0;font-size:13px}.row-actions{display:flex;gap:12px;flex-wrap:wrap}.link-button{background:none;border:0;padding:0;color:var(--blue);cursor:pointer;font-size:14px}.link-button.danger{color:var(--red)}.empty{padding:38px 20px;text-align:center}.empty h3{margin-bottom:9px}.empty p{font-size:14px;color:var(--muted);margin:0 0 20px}.badge{font-size:13px}.checker{display:grid;grid-template-columns:1fr 180px auto;gap:16px;align-items:end}.match-result{margin-top:16px;padding:16px;border-radius:9px;background:#f7f9fb;line-height:1.9;font-size:14px}.match-result strong{color:var(--red)}.footnote{font-size:13px;color:var(--muted);margin-top:16px}.editor{border:1px solid var(--line);border-radius:16px;width:min(680px,94vw);padding:24px;max-height:90vh;overflow:auto;color:var(--ink)}.editor::backdrop{background:#211d1b66}.editor-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.full{grid-column:1/-1}.field textarea{width:100%;min-height:128px;padding:12px;border:1px solid var(--line);border-radius:8px;font:inherit;resize:vertical;line-height:1.6}.field select{font-size:14px}.error{color:var(--red);font-size:14px;line-height:1.8;margin:12px 0 0}.editor-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.storage-status{font-size:13px;color:var(--muted)}.node-form{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.node-form .field{margin-top:16px}.nodes-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.nodes-grid .box-head{padding:16px}.node-form{padding:0 16px 18px}.check-label{display:flex;align-items:center;gap:7px;font-size:14px}.check-label input{width:17px;height:17px}.btn{font-size:14px}.save-node-footer{display:flex;justify-content:space-between;align-items:center;gap:16px}.preview-note{font-size:13px;color:var(--muted)}[hidden]{display:none!important}:focus-visible{outline:3px solid var(--blue);outline-offset:3px}@media(max-width:760px){.default-grid,.checker{grid-template-columns:1fr 1fr}.default-grid .btn,.checker .btn{justify-self:start}.nodes-grid{grid-template-columns:1fr}.box-head{align-items:flex-start}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.page-head{align-items:flex-start}.page-head .btn{white-space:nowrap}}@media(max-width:460px){.default-grid,.checker{grid-template-columns:1fr}.page-head,.box-head{flex-direction:column;align-items:stretch}.node-form{grid-template-columns:1fr}.tabs a{padding:12px}.editor{padding:18px}}
+</style></head>
+<body>
+<header class="topbar"><div class="brand"><span class="brand-mark">效</span><span>履约策略中心</span></div><small>时效方案管理</small></header>
+<main class="page">
+<header class="page-head"><div><h1 id="pageTitle">商品发货时效配置</h1><p>维护通用发货承诺，为需要特殊时效的商品指定独立方案。</p></div><a class="btn" href="发货时效预警策略.html">← 返回订单履约总览</a></header>
+<nav class="tabs"><a href="#products" id="productsTab">商品时效方案</a><a href="#nodes" id="nodesTab">履约节点配置</a></nav>
+<section id="productsView">
+<div class="note rule-order"><b>方案匹配顺序</b><span>已启用的商品自定义方案</span><span>→</span><span>未匹配时使用默认方案</span><span class="sub">同一商品编码只能关联一个已启用方案。</span></div>
+<section class="box"><header class="box-head"><div><h2>默认方案</h2><p>适用于未设置专属方案的商品，始终启用。</p></div><span class="badge gray">通用兜底</span></header><form id="defaultForm" class="box-body"><div class="default-grid"><div class="field"><label for="defaultStock">有货发货时效</label><div class="input-unit"><input id="defaultStock" type="number" min="0.1" step="0.1" max="8760" required><span>小时</span></div></div><div class="field"><label for="defaultNoStock">无货发货时效</label><div class="input-unit"><input id="defaultNoStock" type="number" min="0.1" step="0.1" max="8760" required><span>小时</span></div></div><button class="btn primary" type="submit">保存默认方案</button></div><p class="error" id="defaultError" role="alert"></p></form></section>
+<section class="box"><header class="box-head"><div><h2>自定义方案 <span class="badge gray" id="planCount">0 个</span></h2><p>一个方案可关联多个商品，各自设置有货、无货发货时效。</p></div><button class="btn primary" onclick="openEditor()">＋ 新增方案</button></header><div id="planList"></div></section>
+<section class="box"><header class="box-head"><div><h2>查询商品适用方案</h2><p>输入商品编码，确认该商品实际使用的发货时效。</p></div></header><form class="box-body" id="lookupForm"><div class="checker"><div class="field"><label for="lookupSku">商品编码 / SKU</label><input id="lookupSku" required maxlength="80" placeholder="例如：TGX-001"></div><div class="field"><label for="lookupStock">库存状态</label><select id="lookupStock"><option value="stock">有货</option><option value="noStock">无货</option></select></div><button class="btn" type="submit">查询适用方案</button></div><div class="match-result" id="lookupResult" hidden aria-live="polite"></div></form></section>
+<p class="footnote">按商品编码精确匹配，忽略英文字母大小写；方案停用或删除后，其商品自动回到默认方案。当前未接入商品目录，商品编码由管理员录入。</p>
+</section>
+<section id="nodesView" hidden><div class="note">统一维护财务审核、接单、发货、揽收、物流信息获取和签收节点的通用时效。</div><form id="nodesForm"><div class="nodes-grid" id="nodeFields"></div><div class="save-node-footer"><span class="preview-note">保存后返回总览，示例订单按新阈值重新统计。</span><button class="btn primary" type="submit">保存节点配置</button></div><p class="error" id="nodesError" role="alert"></p></form></section>
+<p class="storage-status" id="storageStatus" role="status">配置仅保存在当前浏览器，尚未接入业务系统。</p>
+</main>
+<dialog class="editor" id="planEditor" aria-labelledby="editorTitle"><form id="planForm"><header class="editor-head"><h2 id="editorTitle">新增自定义方案</h2><button class="btn" type="button" onclick="closeEditor()">关闭</button></header><div class="form-grid">
+<div class="field full"><label for="planName">方案名称</label><input id="planName" required maxlength="50" placeholder="例如：预售商品发货方案"></div>
+<div class="field full"><label for="planSkus">适用商品编码 / SKU</label><textarea id="planSkus" required placeholder="每行一个商品编码，也可以用逗号分隔&#10;TGX-001&#10;TGX-002"></textarea><div class="sub">请填写完整商品编码，不使用商品简称。最多 200 个商品。</div></div>
+<div class="field"><label for="planStock">有货发货时效</label><div class="input-unit"><input id="planStock" type="number" min="0.1" max="8760" step="0.1" required><span>小时</span></div></div>
+<div class="field"><label for="planNoStock">无货发货时效</label><div class="input-unit"><input id="planNoStock" type="number" min="0.1" max="8760" step="0.1" required><span>小时</span></div></div>
+<label class="check-label full"><input type="checkbox" id="planEnabled" checked>启用方案（启用后优先于默认方案）</label>
+</div><p class="error" id="planError" role="alert"></p><footer class="editor-actions"><button type="button" class="btn" onclick="closeEditor()">取消</button><button type="submit" class="btn primary">保存方案</button></footer></form></dialog>
+<dialog class="editor" id="deleteDialog" aria-labelledby="deleteTitle"><h2 id="deleteTitle">删除自定义方案</h2><p id="deleteMessage" style="line-height:1.8"></p><footer class="editor-actions"><button class="btn" onclick="document.getElementById('deleteDialog').close()">取消</button><button class="btn primary" onclick="confirmDelete()">确认删除</button></footer></dialog>
+<script>
+const defaults={product:{stock:24,noStock:72},rules:[{id:'finance',name:'财务审核',from:'订单提交',to:'财务审核通过',value:2,warn:80,on:true,note:'从订单提交开始计时，财务审核通过后停止。'},{id:'accept',name:'接单',from:'财务审核通过',to:'平台完成接单',value:1,warn:80,on:true,note:'仅统计财务审核通过且未接单的订单。'},{id:'ship',name:'发货',from:'平台接单',to:'旺店通审核订单',value:24,warn:75,on:true,note:'以旺店通“订单审核完成”时间作为发货节点完成时间。'},{id:'pickup',name:'揽收',from:'旺店通审核',to:'ERP同步WMS',value:4,warn:75,on:true,note:'ERP成功同步 WMS 后停止计时，失败重试不重置起算时间。'},{id:'logistics',name:'物流信息获取',from:'ERP同步WMS',to:'获取首条物流轨迹',value:6,warn:80,on:true,note:'按物流单号轮询，获取首条有效轨迹后视为完成。'},{id:'sign',name:'签收',from:'获取物流信息',to:'物流签收',value:72,warn:80,on:true,note:'有物流信息按签收状态判断；无物流信息时按配置时效预警。'}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
+const PRODUCT_KEY='shipping-product-schemes-v1', NODE_KEY='shipping-sla-config';
+const copy=x=>JSON.parse(JSON.stringify(x));
+const el=id=>document.getElementById(id);
+function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function readJson(key){const text=localStorage.getItem(key);return text?JSON.parse(text):null}
+function validHours(v){return Number.isFinite(+v)&&+v>=0.1&&+v<=8760}
+function normaliseSku(v){return v.trim().toUpperCase()}
+function parseSkus(v){return [...new Set(v.split(/[\n,，;；]+/).map(normaliseSku).filter(Boolean))]}
+function validateState(state){
+ if(!state||!state.default||!validHours(state.default.stock)||!validHours(state.default.noStock)||!Array.isArray(state.plans))throw Error('配置格式不正确');
+ const occupied=new Set(),ids=new Set();
+ for(const p of state.plans){
+  if(!p.id||ids.has(p.id)||typeof p.name!=='string'||!p.name.trim()||!Array.isArray(p.skus)||!p.skus.length||p.skus.length>200||!validHours(p.stock)||!validHours(p.noStock)||typeof p.enabled!=='boolean')throw Error('自定义方案格式不正确');
+  ids.add(p.id);
+  for(const raw of p.skus){if(typeof raw!=='string'||!raw.trim()||raw.length>80)throw Error('商品编码格式不正确');const sku=normaliseSku(raw);if(p.enabled&&occupied.has(sku))throw Error('商品 '+sku+' 已关联其他启用方案');if(p.enabled)occupied.add(sku);}
+ }
+ return state;
+}
+let state,storageSnapshot=null,storageReady=true,editingId=null,deletingId=null,nodes;
+try{
+ storageSnapshot=localStorage.getItem(PRODUCT_KEY);
+ const existing=storageSnapshot?JSON.parse(storageSnapshot):null;
+ const old=readJson(NODE_KEY);
+ state=validateState(existing||{version:1,default:{stock:validHours(old?.product?.stock)?+old.product.stock:24,noStock:validHours(old?.product?.noStock)?+old.product.noStock:72},plans:[]});
+ nodes=(Array.isArray(old?.rules)?old.rules:defaults.rules).map(copy);
+}catch(e){
+ storageReady=false;state={version:1,default:{stock:24,noStock:72},plans:[]};nodes=copy(defaults.rules);
+ el('storageStatus').textContent='无法读取原配置，请检查浏览器存储后刷新。为保护原数据，当前禁止保存。';
+}
+function commit(next){
+ if(!storageReady)throw Error('原配置读取失败，请刷新后重试');
+ validateState(next);
+ if(localStorage.getItem(PRODUCT_KEY)!==storageSnapshot)throw Error('其他页面已更新商品方案，请刷新本页后再修改');
+ const serialised=JSON.stringify(next);localStorage.setItem(PRODUCT_KEY,serialised);storageSnapshot=serialised;state=next;
+ el('storageStatus').textContent='已保存到当前浏览器 · '+new Date().toLocaleString('zh-CN')+' · 尚未接入业务系统';
+ refreshPlans();refreshLookup();
+}
+function resolveScheme(sku,stock='stock',source=state){
+ const code=normaliseSku(sku),p=source.plans.find(p=>p.enabled&&p.skus.some(s=>normaliseSku(s)===code));
+ return {name:p?p.name:'默认方案',hours:(p||source.default)[stock],custom:!!p};
+}
+function refreshPlans(){
+ el('planCount').textContent=state.plans.length+' 个';
+ if(!state.plans.length){el('planList').innerHTML='<div class="empty"><h3>暂无自定义方案</h3><p>需要更长备货时间或更快发货的商品，可在这里配置专属时效。</p><button class="btn" onclick="openEditor()">新增第一个方案</button></div>';return}
+ el('planList').innerHTML='<div class="table-wrap"><table><thead><tr><th>方案名称</th><th>适用商品</th><th>有货时效</th><th>无货时效</th><th>状态</th><th>操作</th></tr></thead><tbody>'+state.plans.map((p,i)=>'<tr><td><b>'+esc(p.name)+'</b></td><td>'+p.skus.slice(0,3).map(s=>'<span class="chip">'+esc(s)+'</span>').join('')+'<div class="sub">共 '+p.skus.length+' 个商品'+(p.skus.length>3?' · 编辑查看全部':'')+'</div></td><td>'+esc(p.stock)+' 小时</td><td>'+esc(p.noStock)+' 小时</td><td><span class="badge '+(p.enabled?'green':'gray')+'">'+(p.enabled?'已启用':'已停用')+'</span></td><td><div class="row-actions"><button class="link-button" onclick="openEditor('+i+')">编辑</button><button class="link-button" onclick="togglePlan('+i+')">'+(p.enabled?'停用':'启用')+'</button><button class="link-button danger" onclick="requestDelete('+i+')">删除</button></div></td></tr>').join('')+'</tbody></table></div>';
+}
+function openEditor(index){
+ const p=Number.isInteger(index)?state.plans[index]:null;editingId=p?.id||null;
+ el('editorTitle').textContent=p?'编辑自定义方案':'新增自定义方案';
+ el('planName').value=p?.name||'';el('planSkus').value=p?p.skus.join('\n'):'';
+ el('planStock').value=p?.stock??state.default.stock;el('planNoStock').value=p?.noStock??state.default.noStock;
+ el('planEnabled').checked=p?.enabled??true;el('planError').textContent='';el('planEditor').showModal();
+}
+function closeEditor(){el('planEditor').close()}
+function savePlan(){
+ const skus=parseSkus(el('planSkus').value),name=el('planName').value.trim();
+ if(!name)throw Error('请填写方案名称');
+ if(!skus.length||skus.length>200)throw Error('请填写 1–200 个商品编码');
+ if(skus.some(s=>s.length>80))throw Error('单个商品编码不得超过 80 个字符');
+ const next=copy(state),p={id:editingId||crypto.randomUUID(),name,skus,stock:+el('planStock').value,noStock:+el('planNoStock').value,enabled:el('planEnabled').checked};
+ if(next.plans.some(x=>x.id!==editingId&&x.name===name))throw Error('方案名称已存在，请使用不同名称');
+ const index=next.plans.findIndex(x=>x.id===editingId);
+ if(index<0)next.plans.push(p);else next.plans[index]=p;
+ commit(next);closeEditor();
+}
+function togglePlan(i){try{const next=copy(state);next.plans[i].enabled=!next.plans[i].enabled;commit(next)}catch(e){el('storageStatus').textContent=e.message}}
+function requestDelete(i){
+ const p=state.plans[i];deletingId=p.id;
+ el('deleteMessage').textContent='确认删除“'+p.name+'”？涉及 '+p.skus.length+' 个商品；没有其他启用方案的商品将使用默认时效。';el('deleteDialog').showModal();
+}
+function confirmDelete(){try{const next=copy(state);next.plans=next.plans.filter(p=>p.id!==deletingId);commit(next);el('deleteDialog').close()}catch(e){el('deleteMessage').textContent=e.message}}
+function refreshLookup(){
+ if(el('lookupResult').hidden)return;
+ const sku=el('lookupSku').value.trim();if(!sku){el('lookupResult').hidden=true;return}
+ const hit=resolveScheme(sku,el('lookupStock').value);
+ el('lookupResult').innerHTML='商品 <b>'+esc(normaliseSku(sku))+'</b>　'+(hit.custom?'匹配自定义方案':'未匹配启用的自定义方案')+'<br>适用方案：<b>'+esc(hit.name)+'</b>　'+(el('lookupStock').value==='stock'?'有货':'无货')+'发货时效：<strong>'+esc(hit.hours)+' 小时</strong>';
+}
+function renderNodes(){
+ el('nodeFields').innerHTML=nodes.map((r,i)=>'<section class="box"><header class="box-head"><div><h2>'+esc(r.name)+'</h2><p>'+esc(r.from)+' → '+esc(r.to)+'</p></div><label class="check-label"><input type="checkbox" name="on'+i+'" '+(r.on?'checked':'')+'>启用</label></header><div class="node-form"><div class="field"><label for="hours'+i+'">时效 / 小时</label><input id="hours'+i+'" name="hours'+i+'" type="number" min="0.1" max="8760" step="0.1" required value="'+esc(r.value)+'"></div><div class="field"><label for="warn'+i+'">提前提醒 / %</label><input id="warn'+i+'" name="warn'+i+'" type="number" min="1" max="99" required value="'+esc(r.warn)+'"></div><div class="field"><label for="action'+i+'">超时动作</label><select id="action'+i+'" name="action'+i+'">'+['创建异常工单','仅消息提醒','消息提醒并升级'].map(a=>'<option '+(a===(r.action||'创建异常工单')?'selected':'')+'>'+a+'</option>').join('')+'</select></div></div></section>').join('');
+}
+function navigate(){
+ const isNodes=location.hash==='#nodes';el('productsView').hidden=isNodes;el('nodesView').hidden=!isNodes;
+ el('productsTab').classList.toggle('active',!isNodes);el('nodesTab').classList.toggle('active',isNodes);
+ el('pageTitle').textContent=isNodes?'履约节点配置':'商品发货时效配置';
+}
+el('defaultForm').addEventListener('submit',e=>{e.preventDefault();el('defaultError').textContent='';try{const next=copy(state);next.default={stock:+el('defaultStock').value,noStock:+el('defaultNoStock').value};commit(next)}catch(error){el('defaultError').textContent=error.message}});
+el('planForm').addEventListener('submit',e=>{e.preventDefault();el('planError').textContent='';try{savePlan()}catch(error){el('planError').textContent=error.message}});
+el('lookupForm').addEventListener('submit',e=>{e.preventDefault();el('lookupResult').hidden=false;refreshLookup()});
+el('nodesForm').addEventListener('submit',e=>{
+ e.preventDefault();el('nodesError').textContent='';
+ try{
+  if(!storageReady)throw Error('原配置读取失败，请刷新后重试');
+  const fields=e.currentTarget.elements;
+  const next=nodes.map((r,i)=>({...r,value:+fields['hours'+i].value,warn:+fields['warn'+i].value,on:fields['on'+i].checked,action:fields['action'+i].value}));
+  if(next.some(r=>!validHours(r.value)||!Number.isFinite(r.warn)||r.warn<1||r.warn>99))throw Error('请填写有效时效和 1–99% 的提醒比例');
+  const latest=readJson(NODE_KEY)||copy(defaults);latest.rules=next;localStorage.setItem(NODE_KEY,JSON.stringify(latest));nodes=next;
+  el('storageStatus').textContent='节点配置已保存到当前浏览器 · 返回总览后按新阈值统计示例订单。';
+ }catch(error){el('nodesError').textContent=error.message}
+});
+el('defaultStock').value=state.default.stock;el('defaultNoStock').value=state.default.noStock;
+window.addEventListener('hashchange',navigate);
+refreshPlans();renderNodes();navigate();
+</script></body></html>

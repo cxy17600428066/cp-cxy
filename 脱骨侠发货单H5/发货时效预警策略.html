@@ -74,7 +74,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 <label class="ka-field ka-wide"><span>备注</span><textarea name="remark" maxlength="1024" placeholder="请输入备注（最多1024字）"></textarea></label>
 </div>
 <h3 class="ka-title">商品清单</h3><div class="ka-table"><table><thead><tr><th>序号</th><th>商品名称</th><th>单位</th><th>口味</th><th>红线价</th><th>售价(元)</th><th>数量</th><th>搭赠数量</th><th>搭赠比例</th><th>总数量</th><th>操作</th></tr></thead><tbody id="kaProducts"></tbody></table><div class="ka-add"><button type="button" class="btn" onclick="addKaProduct()">＋ 添加商品</button></div></div>
-<div id="kaSchedule"></div><label class="ka-field ka-wide" style="margin-top:20px"><span>修改原因</span><input name="changeReason" placeholder="修改已保存草稿的到货时间时必填"></label><p id="kaTotal" style="text-align:right">商品金额合计：¥ 0.00</p><p class="ka-message" id="kaMessage" role="status"></p></div>
+<div id="kaSchedule"></div><label class="ka-field ka-wide" style="margin-top:20px"><span>修改原因</span><input name="changeReason" placeholder="修改已保存草稿的到货时间时必填"></label><p id="kaTotal" style="text-align:right">商品金额合计：¥ 0.00</p><p class="ka-message" id="kaMessage" role="status"></p><div id="kaHistory"></div></div>
 <footer class="ka-foot"><small>当前为本地演示，保存草稿，不提交真实订单。</small><button class="btn ka-primary" type="submit">保存</button><button class="btn" type="button" onclick="closeKaOrder()">取消</button></footer>
 </form></dialog>
 <dialog id="orderDialog" class="order-dialog" aria-label="订单详情"><div id="orderDetail"></div></dialog>
@@ -212,7 +212,7 @@ function omsOrderCard(x,inDialog=false){
  const products=p?p.products.map(omsProduct).join(''):'<div class="oms-no-products"><span class="oms-unknown">该演示订单未提供商品明细</span><div class="order-sub">订单金额：'+safe(x.o[2])+'</div></div>';
  const receiver=p?'收货人：'+safe(p.receiver)+'<br>手机号：'+safe(p.phone)+'<br>收货地址：'+safe(p.address):unknown;
  const statuses=p?p.statuses.map(([k,v])=>'<div class="oms-status-row">'+safe(k)+'：<span class="'+(k==='订单状态'?'badge gray':'oms-blue-tag')+'">'+safe(v)+'</span></div>').join(''):'<div class="oms-unknown">业务状态未提供</div>';
- return '<article class="oms-order">'+header+'<div class="oms-order-body"><div class="oms-products">'+products+'</div><div class="oms-money">'+(p?'¥ '+p.due.toFixed(2)+'元':unknown)+'</div><div class="oms-receiver">'+receiver+'</div><div class="oms-customer">客户：'+safe(x.o[1])+'<br><span style="margin-top:8px">销售人员：'+(p?safe(p.salesperson):unknown)+'</span></div><div>'+statuses+'<div class="oms-status-row">时效状态：'+statusBadge(x.level)+'</div></div><div class="oms-actions">'+(inDialog?'<span class="oms-node-tag">'+safe(x.r.name)+' · 当前</span>':'<button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">▤ 订单详情</button>')+'<span class="oms-unknown">'+(p?'表格订单资料':'演示订单')+'</span></div></div><div class="oms-order-foot">工厂备注：'+(p?(safe(p.factoryRemark)||'未填写'):'未提供')+'</div>'+(p?'<div class="oms-source-note" style="padding:10px 18px;margin:0">订单资料：订单列表.xls；'+safe(x.r.name)+'节点及已用时 '+duration(x.o[4])+' 沿用演示设置。</div>':'')+'</article>';
+ return '<article class="oms-order">'+header+'<div style="padding:10px 18px;background:#f5f7fa;display:flex;gap:24px;flex-wrap:wrap"><span>客户类型：未提供</span><span>要求到货时间：未提供</span><span>当前节点截止：演示计时，无真实起算时间</span><span>负责人：未分配</span></div>'+'<div class="oms-order-body"><div class="oms-products">'+products+'</div><div class="oms-money">'+(p?'¥ '+p.due.toFixed(2)+'元':unknown)+'</div><div class="oms-receiver">'+receiver+'</div><div class="oms-customer">客户：'+safe(x.o[1])+'<br><span style="margin-top:8px">销售人员：'+(p?safe(p.salesperson):unknown)+'</span></div><div>'+statuses+'<div class="oms-status-row">时效状态：'+statusBadge(x.level)+'</div></div><div class="oms-actions">'+(inDialog?'<span class="oms-node-tag">'+safe(x.r.name)+' · 当前</span>':'<button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">▤ 订单详情</button>')+'<span class="oms-unknown">'+(p?'表格订单资料':'演示订单')+'</span></div></div><div class="oms-order-foot">工厂备注：'+(p?(safe(p.factoryRemark)||'未填写'):'未提供')+'</div>'+(p?'<div class="oms-source-note" style="padding:10px 18px;margin:0">订单资料：订单列表.xls；'+safe(x.r.name)+'节点及已用时 '+duration(x.o[4])+' 沿用演示设置。</div>':'')+'</article>';
 }
 
 function syncMenuRoute(){
@@ -232,7 +232,7 @@ function openKaOrder(){
  let clients=[];try{clients=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}').clients||[]}catch(e){}
  const names=[...new Set([...clients.map(c=>c.name),...Object.keys(nodeOrders).flatMap(k=>nodeOrders[k].map(o=>o[1]))])];
  document.getElementById('kaCustomers').innerHTML=names.map(n=>'<option value="'+safe(n)+'"></option>').join('');
- document.getElementById('kaMessage').textContent='';renderKaProducts();kaCustomerChanged();document.getElementById('kaDrawer').showModal();
+ document.getElementById('kaMessage').textContent='';renderKaHistory();renderKaProducts();kaCustomerChanged();document.getElementById('kaDrawer').showModal();
 }
 function closeKaOrder(){document.getElementById('kaDrawer').close()}
 
@@ -262,7 +262,10 @@ function kaCustomerChanged(){
  hint.textContent=system?'按要求到货时间倒排；回执从实际签收开始计时。':c?'到货时间选填，沿用商品及节点时效。':'请先在客户到货配置中维护客户类型。';
  schedule.innerHTML='';
  if(!c||!system)return;
- const plan=kaPlan(c,data,f.elements.customerRequiredArrivalAt.value);
+ const previous=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');
+ const preserved=previous?.ruleSnapshot&&previous.fields.customerName===f.elements.customerName.value;
+ const plan=kaPlan(preserved?{...c,type:previous.ruleSnapshot.type,mode:'default'}:c,preserved?{defaultRule:previous.ruleSnapshot.rule}:data,f.elements.customerRequiredArrivalAt.value);
+ if(preserved)plan.scheme='已保存规则快照';
  schedule.innerHTML='<h3 class="ka-title">履约时效预览 · '+safe(plan.scheme)+'</h3><div class="ka-table"><table><thead><tr><th>节点</th><th>最晚完成时间</th><th>预警时间</th><th>下单风险</th></tr></thead><tbody>'+plan.deadlines.map(d=>'<tr><td>'+d.name+'</td><td>'+kaDate(d.at)+'</td><td>'+kaDate(d.warningAt)+'</td><td style="color:'+(d.at<Date.now()?'#f56c6c':'#67c23a')+'">'+(d.at<Date.now()?'倒排截止已过，需协调交期':'可安排')+'</td></tr>').join('')+'<tr><td>回执上传</td><td colspan="3">实际签收后 '+plan.rule.receipt+' 小时；未签收不开始计时</td></tr></tbody></table></div>';
  }catch(e){hint.textContent=e.message;schedule.innerHTML=''}
 }
@@ -289,14 +292,20 @@ function saveKaOrder(e){
  if(changed&&!fields.changeReason.trim())throw Error('修改客户要求到货时间，请填写修改原因。');
  const same=previous?.ruleSnapshot&&previous.fields.customerName===fields.customerName;
  const source=same?{defaultRule:previous.ruleSnapshot.rule}:data;
- const plan=kaPlan(same?{...c,mode:'default'}:c,source,fields.customerRequiredArrivalAt);
+ const plan=kaPlan(same?{...c,type:previous.ruleSnapshot.type,mode:'default'}:c,source,fields.customerRequiredArrivalAt);
  if(plan.risk&&!confirm('部分节点倒排截止时间已过，存在无法按期到货的风险。是否仍保存草稿？'))return;
  const history=previous?.history||[];
  if(changed)history.push({at:new Date().toISOString(),actor:'本机操作人（未登录）',before:previous.fields.customerRequiredArrivalAt,after:fields.customerRequiredArrivalAt,reason:fields.changeReason.trim()});
- localStorage.setItem('oms-ka-order-draft-v1',JSON.stringify({fields,products:kaItems,savedAt:new Date().toISOString(),ruleSnapshot:same?previous.ruleSnapshot:plan,history}));
-m.textContent='下单草稿已保存在本机。客户要求到货时间：'+fields.customerRequiredArrivalAt.replace('T',' ')+'。规则已留存快照，重新打开可继续编辑；尚未提交真实订单。'}catch(e){m.textContent=e.message||'保存失败，请检查浏览器存储空间后重试。'}
+ localStorage.setItem('oms-ka-order-draft-v1',JSON.stringify({fields,products:kaItems,savedAt:new Date().toISOString(),ruleSnapshot:same?previous.ruleSnapshot:plan,calculatedSchedule:plan.deadlines,history}));
+renderKaHistory();m.textContent='下单草稿已保存在本机。客户要求到货时间：'+(fields.customerRequiredArrivalAt?fields.customerRequiredArrivalAt.replace('T',' '):'未填写（非系统客户选填）')+'。规则已留存快照，重新打开可继续编辑；尚未提交真实订单。'}catch(e){m.textContent=e.message||'保存失败，请检查浏览器存储空间后重试。'}
 }
 
+
+function renderKaHistory(){
+ let draft;try{draft=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null')}catch(e){}
+ const h=draft?.history||[];
+ document.getElementById('kaHistory').innerHTML=h.length?'<h3 class="ka-title">到货时间修改记录</h3><div class="ka-table"><table><thead><tr><th>修改时间</th><th>操作人</th><th>修改前</th><th>修改后</th><th>原因</th></tr></thead><tbody>'+h.map(x=>'<tr><td>'+safe(kaDate(x.at))+'</td><td>'+safe(x.actor)+'</td><td>'+safe(x.before||'未填写')+'</td><td>'+safe(x.after||'未填写')+'</td><td>'+safe(x.reason)+'</td></tr>').join('')+'</tbody></table></div>':'';
+}
 </script>
 </body>
 </html>

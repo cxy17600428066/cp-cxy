@@ -19,30 +19,30 @@
 @media(max-width:900px) and (min-width:761px){.sla-sidebar{width:200px}.page,body>main.page{margin-left:200px}}
 @media(max-width:760px){.sla-sidebar{position:relative!important;inset:auto;width:100%;display:flex;gap:8px;padding:8px 10px;border-right:0;border-bottom:1px solid #e4e7ed;overflow-x:auto;overflow-y:hidden;z-index:1}.sla-sidebar .sla-nav-group{display:flex;gap:5px;margin:0;padding:0 8px 0 0;border-right:1px solid #ebeef5;flex-shrink:0}.sla-sidebar .sla-nav-group:last-child{border:0}.sla-sidebar .sla-nav-heading{display:none}.sla-sidebar .sla-nav-item{min-height:40px;margin:0;padding:9px 10px;gap:7px}.sla-sidebar .sla-nav-item.active:before{display:none}.sla-sidebar+.page,.page,body>main.page{margin-left:0}}
 </style>
-</head>
+<style>.simple-fold>summary{cursor:pointer;padding:16px 20px;color:#409eff;font-size:14px}.simple-fold .extra{padding:12px 0}.simple-fold.line>summary{padding:0 0 8px}.rules{gap:20px}.extra{grid-template-columns:repeat(2,minmax(0,1fr))}.field label{line-height:1.6}.preview-form{grid-template-columns:repeat(2,minmax(0,1fr))}.note{font-size:14px}@media(max-width:520px){.extra,.preview-form{grid-template-columns:1fr}}</style></head>
 <body>
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="system">OMS订单系统</span></div><small>客户时效方案管理</small></header>
 <nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a class="sla-nav-item" data-group="orders" href="发货时效预警策略.html#orders"><span style="width:18px;text-align:center">▤</span><span>订单列表</span></a><a id="navFlow" class="sla-nav-item" data-group="flow" href="发货时效预警策略.html#flow"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="商品发货时效配置.html#nodes"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item active" data-group="customers" href="客户到货时效配置.html" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
 <main>
-<header class="heading"><div><h1>客户到货时效配置</h1><p>系统客户按订单要求到货时间倒排截止时间；非系统客户沿用现有商品与履约节点时效。</p></div><a class="btn" href="发货时效预警策略.html">返回履约总览</a></header>
-<div class="policy-grid"><section class="policy system-policy"><h3>系统客户 <span class="badge">大型连锁商超</span></h3><div>订单要求到货时间 → 签收到货截止时间</div><div>按客户方案倒排财务审核、接单、发货、揽收截止时间。</div><div class="sub">优先使用客户专属规则，否则使用系统客户默认规则。</div></section><section class="policy"><h3>非系统客户 <span class="badge gray">原有规则</span></h3><div>继续按有货 / 无货商品时效及各履约节点阈值计时。</div><a href="商品发货时效配置.html">查看现有时效配置 →</a></section></div>
-<section class="card"><header class="head"><div><h2>系统客户默认规则</h2><p>只设置相对时长。具体要求到货日期由每笔订单提供，不在客户档案里固定。</p></div><span class="badge">到货时间优先</span></header><form class="body" id="defaultForm">
-<div class="note">例如：客户要求 9 月 12 日 10:00 到货，发货提前 48 小时，则发货截止为 9 月 10 日 10:00。缺少要求到货时间时标记“待补充”，不套用非系统客户规则。</div>
-<div id="defaultFields"></div><div class="foot"><span class="caption">签收截止不增加宽限时间；达到要求到货时间仍未签收即超时。</span><button class="btn primary" type="submit">保存默认规则</button></div><p class="error" id="defaultError" role="alert"></p></form></section>
-<section class="card"><header class="head"><div><h2>客户分类与专属规则 <span id="clientCount" class="badge gray">0 个客户</span></h2><p>以客户编码精确匹配，可为不同商超配置不同的提前时长。</p></div><button class="btn primary" onclick="editClient()">＋ 添加客户</button></header><div id="clientList"></div></section>
-<section class="card"><header class="head"><div><h2>订单时效试算</h2><p>查看要求到货时间对应的各节点截止时间；不会修改现有总览中的订单与演示节点。</p></div><span class="badge gray">试算，不保存订单</span></header><form class="body" id="previewForm"><div class="preview-form">
+<header class="heading"><div><h1>客户到货时效配置</h1><p>先设一套大家通用的时间，有特殊要求的客户再单独改。</p></div><a class="btn" href="发货时效预警策略.html">返回履约总览</a></header>
+<div class="note">这里只管系统客户（大型连锁商超）：下单时填写要求到货日期，系统自动算出各环节最晚完成时间。非系统客户仍用原来的商品时效。</div>
+<section class="card"><header class="head"><div><h2>1. 默认时间设置</h2><p>多数系统客户用这一套，设置一次即可。</p></div><span class="badge">到货时间优先</span></header><form class="body" id="defaultForm">
+<div class="note">举个例子：客户要求周五上午 10 点到货，发货设为提前 48 小时，就是周三上午 10 点前发出。</div>
+<div id="defaultFields"></div><div class="foot"><span class="caption">到货日期在下单时填写，这里不用填日期。</span><button class="btn primary" type="submit">保存默认时间</button></div><p class="error" id="defaultError" role="alert"></p></form></section>
+<section class="card"><header class="head"><div><h2>2. 客户设置 <span id="clientCount" class="badge gray">0 个客户</span></h2><p>添加客户后默认使用上面的时间；只有特殊客户需要单独设置。</p></div><button class="btn primary" onclick="editClient()">＋ 添加客户</button></header><div id="clientList"></div></section>
+<details class="card simple-fold"><summary>想看看怎么算？点这里试一下</summary><form class="body" id="previewForm"><div class="preview-form">
 <div class="field"><label for="previewClient">客户 / 规则</label><select id="previewClient"></select></div>
 <div class="field"><label for="arrivalTime">订单要求到货时间</label><input id="arrivalTime" type="datetime-local"><div class="sub">系统客户必需；不填可查看缺失提示</div></div>
 <div class="field"><label for="createdTime">下单时间</label><input id="createdTime" type="datetime-local" required></div>
 <div class="field"><label for="signedTime">实际签收时间（可选）</label><input id="signedTime" type="datetime-local"><div class="sub">用于计算回执上传截止时间</div></div>
-<button class="btn primary" type="submit">计算截止时间</button></div><p class="error" id="previewError" role="alert"></p><div class="preview-result" id="previewResult" aria-live="polite"></div></form></section>
+<button class="btn primary" type="submit">计算截止时间</button></div><p class="error" id="previewError" role="alert"></p><div class="preview-result" id="previewResult" aria-live="polite"></div></form></details>
 <p class="status" id="storageStatus" role="status">配置仅保存在当前浏览器，尚未接入客户档案和订单系统。</p>
 </main>
 <dialog id="clientDialog" class="editor" aria-labelledby="clientTitle"><form id="clientForm"><header class="head"><h2 id="clientTitle">添加客户</h2><button class="btn" type="button" onclick="closeClient()">关闭</button></header><div class="form-grid">
 <div class="field"><label for="clientCode">客户编码</label><input id="clientCode" maxlength="80" required placeholder="填写客户档案中的唯一编码"></div>
 <div class="field"><label for="clientSystem">所属系统名称</label><input id="clientSystem" maxlength="100" placeholder="例如：客户所属连锁商超系统"></div><div class="field"><label for="clientName">客户名称</label><input id="clientName" maxlength="100" required placeholder="填写完整客户名称"></div>
 <div class="field"><label for="clientType">客户类型</label><select id="clientType" onchange="updateClientEditor()"><option value="system">系统客户（连锁商超）</option><option value="standard">非系统客户</option></select></div>
-<div class="field" id="modeField"><label for="clientMode">时效规则</label><select id="clientMode" onchange="updateClientEditor()"><option value="default">使用系统客户默认规则</option><option value="custom">使用客户专属规则</option></select></div>
+<div class="field" id="modeField"><label for="clientMode">这个客户的时间</label><select id="clientMode" onchange="updateClientEditor()"><option value="default">跟默认时间一样（推荐）</option><option value="custom">这个客户单独设置</option></select></div>
 <div class="full readonly-note" id="inheritNote"></div><div class="full" id="customFields"></div>
 </div><p class="error" id="clientError" role="alert"></p><footer class="editor-footer"><button class="btn" type="button" onclick="closeClient()">取消</button><button class="btn primary" type="submit">保存客户规则</button></footer></form></dialog>
 <dialog id="deleteDialog" class="editor" aria-labelledby="deleteTitle"><h2 id="deleteTitle">删除客户规则</h2><p id="deleteText" class="caption"></p><footer class="editor-footer"><button class="btn" onclick="document.getElementById('deleteDialog').close()">取消</button><button class="btn danger" onclick="confirmDelete()">确认删除</button></footer></dialog>
@@ -56,7 +56,7 @@ function normalizeCode(s){return s.trim().toUpperCase()}
 function validateRule(r){
  for(const key of ['finance','accept','ship','pickup','warning','escalation','receipt'])if(typeof r?.[key]!=='number'||!Number.isFinite(r[key])||r[key]<0||r[key]>8760)throw Error('时长须为 0–8760 小时以内的数字');
  if(r.receipt<=0||r.escalation<=0)throw Error('回执上传时效和超时升级时长须大于 0');
- if(!(r.finance>=r.accept&&r.accept>=r.ship&&r.ship>=r.pickup))throw Error('提前时长须满足：财务审核 ≥ 接单 ≥ 发货 ≥ 揽收，避免节点截止顺序冲突');
+ if(!(r.finance>=r.accept&&r.accept>=r.ship&&r.ship>=r.pickup))throw Error('时间顺序不对：财务审核应最早完成，然后是接单、发货、揽收。前一项的提前小时数不能小于后一项。');
  return r;
 }
 function validateState(s){
@@ -71,7 +71,8 @@ function validateState(s){
 }
 try{snapshot=localStorage.getItem(KEY);if(snapshot)state=validateState(JSON.parse(snapshot));}catch(e){storageReady=false;$('storageStatus').textContent='原配置读取失败，请刷新后重试；当前禁止覆盖原配置。'}
 function fields(prefix,r){
- return '<div class="rules">'+stages.map(([k,n])=>'<div class="field"><label for="'+prefix+k+'">'+n+'截止</label><div class="unit"><span>到货前</span><input id="'+prefix+k+'" type="number" min="0" max="8760" step="0.5" required value="'+r[k]+'"><span>小时</span></div></div>').join('')+'</div><div class="extra line"><div class="fixed"><b>签收到货截止</b>订单要求到货时间<br><span class="sub">不叠加普通签收时长</span></div><div class="field"><label for="'+prefix+'receipt">回执上传截止</label><div class="unit"><span>实际签收后</span><input id="'+prefix+'receipt" type="number" min="0.5" max="8760" step="0.5" required value="'+r.receipt+'"><span>小时</span></div></div><div class="fixed"><b>缺少要求到货时间</b>待补充到货时间<br><span class="sub">不回退到普通商品 / 节点时效</span></div></div><div class="extra line"><div class="field"><label for="'+prefix+'warning">每个截止时间前预警</label><div class="unit"><input id="'+prefix+'warning" type="number" min="0" max="8760" step="0.5" required value="'+r.warning+'"><span>小时</span></div></div><div class="field"><label for="'+prefix+'escalation">超时后升级提醒</label><div class="unit"><input id="'+prefix+'escalation" type="number" min="0.5" max="8760" step="0.5" required value="'+r.escalation+'"><span>小时</span></div></div><div class="fixed"><b>超时判定</b>达到截止时间仍未完成<br><span class="sub">升级提醒不会延长到货承诺</span></div></div>';
+ const input=(k,label,before)=>'<div class="field"><label for="'+prefix+k+'">'+label+'</label><div class="unit"><span>'+before+'</span><input id="'+prefix+k+'" type="number" min="'+(['receipt','escalation'].includes(k)?0.5:0)+'" max="8760" step="0.5" required value="'+r[k]+'"><span>小时</span></div></div>';
+ return '<div class="rules">'+stages.map(([k,name])=>input(k,name+'要多早完成？','到货前')).join('')+'</div><div class="extra line"><div class="fixed"><b>签收</b>按客户要求到货时间完成</div>'+input('receipt','签收后多久上传回执？','签收后')+'</div><details class="simple-fold line"><summary>提醒设置（一般不用改）</summary><div class="extra">'+input('warning','快到截止时间时，提前多久提醒？','提前')+input('escalation','超时后，多久再次提醒？','超时后')+'</div></details>';
 }
 function collectRule(prefix){return validateRule(Object.fromEntries(Object.keys(BASE_RULE).map(k=>[k,$(prefix+k).value.trim()===''?NaN:Number($(prefix+k).value)])))}
 function saveState(next){
@@ -86,12 +87,11 @@ function saveState(next){
 function ruleFor(c){return c.type==='standard'?null:c.mode==='custom'?c.rule:state.defaultRule}
 function renderClients(){
  $('clientCount').textContent=state.clients.length+' 个客户';
- if(!state.clients.length){$('clientList').innerHTML='<div class="empty">尚未添加客户<br>添加系统客户，指定其默认或专属到货规则。</div>';return;}
- $('clientList').innerHTML='<div class="table-wrap"><table><thead><tr><th>客户编码 / 名称</th><th>客户类型</th><th>适用规则</th><th>各节点提前时长（小时）</th><th>回执 / 预警</th><th>操作</th></tr></thead><tbody>'+state.clients.map((c,i)=>{
- const r=ruleFor(c);
- return '<tr><td><b>'+escapeHtml(c.name)+'</b><div class="sub">'+escapeHtml(c.code)+'</div></td><td><span class="badge '+(r?'':'gray')+'">'+(r?'系统客户':'非系统客户')+'</span></td><td>'+(r?(c.mode==='custom'?'客户专属规则':'系统客户默认规则'):'现有商品 / 节点规则')+'</td><td>'+(r?'财审 '+r.finance+' / 接单 '+r.accept+' / 发货 '+r.ship+' / 揽收 '+r.pickup+'<div class="sub">签收截止 = 订单要求到货时间</div>':'沿用现有时效配置')+'</td><td>'+(r?'签收后 '+r.receipt+' 小时上传回执<br>提前 '+r.warning+' 小时预警':'—')+'</td><td><div class="actions"><button class="link" onclick="editClient('+i+')">编辑</button><button class="link danger" onclick="deleteClient('+i+')">删除</button></div></td></tr>';
- }).join('')+'</tbody></table></div>';
+ if(!state.clients.length){$('clientList').innerHTML='<div class="empty">还没有添加客户<br>点击“添加客户”，一般选择“跟默认时间一样”即可。</div>';return;}
+
+ $('clientList').innerHTML='<div class="table-wrap"><table style="min-width:600px"><thead><tr><th>客户名称</th><th>客户类型</th><th>使用哪套时间</th><th>操作</th></tr></thead><tbody>'+state.clients.map((c,i)=>'<tr><td><b>'+escapeHtml(c.name)+'</b><div class="sub">'+escapeHtml(c.systemName||c.code)+'</div></td><td>'+(c.type==='system'?'系统客户':'非系统客户')+'</td><td>'+(c.type==='standard'?'原有商品时效':c.mode==='custom'?'单独设置 · 发货在到货前 '+c.rule.ship+' 小时':'默认时间 · 无需单独设置')+'</td><td><div class="actions"><button class="link" onclick="editClient('+i+')">修改设置</button><button class="link danger" onclick="deleteClient('+i+')">删除</button></div></td></tr>').join('')+'</tbody></table></div>';
 }
+
 function editClient(index){
  const c=Number.isInteger(index)?state.clients[index]:null;editingId=c?.id||null;
  $('clientTitle').textContent=c?'编辑客户规则':'添加客户';$('clientCode').value=c?.code||'';$('clientName').value=c?.name||'';
@@ -154,6 +154,7 @@ function preview(){
  if(result.kind==='missing'){$('previewResult').innerHTML='<div class="note"><span class="badge amber">待补充到货时间</span> 系统客户订单缺少要求到货时间，暂不生成到货截止时间，也不套用普通时效。</div>';return}
  $('previewResult').innerHTML='<p><b>要求到货：'+formatTime(parseTime($('arrivalTime').value))+'</b>　规则：'+(c.mode==='custom'?'客户专属':'系统客户默认')+'　时区：北京时间</p><p class="caption">以下为各节点计划截止时间；未提供节点完成记录时，不据此认定订单已超时。</p><div class="table-wrap"><table class="preview-table"><thead><tr><th>履约节点</th><th>计算口径</th><th>截止时间</th><th>提前预警时间</th><th>超时升级时间</th><th>校验提示</th></tr></thead><tbody>'+result.rows.map(row=>'<tr><td>'+row.name+'</td><td>'+row.basis+'</td><td>'+(row.deadline===null?'等待实际签收':formatTime(row.deadline))+'</td><td>'+(row.warningAt===null?'—':formatTime(row.warningAt))+'</td><td>'+(row.escalationAt===null?'—':formatTime(row.escalationAt))+'</td><td>'+(row.tooEarly?'<span class="badge amber">下单时已过此截止时间</span>':row.signedOnTime===true?'<span class="badge green">已按时签收</span>':row.signedOnTime===false?'<span class="badge red">实际签收晚于要求</span>':row.deadline===null?'<span class="badge gray">待签收后计算</span>':'<span class="badge gray">计划时间</span>')+'</td></tr>').join('')+'</tbody></table></div>';
 }
+document.addEventListener('invalid',e=>{let p=e.target.parentElement;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}},true);
 $('defaultFields').innerHTML=fields('d_',state.defaultRule);
 $('defaultForm').addEventListener('submit',e=>{e.preventDefault();$('defaultError').textContent='';try{const next=clone(state);next.defaultRule=collectRule('d_');saveState(next)}catch(err){$('defaultError').textContent=err.message}});
 $('clientForm').addEventListener('submit',e=>{e.preventDefault();$('clientError').textContent='';try{storeClient()}catch(err){$('clientError').textContent=err.message}});

@@ -206,7 +206,8 @@ function render(){
 }
 
 function openOrder(id){
- const x=records().find(x=>x.o[0]===id);if(!x)return;
+ const tasks=records().filter(x=>x.o[0]===id);
+ const x=tasks.find(x=>x.r.id===selectedNode)||uniqueOrders(tasks)[0];if(!x)return;
  const d=document.getElementById('orderDialog');
  document.getElementById('orderDetail').innerHTML='<div class="dialog-head"><h2>订单详情</h2><button class="btn" onclick="document.getElementById(\'orderDialog\').close()" aria-label="关闭订单详情">关闭</button></div><div class="oms-current-info"><span>当前节点：<b>'+safe(x.r.name)+'</b></span><span>节点时效：'+safe(x.r.value)+' 小时</span><span>已用时：'+duration(x.o[4])+'</span>'+statusBadge(x.level)+'</div><div class="oms-order-scroll">'+omsColumnHead()+omsOrderCard(x,true)+'</div><h3 class="section-title" style="margin:18px 0 12px">订单待办节点（财务审核与工厂接单并行）</h3><div class="order-journey">'+config.rules.map(r=>'<span class="'+(r.id===x.r.id?'current':'')+'">'+safe(r.name)+(r.id===x.r.id?' · 当前':'')+'</span>').join('')+'</div>';
  d.showModal();

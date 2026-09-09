@@ -22,7 +22,7 @@
 </head>
 <body>
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="system">OMS订单系统</span></div><small>客户时效方案管理</small></header>
-<nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a id="navFlow" class="sla-nav-item" data-group="flow" href="发货时效预警策略.html#flow"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="商品发货时效配置.html#nodes"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item active" data-group="customers" href="客户到货时效配置.html" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
+<nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a class="sla-nav-item" data-group="orders" href="发货时效预警策略.html#orders"><span style="width:18px;text-align:center">▤</span><span>订单列表</span></a><a id="navFlow" class="sla-nav-item" data-group="flow" href="发货时效预警策略.html#flow"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="商品发货时效配置.html#nodes"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item active" data-group="customers" href="客户到货时效配置.html" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
 <main>
 <header class="heading"><div><h1>客户到货时效配置</h1><p>系统客户按订单要求到货时间倒排截止时间；非系统客户沿用现有商品与履约节点时效。</p></div><a class="btn" href="发货时效预警策略.html">返回履约总览</a></header>
 <div class="policy-grid"><section class="policy system-policy"><h3>系统客户 <span class="badge">大型连锁商超</span></h3><div>订单要求到货时间 → 签收到货截止时间</div><div>按客户方案倒排财务审核、接单、发货、揽收截止时间。</div><div class="sub">优先使用客户专属规则，否则使用系统客户默认规则。</div></section><section class="policy"><h3>非系统客户 <span class="badge gray">原有规则</span></h3><div>继续按有货 / 无货商品时效及各履约节点阈值计时。</div><a href="商品发货时效配置.html">查看现有时效配置 →</a></section></div>
@@ -40,7 +40,7 @@
 </main>
 <dialog id="clientDialog" class="editor" aria-labelledby="clientTitle"><form id="clientForm"><header class="head"><h2 id="clientTitle">添加客户</h2><button class="btn" type="button" onclick="closeClient()">关闭</button></header><div class="form-grid">
 <div class="field"><label for="clientCode">客户编码</label><input id="clientCode" maxlength="80" required placeholder="填写客户档案中的唯一编码"></div>
-<div class="field"><label for="clientName">客户名称</label><input id="clientName" maxlength="100" required placeholder="填写完整客户名称"></div>
+<div class="field"><label for="clientSystem">所属系统名称</label><input id="clientSystem" maxlength="100" placeholder="例如：客户所属连锁商超系统"></div><div class="field"><label for="clientName">客户名称</label><input id="clientName" maxlength="100" required placeholder="填写完整客户名称"></div>
 <div class="field"><label for="clientType">客户类型</label><select id="clientType" onchange="updateClientEditor()"><option value="system">系统客户（连锁商超）</option><option value="standard">非系统客户</option></select></div>
 <div class="field" id="modeField"><label for="clientMode">时效规则</label><select id="clientMode" onchange="updateClientEditor()"><option value="default">使用系统客户默认规则</option><option value="custom">使用客户专属规则</option></select></div>
 <div class="full readonly-note" id="inheritNote"></div><div class="full" id="customFields"></div>
@@ -95,6 +95,7 @@ function renderClients(){
 function editClient(index){
  const c=Number.isInteger(index)?state.clients[index]:null;editingId=c?.id||null;
  $('clientTitle').textContent=c?'编辑客户规则':'添加客户';$('clientCode').value=c?.code||'';$('clientName').value=c?.name||'';
+ $('clientSystem').value=c?.systemName||'';
  $('clientType').value=c?.type||'system';$('clientMode').value=c?.mode||'default';
  $('customFields').innerHTML=fields('c_',c?.rule||state.defaultRule);$('clientError').textContent='';
  updateClientEditor();$('clientDialog').showModal();
@@ -103,15 +104,16 @@ function updateClientEditor(){
  const standard=$('clientType').value==='standard',custom=!standard&&$('clientMode').value==='custom';
  $('modeField').hidden=standard;$('customFields').hidden=!custom;
  $('customFields').querySelectorAll('input').forEach(i=>i.disabled=!custom);
- $('inheritNote').textContent=standard?'非系统客户继续使用商品及节点配置，不适用订单到货时间倒排。':custom?'此客户使用专属时长；订单要求到货时间仍由每笔订单提供。':'此客户使用系统客户默认时长。修改默认规则后，该客户随之更新。';
+ $('inheritNote').textContent=standard?'非系统客户继续使用商品及节点配置，不适用订单到货时间倒排。':custom?'此客户使用专属时长；订单要求到货时间仍由每笔订单提供。':'此客户使用系统客户默认时长。修改默认规则后仅新草稿使用新规则；已保存草稿保留规则快照。';
 }
 function closeClient(){$('clientDialog').close()}
 function storeClient(){
  const code=normalizeCode($('clientCode').value),name=$('clientName').value.trim();
+ if(state.clients.some(c=>c.id!==editingId&&c.name===name))throw Error('客户名称已存在，请使用唯一客户名称');
  if(!code||!name)throw Error('请填写客户编码和客户名称');
  const next=clone(state),type=$('clientType').value,mode=type==='standard'?'default':$('clientMode').value;
  if(next.clients.some(c=>c.id!==editingId&&normalizeCode(c.code)===code))throw Error('客户编码已存在，请编辑原客户');
- const c={id:editingId||crypto.randomUUID(),code,name,type,mode,rule:type==='system'&&mode==='custom'?collectRule('c_'):null};
+ const c={id:editingId||crypto.randomUUID(),code,name,systemName:$('clientSystem').value.trim(),type,mode,rule:type==='system'&&mode==='custom'?collectRule('c_'):null};
  const index=next.clients.findIndex(c=>c.id===editingId);if(index<0)next.clients.push(c);else next.clients[index]=c;
  saveState(next);closeClient();
 }

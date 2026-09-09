@@ -47,7 +47,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 </head>
 <body>
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="oms-system">OMS订单系统</span></div><small>经营管理视图</small></header>
-<nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a id="navFlow" class="sla-nav-item active" data-group="flow" href="发货时效预警策略.html#flow" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="商品发货时效配置.html#nodes"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item" data-group="customers" href="客户到货时效配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
+<nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a class="sla-nav-item" data-group="orders" href="发货时效预警策略.html#orders"><span style="width:18px;text-align:center">▤</span><span>订单列表</span></a><a id="navFlow" class="sla-nav-item active" data-group="flow" href="发货时效预警策略.html#flow" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="商品发货时效配置.html#nodes"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item" data-group="customers" href="客户到货时效配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
 <main class="page"><header class="page-head"><div><h1>订单履约总览</h1><p>点击总览指标或履约节点，下方直接显示对应订单。</p></div><span class="badge gray">表格订单资料 · 节点时效演示</span></header><div class="layout"><section class="panel"><div id="content"></div><footer class="actions"><span id="saveState">上次保存：尚未保存</span><div><button class="btn" onclick="resetConfig()">恢复默认</button> <button class="btn primary" onclick="saveConfig()">保存并生效</button></div></footer></section></div></main><div class="toast" id="toast"></div>
 
 <dialog id="kaDrawer" class="ka-drawer" aria-labelledby="kaTitle">
@@ -55,14 +55,14 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 <header class="ka-head"><h2 id="kaTitle">新增</h2><button type="button" class="ka-close" aria-label="关闭下单" onclick="closeKaOrder()">×</button></header>
 <div class="ka-body"><h3 class="ka-title">客户信息填写</h3>
 <div class="ka-grid">
-<label class="ka-field"><span><em>* </em>客户名称</span><input name="customerName" list="kaCustomers" placeholder="请选择或输入客户名称" required onchange="kaCustomerChanged()"><datalist id="kaCustomers"></datalist></label>
-<label class="ka-field"><span>系统名称</span><input name="systemName" placeholder="请输入所属连锁商超系统名称"></label>
+<label class="ka-field"><span><em>* </em>客户名称</span><input name="customerName" list="kaCustomers" placeholder="请选择已配置的客户" required oninput="kaCustomerChanged()"><datalist id="kaCustomers"></datalist></label>
+<label class="ka-field"><span>系统名称</span><input name="systemName" readonly placeholder="随客户档案自动带出"></label>
 <div class="ka-field"><span>是否仓库收货</span><div class="ka-radio"><label><input type="radio" name="warehouse" value="是" > 是</label><label><input type="radio" name="warehouse" value="否" checked> 否</label></div></div>
 <label class="ka-field"><span><em>* </em>收货人员</span><input name="receiver" type="text" required placeholder="请输入收货人员"></label>
 <label class="ka-field"><span><em>* </em>手机号码</span><input name="phone" type="tel" required placeholder="请输入手机号码"></label>
 <label class="ka-field"><span><em>* </em>收货区域</span><input name="region" type="text" required placeholder="请输入收货区域"></label>
 <label class="ka-field ka-wide"><span><em>* </em>收货地址</span><input name="address" type="text" required placeholder="请输入收货地址"></label>
-<label class="ka-field ka-arrival"><span><em>* </em>客户要求到货时间</span><input name="customerRequiredArrivalAt" type="datetime-local" required onchange="kaCustomerChanged()"></label>
+<label class="ka-field ka-arrival"><span><em id="kaArrivalRequired">*</em> 客户要求到货时间</span><input name="customerRequiredArrivalAt" type="datetime-local" required onchange="kaCustomerChanged()"></label>
 <div class="ka-field"><span>客户类型</span><span id="kaCustomerType" style="width:auto;text-align:left">未匹配客户配置</span></div>
 <div class="ka-field"><span>客户期望卸货时间</span><input aria-label="卸货开始时间" name="unloadStart" type="datetime-local"><span style="width:auto">—</span><input aria-label="卸货结束时间" name="unloadEnd" type="datetime-local"></div>
 <label class="ka-field"><span>特殊备注</span><textarea name="specialRemark" maxlength="500" placeholder="请输入特殊备注（最多500字）"></textarea></label>
@@ -74,7 +74,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 <label class="ka-field ka-wide"><span>备注</span><textarea name="remark" maxlength="1024" placeholder="请输入备注（最多1024字）"></textarea></label>
 </div>
 <h3 class="ka-title">商品清单</h3><div class="ka-table"><table><thead><tr><th>序号</th><th>商品名称</th><th>单位</th><th>口味</th><th>红线价</th><th>售价(元)</th><th>数量</th><th>搭赠数量</th><th>搭赠比例</th><th>总数量</th><th>操作</th></tr></thead><tbody id="kaProducts"></tbody></table><div class="ka-add"><button type="button" class="btn" onclick="addKaProduct()">＋ 添加商品</button></div></div>
-<p id="kaTotal" style="text-align:right">商品金额合计：¥ 0.00</p><p class="ka-message" id="kaMessage" role="status"></p></div>
+<div id="kaSchedule"></div><label class="ka-field ka-wide" style="margin-top:20px"><span>修改原因</span><input name="changeReason" placeholder="修改已保存草稿的到货时间时必填"></label><p id="kaTotal" style="text-align:right">商品金额合计：¥ 0.00</p><p class="ka-message" id="kaMessage" role="status"></p></div>
 <footer class="ka-foot"><small>当前为本地演示，保存草稿，不提交真实订单。</small><button class="btn ka-primary" type="submit">保存</button><button class="btn" type="button" onclick="closeKaOrder()">取消</button></footer>
 </form></dialog>
 <dialog id="orderDialog" class="order-dialog" aria-label="订单详情"><div id="orderDetail"></div></dialog>
@@ -161,7 +161,7 @@ function detailRows(rows){
 function nodeDetail(){
  const rows=records(selectedNode||'all'),s=tally(rows),r=config.rules.find(x=>x.id===selectedNode);
  const list=rows.filter(x=>statusFilter==='all'||x.level===statusFilter).sort((a,b)=>({overdue:0,warning:1,normal:2,paused:3}[a.level]-{overdue:0,warning:1,normal:2,paused:3}[b.level])||(b.o[4]-b.r.value)-(a.o[4]-a.r.value));
- return '<div class="overview-head"><div><h2>'+(r?safe(r.name)+' · 订单列表':'全部节点 · 订单列表')+'</h2><p>按当前履约节点展示订单，超时订单优先。</p></div><div class="inline-list-tools"><button class="btn" onclick="openKaOrder()">＋ 经销/KA下单</button><span class="badge gray">共 '+s.all+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">全部节点</button>':'')+'</div></div>'+(r?'<div class="detail-summary">计时区间 <b>'+safe(r.from)+' → '+safe(r.to)+'</b>　时效阈值 <b>'+safe(r.value)+' 小时</b>　提前提醒 <b>已用时达 '+safe(r.warn)+'%</b></div>':'')+'<div class="filter-tabs" aria-label="筛选订单时效状态">'+['all','overdue','warning','normal',...(s.paused?['paused']:[])].map(k=>'<button class="'+(statusFilter===k?'active':'')+'" aria-pressed="'+(statusFilter===k)+'" data-order-status="'+k+'" onclick="selectOrderStatus(\''+k+'\')">'+statusNames[k]+' '+s[k]+'</button>').join('')+'</div><div class="oms-summary"><span>当前筛选订单：<b>'+list.length+' 单</b></span><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>超时订单金额：<b>¥ '+amount(list.filter(x=>x.level==='overdue'))+'</b></span></div><p class="oms-source-note">订单资料取自订单列表.xls，六个节点及计时沿用原演示分布；表内原始状态仅作展示。</p><div class="oms-order-scroll">'+omsColumnHead()+(list.length?list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合当前状态的订单</div>')+'</div>';
+ return '<div class="overview-head"><div><h2>'+(r?safe(r.name)+' · 订单列表':'全部节点 · 订单列表')+'</h2><p>按当前履约节点展示订单，超时订单优先。</p></div><div class="inline-list-tools"><span class="badge gray">共 '+s.all+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">全部节点</button>':'')+'</div></div>'+(r?'<div class="detail-summary">计时区间 <b>'+safe(r.from)+' → '+safe(r.to)+'</b>　时效阈值 <b>'+safe(r.value)+' 小时</b>　提前提醒 <b>已用时达 '+safe(r.warn)+'%</b></div>':'')+'<div class="filter-tabs" aria-label="筛选订单时效状态">'+['all','overdue','warning','normal',...(s.paused?['paused']:[])].map(k=>'<button class="'+(statusFilter===k?'active':'')+'" aria-pressed="'+(statusFilter===k)+'" data-order-status="'+k+'" onclick="selectOrderStatus(\''+k+'\')">'+statusNames[k]+' '+s[k]+'</button>').join('')+'</div><div class="oms-summary"><span>当前筛选订单：<b>'+list.length+' 单</b></span><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>超时订单金额：<b>¥ '+amount(list.filter(x=>x.level==='overdue'))+'</b></span></div><p class="oms-source-note">订单资料取自订单列表.xls，六个节点及计时沿用原演示分布；表内原始状态仅作展示。</p><div class="oms-order-scroll">'+omsColumnHead()+(list.length?list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合当前状态的订单</div>')+'</div>';
 }
 
 function render(){
@@ -169,7 +169,12 @@ function render(){
  document.querySelector('.page-head h1').textContent=group==='flow'?'订单履约总览':'发货时效预警策略';
  document.querySelector('.page-head p').textContent=group==='flow'?'点击总览指标或履约节点，下方直接显示对应订单。':'维护商品发货时效和司机信息采集规则。';
  if(group==='flow'){document.getElementById('content').innerHTML='<section id="overviewSurface">'+overview()+'</section><section id="inlineOrderDetails" class="inline-order-details" aria-label="订单明细">'+nodeDetail()+'</section>';refreshOrderDetails();}
- else renderConfig();
+ else if(group==='orders'){
+ document.querySelector('.actions').hidden=true;
+ document.querySelector('.page-head h1').textContent='订单列表';
+ document.querySelector('.page-head p').textContent='经销 / KA下单与订单资料查询';
+ document.getElementById('content').innerHTML='<div class="card" style="padding:18px;margin-bottom:18px"><button class="btn ka-primary" onclick="openKaOrder()">＋ 经销/KA下单</button><span style="margin-left:16px;color:#909399">订单数据沿用原导入资料；新增仅保存本机草稿。</span></div><section id="inlineOrderDetails">'+nodeDetail()+'</section>';
+ }else renderConfig();
 }
 
 function openOrder(id){
@@ -211,7 +216,7 @@ function omsOrderCard(x,inDialog=false){
 }
 
 function syncMenuRoute(){
- const target=location.hash==='#driver'?'driver':'flow';
+ const target=location.hash==='#orders'?'orders':location.hash==='#driver'?'driver':'flow';
  selectGroup(target);
 }
 window.addEventListener('hashchange',syncMenuRoute);
@@ -230,12 +235,36 @@ function openKaOrder(){
  document.getElementById('kaMessage').textContent='';renderKaProducts();kaCustomerChanged();document.getElementById('kaDrawer').showModal();
 }
 function closeKaOrder(){document.getElementById('kaDrawer').close()}
+
+function kaReadCustomer(){
+ const data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}');
+ const name=document.getElementById('kaForm').elements.customerName.value.trim();
+ const matches=(data.clients||[]).filter(c=>c.name===name);
+ return {data,c:matches.length===1?matches[0]:null};
+}
+function kaPlan(c,data,arrival,now=Date.now()){
+ if(!c)throw Error('请先在客户到货配置中维护并选择客户；同名客户需使用唯一名称。');
+ if(c.type!=='system')return {type:'standard',rule:JSON.parse(JSON.stringify(config)),deadlines:[]};
+ const r=c.mode==='custom'?c.rule:data.defaultRule;
+ if(!r||['finance','accept','ship','pickup','warning','receipt','escalation'].some(k=>!Number.isFinite(Number(r[k]))||Number(r[k])<0)||!(r.finance>=r.accept&&r.accept>=r.ship&&r.ship>=r.pickup)||r.receipt<=0)throw Error('客户时效配置无效，请先修正配置。');
+ const at=new Date(arrival).getTime();if(!arrival||!Number.isFinite(at))throw Error('系统客户必须填写客户要求到货时间。');
+ const deadlines=['finance','accept','ship','pickup','sign'].map((id,i)=>({id,name:['财务审核','接单','发货','揽收','签收'][i],at:at-(id==='sign'?0:Number(r[id])*3600000),warningAt:at-(id==='sign'?0:Number(r[id])*3600000)-Number(r.warning)*3600000}));
+ return {type:'system',clientId:c.id,scheme:c.mode==='custom'?'客户专属规则':'系统客户默认规则',rule:JSON.parse(JSON.stringify(r)),deadlines,risk:deadlines.some(d=>d.at<now)};
+}
+function kaDate(at){return new Date(at).toLocaleString('zh-CN',{hour12:false})}
 function kaCustomerChanged(){
- const f=document.getElementById('kaForm');let data={};try{data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}')}catch(e){}
- const c=(data.clients||[]).find(c=>c.name===f.elements.customerName.value);
- document.getElementById('kaCustomerType').textContent=c?(c.type==='system'?'系统客户 · 连锁商超':'非系统客户'):'未匹配客户配置';
- const arrival=f.elements.customerRequiredArrivalAt.value;
- document.getElementById('kaRuleHint').textContent=c&&c.type==='system'?'以客户要求到货时间作为签收截止时间，使用'+(c.mode==='custom'?'客户自定义':'系统客户默认')+'配置倒排履约节点。'+(arrival?' 签收截止：'+arrival.replace('T',' '):''):(c?'沿用商品及履约节点时效配置；到货要求单独记录。':'请在客户到货配置中维护客户类型，未匹配时不自动认定为系统客户。');
+ const f=document.getElementById('kaForm'),hint=document.getElementById('kaRuleHint'),schedule=document.getElementById('kaSchedule');
+ try{
+ const {data,c}=kaReadCustomer(),system=c?.type==='system';
+ f.elements.customerRequiredArrivalAt.required=system;document.getElementById('kaArrivalRequired').hidden=!system;
+ f.elements.systemName.value=system?(c.systemName||''):'';
+ document.getElementById('kaCustomerType').textContent=c?(system?'系统客户 · 连锁商超':'非系统客户'):'未匹配客户配置';
+ hint.textContent=system?'按要求到货时间倒排；回执从实际签收开始计时。':c?'到货时间选填，沿用商品及节点时效。':'请先在客户到货配置中维护客户类型。';
+ schedule.innerHTML='';
+ if(!c||!system)return;
+ const plan=kaPlan(c,data,f.elements.customerRequiredArrivalAt.value);
+ schedule.innerHTML='<h3 class="ka-title">履约时效预览 · '+safe(plan.scheme)+'</h3><div class="ka-table"><table><thead><tr><th>节点</th><th>最晚完成时间</th><th>预警时间</th><th>下单风险</th></tr></thead><tbody>'+plan.deadlines.map(d=>'<tr><td>'+d.name+'</td><td>'+kaDate(d.at)+'</td><td>'+kaDate(d.warningAt)+'</td><td style="color:'+(d.at<Date.now()?'#f56c6c':'#67c23a')+'">'+(d.at<Date.now()?'倒排截止已过，需协调交期':'可安排')+'</td></tr>').join('')+'<tr><td>回执上传</td><td colspan="3">实际签收后 '+plan.rule.receipt+' 小时；未签收不开始计时</td></tr></tbody></table></div>';
+ }catch(e){hint.textContent=e.message;schedule.innerHTML=''}
 }
 function addKaProduct(){const p=kaCatalog()[0];if(p){kaItems.push({...p,qty:1,giftQty:0,price:Number(String(p.price).replace(/[^0-9.]/g,''))||0});renderKaProducts()}}
 function renderKaProducts(){
@@ -249,11 +278,23 @@ function saveKaOrder(e){
  e.preventDefault();const f=document.getElementById('kaForm'),m=document.getElementById('kaMessage');
  if(!f.reportValidity())return;
  const fields=Object.fromEntries(new FormData(f).entries());
- if(new Date(fields.customerRequiredArrivalAt)<=new Date()){m.textContent='客户要求到货时间必须晚于当前时间。';return}
+ if(fields.customerRequiredArrivalAt&&new Date(fields.customerRequiredArrivalAt)<=new Date()){m.textContent='客户要求到货时间必须晚于当前时间。';return}
  if(fields.unloadStart&&fields.unloadEnd&&fields.unloadStart>fields.unloadEnd){m.textContent='卸货结束时间不能早于开始时间。';return}
  if(!kaItems.length){m.textContent='请至少添加一件商品。';return}
  if(kaItems.some(p=>!Number.isInteger(p.qty)||p.qty<1||!Number.isInteger(p.giftQty)||p.giftQty<0||!Number.isFinite(p.price)||p.price<0)){m.textContent='请检查商品售价、数量和搭赠数量。';return}
- try{localStorage.setItem('oms-ka-order-draft-v1',JSON.stringify({fields,products:kaItems,savedAt:new Date().toISOString()}));m.textContent='下单草稿已保存在本机。客户要求到货时间：'+fields.customerRequiredArrivalAt.replace('T',' ')+'。重新打开可继续编辑；尚未提交真实订单。'}catch(e){m.textContent='保存失败，请检查浏览器存储空间后重试。'}
+ try{
+ const {data,c}=kaReadCustomer();
+ let previous=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');
+ const changed=previous&&previous.fields.customerRequiredArrivalAt!==fields.customerRequiredArrivalAt;
+ if(changed&&!fields.changeReason.trim())throw Error('修改客户要求到货时间，请填写修改原因。');
+ const same=previous?.ruleSnapshot&&previous.fields.customerName===fields.customerName;
+ const source=same?{defaultRule:previous.ruleSnapshot.rule}:data;
+ const plan=kaPlan(same?{...c,mode:'default'}:c,source,fields.customerRequiredArrivalAt);
+ if(plan.risk&&!confirm('部分节点倒排截止时间已过，存在无法按期到货的风险。是否仍保存草稿？'))return;
+ const history=previous?.history||[];
+ if(changed)history.push({at:new Date().toISOString(),actor:'本机操作人（未登录）',before:previous.fields.customerRequiredArrivalAt,after:fields.customerRequiredArrivalAt,reason:fields.changeReason.trim()});
+ localStorage.setItem('oms-ka-order-draft-v1',JSON.stringify({fields,products:kaItems,savedAt:new Date().toISOString(),ruleSnapshot:same?previous.ruleSnapshot:plan,history}));
+m.textContent='下单草稿已保存在本机。客户要求到货时间：'+fields.customerRequiredArrivalAt.replace('T',' ')+'。规则已留存快照，重新打开可继续编辑；尚未提交真实订单。'}catch(e){m.textContent=e.message||'保存失败，请检查浏览器存储空间后重试。'}
 }
 
 </script>

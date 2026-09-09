@@ -44,7 +44,9 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 .ka-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 36px;margin:20px 0 30px}.ka-field{display:flex;align-items:center;gap:12px;min-width:0}.ka-field>span{width:120px;flex-shrink:0;text-align:right}.ka-field em{color:#f56c6c;font-style:normal}.ka-field input:not([type=radio]),.ka-field select,.ka-field textarea{width:100%;min-width:0;border:1px solid #dcdfe6;border-radius:3px;padding:8px 10px;background:white;color:#606266;font:inherit}.ka-field textarea{resize:vertical}.ka-wide{grid-column:1/-1}.ka-radio{display:flex;gap:20px;align-items:center}.ka-radio label{white-space:nowrap}.ka-radio input{accent-color:#409eff}.ka-arrival input{border-color:#409eff!important}.ka-hint{margin:0 0 20px;color:#909399;font-size:13px}.ka-foot{justify-content:flex-end;gap:12px;border-top:1px solid #ebeef5}.ka-foot small{margin-right:auto;color:#909399}.ka-primary{background:#409eff!important;border-color:#409eff!important;color:white!important}.ka-table{overflow:auto;border:1px solid #ebeef5;border-radius:3px;padding:16px 20px}.ka-table table{width:100%;min-width:1000px;border-collapse:collapse}.ka-table th,.ka-table td{padding:14px 8px;border-bottom:1px solid #ebeef5;text-align:center;font-weight:400}.ka-table th{color:#909399}.ka-table input{width:76px;padding:6px;border:1px solid #dcdfe6;border-radius:3px}.ka-table select{max-width:310px;padding:6px;border:1px solid #dcdfe6}.ka-table button{color:#409eff;background:none;border:0;cursor:pointer}.ka-add{text-align:center;padding-top:16px}.ka-message{color:#409eff;white-space:pre-line}.ka-close{border:0;background:white;font-size:24px;cursor:pointer}
 @media(max-width:900px){.ka-drawer{width:100vw}.ka-grid{grid-template-columns:1fr}.ka-wide{grid-column:auto}.ka-foot small{max-width:55%}}
 </style>
-<style>.system-orders-table th,.system-orders-table td{padding:16px;text-align:left;border-bottom:1px solid #ebeef5;line-height:1.7;vertical-align:top}.system-orders-table th{background:#f5f7fa;color:#909399;font-weight:400}</style></head>
+<style>.system-orders-table th,.system-orders-table td{padding:16px;text-align:left;border-bottom:1px solid #ebeef5;line-height:1.7;vertical-align:top}.system-orders-table th{background:#f5f7fa;color:#909399;font-weight:400}</style><style>
+.board-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:16px 0 22px}.board-metrics .metric{min-width:0}.board-flow{display:grid;grid-template-columns:2fr 4fr;gap:18px}.board-flow h3{font-size:14px;margin:0 0 12px;color:#606266}.board-parallel{border:1px solid #b3d8ff;border-radius:4px;background:#f5faff;padding:14px}.board-parallel>div{display:grid;grid-template-columns:1fr 1fr;gap:12px}.board-sequence{padding:14px 0}.board-sequence>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.board-flow .stage{width:100%;min-width:0;padding:14px}.board-flow .stage-foot{line-height:1.6;font-size:12px;white-space:normal}.board-table-wrap{overflow:auto}.board-table{width:100%;min-width:1220px;border-collapse:collapse;font-size:14px}.board-table th{background:#f5f7fa;color:#909399;font-weight:400;white-space:nowrap}.board-table th,.board-table td{padding:14px 12px;border-bottom:1px solid #ebeef5;text-align:left;vertical-align:top;line-height:1.8}.board-table td:first-child{max-width:230px}.board-table small{color:#909399}.board-table summary{color:#409eff;cursor:pointer;white-space:nowrap}.board-products{max-width:280px;min-width:200px}.board-table td>div+div{margin-top:6px}.board-table .orders-toggle{margin-top:8px}@media(max-width:1200px){.board-flow{grid-template-columns:1fr}.board-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.board-metrics,.board-sequence>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style></head>
 <body>
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="oms-system">OMS订单系统</span></div><small>经营管理视图</small></header>
 <nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a class="sla-nav-item" data-group="orders" href="发货时效预警策略.html#orders"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>订单列表</span></a><a id="navFlow" class="sla-nav-item active" data-group="flow" href="发货时效预警策略.html#flow" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="履约节点配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item" data-group="customers" href="客户到货时效配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
@@ -181,7 +183,7 @@ function detailRows(rows){
  return rows.map(x=>'<tr><td><div class="order-no">'+safe(x.o[0])+'</div><div class="order-sub">'+safe(x.o[1])+'</div></td><td>'+safe(x.r.name)+'</td><td>'+safe(x.o[2])+'</td><td>'+safe(x.o[3])+'</td><td><span class="time-value '+x.level+'">'+timing(x)+'</span><div class="order-sub">已用 '+duration(x.o[4])+' / '+safe(x.r.value)+' 小时</div><div class="time-progress '+x.level+'"><i style="width:'+Math.max(0,Math.min(100,x.o[4]/x.r.value*100))+'%"></i></div></td><td>'+statusBadge(x.level)+'</td><td><button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">查看详情</button></td></tr>').join('')||'<tr><td colspan="7" class="empty-orders">暂无符合当前状态的订单</td></tr>';
 }
 
-function nodeDetail(){
+function legacyNodeDetail(){
  if(group==='flow'&&customerView==='system')return systemOrderDetails();
  const rows=uniqueOrders(records(selectedNode||'all')),s=tally(rows),r=config.rules.find(x=>x.id===selectedNode);
  const list=rows.filter(x=>statusFilter==='all'||x.level===statusFilter).sort((a,b)=>({overdue:0,warning:1,normal:2,paused:3}[a.level]-{overdue:0,warning:1,normal:2,paused:3}[b.level])||(b.o[4]-b.r.value)-(a.o[4]-a.r.value));
@@ -356,6 +358,54 @@ function systemOrderDetails(){
  return '<div class="overview-head"><h2>系统客户订单明细</h2><span class="badge gray">当前 '+list.length+' 单</span></div>'+(error?'<p role="alert">'+safe(error)+'</p>':'')+'<div style="overflow-x:auto"><table style="width:100%;min-width:980px;border-collapse:collapse" class="system-orders-table"><thead><tr><th>订单 / 客户</th><th>所属系统</th><th>要求到货时间</th><th>当前节点</th><th>到货状态</th><th>订单金额</th><th>操作</th></tr></thead><tbody>'+list.map(x=>'<tr><td>'+safe(x.o[0])+'<div style="margin-top:6px">'+safe(x.o[1])+'</div></td><td>'+safe(x.client.systemName||'未填写')+'</td><td>'+safe(x.arrival?x.arrival.replace('T',' '):'待补充')+'</td><td>'+safe(x.r.name)+'</td><td><span class="badge amber">'+(x.arrival?'待同步实际履约记录':'待补充到货时间')+'</span></td><td>'+safe(x.o[2])+'</td><td><button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">订单详情</button></td></tr>').join('')+'</tbody></table></div>'+(!list.length?'<div class="empty-orders">暂无匹配的系统客户订单。<br>请在“客户到货配置”中维护客户类型，客户名称需与订单一致。<br>现有订单仍保留在“全部订单”中。</div>':'')+draftHtml;
 }
 
+
+function boardRows(){
+ let clients=[];try{clients=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}').clients||[]}catch(e){}
+ return uniqueOrders(records()).map(x=>{const p=omsProfiles[x.o[0]]||{},matches=clients.filter(c=>c.name===x.o[1]),c=matches.length===1?matches[0]:null;
+ return {...x,p,client:c,tasks:records().filter(t=>t.o[0]===x.o[0]),arrival:boardTime(p.customerRequiredArrivalAt),signed:boardTime(p.events?.signedAt)};
+ }).filter(x=>customerView!=='system'||x.client?.type==='system');
+}
+function boardTime(v){if(!v)return null;const t=Date.parse(v);return Number.isFinite(t)?t:null}
+function boardDay(t){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(t))}
+function arrivalStatus(x,now=Date.now()){
+ if(x.arrival===null)return {key:'missing',text:'到货时间待补充',color:'gray'};
+ if(x.signed!==null)return {key:x.signed>x.arrival?'late':'signed',text:x.signed>x.arrival?'超期签收':'按时签收',color:x.signed>x.arrival?'red':'green'};
+ // No signature event alone is not evidence that delivery has not occurred.
+ if(x.p.events?.signedAt===null)return {key:x.arrival<=now?'late':'pending',text:x.arrival<=now?'到货已超时':'待到货',color:x.arrival<=now?'red':'gray'};
+ return {key:'unknown',text:'签收记录待同步',color:'gray'};
+}
+function boardMatch(x,key){
+ if(key==='today')return x.arrival!==null&&boardDay(x.arrival)===boardDay(Date.now());
+ if(key==='missing')return x.arrival===null;
+ if(key==='arrivalLate')return arrivalStatus(x).key==='late';
+ return key==='all'||x.level===key;
+}
+function boardOverview(){
+ const rows=boardRows();
+ const tiles=[['all','履约中','','订单去重统计'],['overdue','已超时','danger','节点时效已超时'],['warning','即将超时','caution','节点已进入预警'],['today','今日要求到货','','按客户要求到货日期'],['missing','到货时间待补充','','尚无有效到货时间']];
+ function stage(r){const tasks=rows.flatMap(x=>x.tasks).filter(x=>x.r.id===r.id),s=tally(tasks);
+ return '<button class="stage" data-node-card="'+r.id+'" aria-pressed="false" onclick="openNode(\''+r.id+'\')"><div class="stage-top"><b>'+safe(r.name)+'</b></div><div class="stage-total">'+s.all+'<small>单待完成</small></div><div class="stage-counts"><span class="overdue">超时 '+s.overdue+'</span><span class="warning">预警 '+s.warning+'</span></div><div class="stage-foot">'+safe(r.from)+' → '+safe(r.to)+'</div></button>';
+ }
+ return customerViewTabs()+'<div class="overview-head"><h2>'+(customerView==='system'?'系统客户履约总览':'订单履约总览')+'</h2></div><div class="board-metrics">'+tiles.map(([key,title,color,sub])=>'<button class="metric '+color+'" data-metric-filter="'+key+'" aria-pressed="false" onclick="openNode(\'all\',\''+key+'\')"><span>'+title+'</span><strong>'+rows.filter(x=>boardMatch(x,key)).length+' <small>单</small></strong><small>'+sub+'</small></button>').join('')+'</div><div class="board-flow"><section class="board-parallel"><h3>并行办理 · 互不等待</h3><div>'+config.rules.slice(0,2).map(stage).join('')+'</div></section><section class="board-sequence"><h3>发货至回执</h3><div>'+config.rules.slice(2).map(stage).join('')+'</div></section></div><p class="section-caption">总订单数去重；同一订单可同时待财务审核、待工厂接单。节点超时与到货超时分别判断。</p>';
+}
+function overview(){return boardOverview()}
+function nodeDetail(){
+ if(group!=='flow')return legacyNodeDetail();
+ let rows=boardRows().filter(x=>!selectedNode||selectedNode==='all'||x.tasks.some(t=>t.r.id===selectedNode));
+ // Node selection uses that node's own timer, not another parallel task's status.
+ if(selectedNode&&selectedNode!=='all')rows=rows.map(x=>({...x,...x.tasks.find(t=>t.r.id===selectedNode)}));
+ const list=rows.filter(x=>boardMatch(x,statusFilter)).sort((a,b)=>({overdue:0,warning:1,normal:2,paused:3}[a.level]-{overdue:0,warning:1,normal:2,paused:3}[b.level])||(a.arrival??Infinity)-(b.arrival??Infinity));
+ const title=config.rules.find(r=>r.id===selectedNode)?.name||'全部节点';
+ const keys=[['all','全部'],['overdue','节点超时'],['warning','节点预警'],['today','今日要求到货'],['missing','到货待补充'],['arrivalLate','到货超时']];
+ return '<div class="overview-head"><h2>'+safe(title)+' · 订单明细</h2><span class="badge gray">'+list.length+' 单</span></div><div class="filter-tabs">'+keys.map(([key,label])=>'<button data-order-status="'+key+'" aria-pressed="'+(statusFilter===key)+'" class="'+(statusFilter===key?'active':'')+'" onclick="selectOrderStatus(\''+key+'\')">'+label+' '+rows.filter(x=>boardMatch(x,key)).length+'</button>').join('')+'</div><div class="board-table-wrap"><table class="board-table"><thead><tr><th>订单号 / 客户</th><th>当前待办节点</th><th>客户要求到货</th><th>节点截止 / 剩余时长</th><th>节点状态</th><th>到货状态</th><th>负责人</th><th>操作</th></tr></thead><tbody>'+list.map(x=>{
+ const ar=arrivalStatus(x),tasks=selectedNode&&selectedNode!=='all'?x.tasks.filter(t=>t.r.id===selectedNode):x.tasks;
+ return '<tr><td><b>'+safe(x.o[0])+'</b><div>'+safe(x.o[1])+'</div><small>'+safe(x.client?.type==='system'?'系统客户'+(x.client.systemName?' · '+x.client.systemName:''):x.client?'非系统客户':'客户类型待补充')+'</small></td><td>'+x.tasks.map(t=>'<div>'+safe(t.r.name)+'</div>').join('')+'</td><td>'+(x.arrival===null?'待补充':safe(kaDate(x.arrival)))+'</td><td>'+tasks.map(t=>{const start=boardTime(t.o[3]);return '<div>'+safe(t.r.name)+'：'+(start===null?'截止时间待补充':safe(kaDate(start+Number(t.r.value)*3600000)))+'<br><span class="time-value '+t.level+'">'+timing(t)+'</span></div>'}).join('')+'</td><td>'+tasks.map(t=>'<div>'+safe(t.r.name)+' '+statusBadge(t.level)+'</div>').join('')+'</td><td><span class="badge '+ar.color+'">'+ar.text+'</span></td><td>'+safe(x.p.owner||'待分配')+'</td><td><details><summary>商品明细</summary><div class="board-products">'+(x.p.products||[]).map(p=>'<p>'+safe(p.name)+'<br>'+safe(p.sku)+' · '+safe(p.qty)+' '+safe(p.unit)+'</p>').join('')+'</div></details><button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">订单详情</button></td></tr>';
+ }).join('')+'</tbody></table></div>'+(!list.length?'<div class="empty-orders">暂无符合条件的订单'+(customerView==='system'?'，请先在客户到货配置中维护系统客户。':'。')+'</div>':'')+'<p class="section-caption">缺少起算时间、到货时间或签收记录时显示待补充 / 待同步，不据此认定到货正常。</p>'+boardDraft();
+}
+function boardDraft(){
+ if(customerView!=='system')return '';
+ try{const d=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(d?.ruleSnapshot?.type!=='system')return '';return '<details><summary>本地系统客户草稿（未提交，不计入订单）</summary><p>'+safe(d.fields.customerName)+' · 要求到货 '+safe(d.fields.customerRequiredArrivalAt||'待补充')+'</p><button class="btn" onclick="openKaOrder()">查看草稿</button></details>'}catch(e){return ''}
+}
 </script>
 </body>
 </html>

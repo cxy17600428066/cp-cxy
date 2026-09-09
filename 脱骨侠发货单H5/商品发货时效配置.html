@@ -37,14 +37,14 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 <header class="page-head"><div><h1 id="pageTitle">商品发货时效配置</h1><p>商品基础时效在标准库维护，这里只设置特殊商品的自定义方案。</p></div><a class="btn" href="发货时效预警策略.html">← 返回订单履约总览</a></header>
 
 <section id="productsView">
-<section class="box"><header class="box-head"><div><h2>商品发货时效明细</h2><p>商品资料来自现有订单与自定义方案；标准库完整目录及基础时效尚待同步。</p></div><span id="productCount" class="badge gray"></span></header><div class="box-body"><form id="productFilters" style="display:flex;flex-wrap:wrap;gap:14px;align-items:end">
-<div class="field"><label for="productQuery">商品名称 / 编码</label><input id="productQuery" placeholder="输入关键词"></div><div class="field"><label for="productSource">时效来源</label><select id="productSource"><option value="all">全部</option><option value="custom">自定义方案</option><option value="standard">标准库（待同步）</option></select></div>
+<section class="box"><header class="box-head"><div><h2>商品发货时效明细</h2><p>未配置自定义方案的商品暂按演示默认值展示：有货24小时、无货72小时；实际以标准库同步数据为准。</p></div><span id="productCount" class="badge gray"></span></header><div class="box-body"><form id="productFilters" style="display:flex;flex-wrap:wrap;gap:14px;align-items:end">
+<div class="field"><label for="productQuery">商品名称 / 编码</label><input id="productQuery" placeholder="输入关键词"></div><div class="field"><label for="productSource">时效来源</label><select id="productSource"><option value="all">全部</option><option value="custom">自定义方案</option><option value="standard">标准库（演示默认）</option></select></div>
 <div class="field"><label>有货时效范围（小时）</label><div style="display:flex;gap:6px"><input id="stockMin" aria-label="有货最少小时" type="number" min="0" step="0.1" placeholder="最少" style="width:95px"><input id="stockMax" aria-label="有货最多小时" type="number" min="0" step="0.1" placeholder="最多" style="width:95px"></div></div><div class="field"><label>无货时效范围（小时）</label><div style="display:flex;gap:6px"><input id="noStockMin" aria-label="无货最少小时" type="number" min="0" step="0.1" placeholder="最少" style="width:95px"><input id="noStockMax" aria-label="无货最多小时" type="number" min="0" step="0.1" placeholder="最多" style="width:95px"></div></div>
 <button class="btn primary">筛选</button><button class="btn" type="button" onclick="el('productFilters').reset();renderProductTable()">重置</button></form><p id="productFilterError" class="error" role="alert"></p></div><div id="productTable" class="table-wrap"></div></section>
 <div class="note rule-order"><b>方案匹配顺序</b><span>已启用的商品自定义方案</span><span>→</span><span>未匹配时使用标准库商品时效</span><span class="sub">同一商品编码只能关联一个已启用方案。</span></div>
 <section class="box"><header class="box-head"><div><h2>自定义方案 <span class="badge gray" id="planCount">0 个</span></h2><p>一个方案可关联多个商品，各自设置有货、无货发货时效。</p></div><button class="btn primary" onclick="openEditor()">＋ 新增方案</button></header><div id="planList"></div></section>
 <section class="box"><header class="box-head"><div><h2>查询商品适用方案</h2><p>输入商品编码，确认该商品实际使用的发货时效。</p></div></header><form class="box-body" id="lookupForm"><div class="checker"><div class="field"><label for="lookupSku">商品编码 / SKU</label><input id="lookupSku" required maxlength="80" placeholder="例如：TGX-001"></div><div class="field"><label for="lookupStock">库存状态</label><select id="lookupStock"><option value="stock">有货</option><option value="noStock">无货</option></select></div><button class="btn" type="submit">查询适用方案</button></div><div class="match-result" id="lookupResult" hidden aria-live="polite"></div></form></section>
-<p class="footnote">按商品编码精确匹配，忽略英文字母大小写；方案停用或删除后，其商品使用标准库商品管理中的时效。当前未接入标准库，无法读取具体小时数，商品编码由管理员录入。</p>
+<p class="footnote">按商品编码精确匹配，忽略英文字母大小写；方案停用或删除后，其商品使用标准库商品管理中的时效。当前未接入标准库，暂展示演示默认时效；商品编码由管理员录入。</p>
 </section>
 <p class="storage-status" id="storageStatus" role="status">配置仅保存在当前浏览器，尚未接入业务系统。</p>
 </main>
@@ -111,7 +111,7 @@ function commit(next){
 }
 function resolveScheme(sku,stock='stock',source=state){
  const code=normaliseSku(sku),p=source.plans.find(p=>p.enabled&&p.skus.some(s=>normaliseSku(s)===code));
- return {name:p?p.name:'标准库商品时效',hours:p?p[stock]:null,custom:!!p};
+ return {name:p?p.name:'标准库商品时效（演示默认）',hours:p?p[stock]:(stock==='stock'?24:72),custom:!!p};
 }
 function refreshPlans(){
  el('planCount').textContent=state.plans.length+' 个';
@@ -147,7 +147,7 @@ function refreshLookup(){
  if(el('lookupResult').hidden)return;
  const sku=el('lookupSku').value.trim();if(!sku){el('lookupResult').hidden=true;return}
  const hit=resolveScheme(sku,el('lookupStock').value);
- el('lookupResult').innerHTML='商品 <b>'+esc(normaliseSku(sku))+'</b>　'+(hit.custom?'匹配自定义方案':'未匹配启用的自定义方案')+'<br>适用方案：<b>'+esc(hit.name)+'</b>　'+(el('lookupStock').value==='stock'?'有货':'无货')+(hit.custom?'发货时效：<strong>'+esc(hit.hours)+' 小时</strong>':'时效由标准库商品管理维护，当前未接入，具体小时数暂不可读取。');
+ el('lookupResult').innerHTML='商品 <b>'+esc(normaliseSku(sku))+'</b>　'+(hit.custom?'匹配自定义方案':'未匹配启用的自定义方案')+'<br>适用方案：<b>'+esc(hit.name)+'</b>　'+(el('lookupStock').value==='stock'?'有货':'无货')+('发货时效：<strong>'+esc(hit.hours)+' 小时</strong>'+(hit.custom?'':'（演示默认，未从标准库同步）'));
 }
 
 function navigate(){if(location.hash==='#nodes'){location.replace('履约节点配置.html');return}el('sideProducts').classList.add('active');el('sideProducts').setAttribute('aria-current','page')}

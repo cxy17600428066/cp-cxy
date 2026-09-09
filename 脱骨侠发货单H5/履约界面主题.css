@@ -1,7 +1,7 @@
 /* Shared visual theme for the four local fulfillment pages.
    Presentation only: identifiers, rules, storage and order data remain in their pages. */
 body.sla-polished{
- --blue:#2563eb;--red:#2563eb;--red-dark:#1d4ed8;
+ --blue:#2563eb;--red:#d04c54;--red-dark:#b93945;
  --ink:#24334b;--muted:#68788e;--line:#e2e8f0;--bg:#f3f6fb;
  --green:#178358;--amber:#b76a12;
  margin:0;color:var(--ink);background:var(--bg);
@@ -141,7 +141,7 @@ body.sla-polished{
 .sla-polished .node-help{color:#8291a5}
 .sla-polished .check-label{color:#708299;font-size:13px;white-space:nowrap}
 .sla-polished .check-label input{width:16px;height:16px}
-.sla-polished .save-node-footer,.sla-polished .actions{border:1px solid #e4ebf4;background:#fff;border-radius:9px;padding:15px 20px;box-shadow:0 3px 10px #29497104}
+.sla-polished .save-node-footer,.sla-polished footer.actions{border:1px solid #e4ebf4;background:#fff;border-radius:9px;padding:15px 20px;box-shadow:0 3px 10px #29497104}
 .sla-polished .fixed{background:#f8faff;border:1px solid #e8eef7;border-radius:8px;color:#5c718e;padding:14px 16px}
 .sla-polished .fixed b{color:#415b7d;font-weight:600}
 .sla-polished .line{border-color:#edf1f6}
@@ -203,3 +203,5 @@ body.sla-polished{
  .sla-polished *{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 }
 
+.sla-polished .btn.ka-primary{background:#2563eb!important;border-color:#2563eb!important;color:#fff!important}
+.sla-polished .btn.ka-primary:hover{background:#1d4ed8!important;border-color:#1d4ed8!important}

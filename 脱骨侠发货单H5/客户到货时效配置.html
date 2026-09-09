@@ -26,7 +26,7 @@
 <main>
 <header class="heading"><div><h1>客户到货时效配置</h1><p>先设一套大家通用的时间，有特殊要求的客户再单独改。</p></div><a class="btn" href="发货时效预警策略.html">返回履约总览</a></header>
 <div class="note">这里只管系统客户（大型连锁商超）：下单时填写要求到货日期，系统自动算出各环节最晚完成时间。非系统客户仍用原来的商品时效。</div>
-<section class="card"><header class="head"><div><h2>1. 默认时间设置</h2><p>多数系统客户用这一套，设置一次即可。</p></div><span class="badge">到货时间优先</span></header><form class="body" id="defaultForm">
+<section class="card"><header class="head"><div><h2>1. 默认时间设置</h2><p>多数系统客户用这一套。财务审核与工厂接单并行，可分别设置。</p></div><span class="badge">到货时间优先</span></header><form class="body" id="defaultForm">
 <div class="note">举个例子：客户要求周五上午 10 点到货，发货设为提前 48 小时，就是周三上午 10 点前发出。</div>
 <div id="defaultFields"></div><div class="foot"><span class="caption">到货日期在下单时填写，这里不用填日期。</span><button class="btn primary" type="submit">保存默认时间</button></div><p class="error" id="defaultError" role="alert"></p></form></section>
 <section class="card"><header class="head"><div><h2>2. 客户设置 <span id="clientCount" class="badge gray">0 个客户</span></h2><p>添加客户后默认使用上面的时间；只有特殊客户需要单独设置。</p></div><button class="btn primary" onclick="editClient()">＋ 添加客户</button></header><div id="clientList"></div></section>
@@ -49,14 +49,14 @@
 <script>
 const KEY='shipping-customer-arrival-v1', $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
 const BASE_RULE={finance:72,accept:60,ship:48,pickup:36,warning:2,escalation:2,receipt:24};
-const stages=[['finance','财务审核'],['accept','接单'],['ship','发货'],['pickup','揽收']];
+const stages=[['finance','财务审核'],['accept','工厂接单'],['ship','发货'],['pickup','揽收']];
 let state={version:1,defaultRule:clone(BASE_RULE),clients:[]},snapshot=null,storageReady=true,editingId=null,deletingId=null;
 function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function normalizeCode(s){return s.trim().toUpperCase()}
 function validateRule(r){
  for(const key of ['finance','accept','ship','pickup','warning','escalation','receipt'])if(typeof r?.[key]!=='number'||!Number.isFinite(r[key])||r[key]<0||r[key]>8760)throw Error('时长须为 0–8760 小时以内的数字');
  if(r.receipt<=0||r.escalation<=0)throw Error('回执上传时效和超时升级时长须大于 0');
- if(!(r.finance>=r.accept&&r.accept>=r.ship&&r.ship>=r.pickup))throw Error('时间顺序不对：财务审核应最早完成，然后是接单、发货、揽收。前一项的提前小时数不能小于后一项。');
+ if(!(r.finance>=r.ship&&r.accept>=r.ship&&r.ship>=r.pickup))throw Error('财务审核和工厂接单可各自设置、不分先后；两项计划完成时间应不晚于发货，发货应不晚于出库揽收。');
  return r;
 }
 function validateState(s){

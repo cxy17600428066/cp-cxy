@@ -37,11 +37,46 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 @media(max-width:900px) and (min-width:761px){.sla-sidebar{width:200px}.page,body>main.page{margin-left:200px}}
 @media(max-width:760px){.sla-sidebar{position:relative!important;inset:auto;width:100%;display:flex;gap:8px;padding:8px 10px;border-right:0;border-bottom:1px solid #e4e7ed;overflow-x:auto;overflow-y:hidden;z-index:1}.sla-sidebar .sla-nav-group{display:flex;gap:5px;margin:0;padding:0 8px 0 0;border-right:1px solid #ebeef5;flex-shrink:0}.sla-sidebar .sla-nav-group:last-child{border:0}.sla-sidebar .sla-nav-heading{display:none}.sla-sidebar .sla-nav-item{min-height:40px;margin:0;padding:9px 10px;gap:7px}.sla-sidebar .sla-nav-item.active:before{display:none}.sla-sidebar+.page,.page,body>main.page{margin-left:0}}
 </style>
+
+<style>
+.ka-drawer{position:fixed;inset:0 0 0 auto;margin:0;width:min(1520px,80vw);max-width:100vw;height:100dvh;max-height:100dvh;border:0;padding:0;color:#606266;background:white;box-shadow:-8px 0 32px #0002}
+.ka-drawer::backdrop{background:#0007}.ka-drawer form{height:100%;display:flex;flex-direction:column}.ka-head,.ka-foot{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;background:white}.ka-head h2{margin:0;font-size:20px;color:#303133;font-weight:500}.ka-body{flex:1;overflow:auto;padding:0 24px 24px}.ka-title{font-size:16px;color:#303133;border-bottom:1px solid #ebeef5;padding:12px 0;position:relative}.ka-title:before{content:"";position:absolute;width:4px;height:18px;left:-10px;background:#409eff;border-radius:2px}
+.ka-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 36px;margin:20px 0 30px}.ka-field{display:flex;align-items:center;gap:12px;min-width:0}.ka-field>span{width:120px;flex-shrink:0;text-align:right}.ka-field em{color:#f56c6c;font-style:normal}.ka-field input:not([type=radio]),.ka-field select,.ka-field textarea{width:100%;min-width:0;border:1px solid #dcdfe6;border-radius:3px;padding:8px 10px;background:white;color:#606266;font:inherit}.ka-field textarea{resize:vertical}.ka-wide{grid-column:1/-1}.ka-radio{display:flex;gap:20px;align-items:center}.ka-radio label{white-space:nowrap}.ka-radio input{accent-color:#409eff}.ka-arrival input{border-color:#409eff!important}.ka-hint{margin:0 0 20px;color:#909399;font-size:13px}.ka-foot{justify-content:flex-end;gap:12px;border-top:1px solid #ebeef5}.ka-foot small{margin-right:auto;color:#909399}.ka-primary{background:#409eff!important;border-color:#409eff!important;color:white!important}.ka-table{overflow:auto;border:1px solid #ebeef5;border-radius:3px;padding:16px 20px}.ka-table table{width:100%;min-width:1000px;border-collapse:collapse}.ka-table th,.ka-table td{padding:14px 8px;border-bottom:1px solid #ebeef5;text-align:center;font-weight:400}.ka-table th{color:#909399}.ka-table input{width:76px;padding:6px;border:1px solid #dcdfe6;border-radius:3px}.ka-table select{max-width:310px;padding:6px;border:1px solid #dcdfe6}.ka-table button{color:#409eff;background:none;border:0;cursor:pointer}.ka-add{text-align:center;padding-top:16px}.ka-message{color:#409eff;white-space:pre-line}.ka-close{border:0;background:white;font-size:24px;cursor:pointer}
+@media(max-width:900px){.ka-drawer{width:100vw}.ka-grid{grid-template-columns:1fr}.ka-wide{grid-column:auto}.ka-foot small{max-width:55%}}
+</style>
 </head>
 <body>
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="oms-system">OMS订单系统</span></div><small>经营管理视图</small></header>
 <nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a id="navFlow" class="sla-nav-item active" data-group="flow" href="发货时效预警策略.html#flow" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="商品发货时效配置.html#nodes"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item" data-group="customers" href="客户到货时效配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
 <main class="page"><header class="page-head"><div><h1>订单履约总览</h1><p>点击总览指标或履约节点，下方直接显示对应订单。</p></div><span class="badge gray">表格订单资料 · 节点时效演示</span></header><div class="layout"><section class="panel"><div id="content"></div><footer class="actions"><span id="saveState">上次保存：尚未保存</span><div><button class="btn" onclick="resetConfig()">恢复默认</button> <button class="btn primary" onclick="saveConfig()">保存并生效</button></div></footer></section></div></main><div class="toast" id="toast"></div>
+
+<dialog id="kaDrawer" class="ka-drawer" aria-labelledby="kaTitle">
+<form id="kaForm" onsubmit="saveKaOrder(event)">
+<header class="ka-head"><h2 id="kaTitle">新增</h2><button type="button" class="ka-close" aria-label="关闭下单" onclick="closeKaOrder()">×</button></header>
+<div class="ka-body"><h3 class="ka-title">客户信息填写</h3>
+<div class="ka-grid">
+<label class="ka-field"><span><em>* </em>客户名称</span><input name="customerName" list="kaCustomers" placeholder="请选择或输入客户名称" required onchange="kaCustomerChanged()"><datalist id="kaCustomers"></datalist></label>
+<label class="ka-field"><span>系统名称</span><input name="systemName" placeholder="请输入所属连锁商超系统名称"></label>
+<div class="ka-field"><span>是否仓库收货</span><div class="ka-radio"><label><input type="radio" name="warehouse" value="是" > 是</label><label><input type="radio" name="warehouse" value="否" checked> 否</label></div></div>
+<label class="ka-field"><span><em>* </em>收货人员</span><input name="receiver" type="text" required placeholder="请输入收货人员"></label>
+<label class="ka-field"><span><em>* </em>手机号码</span><input name="phone" type="tel" required placeholder="请输入手机号码"></label>
+<label class="ka-field"><span><em>* </em>收货区域</span><input name="region" type="text" required placeholder="请输入收货区域"></label>
+<label class="ka-field ka-wide"><span><em>* </em>收货地址</span><input name="address" type="text" required placeholder="请输入收货地址"></label>
+<label class="ka-field ka-arrival"><span><em>* </em>客户要求到货时间</span><input name="customerRequiredArrivalAt" type="datetime-local" required onchange="kaCustomerChanged()"></label>
+<div class="ka-field"><span>客户类型</span><span id="kaCustomerType" style="width:auto;text-align:left">未匹配客户配置</span></div>
+<div class="ka-field"><span>客户期望卸货时间</span><input aria-label="卸货开始时间" name="unloadStart" type="datetime-local"><span style="width:auto">—</span><input aria-label="卸货结束时间" name="unloadEnd" type="datetime-local"></div>
+<label class="ka-field"><span>特殊备注</span><textarea name="specialRemark" maxlength="500" placeholder="请输入特殊备注（最多500字）"></textarea></label>
+<div class="ka-field"><span>经销转私域</span><div class="ka-radio"><label><input type="radio" name="privateDomain" value="是" > 是</label><label><input type="radio" name="privateDomain" value="否" checked> 否</label></div></div>
+<div class="ka-field"><span>是否换货下单</span><div class="ka-radio"><label><input type="radio" name="exchange" value="是" > 是</label><label><input type="radio" name="exchange" value="否" checked> 否</label></div></div>
+<div class="ka-field"><span>是否团购</span><div class="ka-radio"><label><input type="radio" name="groupBuy" value="是" > 是</label><label><input type="radio" name="groupBuy" value="否" checked> 否</label></div></div>
+<div class="ka-field"><span>发货主体</span><div class="ka-radio"><label><input type="radio" name="shipper" value="卓希工厂" checked> 卓希工厂</label><label><input type="radio" name="shipper" value="运营中心" > 运营中心</label></div></div>
+<div class="ka-field ka-wide"><span>特殊情况说明</span><div id="kaRuleHint">选择客户后展示适用的时效规则。</div></div>
+<label class="ka-field ka-wide"><span>备注</span><textarea name="remark" maxlength="1024" placeholder="请输入备注（最多1024字）"></textarea></label>
+</div>
+<h3 class="ka-title">商品清单</h3><div class="ka-table"><table><thead><tr><th>序号</th><th>商品名称</th><th>单位</th><th>口味</th><th>红线价</th><th>售价(元)</th><th>数量</th><th>搭赠数量</th><th>搭赠比例</th><th>总数量</th><th>操作</th></tr></thead><tbody id="kaProducts"></tbody></table><div class="ka-add"><button type="button" class="btn" onclick="addKaProduct()">＋ 添加商品</button></div></div>
+<p id="kaTotal" style="text-align:right">商品金额合计：¥ 0.00</p><p class="ka-message" id="kaMessage" role="status"></p></div>
+<footer class="ka-foot"><small>当前为本地演示，保存草稿，不提交真实订单。</small><button class="btn ka-primary" type="submit">保存</button><button class="btn" type="button" onclick="closeKaOrder()">取消</button></footer>
+</form></dialog>
 <dialog id="orderDialog" class="order-dialog" aria-label="订单详情"><div id="orderDetail"></div></dialog>
 <script>
 const defaults={product:{stock:24,noStock:72},rules:[{id:'finance',name:'财务审核',from:'订单提交',to:'财务审核通过',value:2,warn:80,on:true,note:'从订单提交开始计时，财务审核通过后停止。'},{id:'accept',name:'接单',from:'财务审核通过',to:'平台完成接单',value:1,warn:80,on:true,note:'仅统计财务审核通过且未接单的订单。'},{id:'ship',name:'发货',from:'平台接单',to:'旺店通审核订单',value:24,warn:75,on:true,note:'以旺店通“订单审核完成”时间作为发货节点完成时间。'},{id:'pickup',name:'揽收',from:'旺店通审核',to:'ERP同步WMS',value:4,warn:75,on:true,note:'ERP成功同步 WMS 后停止计时，失败重试不重置起算时间。'},{id:'sign',name:'签收',from:'ERP同步WMS',to:'签收完成',value:72,warn:80,on:true,note:'ERP成功同步WMS后开始计时，签收完成后停止；有物流信息按签收状态判断，无物流信息按配置时效预警。'},{id:'receipt',name:'回执上传',from:'签收完成',to:'回执上传成功',value:24,warn:80,on:true,note:'订单签收完成后开始计时，回执上传成功后停止；超过配置时效仍未上传则触发预警。'}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
@@ -126,7 +161,7 @@ function detailRows(rows){
 function nodeDetail(){
  const rows=records(selectedNode||'all'),s=tally(rows),r=config.rules.find(x=>x.id===selectedNode);
  const list=rows.filter(x=>statusFilter==='all'||x.level===statusFilter).sort((a,b)=>({overdue:0,warning:1,normal:2,paused:3}[a.level]-{overdue:0,warning:1,normal:2,paused:3}[b.level])||(b.o[4]-b.r.value)-(a.o[4]-a.r.value));
- return '<div class="overview-head"><div><h2>'+(r?safe(r.name)+' · 订单列表':'全部节点 · 订单列表')+'</h2><p>按当前履约节点展示订单，超时订单优先。</p></div><div class="inline-list-tools"><span class="badge gray">共 '+s.all+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">全部节点</button>':'')+'</div></div>'+(r?'<div class="detail-summary">计时区间 <b>'+safe(r.from)+' → '+safe(r.to)+'</b>　时效阈值 <b>'+safe(r.value)+' 小时</b>　提前提醒 <b>已用时达 '+safe(r.warn)+'%</b></div>':'')+'<div class="filter-tabs" aria-label="筛选订单时效状态">'+['all','overdue','warning','normal',...(s.paused?['paused']:[])].map(k=>'<button class="'+(statusFilter===k?'active':'')+'" aria-pressed="'+(statusFilter===k)+'" data-order-status="'+k+'" onclick="selectOrderStatus(\''+k+'\')">'+statusNames[k]+' '+s[k]+'</button>').join('')+'</div><div class="oms-summary"><span>当前筛选订单：<b>'+list.length+' 单</b></span><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>超时订单金额：<b>¥ '+amount(list.filter(x=>x.level==='overdue'))+'</b></span></div><p class="oms-source-note">订单资料取自订单列表.xls，六个节点及计时沿用原演示分布；表内原始状态仅作展示。</p><div class="oms-order-scroll">'+omsColumnHead()+(list.length?list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合当前状态的订单</div>')+'</div>';
+ return '<div class="overview-head"><div><h2>'+(r?safe(r.name)+' · 订单列表':'全部节点 · 订单列表')+'</h2><p>按当前履约节点展示订单，超时订单优先。</p></div><div class="inline-list-tools"><button class="btn" onclick="openKaOrder()">＋ 经销/KA下单</button><span class="badge gray">共 '+s.all+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">全部节点</button>':'')+'</div></div>'+(r?'<div class="detail-summary">计时区间 <b>'+safe(r.from)+' → '+safe(r.to)+'</b>　时效阈值 <b>'+safe(r.value)+' 小时</b>　提前提醒 <b>已用时达 '+safe(r.warn)+'%</b></div>':'')+'<div class="filter-tabs" aria-label="筛选订单时效状态">'+['all','overdue','warning','normal',...(s.paused?['paused']:[])].map(k=>'<button class="'+(statusFilter===k?'active':'')+'" aria-pressed="'+(statusFilter===k)+'" data-order-status="'+k+'" onclick="selectOrderStatus(\''+k+'\')">'+statusNames[k]+' '+s[k]+'</button>').join('')+'</div><div class="oms-summary"><span>当前筛选订单：<b>'+list.length+' 单</b></span><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>超时订单金额：<b>¥ '+amount(list.filter(x=>x.level==='overdue'))+'</b></span></div><p class="oms-source-note">订单资料取自订单列表.xls，六个节点及计时沿用原演示分布；表内原始状态仅作展示。</p><div class="oms-order-scroll">'+omsColumnHead()+(list.length?list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合当前状态的订单</div>')+'</div>';
 }
 
 function render(){
@@ -182,6 +217,44 @@ function syncMenuRoute(){
 window.addEventListener('hashchange',syncMenuRoute);
 syncMenuRoute();
 
+
+
+let kaItems=[];
+function kaCatalog(){return [...new Map(Object.values(omsProfiles).flatMap(p=>p.products).map(p=>[p.sku||p.name,p])).values()]}
+function openKaOrder(){
+ const form=document.getElementById('kaForm');form.reset();kaItems=[];
+ try{const draft=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(draft){for(const [k,v] of Object.entries(draft.fields||{})){if(form.elements.namedItem(k))form.elements.namedItem(k).value=v}kaItems=draft.products||[]}}catch(e){}
+ let clients=[];try{clients=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}').clients||[]}catch(e){}
+ const names=[...new Set([...clients.map(c=>c.name),...Object.keys(nodeOrders).flatMap(k=>nodeOrders[k].map(o=>o[1]))])];
+ document.getElementById('kaCustomers').innerHTML=names.map(n=>'<option value="'+safe(n)+'"></option>').join('');
+ document.getElementById('kaMessage').textContent='';renderKaProducts();kaCustomerChanged();document.getElementById('kaDrawer').showModal();
+}
+function closeKaOrder(){document.getElementById('kaDrawer').close()}
+function kaCustomerChanged(){
+ const f=document.getElementById('kaForm');let data={};try{data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}')}catch(e){}
+ const c=(data.clients||[]).find(c=>c.name===f.elements.customerName.value);
+ document.getElementById('kaCustomerType').textContent=c?(c.type==='system'?'系统客户 · 连锁商超':'非系统客户'):'未匹配客户配置';
+ const arrival=f.elements.customerRequiredArrivalAt.value;
+ document.getElementById('kaRuleHint').textContent=c&&c.type==='system'?'以客户要求到货时间作为签收截止时间，使用'+(c.mode==='custom'?'客户自定义':'系统客户默认')+'配置倒排履约节点。'+(arrival?' 签收截止：'+arrival.replace('T',' '):''):(c?'沿用商品及履约节点时效配置；到货要求单独记录。':'请在客户到货配置中维护客户类型，未匹配时不自动认定为系统客户。');
+}
+function addKaProduct(){const p=kaCatalog()[0];if(p){kaItems.push({...p,qty:1,giftQty:0,price:Number(String(p.price).replace(/[^0-9.]/g,''))||0});renderKaProducts()}}
+function renderKaProducts(){
+ const cat=kaCatalog();
+ document.getElementById('kaProducts').innerHTML=kaItems.length?kaItems.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><select aria-label="商品名称" onchange="changeKaProduct('+i+',this.value)">'+cat.map((v,j)=>'<option value="'+j+'" '+((v.sku||v.name)===(p.sku||p.name)?'selected':'')+'>'+safe(v.name)+'</option>').join('')+'</select></td><td>'+safe(p.unit||'—')+'</td><td>—</td><td>—</td>'+['price','qty','giftQty'].map(k=>'<td><input aria-label="'+({price:'售价',qty:'数量',giftQty:'搭赠数量'}[k])+'" type="number" min="'+(k==='qty'?1:0)+'" step="'+(k==='price'?'0.01':'1')+'" required value="'+Number(p[k]||0)+'" onchange="updateKaItem('+i+',\''+k+'\',this.value)"></td>').join('')+'<td>'+((p.giftQty||0)/p.qty*100).toFixed(1)+'%</td><td>'+(Number(p.qty)+Number(p.giftQty||0))+'</td><td><button type="button" onclick="kaItems.splice('+i+',1);renderKaProducts()">删除</button></td></tr>').join(''):'<tr><td colspan="11" style="color:#909399;padding:30px">暂无数据</td></tr>';
+ document.getElementById('kaTotal').textContent='商品金额合计：¥ '+kaItems.reduce((s,p)=>s+Number(p.price)*Number(p.qty),0).toFixed(2);
+}
+function changeKaProduct(i,j){const p=kaCatalog()[Number(j)];kaItems[i]={...p,qty:1,giftQty:0,price:Number(String(p.price).replace(/[^0-9.]/g,''))||0};renderKaProducts()}
+function updateKaItem(i,k,v){kaItems[i][k]=Number(v);renderKaProducts()}
+function saveKaOrder(e){
+ e.preventDefault();const f=document.getElementById('kaForm'),m=document.getElementById('kaMessage');
+ if(!f.reportValidity())return;
+ const fields=Object.fromEntries(new FormData(f).entries());
+ if(new Date(fields.customerRequiredArrivalAt)<=new Date()){m.textContent='客户要求到货时间必须晚于当前时间。';return}
+ if(fields.unloadStart&&fields.unloadEnd&&fields.unloadStart>fields.unloadEnd){m.textContent='卸货结束时间不能早于开始时间。';return}
+ if(!kaItems.length){m.textContent='请至少添加一件商品。';return}
+ if(kaItems.some(p=>!Number.isInteger(p.qty)||p.qty<1||!Number.isInteger(p.giftQty)||p.giftQty<0||!Number.isFinite(p.price)||p.price<0)){m.textContent='请检查商品售价、数量和搭赠数量。';return}
+ try{localStorage.setItem('oms-ka-order-draft-v1',JSON.stringify({fields,products:kaItems,savedAt:new Date().toISOString()}));m.textContent='下单草稿已保存在本机。客户要求到货时间：'+fields.customerRequiredArrivalAt.replace('T',' ')+'。重新打开可继续编辑；尚未提交真实订单。'}catch(e){m.textContent='保存失败，请检查浏览器存储空间后重试。'}
+}
 
 </script>
 </body>

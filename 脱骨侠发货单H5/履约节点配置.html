@@ -74,7 +74,7 @@ el('nodesForm').addEventListener('submit',e=>{
   const next=nodes.map((r,i)=>({...r,value:+fields['hours'+i].value,warn:+fields['warn'+i].value,on:fields['on'+i].checked,action:fields['action'+i].value}));
   if(next.some(r=>!validHours(r.value)||!Number.isFinite(r.warn)||r.warn<1||r.warn>99))throw Error('请填写有效时效和 1–99% 的提醒比例');
   const latest=readJson(NODE_KEY)||copy(defaults);latest.rules=next;localStorage.setItem(NODE_KEY,JSON.stringify(latest));nodes=next;
-  el('storageStatus').textContent='节点配置已保存到当前浏览器 · 返回总览后按新阈值统计示例订单。';
+  el('storageStatus').textContent='节点配置已保存到当前浏览器 · 返回总览后按新阈值统计订单。';
  }catch(error){el('nodesError').textContent=error.message}
 });
 el('nodesForm').addEventListener('invalid',e=>{const fold=e.target.closest('details');if(fold)fold.open=true},true);

@@ -55,6 +55,8 @@ body.sla-polished{
 .sla-polished .input-unit span,.sla-polished .unit span{background:#f7f9fc;color:#748399;font-size:13px;padding:0 12px;white-space:nowrap}
 .sla-polished input[type=checkbox],.sla-polished input[type=radio]{accent-color:#2563eb}
 .sla-polished .note,.sla-polished .detail-summary,.sla-polished .readonly-note,.sla-polished .match-result{border:1px solid #e1eafb;background:#f5f8ff;border-radius:8px;padding:13px 16px;line-height:1.8;color:#5a6f8f;font-size:14px}
+.sla-polished .match-result strong{color:var(--blue)}
+.sla-polished .order-journey .current{color:#2563eb;background:#edf3ff}
 .sla-polished .badge,.sla-polished .oms-blue-tag,.sla-polished .oms-node-tag{border-radius:5px;font-weight:500;font-size:12px;padding:3px 8px;line-height:1.6}
 .sla-polished .badge.gray{color:#687990;background:#f1f4f8;border-color:#e4eaf2}
 .sla-polished .badge.green{color:#178358;background:#ecf8f1;border-color:#d6efe2}
@@ -141,6 +143,8 @@ body.sla-polished{
 .sla-polished .node-help{color:#8291a5}
 .sla-polished .check-label{color:#708299;font-size:13px;white-space:nowrap}
 .sla-polished .check-label input{width:16px;height:16px}
+.sla-polished .editor .check-label{white-space:normal;align-items:flex-start;line-height:1.8}
+.sla-polished .editor .check-label input{flex-shrink:0;margin-top:4px}
 .sla-polished .save-node-footer,.sla-polished footer.actions{border:1px solid #e4ebf4;background:#fff;border-radius:9px;padding:15px 20px;box-shadow:0 3px 10px #29497104}
 .sla-polished .fixed{background:#f8faff;border:1px solid #e8eef7;border-radius:8px;color:#5c718e;padding:14px 16px}
 .sla-polished .fixed b{color:#415b7d;font-weight:600}
@@ -193,6 +197,7 @@ body.sla-polished{
  .sla-polished .clarity-stages{gap:10px}
  .sla-polished .clarity-stages .stage{padding:13px}
  .sla-polished .ka-drawer{width:100vw;border-radius:0}
+ .sla-polished .editor{padding:18px}
  .sla-polished .ka-head,.sla-polished .ka-foot{padding:16px}
  .sla-polished .ka-body{padding:8px 18px 20px}
  .sla-polished .ka-field{flex-wrap:wrap;gap:6px}

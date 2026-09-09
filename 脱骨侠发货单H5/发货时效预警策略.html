@@ -21,10 +21,27 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 </style>
 <style>
 .inline-order-details{border-top:1px solid var(--line);margin-top:24px;padding-top:22px;min-width:0}.inline-list-tools{display:flex;align-items:center;gap:14px}.stage.selected,.metric.selected{border-color:#409eff;background:#ecf5ff;box-shadow:inset 0 0 0 1px #409eff}.stage.selected .stage-top{color:#409eff}.stage.selected .stage-foot b{font-weight:700}.metric{padding:14px 16px}.metric strong{font-size:28px;margin:8px 0}.stage{padding:14px}.stage-total{font-size:26px;margin:8px 0}.stage-foot{margin-top:10px;padding-top:10px}.stage-counts{gap:8px}.overview-head{margin-bottom:16px}.focus-note{margin-top:16px;padding:10px 14px}.inline-order-details>.overview-head h2{font-size:18px}.inline-order-details .detail-summary{margin:10px 0;padding:10px 14px}.inline-order-details .oms-summary{margin:12px 0}@media(min-width:1350px){.stage-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.stage-top{font-size:14px}.stage-counts{font-size:12px}}@media(max-width:680px){.inline-order-details{margin-top:18px;padding-top:18px}}
-</style></head>
+</style><style>
+/* One sidebar layout for all SLA pages. */
+.sla-sidebar{position:fixed!important;inset:60px auto 0 0;width:200px;padding:18px 12px 24px;background:#fff;border-right:1px solid #e4e7ed;overflow-y:auto;z-index:9;box-sizing:border-box;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif}
+.sla-sidebar .sla-nav-group{margin:0 0 20px}.sla-sidebar .sla-nav-group:last-child{margin-bottom:0}
+.sla-sidebar .sla-nav-heading{margin:0 0 7px;padding:0 12px;font-size:12px;line-height:22px;font-weight:400;color:#909399;letter-spacing:1px}
+.sla-sidebar .sla-nav-item{position:relative;display:flex;align-items:center;gap:10px;min-height:44px;padding:11px 12px;margin:3px 0;color:#606266;background:transparent;border:0;border-radius:5px;text-decoration:none;font-size:14px;font-weight:400;line-height:22px;white-space:nowrap;box-sizing:border-box;cursor:pointer}
+.sla-sidebar .sla-nav-item:hover{background:#f5f7fa;color:#303133}
+.sla-sidebar .sla-nav-item.active{background:#ecf5ff;color:#409eff;font-weight:600}
+.sla-sidebar .sla-nav-item.active:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:#409eff}
+.sla-sidebar .sla-nav-item:focus-visible{outline:2px solid #409eff;outline-offset:2px}
+.sla-sidebar .sla-nav-icon{display:block;width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sla-sidebar .sla-nav-item span{display:block;flex:1;min-width:0}
+.sla-sidebar+.page,body>main.page{margin-left:200px}
+@media(max-width:900px) and (min-width:761px){.sla-sidebar{width:200px}.page,body>main.page{margin-left:200px}}
+@media(max-width:760px){.sla-sidebar{position:relative!important;inset:auto;width:100%;display:flex;gap:8px;padding:8px 10px;border-right:0;border-bottom:1px solid #e4e7ed;overflow-x:auto;overflow-y:hidden;z-index:1}.sla-sidebar .sla-nav-group{display:flex;gap:5px;margin:0;padding:0 8px 0 0;border-right:1px solid #ebeef5;flex-shrink:0}.sla-sidebar .sla-nav-group:last-child{border:0}.sla-sidebar .sla-nav-heading{display:none}.sla-sidebar .sla-nav-item{min-height:40px;margin:0;padding:9px 10px;gap:7px}.sla-sidebar .sla-nav-item.active:before{display:none}.sla-sidebar+.page,.page,body>main.page{margin-left:0}}
+</style>
+</head>
 <body>
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="oms-system">OMS订单系统</span></div><small>经营管理视图</small></header>
-<main class="page"><header class="page-head"><div><h1>订单履约总览</h1><p>点击总览指标或履约节点，下方直接显示对应订单。</p></div><span class="badge gray">表格订单资料 · 节点时效演示</span></header><div class="layout"><nav class="nav"><button class="tab active" data-group="flow" onclick="selectGroup('flow',this)">订单履约总览 <small>6</small></button><a class="tab" style="text-decoration:none" href="商品发货时效配置.html">商品发货时效配置 ↗</a><a class="tab" style="text-decoration:none" href="商品发货时效配置.html#nodes">履约节点配置 ↗</a><button class="tab" data-group="driver" onclick="selectGroup('driver',this)">司机与车辆信息 <small>1</small></button><a class="tab" style="text-decoration:none" href="客户到货时效配置.html">客户到货时效配置 ↗</a></nav><section class="panel"><div id="content"></div><footer class="actions"><span id="saveState">上次保存：尚未保存</span><div><button class="btn" onclick="resetConfig()">恢复默认</button> <button class="btn primary" onclick="saveConfig()">保存并生效</button></div></footer></section></div></main><div class="toast" id="toast"></div>
+<nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a id="navFlow" class="sla-nav-item active" data-group="flow" href="发货时效预警策略.html#flow" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="商品发货时效配置.html#nodes"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item" data-group="customers" href="客户到货时效配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">基础资料</h2><a id="navDriver" class="sla-nav-item" data-group="driver" href="发货时效预警策略.html#driver"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h11v11H3zM14 10h4l3 4v3h-7"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg><span>司机与车辆</span></a></div></nav>
+<main class="page"><header class="page-head"><div><h1>订单履约总览</h1><p>点击总览指标或履约节点，下方直接显示对应订单。</p></div><span class="badge gray">表格订单资料 · 节点时效演示</span></header><div class="layout"><section class="panel"><div id="content"></div><footer class="actions"><span id="saveState">上次保存：尚未保存</span><div><button class="btn" onclick="resetConfig()">恢复默认</button> <button class="btn primary" onclick="saveConfig()">保存并生效</button></div></footer></section></div></main><div class="toast" id="toast"></div>
 <dialog id="orderDialog" class="order-dialog" aria-label="订单详情"><div id="orderDetail"></div></dialog>
 <script>
 const defaults={product:{stock:24,noStock:72},rules:[{id:'finance',name:'财务审核',from:'订单提交',to:'财务审核通过',value:2,warn:80,on:true,note:'从订单提交开始计时，财务审核通过后停止。'},{id:'accept',name:'接单',from:'财务审核通过',to:'平台完成接单',value:1,warn:80,on:true,note:'仅统计财务审核通过且未接单的订单。'},{id:'ship',name:'发货',from:'平台接单',to:'旺店通审核订单',value:24,warn:75,on:true,note:'以旺店通“订单审核完成”时间作为发货节点完成时间。'},{id:'pickup',name:'揽收',from:'旺店通审核',to:'ERP同步WMS',value:4,warn:75,on:true,note:'ERP成功同步 WMS 后停止计时，失败重试不重置起算时间。'},{id:'sign',name:'签收',from:'ERP同步WMS',to:'签收完成',value:72,warn:80,on:true,note:'ERP成功同步WMS后开始计时，签收完成后停止；有物流信息按签收状态判断，无物流信息按配置时效预警。'},{id:'receipt',name:'回执上传',from:'签收完成',to:'回执上传成功',value:24,warn:80,on:true,note:'订单签收完成后开始计时，回执上传成功后停止；超过配置时效仍未上传则触发预警。'}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
@@ -71,7 +88,7 @@ function timing(x){
  return diff>=0?'超时 '+duration(diff):'剩余 '+duration(-diff);
 }
 function statusBadge(level){return '<span class="badge '+({normal:'green',warning:'amber',overdue:'red',paused:'gray'}[level])+'">'+statusNames[level]+'</span>'}
-function selectGroup(next,el){if(next==='product'){location.href='商品发货时效配置.html';return;}group=next;selectedNode=null;statusFilter='all';document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.group===next));render()}
+function selectGroup(next,el){if(next==='product'){location.href='商品发货时效配置.html';return;}group=next;selectedNode=null;statusFilter='all';document.querySelectorAll('.sla-nav-item').forEach(x=>{const active=x.dataset.group===next;x.classList.toggle('active',active);if(active)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current');});render()}
 function openNode(id,filter='all'){
  group='flow';selectedNode=id;statusFilter=filter;
  if(document.getElementById('inlineOrderDetails')){refreshOrderDetails();}else{render();}
@@ -158,7 +175,13 @@ function omsOrderCard(x,inDialog=false){
  return '<article class="oms-order">'+header+'<div class="oms-order-body"><div class="oms-products">'+products+'</div><div class="oms-money">'+(p?'¥ '+p.due.toFixed(2)+'元':unknown)+'</div><div class="oms-receiver">'+receiver+'</div><div class="oms-customer">客户：'+safe(x.o[1])+'<br><span style="margin-top:8px">销售人员：'+(p?safe(p.salesperson):unknown)+'</span></div><div>'+statuses+'<div class="oms-status-row">时效状态：'+statusBadge(x.level)+'</div></div><div class="oms-actions">'+(inDialog?'<span class="oms-node-tag">'+safe(x.r.name)+' · 当前</span>':'<button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">▤ 订单详情</button>')+'<span class="oms-unknown">'+(p?'表格订单资料':'演示订单')+'</span></div></div><div class="oms-order-foot">工厂备注：'+(p?(safe(p.factoryRemark)||'未填写'):'未提供')+'</div>'+(p?'<div class="oms-source-note" style="padding:10px 18px;margin:0">订单资料：订单列表.xls；'+safe(x.r.name)+'节点及已用时 '+duration(x.o[4])+' 沿用演示设置。</div>':'')+'</article>';
 }
 
-render();
+function syncMenuRoute(){
+ const target=location.hash==='#driver'?'driver':'flow';
+ selectGroup(target);
+}
+window.addEventListener('hashchange',syncMenuRoute);
+syncMenuRoute();
+
 
 </script>
 </body>

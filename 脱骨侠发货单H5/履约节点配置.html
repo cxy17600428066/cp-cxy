@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>商品发货时效配置</title>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>履约节点配置</title>
 <style>
 :root{--red:#d92d20;--red-dark:#b42318;--ink:#25211f;--muted:#746d69;--line:#e9e4e1;--bg:#f5f3f1;--green:#12805c;--amber:#b75b08;--blue:#2869b2}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px}button,input,select{font:inherit}.topbar{height:68px;background:#211d1b;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100vw - 1240px)/2));box-shadow:0 2px 12px rgba(30,20,16,.12)}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px}.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--red);display:grid;place-items:center}.topbar small{color:#aaa19d}.page{max-width:1240px;margin:0 auto;padding:26px 24px 60px}.page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.page-head h1{font-size:24px;margin:0 0 7px}.page-head p{margin:0;color:var(--muted)}.badge{display:inline-flex;align-items:center;border-radius:99px;padding:6px 10px;font-size:12px;font-weight:700}.badge.green{background:#eaf7f1;color:var(--green)}.badge.gray{background:#eeeceb;color:#6f6966}.badge.amber{background:#fff1dc;color:var(--amber)}.badge.red{background:#fde9e6;color:var(--red)}.legend{display:flex;gap:8px;margin-bottom:16px}.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px}.nav,.panel{background:#fff;border:1px solid #eeeae8;border-radius:14px;box-shadow:0 4px 16px rgba(50,35,28,.035)}.nav{padding:10px;height:max-content;position:sticky;top:18px}.tab{width:100%;border:0;background:transparent;border-radius:9px;padding:13px 12px;text-align:left;color:#6f6763;cursor:pointer;display:flex;justify-content:space-between;align-items:center}.tab.active{background:#fff0ed;color:var(--red);font-weight:800}.tab small{background:#f2efed;border-radius:99px;padding:2px 7px}.tab.active small{background:#ffdcd6}.panel{padding:20px}.panel-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding-bottom:17px;border-bottom:1px solid var(--line)}.panel-head h2{margin:0 0 6px;font-size:18px}.panel-head p{margin:0;color:var(--muted);font-size:13px}.card{border:1px solid var(--line);border-radius:12px;margin-top:14px;overflow:hidden}.card-head{padding:13px 15px;background:#fbfaf9;display:flex;justify-content:space-between;align-items:center}.card-body{padding:15px;display:grid;grid-template-columns:1.5fr repeat(3,minmax(105px,.7fr));gap:14px;align-items:end}.card-body.two{grid-template-columns:1fr 1fr}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input,.field select{width:100%;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;outline:none}.field input:focus,.field select:focus{border-color:#d78378;box-shadow:0 0 0 3px #fff0ed}.input-unit{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.input-unit input{border:0;border-radius:0;min-width:0}.input-unit span{padding:0 10px;background:#faf8f7;color:#817874;display:flex;align-items:center}.note{grid-column:1/-1;background:#f5f8fb;border-radius:8px;padding:11px 12px;font-size:12px;color:#5f6c78}.toggle{width:44px;height:25px;border:0;border-radius:99px;background:#c9c2be;padding:3px;cursor:pointer}.toggle:after{content:'';display:block;width:19px;height:19px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px #777}.toggle.on{background:var(--green)}.toggle.on:after{transform:translateX(19px)}.driver-options{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.option{border:1px solid var(--line);border-radius:10px;padding:14px}.option label{font-weight:700}.option p{font-size:12px;color:var(--muted);margin:6px 0 0}.option input{margin-right:7px}.actions{position:sticky;bottom:0;margin:20px -20px -20px;padding:14px 20px;background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.actions span{font-size:12px;color:var(--muted)}.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 16px;cursor:pointer}.btn.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}.btn.primary:hover{background:var(--red-dark)}.dirty{color:var(--amber)!important;font-weight:700}.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#211d1b;color:#fff;border-radius:9px;padding:11px 18px;opacity:0;pointer-events:none;transition:.2s;z-index:5}@media(max-width:820px){.topbar{padding:0 16px}.page{padding:20px 14px 50px}.layout{grid-template-columns:1fr}.nav{position:static;display:flex;overflow:auto}.tab{min-width:150px}.card-body,.card-body.two{grid-template-columns:1fr 1fr}.driver-options{grid-template-columns:1fr}.page-head{gap:12px}.page-head h1{font-size:21px}}@media(max-width:560px){.card-body,.card-body.two{grid-template-columns:1fr}.legend{overflow:auto}.page-head{display:block}.page-head>.badge{margin-top:12px}.actions{align-items:flex-start;gap:10px}.actions>div{display:flex;gap:6px}.btn{padding:9px 11px}}
 
@@ -34,30 +34,9 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 <header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="oms-system">OMS订单系统</span></div><small>时效方案管理</small></header>
 <nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a class="sla-nav-item" data-group="orders" href="发货时效预警策略.html#orders"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>订单列表</span></a><a id="navFlow" class="sla-nav-item" data-group="flow" href="发货时效预警策略.html#flow"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item active" data-group="products" href="商品发货时效配置.html#products" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="履约节点配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item" data-group="customers" href="客户到货时效配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>客户到货配置</span></a></div></nav>
 <main class="page">
-<header class="page-head"><div><h1 id="pageTitle">商品发货时效配置</h1><p>商品基础时效在标准库维护，这里只设置特殊商品的自定义方案。</p></div><a class="btn" href="发货时效预警策略.html">← 返回订单履约总览</a></header>
-
-<section id="productsView">
-<section class="box"><header class="box-head"><div><h2>商品发货时效明细</h2><p>商品资料来自现有订单与自定义方案；标准库完整目录及基础时效尚待同步。</p></div><span id="productCount" class="badge gray"></span></header><div class="box-body"><form id="productFilters" style="display:flex;flex-wrap:wrap;gap:14px;align-items:end">
-<div class="field"><label for="productQuery">商品名称 / 编码</label><input id="productQuery" placeholder="输入关键词"></div><div class="field"><label for="productSource">时效来源</label><select id="productSource"><option value="all">全部</option><option value="custom">自定义方案</option><option value="standard">标准库（待同步）</option></select></div>
-<div class="field"><label>有货时效范围（小时）</label><div style="display:flex;gap:6px"><input id="stockMin" aria-label="有货最少小时" type="number" min="0" step="0.1" placeholder="最少" style="width:95px"><input id="stockMax" aria-label="有货最多小时" type="number" min="0" step="0.1" placeholder="最多" style="width:95px"></div></div><div class="field"><label>无货时效范围（小时）</label><div style="display:flex;gap:6px"><input id="noStockMin" aria-label="无货最少小时" type="number" min="0" step="0.1" placeholder="最少" style="width:95px"><input id="noStockMax" aria-label="无货最多小时" type="number" min="0" step="0.1" placeholder="最多" style="width:95px"></div></div>
-<button class="btn primary">筛选</button><button class="btn" type="button" onclick="el('productFilters').reset();renderProductTable()">重置</button></form><p id="productFilterError" class="error" role="alert"></p></div><div id="productTable" class="table-wrap"></div></section>
-<div class="note rule-order"><b>方案匹配顺序</b><span>已启用的商品自定义方案</span><span>→</span><span>未匹配时使用标准库商品时效</span><span class="sub">同一商品编码只能关联一个已启用方案。</span></div>
-<section class="box"><header class="box-head"><div><h2>自定义方案 <span class="badge gray" id="planCount">0 个</span></h2><p>一个方案可关联多个商品，各自设置有货、无货发货时效。</p></div><button class="btn primary" onclick="openEditor()">＋ 新增方案</button></header><div id="planList"></div></section>
-<section class="box"><header class="box-head"><div><h2>查询商品适用方案</h2><p>输入商品编码，确认该商品实际使用的发货时效。</p></div></header><form class="box-body" id="lookupForm"><div class="checker"><div class="field"><label for="lookupSku">商品编码 / SKU</label><input id="lookupSku" required maxlength="80" placeholder="例如：TGX-001"></div><div class="field"><label for="lookupStock">库存状态</label><select id="lookupStock"><option value="stock">有货</option><option value="noStock">无货</option></select></div><button class="btn" type="submit">查询适用方案</button></div><div class="match-result" id="lookupResult" hidden aria-live="polite"></div></form></section>
-<p class="footnote">按商品编码精确匹配，忽略英文字母大小写；方案停用或删除后，其商品使用标准库商品管理中的时效。当前未接入标准库，无法读取具体小时数，商品编码由管理员录入。</p>
-</section>
-<p class="storage-status" id="storageStatus" role="status">配置仅保存在当前浏览器，尚未接入业务系统。</p>
-</main>
-<dialog class="editor" id="planEditor" aria-labelledby="editorTitle"><form id="planForm"><header class="editor-head"><h2 id="editorTitle">新增自定义方案</h2><button class="btn" type="button" onclick="closeEditor()">关闭</button></header><div class="form-grid">
-<div class="field full"><label for="planName">方案名称</label><input id="planName" required maxlength="50" placeholder="例如：预售商品发货方案"></div>
-<div class="field full"><label for="planSkus">适用商品编码 / SKU</label><textarea id="planSkus" required placeholder="每行一个商品编码，也可以用逗号分隔&#10;TGX-001&#10;TGX-002"></textarea><div class="sub">请填写完整商品编码，不使用商品简称。最多 200 个商品。</div></div>
-<div class="field"><label for="planStock">有货发货时效</label><div class="input-unit"><input id="planStock" type="number" min="0.1" max="8760" step="0.1" required><span>小时</span></div></div>
-<div class="field"><label for="planNoStock">无货发货时效</label><div class="input-unit"><input id="planNoStock" type="number" min="0.1" max="8760" step="0.1" required><span>小时</span></div></div>
-<label class="check-label full"><input type="checkbox" id="planEnabled" checked>启用方案（启用后优先于标准库商品时效）</label>
-</div><p class="error" id="planError" role="alert"></p><footer class="editor-actions"><button type="button" class="btn" onclick="closeEditor()">取消</button><button type="submit" class="btn primary">保存方案</button></footer></form></dialog>
-<dialog class="editor" id="deleteDialog" aria-labelledby="deleteTitle"><h2 id="deleteTitle">删除自定义方案</h2><p id="deleteMessage" style="line-height:1.8"></p><footer class="editor-actions"><button class="btn" onclick="document.getElementById('deleteDialog').close()">取消</button><button class="btn primary" onclick="confirmDelete()">确认删除</button></footer></dialog>
-<script>
-const defaults={product:{stock:24,noStock:72},rules:[{"id":"finance","name":"财务审核","from":"订单提交","to":"财务审核通过","value":2,"warn":80,"on":true,"note":"与工厂接单同时从订单提交开始，各自计时，互不等待。"},{"id":"accept","name":"工厂接单","from":"订单提交","to":"工厂接单完成","value":1,"warn":80,"on":true,"note":"与财务审核并行，不以财务审核通过作为接单计时起点。"},{"id":"ship","name":"发货","from":"同步旺店通成功","to":"ERP同步WMS成功并生成快递单号","value":24,"warn":75,"on":true,"note":"统计同步旺店通成功，到ERP同步WMS成功且生成快递单号的用时；此时视为发货。"},{"id":"pickup","name":"揽收","from":"WMS收到ERP订单","to":"WMS出库完成","value":4,"warn":75,"on":true,"note":"以WMS出库作为揽收完成，不使用快递首次扫描时间。"},{"id":"sign","name":"签收","from":"WMS出库完成（揽收）","to":"客户签收收货","value":72,"warn":80,"on":true,"note":"从WMS出库开始，到客户实际收到货并签收结束。缺少签收记录不视为已完成。"},{"id":"receipt","name":"回执上传","from":"客户签收收货","to":"回执单上传成功","value":24,"warn":80,"on":true,"note":"从实际签收开始，在配置小时内上传回执单；未签收不开始计时。"}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
+<header class="page-head"><div><h1 id="pageTitle">履约节点配置</h1><p>设置每个履约节点多久内完成。财务审核与工厂接单并行。</p></div><a class="btn" href="发货时效预警策略.html">← 返回订单履约总览</a></header>
+<section id="nodesView"><div class="note">财务审核与工厂接单并行，分别从订单提交计时。发货完成于ERP同步WMS并生成单号，WMS出库即揽收。<br><span class="sub">系统客户按要求到货时间计算，使用<a href="客户到货时效配置.html">客户到货配置</a>。</span></div><form id="nodesForm"><div class="nodes-grid" id="nodeFields"></div><div class="save-node-footer"><span class="preview-note">修改后记得保存。关闭提醒不影响订单正常流转。</span><button class="btn primary" type="submit">保存节点时间</button></div><p class="error" id="nodesError" role="alert"></p></form></section>
+<p class="storage-status" id="storageStatus" role="status">配置保存在当前浏览器。</p></main><script>const defaults={product:{stock:24,noStock:72},rules:[{"id":"finance","name":"财务审核","from":"订单提交","to":"财务审核通过","value":2,"warn":80,"on":true,"note":"与工厂接单同时从订单提交开始，各自计时，互不等待。"},{"id":"accept","name":"工厂接单","from":"订单提交","to":"工厂接单完成","value":1,"warn":80,"on":true,"note":"与财务审核并行，不以财务审核通过作为接单计时起点。"},{"id":"ship","name":"发货","from":"同步旺店通成功","to":"ERP同步WMS成功并生成快递单号","value":24,"warn":75,"on":true,"note":"统计同步旺店通成功，到ERP同步WMS成功且生成快递单号的用时；此时视为发货。"},{"id":"pickup","name":"揽收","from":"WMS收到ERP订单","to":"WMS出库完成","value":4,"warn":75,"on":true,"note":"以WMS出库作为揽收完成，不使用快递首次扫描时间。"},{"id":"sign","name":"签收","from":"WMS出库完成（揽收）","to":"客户签收收货","value":72,"warn":80,"on":true,"note":"从WMS出库开始，到客户实际收到货并签收结束。缺少签收记录不视为已完成。"},{"id":"receipt","name":"回执上传","from":"客户签收收货","to":"回执单上传成功","value":24,"warn":80,"on":true,"note":"从实际签收开始，在配置小时内上传回执单；未签收不开始计时。"}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
 
 function currentNodeRules(saved){
  const previous=Array.isArray(saved)?saved:[];
@@ -72,105 +51,31 @@ function currentNodeRules(saved){
  });
 }
 
-const PRODUCT_KEY='shipping-product-schemes-v1', NODE_KEY='shipping-sla-config';
-const copy=x=>JSON.parse(JSON.stringify(x));
-const el=id=>document.getElementById(id);
+
+const NODE_KEY='shipping-sla-config',copy=x=>JSON.parse(JSON.stringify(x)),el=id=>document.getElementById(id);
 function esc(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function readJson(key){const text=localStorage.getItem(key);return text?JSON.parse(text):null}
+function readJson(k){const v=localStorage.getItem(k);return v?JSON.parse(v):null}
 function validHours(v){return Number.isFinite(+v)&&+v>=0.1&&+v<=8760}
-function normaliseSku(v){return v.trim().toUpperCase()}
-function parseSkus(v){return [...new Set(v.split(/[\n,，;；]+/).map(normaliseSku).filter(Boolean))]}
-function validateState(state){
- if(!state||!Array.isArray(state.plans))throw Error('配置格式不正确');
- const occupied=new Set(),ids=new Set();
- for(const p of state.plans){
-  if(!p.id||ids.has(p.id)||typeof p.name!=='string'||!p.name.trim()||!Array.isArray(p.skus)||!p.skus.length||p.skus.length>200||!validHours(p.stock)||!validHours(p.noStock)||typeof p.enabled!=='boolean')throw Error('自定义方案格式不正确');
-  ids.add(p.id);
-  for(const raw of p.skus){if(typeof raw!=='string'||!raw.trim()||raw.length>80)throw Error('商品编码格式不正确');const sku=normaliseSku(raw);if(p.enabled&&occupied.has(sku))throw Error('商品 '+sku+' 已关联其他启用方案');if(p.enabled)occupied.add(sku);}
- }
- return state;
+let nodes,storageReady=true;
+try{nodes=currentNodeRules(readJson(NODE_KEY)?.rules)}catch(e){nodes=copy(defaults.rules);storageReady=false;el('storageStatus').textContent='原配置读取失败，禁止覆盖，请刷新重试。'}
+function nodeReminder(i){
+ const hours=Number(el('hours'+i).value),warn=Number(el('warn'+i).value);
+ el('reminderText'+i).textContent=Number.isFinite(hours)&&hours>0&&warn>0&&warn<100?'开始后 '+Number((hours*warn/100).toFixed(2))+' 小时提醒，还剩 '+Number((hours*(100-warn)/100).toFixed(2))+' 小时到期。':'请填写有效时间和 1–99% 的提醒比例。';
 }
-let state,storageSnapshot=null,storageReady=true,editingId=null,deletingId=null,nodes;
-try{
- storageSnapshot=localStorage.getItem(PRODUCT_KEY);
- const existing=storageSnapshot?JSON.parse(storageSnapshot):null;
- const old=readJson(NODE_KEY);
- state=validateState(existing||{version:2,plans:[]});
- nodes=currentNodeRules(old?.rules);
-}catch(e){
- storageReady=false;state={version:2,plans:[]};nodes=copy(defaults.rules);
- el('storageStatus').textContent='无法读取原配置，请检查浏览器存储后刷新。为保护原数据，当前禁止保存。';
+function renderNodes(){
+ el('nodeFields').innerHTML=nodes.map((r,i)=>'<section class="box simple-node"><header class="box-head"><h2><span class="node-number">'+(i<2?'并行':i)+'</span>'+esc(r.name)+'</h2><label class="check-label"><input type="checkbox" name="on'+i+'" '+(r.on?'checked':'')+'>启用提醒</label></header><div class="simple-node-body"><p class="node-start">从「'+esc(r.from)+'」开始计时</p><div class="field"><label for="hours'+i+'">多久内完成？</label><div class="input-unit"><input id="hours'+i+'" name="hours'+i+'" type="number" min="0.1" max="8760" step="0.1" required value="'+esc(r.value)+'" oninput="nodeReminder('+i+')"><span>小时内</span></div></div><p class="node-end">完成「'+esc(r.to)+'」后停止计时</p><details class="node-more"><summary>提醒与超时处理</summary><div class="node-advanced"><div class="field"><label for="warn'+i+'">用时达到多少时提醒？</label><div class="input-unit"><input id="warn'+i+'" name="warn'+i+'" type="number" min="1" max="99" required value="'+esc(r.warn)+'" oninput="nodeReminder('+i+')"><span>%</span></div></div><div class="field"><label for="action'+i+'">超时后怎么处理？</label><select id="action'+i+'" name="action'+i+'">'+['创建异常工单','仅消息提醒','消息提醒并升级'].map(a=>'<option '+(a===(r.action||'创建异常工单')?'selected':'')+'>'+a+'</option>').join('')+'</select></div></div><p class="node-help" id="reminderText'+i+'"></p><p class="node-help">'+esc(r.note)+'</p></details></div></section>').join('');
+ nodes.forEach((r,i)=>nodeReminder(i));
 }
-function commit(next){
- if(!storageReady)throw Error('原配置读取失败，请刷新后重试');
- validateState(next);
- if(localStorage.getItem(PRODUCT_KEY)!==storageSnapshot)throw Error('其他页面已更新商品方案，请刷新本页后再修改');
- const serialised=JSON.stringify(next);localStorage.setItem(PRODUCT_KEY,serialised);storageSnapshot=serialised;state=next;
- el('storageStatus').textContent='已保存到当前浏览器 · '+new Date().toLocaleString('zh-CN')+' · 尚未接入业务系统';
- refreshPlans();refreshLookup();renderProductTable();
-}
-function resolveScheme(sku,stock='stock',source=state){
- const code=normaliseSku(sku),p=source.plans.find(p=>p.enabled&&p.skus.some(s=>normaliseSku(s)===code));
- return {name:p?p.name:'标准库商品时效',hours:p?p[stock]:null,custom:!!p};
-}
-function refreshPlans(){
- el('planCount').textContent=state.plans.length+' 个';
- if(!state.plans.length){el('planList').innerHTML='<div class="empty"><h3>暂无自定义方案</h3><p>需要更长备货时间或更快发货的商品，可在这里配置专属时效。</p><button class="btn" onclick="openEditor()">新增第一个方案</button></div>';return}
- el('planList').innerHTML='<div class="table-wrap"><table><thead><tr><th>方案名称</th><th>适用商品</th><th>有货时效</th><th>无货时效</th><th>状态</th><th>操作</th></tr></thead><tbody>'+state.plans.map((p,i)=>'<tr><td><b>'+esc(p.name)+'</b></td><td>'+p.skus.slice(0,3).map(s=>'<span class="chip">'+esc(s)+'</span>').join('')+'<div class="sub">共 '+p.skus.length+' 个商品'+(p.skus.length>3?' · 编辑查看全部':'')+'</div></td><td>'+esc(p.stock)+' 小时</td><td>'+esc(p.noStock)+' 小时</td><td><span class="badge '+(p.enabled?'green':'gray')+'">'+(p.enabled?'已启用':'已停用')+'</span></td><td><div class="row-actions"><button class="link-button" onclick="openEditor('+i+')">编辑</button><button class="link-button" onclick="togglePlan('+i+')">'+(p.enabled?'停用':'启用')+'</button><button class="link-button danger" onclick="requestDelete('+i+')">删除</button></div></td></tr>').join('')+'</tbody></table></div>';
-}
-function openEditor(index){
- const p=Number.isInteger(index)?state.plans[index]:null;editingId=p?.id||null;
- el('editorTitle').textContent=p?'编辑自定义方案':'新增自定义方案';
- el('planName').value=p?.name||'';el('planSkus').value=p?p.skus.join('\n'):'';
- el('planStock').value=p?.stock??'';el('planNoStock').value=p?.noStock??'';
- el('planEnabled').checked=p?.enabled??true;el('planError').textContent='';el('planEditor').showModal();
-}
-function closeEditor(){el('planEditor').close()}
-function savePlan(){
- const skus=parseSkus(el('planSkus').value),name=el('planName').value.trim();
- if(!name)throw Error('请填写方案名称');
- if(!skus.length||skus.length>200)throw Error('请填写 1–200 个商品编码');
- if(skus.some(s=>s.length>80))throw Error('单个商品编码不得超过 80 个字符');
- const next=copy(state),p={id:editingId||crypto.randomUUID(),name,skus,stock:+el('planStock').value,noStock:+el('planNoStock').value,enabled:el('planEnabled').checked};
- if(next.plans.some(x=>x.id!==editingId&&x.name===name))throw Error('方案名称已存在，请使用不同名称');
- const index=next.plans.findIndex(x=>x.id===editingId);
- if(index<0)next.plans.push(p);else next.plans[index]=p;
- commit(next);closeEditor();
-}
-function togglePlan(i){try{const next=copy(state);next.plans[i].enabled=!next.plans[i].enabled;commit(next)}catch(e){el('storageStatus').textContent=e.message}}
-function requestDelete(i){
- const p=state.plans[i];deletingId=p.id;
- el('deleteMessage').textContent='确认删除“'+p.name+'”？涉及 '+p.skus.length+' 个商品；没有其他启用方案的商品将使用标准库商品时效。';el('deleteDialog').showModal();
-}
-function confirmDelete(){try{const next=copy(state);next.plans=next.plans.filter(p=>p.id!==deletingId);commit(next);el('deleteDialog').close()}catch(e){el('deleteMessage').textContent=e.message}}
-function refreshLookup(){
- if(el('lookupResult').hidden)return;
- const sku=el('lookupSku').value.trim();if(!sku){el('lookupResult').hidden=true;return}
- const hit=resolveScheme(sku,el('lookupStock').value);
- el('lookupResult').innerHTML='商品 <b>'+esc(normaliseSku(sku))+'</b>　'+(hit.custom?'匹配自定义方案':'未匹配启用的自定义方案')+'<br>适用方案：<b>'+esc(hit.name)+'</b>　'+(el('lookupStock').value==='stock'?'有货':'无货')+(hit.custom?'发货时效：<strong>'+esc(hit.hours)+' 小时</strong>':'时效由标准库商品管理维护，当前未接入，具体小时数暂不可读取。');
-}
-
-function navigate(){if(location.hash==='#nodes'){location.replace('履约节点配置.html');return}el('sideProducts').classList.add('active');el('sideProducts').setAttribute('aria-current','page')}
-el('planForm').addEventListener('submit',e=>{e.preventDefault();el('planError').textContent='';try{savePlan()}catch(error){el('planError').textContent=error.message}});
-el('lookupForm').addEventListener('submit',e=>{e.preventDefault();el('lookupResult').hidden=false;refreshLookup()});
-
-window.addEventListener('hashchange',navigate);
-refreshPlans();navigate();
-
-const productCatalog=[{"sku":"2188","name":"无骨鸡爪-脱骨侠-388克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）"},{"sku":"2283","name":"无骨鸡爪-脱骨侠-500克*5-柠檬-12个月-70%（无骨-冷冻-袋-线下）"},{"sku":"4180","name":"云南佤味-棒小爪-500克-牛皮-15天（100%-非虎皮有骨-冷藏-盒）"},{"sku":"4153","name":"云南佤味鸡爪-棒小爪-500克-15天（100%-非虎皮有骨-冷藏-盒）"},{"sku":"4075","name":"无骨鸡爪-脱骨侠-500克-麻辣藤椒-9个月-60%（无骨-冷冻-罐）"},{"sku":"2756","name":"无骨鸡爪-脱骨侠-500克-泡椒-9个月（60%-无骨-冷冻-罐-线下）"},{"sku":"2754","name":"无骨鸡爪-脱骨侠-500克-川香红油-9个月（60%-无骨-冷冻-罐-线下）"},{"sku":"3416","name":"无骨鸡爪-脱骨侠-500克-酸辣柠檬-9个月（60%-无骨-冷冻-罐）"},{"sku":"2750","name":"无骨鸡爪-脱骨侠-500克-蒜香中辣-9个月（60%-无骨-冷冻-罐-线下）"},{"sku":"2752","name":"无骨鸡爪-脱骨侠-500克-蒜香重辣-9个月（60%-无骨-冷冻-罐-线下）"},{"sku":"2748","name":"无骨鸡爪-脱骨侠-500克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）"},{"sku":"3584","name":"佤味鸡爪-脱骨侠-328克-佤味-9个月冷冻(JX)（100%-非虎皮有骨-冷冻-盒）"},{"sku":"2536","name":"无骨鸡爪-脱骨侠-200克-柠檬-6个月（60%-无骨-冷冻-盒-线下）"},{"sku":"2314","name":"无骨鸡爪-脱骨侠-200克-蒜香重辣-6个月（60%-无骨-冷冻-盒-线下）"},{"sku":"2542","name":"椒麻大杂烩-脱骨侠-508克-椒麻-9个月（60%-椒麻鸡胸骨系列-冷冻-盒-线下）"},{"sku":"2208","name":"无骨鸡爪-脱骨侠-500克*5-川香红油-12个月-70%（无骨-冷冻-袋-线下/线上）"}];
-function productRows(){
- const map=new Map(productCatalog.map(p=>[normaliseSku(p.sku),p]));
- state.plans.forEach(p=>p.skus.forEach(sku=>{const key=normaliseSku(sku);if(!map.has(key))map.set(key,{sku:key,name:'商品名称待同步'})}));
- return [...map.values()].map(p=>{const rule=resolveScheme(p.sku);return {...p,custom:rule.custom,scheme:rule.name,stock:rule.hours,noStock:resolveScheme(p.sku,'noStock').hours}});
-}
-function renderProductTable(){
- const q=el('productQuery').value.trim().toLowerCase(),source=el('productSource').value;
- const bounds={};el('productFilterError').textContent='';
- for(const k of ['stock','noStock']){const min=el(k+'Min').value,max=el(k+'Max').value;bounds[k]=[min===''?null:Number(min),max===''?null:Number(max)];if(min!==''&&max!==''&&Number(min)>Number(max)){el('productFilterError').textContent='最少小时数不能大于最多小时数。';return}}
- const all=productRows(),rows=all.filter(p=>(!q||(p.name+' '+p.sku).toLowerCase().includes(q))&&(source==='all'||p.custom===(source==='custom'))&&['stock','noStock'].every(k=>{const [min,max]=bounds[k];return min===null&&max===null||p[k]!==null&&(min===null||p[k]>=min)&&(max===null||p[k]<=max)}));
- el('productCount').textContent=rows.length+' / '+all.length+' 个商品';
- el('productTable').innerHTML='<table><thead><tr><th>商品编码</th><th>商品名称</th><th>有货发货时效</th><th>无货发货时效</th><th>时效来源 / 方案</th></tr></thead><tbody>'+rows.map(p=>'<tr><td>'+esc(p.sku)+'</td><td>'+esc(p.name)+'</td><td>'+(p.stock===null?'待同步':esc(p.stock)+' 小时')+'</td><td>'+(p.noStock===null?'待同步':esc(p.noStock)+' 小时')+'</td><td>'+esc(p.scheme)+'</td></tr>').join('')+'</tbody></table>'+(!rows.length?'<div class="empty">暂无符合筛选条件的商品</div>':'');
-}
-el('productFilters').addEventListener('submit',e=>{e.preventDefault();renderProductTable()});
-renderProductTable();
-</script></body></html>
+el('nodesForm').addEventListener('submit',e=>{
+ e.preventDefault();el('nodesError').textContent='';
+ try{
+  if(!storageReady)throw Error('原配置读取失败，请刷新后重试');
+  const fields=e.currentTarget.elements;
+  const next=nodes.map((r,i)=>({...r,value:+fields['hours'+i].value,warn:+fields['warn'+i].value,on:fields['on'+i].checked,action:fields['action'+i].value}));
+  if(next.some(r=>!validHours(r.value)||!Number.isFinite(r.warn)||r.warn<1||r.warn>99))throw Error('请填写有效时效和 1–99% 的提醒比例');
+  const latest=readJson(NODE_KEY)||copy(defaults);latest.rules=next;localStorage.setItem(NODE_KEY,JSON.stringify(latest));nodes=next;
+  el('storageStatus').textContent='节点配置已保存到当前浏览器 · 返回总览后按新阈值统计示例订单。';
+ }catch(error){el('nodesError').textContent=error.message}
+});
+el('nodesForm').addEventListener('invalid',e=>{const fold=e.target.closest('details');if(fold)fold.open=true},true);
+renderNodes();el('sideNodes').classList.add('active');el('sideNodes').setAttribute('aria-current','page');</script></body></html>

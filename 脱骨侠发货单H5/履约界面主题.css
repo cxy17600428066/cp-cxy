@@ -244,6 +244,7 @@ body.sla-polished{
 .sla-polished .sku-paste{margin-top:12px;border-top:1px solid #e9eef6;padding-top:10px}
 .sla-polished .sku-paste>summary{cursor:pointer;font-size:14px;color:#537cb7}
 .sla-polished .sku-paste>label{display:block;margin-top:10px}
+#wecomGroup{display:block;width:min(100%,480px);height:40px;margin-top:10px;padding:0 12px;border:1px solid #d7e2f1;border-radius:6px;font:inherit;color:#24354b;background:#fff}
 .sla-polished .sku-paste textarea{min-height:96px;resize:vertical;width:100%}
 @media(max-width:1250px){.sla-polished .order-search{grid-template-columns:repeat(2,minmax(0,1fr))}.sla-polished .order-search-actions{grid-column:1/-1}}
 @media(max-width:520px){.sla-polished .order-search{grid-template-columns:1fr;padding:14px}.sla-polished .sku-selected-chip>span{max-width:140px}}

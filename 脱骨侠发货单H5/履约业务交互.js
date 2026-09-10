@@ -72,6 +72,7 @@
    if(!Fulfillment.canSync(o.events))throw Error('请先补充财务通过及工厂接单记录，才能关联已发货物流资料');
    if(Fulfillment.at(outbound)<Fulfillment.at(o.events.factoryAcceptedAt)||Fulfillment.at(outbound)>Date.now())throw Error('出库时间必须在接单后且不晚于当前时间');
    const next=clone(db),old=next.shipments[id];
+   if(old&&(old.method!==f.get('method')||old.date!==f.get('date')||Fulfillment.at(old.events.wmsOutboundAt)!==Fulfillment.at(outbound)))throw Error('该发货单已存在，发货方式、日期或出库时间不一致，请检查');
    if(old&&(old.company!==f.get('company')||old.trackingNumber!==f.get('tracking')))throw Error('该发货单已存在，物流公司或单号不一致，请检查');
    const line={...o.lines.find(l=>l.key===key),orderId:activeOrder,qty};
    const s=old||{id,source:'物流信息导入',company:f.get('company'),trackingNumber:f.get('tracking'),method:f.get('method'),date:f.get('date'),lines:[],events:{wmsOutboundAt:outbound}};

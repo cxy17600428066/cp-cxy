@@ -29,7 +29,11 @@ try {
   [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($prdDocument)
  }
  if ($null -ne $wordApp) {
-  if ($ownsWord -and $wordApp.Documents.Count -eq 0) { $wordApp.Quit() }
+  try {
+   if ($ownsWord -and $wordApp.Documents.Count -eq 0) { $wordApp.Quit() }
+  } catch {
+   Write-Warning ('Word cleanup: ' + $_.Exception.Message)
+  }
   [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($wordApp)
  }
 }

@@ -104,7 +104,7 @@ while idx<len(lines):
     line=lines[idx].strip()
     if not line:idx+=1;continue
     if line=='<!-- pagebreak -->':
-        doc.add_page_break();idx+=1;continue
+        idx+=1;continue
     if line.startswith('|'):
         data=[]
         while idx<len(lines) and lines[idx].strip().startswith('|'):

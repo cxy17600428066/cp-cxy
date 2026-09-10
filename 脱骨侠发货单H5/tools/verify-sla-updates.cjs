@@ -48,6 +48,19 @@ test('parallel tasks count as one order',()=>{
  const x=o.run("boardRows('system')[0]");assert.equal(x.tasks.length,2);assert.equal(o.run("boardRows('all').length"),15);assert.equal(new Set(x.tasks.map(t=>t.r.id)).size,2);
 });
 test('detail follows selected parallel node and customer rule',()=>{o.run("selectedNode='accept'");o.ctx.openOrder(first);const h=o.el('orderDetail').innerHTML;assert(h.includes('当前节点：<b>工厂接单</b>'));assert(h.includes('本节点最晚完成'));assert(!h.includes('节点时效：1 小时'))});
+test('pending parallel evidence does not become a normal order',()=>{
+ const rows=[{o:['parallel'],level:'normal'},{o:['parallel'],level:'awaiting'}];assert.equal(o.ctx.uniqueOrders(rows)[0].level,'awaiting');
+});
+test('system urgency uses its deadline instead of generic elapsed hours',()=>{
+ const early={sla:{kind:'system',at:now-3600000},o:[null,null,null,null,1],r:{value:100}},later={sla:{kind:'system',at:now+3600000},o:[null,null,null,null,100],r:{value:1}};
+ assert(o.ctx.orderUrgency(early,now)>o.ctx.orderUrgency(later,now));
+});
+test('order system snapshot survives customer reclassification or removal',()=>{
+ setProfile(JSON.stringify({ruleSnapshot:{type:'system',rule:rules}}));
+ o.storage['shipping-customer-arrival-v1']=JSON.stringify({clients:[{...customer,type:'standard'}],defaultRule:rules});assert.equal(o.run("boardRows('system').length"),1);
+ o.storage['shipping-customer-arrival-v1']=JSON.stringify({clients:[],defaultRule:rules});assert.equal(o.run("boardRows('system')[0].sla.ruleName"),'按订单保存规则计算');
+ o.storage['shipping-customer-arrival-v1']=JSON.stringify({clients:[customer],defaultRule:rules});o.run('delete omsProfiles['+JSON.stringify(first)+'].ruleSnapshot');
+});
 test('order lookup supports order number, customer and inclusive Shanghai dates',()=>{
  const x={o:['O123','连锁商超'],p:{createdAt:'2026-09-01T15:59:59Z'}},match=q=>o.ctx.orderMatchesSearch(x,{orderNo:'',customer:'',start:'',end:'',...q});
  assert(match({orderNo:'o12',customer:'连锁',start:'2026-09-01',end:'2026-09-01'}));assert(!match({end:'2026-08-31'}));assert(!match({customer:'不匹配'}));

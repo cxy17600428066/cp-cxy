@@ -85,7 +85,7 @@ def table(rows):
             if item.tag in [q('trHeight'),q('tblHeader')]:trPr.remove(item)
         if trPr.find(q('cantSplit')) is None:trPr.append(el('cantSplit'))
         if i==0:trPr.append(el('tblHeader',val='true'))
-        for j,(c,value,w) in enumerate(zip(tr.findall(q('tc')),row,widths))):
+        for j,(c,value,w) in enumerate(zip(tr.findall(q('tc')),row,widths)):
             child(child(c,'tcPr'),'tcW').set(q('w'),str(w))
             template_p=c.find(q('p'))
             for old in c.findall(q('p')):c.remove(old)

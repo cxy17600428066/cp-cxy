@@ -131,7 +131,7 @@ function eventNodeRows(order,events,now=Date.now()){
  });
 }
 function uniqueOrders(rows){
- const rank={overdue:0,warning:1,normal:2,awaiting:3,paused:4},map=new Map();
+ const rank={overdue:0,warning:1,awaiting:2,normal:3,paused:4},map=new Map();
  rows.forEach(x=>{const prev=map.get(x.o[0]);if(!prev||rank[x.level]<rank[prev.level])map.set(x.o[0],x)});
  return [...map.values()];
 }
@@ -377,7 +377,8 @@ function boardRows(scope=customerView){
  const clients=Array.isArray(data.clients)?data.clients:[],groups=new Map();
  records().forEach(x=>{if(!groups.has(x.o[0]))groups.set(x.o[0],[]);groups.get(x.o[0]).push(x)});
  return [...groups.values()].map(raw=>{
-  const p=omsProfiles[raw[0].o[0]]||{},matches=clients.filter(c=>c.name===raw[0].o[1]),client=matches.length===1?matches[0]:null;
+  const p=omsProfiles[raw[0].o[0]]||{},matches=clients.filter(c=>c.name===raw[0].o[1]),matched=matches.length===1?matches[0]:null;
+  const snap=p.ruleSnapshot,client=snap&&['system','standard'].includes(snap.type)?{...(matched||{}),name:raw[0].o[1],type:snap.type,systemName:snap.systemName||matched?.systemName||p.systemName||''}:matched;
   const tasks=raw.map(x=>withCustomerDeadline({...x,p,client},data));
   return {...uniqueOrders(tasks)[0],p,client,tasks,arrival:boardTime(p.customerRequiredArrivalAt),signed:boardTime(p.events?.signedAt)};
  }).filter(x=>scope!=='system'||x.client?.type==='system');
@@ -422,7 +423,7 @@ function withCustomerDeadline(x,data,now=Date.now()){
 function nodeDeadlineInfo(x){
  if(x.sla?.kind!=='system')return '<span>节点时效：'+safe(x.r.value)+' 小时</span><span>已用时：'+duration(x.o[4])+'</span>';
  const sla=x.sla;
- return '<span>本节点最晚完成：<b>'+(sla.at===null?safe(sla.message):safe(kaDate(sla.at)))+'</b></span><span class="sub">'+safe(sla.ruleName)+(x.r.id==='receipt'&&sla.receiptHours?' · 实际签收后 '+sla.receiptHours+' 小时':' · 按要求到货时间倒排')+'</span>';
+ return '<span>本节点最晚完成：<b>'+(sla.at===null?safe(sla.message):safe(kaDate(sla.at)))+'</b></span><span class="sub">'+safe(sla.ruleName)+(x.r.id==='receipt'?' · 实际签收后'+(sla.receiptHours?' '+sla.receiptHours+' 小时':'计时'):' · 按要求到货时间倒排')+'</span>';
 }
 function orderMatchesSearch(x,q=orderSearch){
  if(q.orderNo&&!String(x.o[0]).toLowerCase().includes(q.orderNo.toLowerCase()))return false;
@@ -443,6 +444,7 @@ function applyOrderSearch(event){
  orderSearch=next;refreshOrderDetails();
 }
 function resetOrderSearch(){orderSearch={orderNo:'',customer:'',start:'',end:''};refreshOrderDetails()}
+function orderUrgency(x,now=Date.now()){return x.sla?.kind==='system'?(x.sla.at===null?-Infinity:(now-x.sla.at)/3600000):x.o[4]-x.r.value}
 function boardDay(t){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(t))}
 function arrivalStatus(x,now=Date.now()){
  if(x.arrival===null)return {key:'missing',text:'到货时间待补充',color:'gray'};
@@ -473,7 +475,7 @@ function nodeDetail(){
  let rows=boardRows(group==='orders'?'all':customerView).filter(x=>!selectedNode||selectedNode==='all'||x.tasks.some(t=>t.r.id===selectedNode));
  if(selectedNode&&selectedNode!=='all')rows=rows.map(x=>({...x,...x.tasks.find(t=>t.r.id===selectedNode)}));
  rows=rows.filter(x=>orderMatchesSearch(x));
- const list=rows.filter(x=>boardMatch(x,statusFilter)).sort((a,b)=>({overdue:0,warning:1,normal:2,awaiting:3,paused:4}[a.level]-{overdue:0,warning:1,normal:2,awaiting:3,paused:4}[b.level])||((b.o[4]-b.r.value)-(a.o[4]-a.r.value)));
+ const list=rows.filter(x=>boardMatch(x,statusFilter)).sort((a,b)=>({overdue:0,warning:1,awaiting:2,normal:3,paused:4}[a.level]-{overdue:0,warning:1,awaiting:2,normal:3,paused:4}[b.level])||(orderUrgency(b)-orderUrgency(a)));
  const r=config.rules.find(r=>r.id===selectedNode),labels={all:'全部',overdue:'节点超时',warning:'节点预警',normal:'正常',today:'今日要求到货',missing:'系统客户到货时间待补充',arrivalLate:'到货超时',awaiting:'节点待判定'};
  const keys=[['all','全部'],['overdue','超时'],['warning','预警'],['normal','正常']];
  if(rows.some(x=>x.level==='awaiting'))keys.push(['awaiting','待判定']);

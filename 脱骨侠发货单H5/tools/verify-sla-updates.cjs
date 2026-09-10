@@ -110,5 +110,18 @@ test('empty picker, unknown query and HTML escaping',()=>{
  p.el('planName').value='无商品';assert.throws(()=>p.ctx.savePlan(),/1–200/);
  p.el('planSkus').value='<img onerror=bad>';p.ctx.renderSkuPicker();assert(!p.el('skuSelected').innerHTML.includes('<img'));
 });
+test('KA receipt field saves and restores without reusing legacy group-buy data',()=>{
+ const d=page('发货时效预警策略.html',{'shipping-customer-arrival-v1':JSON.stringify({clients:[{name:'测试客户',type:'standard'}]})});
+ assert(d.html.includes('<span>是否回执</span>'));assert(!/name="(?:unloadStart|unloadEnd|groupBuy)"/.test(d.html));assert(!d.html.includes('客户期望卸货时间'));
+ const f=d.el('kaForm');f.elements={customerName:{value:''},customerRequiredArrivalAt:{value:''},receiptRequired:{value:'否'},changeReason:{value:''},namedItem(k){return this[k]||null}};
+ f.reset=()=>{f.elements.customerName.value='';f.elements.receiptRequired.value='否'};f.reportValidity=()=>true;
+ d.ctx.FormData=class{constructor(form){this.form=form}entries(){return Object.entries(this.form.elements).filter(([,v])=>typeof v==='object').map(([k,v])=>[k,v.value])}};
+ d.run('renderKaProducts=function(){};renderKaHistory=function(){};kaCustomerChanged=function(){}');
+ d.storage['oms-ka-order-draft-v1']=JSON.stringify({fields:{customerName:'测试客户',customerRequiredArrivalAt:'',groupBuy:'是',unloadStart:'2026-09-01T10:00',unloadEnd:'2026-09-01T09:00'},products:[{qty:1,giftQty:0,price:10}]});
+ d.ctx.openKaOrder();assert.equal(f.elements.receiptRequired.value,'否');f.elements.receiptRequired.value='是';
+ d.ctx.saveKaOrder({preventDefault(){}});const saved=JSON.parse(d.storage['oms-ka-order-draft-v1']);
+ assert.equal(saved.fields.receiptRequired,'是');assert(!('groupBuy' in saved.fields));assert(!('unloadStart' in saved.fields));assert(!('unloadEnd' in saved.fields));
+ d.ctx.openKaOrder();assert.equal(f.elements.receiptRequired.value,'是');
+});
 for(const file of ['履约节点配置.html','客户到货时效配置.html'])test(file+' initialization',()=>page(file));
 console.log('\n'+checks+' checks passed.');

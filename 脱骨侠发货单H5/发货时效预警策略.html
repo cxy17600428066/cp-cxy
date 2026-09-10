@@ -68,11 +68,10 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 <label class="ka-field ka-wide"><span><em>* </em>收货地址</span><input name="address" type="text" required placeholder="请输入收货地址"></label>
 <label class="ka-field ka-arrival"><span><em id="kaArrivalRequired">*</em> 客户要求到货时间</span><input name="customerRequiredArrivalAt" type="datetime-local" required onchange="kaCustomerChanged()"></label>
 <div class="ka-field"><span>客户类型</span><span id="kaCustomerType" style="width:auto;text-align:left">未匹配客户配置</span></div>
-<div class="ka-field"><span>客户期望卸货时间</span><input aria-label="卸货开始时间" name="unloadStart" type="datetime-local"><span style="width:auto">—</span><input aria-label="卸货结束时间" name="unloadEnd" type="datetime-local"></div>
 <label class="ka-field"><span>特殊备注</span><textarea name="specialRemark" maxlength="500" placeholder="请输入特殊备注（最多500字）"></textarea></label>
 <div class="ka-field"><span>经销转私域</span><div class="ka-radio"><label><input type="radio" name="privateDomain" value="是" > 是</label><label><input type="radio" name="privateDomain" value="否" checked> 否</label></div></div>
 <div class="ka-field"><span>是否换货下单</span><div class="ka-radio"><label><input type="radio" name="exchange" value="是" > 是</label><label><input type="radio" name="exchange" value="否" checked> 否</label></div></div>
-<div class="ka-field"><span>是否团购</span><div class="ka-radio"><label><input type="radio" name="groupBuy" value="是" > 是</label><label><input type="radio" name="groupBuy" value="否" checked> 否</label></div></div>
+<div class="ka-field"><span>是否回执</span><div class="ka-radio"><label><input type="radio" name="receiptRequired" value="是"> 是</label><label><input type="radio" name="receiptRequired" value="否" checked> 否</label></div></div>
 <div class="ka-field"><span>发货主体</span><div class="ka-radio"><label><input type="radio" name="shipper" value="卓希工厂" checked> 卓希工厂</label><label><input type="radio" name="shipper" value="运营中心" > 运营中心</label></div></div>
 <div class="ka-field ka-wide"><span>特殊情况说明</span><div id="kaRuleHint">选择客户后展示适用的时效规则。</div></div>
 <label class="ka-field ka-wide"><span>备注</span><textarea name="remark" maxlength="1024" placeholder="请输入备注（最多1024字）"></textarea></label>
@@ -321,7 +320,6 @@ function saveKaOrder(e){
  if(!f.reportValidity())return;
  const fields=Object.fromEntries(new FormData(f).entries());
  if(fields.customerRequiredArrivalAt&&new Date(fields.customerRequiredArrivalAt)<=new Date()){m.textContent='客户要求到货时间必须晚于当前时间。';return}
- if(fields.unloadStart&&fields.unloadEnd&&fields.unloadStart>fields.unloadEnd){m.textContent='卸货结束时间不能早于开始时间。';return}
  if(!kaItems.length){m.textContent='请至少添加一件商品。';return}
  if(kaItems.some(p=>!Number.isInteger(p.qty)||p.qty<1||!Number.isInteger(p.giftQty)||p.giftQty<0||!Number.isFinite(p.price)||p.price<0)){m.textContent='请检查商品售价、数量和搭赠数量。';return}
  try{

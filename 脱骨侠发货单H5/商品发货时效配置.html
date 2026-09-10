@@ -50,7 +50,7 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 </main>
 <dialog class="editor" id="planEditor" aria-labelledby="editorTitle"><form id="planForm"><header class="editor-head"><h2 id="editorTitle">新增自定义方案</h2><button class="btn" type="button" onclick="closeEditor()">关闭</button></header><div class="form-grid">
 <div class="field full"><label for="planName">方案名称</label><input id="planName" required maxlength="50" placeholder="例如：预售商品发货方案"></div>
-<div class="field full"><label for="planSkus">适用商品编码 / SKU</label><textarea id="planSkus" required placeholder="每行一个商品编码，也可以用逗号分隔&#10;TGX-001&#10;TGX-002"></textarea><div class="sub">请填写完整商品编码，不使用商品简称。最多 200 个商品。</div></div>
+<section class="field full sku-picker" aria-labelledby="skuPickerTitle"><div class="sku-picker-head"><label id="skuPickerTitle" for="skuPickerQuery">适用商品</label><span id="skuSelectionCount" class="badge gray" aria-live="polite">已选 0 / 200</span></div><input id="skuPickerQuery" type="search" placeholder="搜索商品名称或编码，然后勾选" oninput="renderSkuPicker()"><div id="skuPickerResults" class="sku-picker-results" role="group" aria-label="可选商品"></div><div id="skuSelected" class="sku-selected" aria-label="已选商品"></div><details id="skuPasteFold" class="sku-paste"><summary>批量粘贴商品编码</summary><label class="sub" for="planSkus">每行一个编码，也可用中英文逗号分隔；与上方勾选结果同步，最多 200 个。</label><textarea id="planSkus" placeholder="例如：2188&#10;2283" oninput="renderSkuPicker()"></textarea></details></section>
 <div class="field"><label for="planStock">有货发货时效</label><div class="input-unit"><input id="planStock" type="number" min="0.1" max="8760" step="0.1" required><span>小时</span></div></div>
 <div class="field"><label for="planNoStock">无货发货时效</label><div class="input-unit"><input id="planNoStock" type="number" min="0.1" max="8760" step="0.1" required><span>小时</span></div></div>
 <label class="check-label full"><input type="checkbox" id="planEnabled" checked>启用方案（启用后优先于标准库商品时效）</label>
@@ -123,13 +123,45 @@ function openEditor(index){
  el('editorTitle').textContent=p?'编辑自定义方案':'新增自定义方案';
  el('planName').value=p?.name||'';el('planSkus').value=p?p.skus.join('\n'):'';
  el('planStock').value=p?.stock??'';el('planNoStock').value=p?.noStock??'';
- el('planEnabled').checked=p?.enabled??true;el('planError').textContent='';el('planEditor').showModal();
+ el('planEnabled').checked=p?.enabled??true;el('planError').textContent='';
+ el('skuPickerQuery').value='';el('skuPasteFold').open=false;renderSkuPicker();el('planEditor').showModal();
+}
+function pickerProducts(){
+ const items=new Map(productCatalog.map(p=>[normaliseSku(p.sku),{sku:normaliseSku(p.sku),name:p.name}]));
+ state.plans.forEach(p=>p.skus.forEach(s=>{const sku=normaliseSku(s);if(!items.has(sku))items.set(sku,{sku,name:'商品名称待同步'})}));
+ return [...items.values()];
+}
+function renderSkuPicker(){
+ const selected=parseSkus(el('planSkus').value),chosen=new Set(selected);
+ const query=el('skuPickerQuery').value.trim().toLowerCase(),catalog=pickerProducts();
+ const matches=catalog.filter(p=>(p.name+' '+p.sku).toLowerCase().includes(query));
+ el('skuSelectionCount').textContent='已选 '+selected.length+' / 200';
+ el('skuSelectionCount').className='badge '+(selected.length>200?'red':'gray');
+ el('skuPickerResults').innerHTML=matches.length?matches.map(p=>{
+  const used=state.plans.find(plan=>plan.id!==editingId&&plan.enabled&&plan.skus.some(s=>normaliseSku(s)===p.sku));
+  return '<label class="sku-choice"><input type="checkbox" data-picker-sku="'+esc(p.sku)+'" '+(chosen.has(p.sku)?'checked':'')+' onchange="togglePickerSku(this)"><span><span class="sku-choice-name">'+esc(p.name)+'</span><span class="sub">编码：'+esc(p.sku)+(used?' · 已用于“'+esc(used.name)+'”':'')+'</span></span></label>';
+ }).join(''):'<div class="empty">没有匹配的商品，可调整关键词或批量粘贴编码。</div>';
+ el('skuSelected').innerHTML=selected.length?'<div class="sub">已选商品 · 点击 × 移除</div><div class="sku-selected-items">'+selected.map((sku,i)=>{
+  const name=catalog.find(p=>p.sku===sku)?.name||'商品名称待同步';
+  return '<button class="sku-selected-chip" type="button" title="'+esc(name+' · '+sku)+'" aria-label="移除 '+esc(name+'，编码 '+sku)+'" onclick="removePickerSku('+i+')"><span>'+esc(name)+'</span><small>'+esc(sku)+'</small><b aria-hidden="true">×</b></button>';
+ }).join('')+'</div>':'<p class="sub">尚未选择商品，请勾选上方商品或批量粘贴编码。</p>';
+}
+function togglePickerSku(input){
+ const selected=parseSkus(el('planSkus').value),sku=normaliseSku(input.dataset.pickerSku),chosen=new Set(selected);
+ if(input.checked&&chosen.size>=200&&!chosen.has(sku)){input.checked=false;el('planError').textContent='一个方案最多关联 200 个商品';return}
+ if(input.checked)chosen.add(sku);else chosen.delete(sku);
+ el('planSkus').value=[...chosen].join('\n');el('planError').textContent='';renderSkuPicker();
+ const checkbox=[...el('skuPickerResults').querySelectorAll('input')].find(i=>i.dataset.pickerSku===sku);if(checkbox)checkbox.focus({preventScroll:true});
+}
+function removePickerSku(index){
+ const selected=parseSkus(el('planSkus').value);selected.splice(index,1);
+ el('planSkus').value=selected.join('\n');el('planError').textContent='';renderSkuPicker();
 }
 function closeEditor(){el('planEditor').close()}
 function savePlan(){
  const skus=parseSkus(el('planSkus').value),name=el('planName').value.trim();
  if(!name)throw Error('请填写方案名称');
- if(!skus.length||skus.length>200)throw Error('请填写 1–200 个商品编码');
+ if(!skus.length||skus.length>200)throw Error('请选择或填写 1–200 个商品编码');
  if(skus.some(s=>s.length>80))throw Error('单个商品编码不得超过 80 个字符');
  const next=copy(state),p={id:editingId||crypto.randomUUID(),name,skus,stock:+el('planStock').value,noStock:+el('planNoStock').value,enabled:el('planEnabled').checked};
  if(next.plans.some(x=>x.id!==editingId&&x.name===name))throw Error('方案名称已存在，请使用不同名称');

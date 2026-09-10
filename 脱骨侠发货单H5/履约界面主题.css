@@ -245,6 +245,21 @@ body.sla-polished{
 .sla-polished .sku-paste>summary{cursor:pointer;font-size:14px;color:#537cb7}
 .sla-polished .sku-paste>label{display:block;margin-top:10px}
 #wecomGroup{display:block;width:min(100%,480px);height:40px;margin-top:10px;padding:0 12px;border:1px solid #d7e2f1;border-radius:6px;font:inherit;color:#24354b;background:#fff}
+.sla-polished .arrival-preview>summary{padding:20px 24px;color:#516b94;background:#f8faff;border-radius:12px;line-height:24px}
+.arrival-preview .preview-heading{font-size:16px;font-weight:600;color:#263b59;margin-left:6px}
+.arrival-preview .preview-description{font-size:13px;color:#8090a8;margin-left:16px;font-weight:400}
+.sla-polished .arrival-preview[open]>summary{border-bottom:1px solid #e9eef6;border-radius:12px 12px 0 0}
+.sla-polished .arrival-preview #previewForm{padding:24px;margin:0}
+.sla-polished .arrival-preview .preview-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 28px;align-items:start}
+.sla-polished .arrival-preview .field label{color:#455771;font-weight:500;margin:0 0 8px;line-height:22px}
+.sla-polished .arrival-preview .field input,.sla-polished .arrival-preview .field select{height:42px;border-radius:7px;background:#fff;width:100%;min-width:0}
+.arrival-preview .sub{margin-top:6px;font-size:12px;line-height:18px;color:#8b98ab}
+.arrival-preview .preview-actions{display:flex;align-items:center;justify-content:flex-end;gap:20px;border-top:1px solid #edf1f7;padding-top:18px;margin-top:24px}
+.arrival-preview .preview-actions>span{font-size:12px;color:#8b98ab}
+.sla-polished .arrival-preview .preview-actions .btn{width:auto;min-width:148px;height:40px;padding:0 22px}
+.arrival-preview .preview-result:empty,.arrival-preview .error:empty{display:none}
+.arrival-preview .preview-result:not(:empty){border-top:1px solid #edf1f7;padding-top:20px;margin-top:22px}
+@media(max-width:640px){.sla-polished .arrival-preview .preview-form{grid-template-columns:1fr;gap:18px}.arrival-preview .preview-description{display:block;margin-left:20px}.sla-polished .arrival-preview #previewForm{padding:18px}.arrival-preview .preview-actions{align-items:stretch;flex-direction:column;gap:10px}.arrival-preview .preview-actions>span{text-align:center}}
 .sla-polished .sku-paste textarea{min-height:96px;resize:vertical;width:100%}
 @media(max-width:1250px){.sla-polished .order-search{grid-template-columns:repeat(2,minmax(0,1fr))}.sla-polished .order-search-actions{grid-column:1/-1}}
 @media(max-width:520px){.sla-polished .order-search{grid-template-columns:1fr;padding:14px}.sla-polished .sku-selected-chip>span{max-width:140px}}

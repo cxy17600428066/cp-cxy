@@ -35,7 +35,7 @@
   let hours=Number(r.value);
   if(id==='ship'&&order.type!=='system'){
    if(!['stock','noStock'].includes(order.stock))return {id,state:'awaiting',reason:'接单有货状态待同步'};
-   const values=(shipment?.lines||order.lines||[]).map(l=>Number(l[order.stock]));
+   const values=(shipment?.lines||order.lines||[]).map(l=>Number(l[order.stock]??order.lines?.find(original=>original.key===l.key)?.[order.stock]));
    if(!values.length||values.some(v=>!Number.isFinite(v)||v<=0))return {id,state:'awaiting',reason:'商品时效待同步'};
    hours=Math.min(...values);
   }

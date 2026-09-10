@@ -1,5 +1,8 @@
 # Reference execution contract
 
+## v1.1 user-authorized revision
+Continue the same retained reference styles. User removed scope-boundary and priority sections; use nine top-level sections. v1.1 source is PRD-OMS订单履约时效管理-v1.1.md. Rewrite confirmed rules and three diagram labels for factory-acceptance shipping start, both-gate synchronization, first-upload receipt timing, shipment-only split/merge, continuous hours, WeCom group reminders and no driver fields. Preserve prior v1.0 deliverables. Full final-page inspection remains required. Caption is 9pt; source blue panel fill is E8F2FB.
+
 Reference: E:/cxy/04-需求管理/PRD-OMS发货单拆单与合单功能-v1.0.docx
 SHA256: 59bb9de4d3e5d42a01484ce3ea9300669903c3255a1642e2e7194bf2c839eb7c
 Reference Word render: ../template-reference/prd-preview.pdf and page-01.png through page-21.png. All 21 pages inspected. One portrait section. Style evidence: ../template-reference/style-evidence.json. Section, heading, image and field audits performed. No controls, footnotes, tracked changes or text boxes in source body; three inline images and one footer PAGE field.

@@ -30,12 +30,12 @@
 <div class="note">举个例子：客户要求周五上午 10 点到货，发货设为提前 48 小时，就是周三上午 10 点前发出。</div>
 <div id="defaultFields"></div><div class="foot"><span class="caption">到货日期在下单时填写，这里不用填日期。</span><button class="btn primary" type="submit">保存默认时间</button></div><p class="error" id="defaultError" role="alert"></p></form></section>
 <section class="card"><header class="head"><div><h2>2. 客户设置 <span id="clientCount" class="badge gray">0 个客户</span></h2><p>添加客户后默认使用上面的时间；只有特殊客户需要单独设置。</p></div><button class="btn primary" onclick="editClient()">＋ 添加客户</button></header><div id="clientList"></div></section>
-<details class="card simple-fold"><summary>想看看怎么算？点这里试一下</summary><form class="body" id="previewForm"><div class="preview-form">
+<details class="card simple-fold arrival-preview"><summary><span class="preview-heading">到货时效试算</span><span class="preview-description">选择客户和时间，查看各节点截止时间</span></summary><form class="body" id="previewForm"><div class="preview-form">
 <div class="field"><label for="previewClient">客户 / 规则</label><select id="previewClient"></select></div>
 <div class="field"><label for="arrivalTime">订单要求到货时间</label><input id="arrivalTime" type="datetime-local"><div class="sub">系统客户必需；不填可查看缺失提示</div></div>
 <div class="field"><label for="createdTime">下单时间</label><input id="createdTime" type="datetime-local" required></div>
 <div class="field"><label for="signedTime">实际签收时间（可选）</label><input id="signedTime" type="datetime-local"><div class="sub">用于计算回执上传截止时间</div></div>
-<button class="btn primary" type="submit">计算截止时间</button></div><p class="error" id="previewError" role="alert"></p><div class="preview-result" id="previewResult" aria-live="polite"></div></form></details>
+</div><div class="preview-actions"><span>仅用于规则试算，不修改订单信息</span><button class="btn primary" type="submit">计算截止时间</button></div><p class="error" id="previewError" role="alert"></p><div class="preview-result" id="previewResult" aria-live="polite"></div></form></details>
 <p class="status" id="storageStatus" role="status">配置仅保存在当前浏览器，尚未接入客户档案和订单系统。保存仅影响新订单；按连续小时计算，通过企业微信群提醒。</p>
 </main>
 <dialog id="clientDialog" class="editor" aria-labelledby="clientTitle"><form id="clientForm"><header class="head"><h2 id="clientTitle">添加客户</h2><button class="btn" type="button" onclick="closeClient()">关闭</button></header><div class="form-grid">

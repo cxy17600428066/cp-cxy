@@ -53,7 +53,8 @@ def para(pattern,text,bold_prefix=False):
     if bold_prefix and '：' in text:chunks=[text.split('：',1)[0]+'：',text.split('：',1)[1]]
     for i,t in enumerate(chunks):
         r=el('r')
-        if base is not None:r.append(deepcopy(base))
+        chosen=first.find(q('rPr')) if len(chunks)>1 and i==0 and first is not None else base
+        if chosen is not None:r.append(deepcopy(chosen))
         if len(chunks)>1 and i==0:child(r,'rPr').append(el('b'))
         tx=el('t');tx.text=t;tx.set('{http://www.w3.org/XML/1998/namespace}space','preserve');r.append(tx);p.append(r)
     return p
@@ -180,7 +181,11 @@ while i<len(lines):
     line=lines[i].strip();i+=1
     if not line:continue
     if line.startswith('# '):
-        p=para(ps[1],line[2:]);child(child(p,'pPr'),'pStyle').set(q('val'),'Title');body.append(p)
+        p=para(ps[1],line[2:]);pr=child(p,'pPr');child(pr,'pStyle').set(q('val'),'Title')
+        # The source cover title has no rule. Suppress the unused Title style's inherited border.
+        borders=child(pr,'pBdr')
+        for edge in ['top','left','bottom','right','between','bar']:borders.append(el(edge,val='nil'))
+        body.append(p)
     elif line.startswith('@subtitle '):body.append(para(ps[2],line[10:]))
     elif line.startswith('@meta '):
         body.append(para(ps[metadata],line[6:],True));metadata+=1

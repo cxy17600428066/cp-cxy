@@ -64,7 +64,8 @@
  function importLogistics(event){
   event.preventDefault();try{
    const f=new FormData(event.target),o=order(activeOrder),id=String(f.get('shipment')).trim(),key=String(f.get('line')),qty=Number(f.get('qty')),outbound=new Date(f.get('outbound')).toISOString();
-   if(!Fulfillment.at(o.events.factoryAcceptedAt))throw Error('接单记录尚未同步，请先在接单系统完成接单并同步资料');
+   if(!/^[\w\u4e00-\u9fff-]{1,80}$/.test(id))throw Error('发货单号仅支持字母、数字、中文、下划线和短横线');
+   if(!Fulfillment.canSync(o.events))throw Error('请先补充财务通过及工厂接单记录，才能关联已发货物流资料');
    if(Fulfillment.at(outbound)<Fulfillment.at(o.events.factoryAcceptedAt)||Fulfillment.at(outbound)>Date.now())throw Error('出库时间必须在接单后且不晚于当前时间');
    const next=clone(db),old=next.shipments[id];
    if(old&&(old.company!==f.get('company')||old.trackingNumber!==f.get('tracking')))throw Error('该发货单已存在，物流公司或单号不一致，请检查');

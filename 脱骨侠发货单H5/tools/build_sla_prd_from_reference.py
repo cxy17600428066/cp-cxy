@@ -215,7 +215,10 @@ while i<len(lines):
             if not all(re.fullmatch(':?-+:?',c) for c in row):rows.append(row)
         body.append(table(rows))
     else:body.append(para(ps[13],line))
-body.append(sect)
+# Word requires a paragraph after the final table; keep that structural paragraph tiny.
+tail=el('p');tail_pr=el('pPr');tail_pr.append(el('spacing',before=0,after=0,line=20,lineRule='exact'))
+tail_mark=el('rPr');tail_mark.append(el('sz',val=2));tail_pr.append(tail_mark);tail.append(tail_pr)
+body.append(tail);body.append(sect)
 parts['word/document.xml']=xml(doc)
 header=E.fromstring(parts['word/header1.xml'])
 for t in header.iter(q('t')):

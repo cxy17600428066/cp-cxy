@@ -59,6 +59,7 @@ function validHours(v){return Number.isFinite(+v)&&+v>=0.1&&+v<=8760}
 let nodes,storageReady=true;
 try{nodes=currentNodeRules(readJson(NODE_KEY)?.rules)}catch(e){nodes=copy(defaults.rules);storageReady=false;el('storageStatus').textContent='原配置读取失败，禁止覆盖，请刷新重试。'}
 function nodeReminder(i){
+ if(nodes[i].id==='ship'){const warn=Number(el('warn'+i).value);el('reminderText'+i).textContent=warn>0&&warn<100?'按本订单商品发货时限的 '+warn+'% 提醒，具体小时数随有货／无货时效计算。':'请填写 1–99% 的提醒比例。';return;}
  if(!el('hours'+i))return;
  const hours=Number(el('hours'+i).value),warn=Number(el('warn'+i).value);
  el('reminderText'+i).textContent=Number.isFinite(hours)&&hours>0&&warn>0&&warn<100?'开始后 '+Number((hours*warn/100).toFixed(2))+' 小时提醒，还剩 '+Number((hours*(100-warn)/100).toFixed(2))+' 小时到期。':'请填写有效时间和 1–99% 的提醒比例。';

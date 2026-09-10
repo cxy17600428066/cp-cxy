@@ -107,7 +107,8 @@ function renderConfig(){const c=document.getElementById('content');c.innerHTML=`
 function toggleOrders(id,btn){const box=document.getElementById('orders-'+id),hidden=box.hidden;box.hidden=!hidden;btn.textContent=hidden?'收起订单':'展开订单'}function updateRule(el){const r=config.rules.find(x=>x.id===el.dataset.id);r[el.dataset.key]=+el.value;dirty();const box=document.getElementById('orders-'+r.id);if(box)box.querySelector('tbody').innerHTML=orderRows(r)}function toggleRule(id,el){const r=config.rules.find(x=>x.id===id);r.on=!r.on;el.classList.toggle('on',r.on);dirty()}function dirty(){const s=document.getElementById('saveState');s.textContent='有未保存的修改';s.classList.add('dirty')}function saveConfig(){localStorage.setItem('shipping-sla-config',JSON.stringify(config));const s=document.getElementById('saveState');s.textContent='已保存并生效 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});s.classList.remove('dirty');showToast('时效预警策略已保存并生效')}function resetConfig(){config=clone(defaults);render();dirty();showToast('已恢复默认配置，请保存后生效')}function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity=1;t.style.transform='translate(-50%,0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translate(-50%,20px)'},1800)}
 
 let selectedNode=null, statusFilter='all', customerView='all';
-const statusNames={all:'全部',normal:'正常',warning:'临近预警',overdue:'已超时',paused:'预警已关闭'};
+let orderSearch={orderNo:'',customer:'',start:'',end:''};
+const statusNames={all:'全部',normal:'正常',warning:'临近预警',overdue:'已超时',awaiting:'待判定',paused:'预警已关闭'};
 function safe(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function classify(o,r){
  if(!r.on)return 'paused';
@@ -130,7 +131,7 @@ function eventNodeRows(order,events,now=Date.now()){
  });
 }
 function uniqueOrders(rows){
- const rank={overdue:0,warning:1,normal:2,paused:3},map=new Map();
+ const rank={overdue:0,warning:1,normal:2,awaiting:3,paused:4},map=new Map();
  rows.forEach(x=>{const prev=map.get(x.o[0]);if(!prev||rank[x.level]<rank[prev.level])map.set(x.o[0],x)});
  return [...map.values()];
 }
@@ -140,15 +141,20 @@ function records(id='all'){
  demo.forEach(x=>{const p=omsProfiles[x.o[0]];if(p?.events&&!events.has(x.o[0]))events.set(x.o[0],eventNodeRows(x.o,p.events))});
  return [...demo.filter(x=>!events.has(x.o[0])),...[...events.values()].flat()].filter(x=>id==='all'||x.r.id===id);
 }
-function tally(rows){return rows.reduce((a,x)=>{a[x.level]++;a.all++;return a},{all:0,normal:0,warning:0,overdue:0,paused:0})}
+function tally(rows){return rows.reduce((a,x)=>{a[x.level]++;a.all++;return a},{all:0,normal:0,warning:0,overdue:0,awaiting:0,paused:0})}
 function amount(rows){return rows.reduce((a,x)=>a+Number(x.o[2].replace(/[^\d.]/g,'')),0).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function duration(n){return Number(n.toFixed(1))+' 小时'}
 function timing(x){
  if(x.level==='paused')return '预警已关闭';
+ if(x.sla?.kind==='system'){
+  if(x.level==='awaiting')return x.sla.message;
+  const hours=(Date.now()-x.sla.at)/3600000;
+  return hours>=0?'超时 '+duration(hours):'剩余 '+duration(-hours);
+ }
  const diff=x.o[4]-Number(x.r.value);
  return diff>=0?'超时 '+duration(diff):'剩余 '+duration(-diff);
 }
-function statusBadge(level){return '<span class="badge '+({normal:'green',warning:'amber',overdue:'red',paused:'gray'}[level])+'">'+statusNames[level]+'</span>'}
+function statusBadge(level){return '<span class="badge '+({normal:'green',warning:'amber',overdue:'red',awaiting:'gray',paused:'gray'}[level])+'">'+statusNames[level]+'</span>'}
 function selectGroup(next,el){if(next==='product'){location.href='商品发货时效配置.html';return;}group=next;selectedNode=null;statusFilter='all';document.querySelectorAll('.sla-nav-item').forEach(x=>{const active=x.dataset.group===next;x.classList.toggle('active',active);if(active)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current');});render()}
 function openNode(id,filter='all'){
  group='flow';selectedNode=id;statusFilter=filter;
@@ -206,10 +212,10 @@ function render(){
 }
 
 function openOrder(id){
- const tasks=records().filter(x=>x.o[0]===id);
- const x=tasks.find(x=>x.r.id===selectedNode)||uniqueOrders(tasks)[0];if(!x)return;
+ const row=boardRows('all').find(x=>x.o[0]===id);if(!row)return;
+ const x={...row,...(row.tasks.find(x=>x.r.id===selectedNode)||{})};
  const d=document.getElementById('orderDialog');
- document.getElementById('orderDetail').innerHTML='<div class="dialog-head"><h2>订单详情</h2><button class="btn" onclick="document.getElementById(\'orderDialog\').close()" aria-label="关闭订单详情">关闭</button></div><div class="oms-current-info"><span>当前节点：<b>'+safe(x.r.name)+'</b></span><span>节点时效：'+safe(x.r.value)+' 小时</span><span>已用时：'+duration(x.o[4])+'</span>'+statusBadge(x.level)+'</div><div class="oms-order-scroll">'+omsColumnHead()+omsOrderCard(x,true)+'</div><h3 class="section-title" style="margin:18px 0 12px">订单待办节点（财务审核与工厂接单并行）</h3><div class="order-journey">'+config.rules.map(r=>'<span class="'+(r.id===x.r.id?'current':'')+'">'+safe(r.name)+(r.id===x.r.id?' · 当前':'')+'</span>').join('')+'</div>';
+ document.getElementById('orderDetail').innerHTML='<div class="dialog-head"><h2>订单详情</h2><button class="btn" onclick="document.getElementById(\'orderDialog\').close()" aria-label="关闭订单详情">关闭</button></div><div class="oms-current-info"><span>当前节点：<b>'+safe(x.r.name)+'</b></span>'+nodeDeadlineInfo(x)+statusBadge(x.level)+'</div><div class="oms-order-scroll">'+omsColumnHead()+omsOrderCard(x,true)+'</div><h3 class="section-title" style="margin:18px 0 12px">订单待办节点（财务审核与工厂接单并行）</h3><div class="order-journey">'+config.rules.map(r=>'<span class="'+(r.id===x.r.id?'current':'')+'">'+safe(r.name)+(r.id===x.r.id?' · 当前':'')+'</span>').join('')+'</div>';
  d.showModal();
 }
 
@@ -271,16 +277,20 @@ function kaReadCustomer(){
  const matches=(data.clients||[]).filter(c=>c.name===name);
  return {data,c:matches.length===1?matches[0]:null};
 }
+function customerTimingRule(c,data){
+ const r=c.mode==='custom'?c.rule:data.defaultRule;
+ if(!r||['finance','accept','ship','pickup','warning','receipt','escalation'].some(k=>r[k]===null||r[k]===''||!Number.isFinite(Number(r[k]))||Number(r[k])<0)||!(Number(r.finance)>=Number(r.ship)&&Number(r.accept)>=Number(r.ship)&&Number(r.ship)>=Number(r.pickup))||Number(r.receipt)<=0)throw Error('客户时效配置无效，请先修正配置。');
+ return r;
+}
 function kaPlan(c,data,arrival,now=Date.now()){
  if(!c)throw Error('请先在客户到货配置中维护并选择客户；同名客户需使用唯一名称。');
  if(c.type!=='system')return {type:'standard',rule:JSON.parse(JSON.stringify(config)),deadlines:[]};
- const r=c.mode==='custom'?c.rule:data.defaultRule;
- if(!r||['finance','accept','ship','pickup','warning','receipt','escalation'].some(k=>!Number.isFinite(Number(r[k]))||Number(r[k])<0)||!(r.finance>=r.ship&&r.accept>=r.ship&&r.ship>=r.pickup)||r.receipt<=0)throw Error('客户时效配置无效，请先修正配置。');
- const at=new Date(arrival).getTime();if(!arrival||!Number.isFinite(at))throw Error('系统客户必须填写客户要求到货时间。');
+ const r=customerTimingRule(c,data);
+ const at=boardTime(arrival);if(at===null)throw Error('系统客户必须填写客户要求到货时间。');
  const deadlines=['finance','accept','ship','pickup','sign'].map((id,i)=>({id,name:['财务审核（并行）','工厂接单（并行）','发货（生成单号）','揽收（WMS出库）','签收'][i],at:at-(id==='sign'?0:Number(r[id])*3600000),warningAt:at-(id==='sign'?0:Number(r[id])*3600000)-Number(r.warning)*3600000}));
  return {type:'system',clientId:c.id,scheme:c.mode==='custom'?'客户专属规则':'系统客户默认规则',rule:JSON.parse(JSON.stringify(r)),deadlines,risk:deadlines.some(d=>d.at<now)};
 }
-function kaDate(at){return new Date(at).toLocaleString('zh-CN',{hour12:false})}
+function kaDate(at){return new Date(at).toLocaleString('zh-CN',{hour12:false,timeZone:'Asia/Shanghai'})}
 function kaCustomerChanged(){
  const f=document.getElementById('kaForm'),hint=document.getElementById('kaRuleHint'),schedule=document.getElementById('kaSchedule');
  try{
@@ -362,13 +372,77 @@ function systemOrderDetails(){
 }
 
 
-function boardRows(){
- let clients=[];try{clients=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}').clients||[]}catch(e){}
- return uniqueOrders(records()).map(x=>{const p=omsProfiles[x.o[0]]||{},matches=clients.filter(c=>c.name===x.o[1]),c=matches.length===1?matches[0]:null;
- return {...x,p,client:c,tasks:records().filter(t=>t.o[0]===x.o[0]),arrival:boardTime(p.customerRequiredArrivalAt),signed:boardTime(p.events?.signedAt)};
- }).filter(x=>customerView!=='system'||x.client?.type==='system');
+function boardRows(scope=customerView){
+ let data={};try{data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}')||{}}catch(e){}
+ const clients=Array.isArray(data.clients)?data.clients:[],groups=new Map();
+ records().forEach(x=>{if(!groups.has(x.o[0]))groups.set(x.o[0],[]);groups.get(x.o[0]).push(x)});
+ return [...groups.values()].map(raw=>{
+  const p=omsProfiles[raw[0].o[0]]||{},matches=clients.filter(c=>c.name===raw[0].o[1]),client=matches.length===1?matches[0]:null;
+  const tasks=raw.map(x=>withCustomerDeadline({...x,p,client},data));
+  return {...uniqueOrders(tasks)[0],p,client,tasks,arrival:boardTime(p.customerRequiredArrivalAt),signed:boardTime(p.events?.signedAt)};
+ }).filter(x=>scope!=='system'||x.client?.type==='system');
 }
-function boardTime(v){if(!v)return null;const t=Date.parse(v);return Number.isFinite(t)?t:null}
+function boardTime(v){
+ if(v===null||v===undefined||v==='')return null;
+ if(typeof v==='number')return Number.isFinite(v)?v:null;
+ let value=String(v).trim();
+ if(/^\d{4}-\d{2}-\d{2}$/.test(value))value+='T00:00:00+08:00';
+ else if(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/.test(value))value=value.replace(' ','T')+'+08:00';
+ const at=Date.parse(value);return Number.isFinite(at)?at:null;
+}
+function withCustomerDeadline(x,data,now=Date.now()){
+ if(x.client?.type!=='system')return x;
+ const sla={kind:'system',at:null,warningAt:null,ruleName:'按当前客户配置计算',message:''};
+ try{
+  const snap=x.p.ruleSnapshot;
+  if(snap&&snap.type!=='system')throw Error('订单规则快照与客户类型不一致');
+  const c=snap?{...x.client,mode:'default'}:x.client,source=snap?{defaultRule:snap.rule}:data;
+  if(snap)sla.ruleName='按订单保存规则计算';
+  const rule=customerTimingRule(c,source);
+  if(x.r.id==='receipt'){
+   sla.receiptHours=Number(rule.receipt);
+   const signed=boardTime(x.p.events?.signedAt);
+   if(signed===null||signed>now)sla.message='待实际签收后计算';
+   else {sla.at=signed+Number(rule.receipt)*3600000;sla.warningAt=Math.max(signed,sla.at-Number(rule.warning)*3600000);}
+  }else if(boardTime(x.p.customerRequiredArrivalAt)===null)sla.message='客户要求到货时间待补充';
+  else {
+   const d=kaPlan(c,source,x.p.customerRequiredArrivalAt,now).deadlines.find(d=>d.id===x.r.id);
+   sla.at=d.at;sla.warningAt=d.warningAt;
+  }
+  const starts={finance:'submittedAt',accept:'submittedAt',ship:'wdtSyncedAt',pickup:'wmsReceivedAt',sign:'wmsOutboundAt',receipt:'signedAt'};
+  const ends={finance:'financeApprovedAt',accept:'factoryAcceptedAt',ship:'shippedAt',pickup:'wmsOutboundAt',sign:'signedAt',receipt:'receiptUploadedAt'};
+  const e=x.p.events||{},start=boardTime(e[starts[x.r.id]]);
+  const unfinished=e[ends[x.r.id]]===null||(x.r.id==='ship'&&(e.wmsReceivedAt===null||e.trackingCreatedAt===null||e.trackingNumber===null));
+  sla.observed=start!==null&&start<=now&&unfinished;
+  if(sla.at!==null&&!sla.observed)sla.message='履约记录待同步';
+ }catch(e){sla.message='客户时效配置待检查';}
+ const level=!x.r.on?'paused':sla.at===null||!sla.observed?'awaiting':now>=sla.at?'overdue':now>=sla.warningAt?'warning':'normal';
+ return {...x,sla,level};
+}
+function nodeDeadlineInfo(x){
+ if(x.sla?.kind!=='system')return '<span>节点时效：'+safe(x.r.value)+' 小时</span><span>已用时：'+duration(x.o[4])+'</span>';
+ const sla=x.sla;
+ return '<span>本节点最晚完成：<b>'+(sla.at===null?safe(sla.message):safe(kaDate(sla.at)))+'</b></span><span class="sub">'+safe(sla.ruleName)+(x.r.id==='receipt'&&sla.receiptHours?' · 实际签收后 '+sla.receiptHours+' 小时':' · 按要求到货时间倒排')+'</span>';
+}
+function orderMatchesSearch(x,q=orderSearch){
+ if(q.orderNo&&!String(x.o[0]).toLowerCase().includes(q.orderNo.toLowerCase()))return false;
+ if(q.customer&&!String(x.o[1]).toLowerCase().includes(q.customer.toLowerCase()))return false;
+ if(q.start||q.end){
+  const at=boardTime(x.p?.createdAt);if(at===null)return false;
+  const day=boardDay(at);if(q.start&&day<q.start||q.end&&day>q.end)return false;
+ }
+ return true;
+}
+function orderSearchForm(){
+ return '<form class="order-search" onsubmit="applyOrderSearch(event)" aria-label="订单查询"><div class="field"><label for="orderQueryNo">订单号</label><input id="orderQueryNo" name="orderNo" value="'+safe(orderSearch.orderNo)+'" placeholder="输入订单号" maxlength="100"></div><div class="field"><label for="orderQueryCustomer">客户名称</label><input id="orderQueryCustomer" name="customer" value="'+safe(orderSearch.customer)+'" placeholder="输入客户名称" maxlength="100"></div><div class="field"><label for="orderQueryStart">下单开始日期</label><input id="orderQueryStart" name="start" type="date" value="'+safe(orderSearch.start)+'"></div><div class="field"><label for="orderQueryEnd">下单结束日期</label><input id="orderQueryEnd" name="end" type="date" value="'+safe(orderSearch.end)+'"></div><div class="order-search-actions"><button class="btn primary" type="submit">查询</button><button class="btn" type="button" onclick="resetOrderSearch()">清空查询</button></div><p id="orderQueryError" class="error" role="alert"></p></form>'+(group==='flow'?'<p class="order-search-note">查询仅筛选下方订单，不改变上方总览统计。</p>':'')+(Object.values(orderSearch).some(Boolean)?'<p class="order-search-applied">当前查询：'+[orderSearch.orderNo?'订单号包含“'+safe(orderSearch.orderNo)+'”':'',orderSearch.customer?'客户包含“'+safe(orderSearch.customer)+'”':'',orderSearch.start||orderSearch.end?'下单日期 '+safe(orderSearch.start||'不限')+' 至 '+safe(orderSearch.end||'不限'):''].filter(Boolean).join(' · ')+'</p>':'');
+}
+function applyOrderSearch(event){
+ event.preventDefault();const f=event.currentTarget.elements,next={};
+ ['orderNo','customer','start','end'].forEach(k=>next[k]=f[k].value.trim());
+ if(next.start&&next.end&&next.start>next.end){document.getElementById('orderQueryError').textContent='开始日期不能晚于结束日期';return}
+ orderSearch=next;refreshOrderDetails();
+}
+function resetOrderSearch(){orderSearch={orderNo:'',customer:'',start:'',end:''};refreshOrderDetails()}
 function boardDay(t){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(t))}
 function arrivalStatus(x,now=Date.now()){
  if(x.arrival===null)return {key:'missing',text:'到货时间待补充',color:'gray'};
@@ -379,7 +453,7 @@ function arrivalStatus(x,now=Date.now()){
 }
 function boardMatch(x,key){
  if(key==='today')return x.arrival!==null&&boardDay(x.arrival)===boardDay(Date.now());
- if(key==='missing')return x.arrival===null;
+ if(key==='missing')return x.client?.type==='system'&&x.arrival===null;
  if(key==='arrivalLate')return arrivalStatus(x).key==='late';
  return key==='all'||x.level===key;
 }
@@ -387,22 +461,24 @@ function boardMatch(x,key){
 function boardOverview(){
  const rows=boardRows(),system=customerView==='system';
  const tiles=system?[['all','系统客户订单','','当前履约中的订单'],['arrivalLate','到货超时','danger','超过客户要求到货时间'],['today','今日要求到货','caution','按客户要求的日期统计'],['missing','到货时间待补充','','需补充客户到货要求']]:[['all','履约中订单','','订单总数已去重'],['overdue','已超时订单','danger','优先跟进处理'],['warning','即将超时订单','caution','提前安排，避免超时'],['normal','正常履约订单','good','节点时效正常']];
- const extra=system?[['overdue','节点超时'],['warning','节点预警']]:[['today','今日要求到货'],['missing','到货时间待补充'],['arrivalLate','到货超时']];
+ const extra=system?[['overdue','节点超时'],['warning','节点预警']]:[['today','今日要求到货'],['missing','系统客户到货待补充'],['arrivalLate','到货超时']];
+ if(rows.some(x=>x.level==='awaiting'))extra.push(['awaiting','节点待判定']);
  return customerViewTabs()+'<div class="clarity-metrics">'+tiles.map(([key,title,color,sub])=>'<button class="metric '+color+'" data-metric-filter="'+key+'" aria-pressed="false" onclick="openNode(\'all\',\''+key+'\')"><span>'+title+'</span><strong>'+rows.filter(x=>boardMatch(x,key)).length+' <small>单</small></strong><small>'+sub+'</small></button>').join('')+'</div><div class="clarity-attention"><span>'+(system?'节点提醒':'到货提醒')+'</span>'+extra.map(([key,label])=>'<button data-metric-filter="'+key+'" aria-pressed="false" onclick="openNode(\'all\',\''+key+'\')">'+label+' <b>'+rows.filter(x=>boardMatch(x,key)).length+'</b></button>').join('')+'</div><div class="clarity-node-heading"><h3>按履约节点查看</h3><span>财务审核与工厂接单并行，订单总数不重复计算</span></div><div class="clarity-stages">'+config.rules.map((r,i)=>{
  const s=tally(rows.flatMap(x=>x.tasks).filter(x=>x.r.id===r.id));
- return '<button class="stage" data-node-card="'+r.id+'" aria-pressed="false" onclick="openNode(\''+r.id+'\')"><div class="stage-top"><b>'+safe(r.name)+'</b>'+(i<2?'<span class="oms-node-tag">并行</span>':'')+'</div><div class="stage-total">'+s.all+'<small>单待完成</small></div><div class="segments">'+['normal','warning','overdue','paused'].map(k=>'<i class="'+k+'" style="width:'+(s.all?s[k]/s.all*100:0)+'%"></i>').join('')+'</div><div class="clarity-counts"><span>正常 <b>'+s.normal+'</b></span><span class="warning">预警 <b>'+s.warning+'</b></span><span class="overdue">超时 <b>'+s.overdue+'</b></span></div><div class="stage-foot">'+(r.on?'配置时效 '+safe(r.value)+' 小时':'预警已关闭')+'</div></button>';
+ return '<button class="stage" data-node-card="'+r.id+'" aria-pressed="false" onclick="openNode(\''+r.id+'\')"><div class="stage-top"><b>'+safe(r.name)+'</b>'+(i<2?'<span class="oms-node-tag">并行</span>':'')+'</div><div class="stage-total">'+s.all+'<small>单待完成</small></div><div class="segments">'+['normal','warning','overdue','awaiting','paused'].map(k=>'<i class="'+k+'" style="width:'+(s.all?s[k]/s.all*100:0)+'%"></i>').join('')+'</div><div class="clarity-counts"><span>正常 <b>'+s.normal+'</b></span><span class="warning">预警 <b>'+s.warning+'</b></span><span class="overdue">超时 <b>'+s.overdue+'</b></span>'+(s.awaiting?'<span>待判定 <b>'+s.awaiting+'</b></span>':'')+'</div><div class="stage-foot">'+(system?(r.id==='receipt'?'签收后按客户规则计时':'按客户要求到货时间倒排'):'普通订单 '+safe(r.value)+' 小时'+(rows.some(x=>x.client?.type==='system')?' · 系统客户单独计算':''))+(r.on?'':' · 提醒已关闭')+'</div></button>';
  }).join('')+'</div>';
 }
 function overview(){return boardOverview()}
 function nodeDetail(){
- if(group!=='flow')return legacyNodeDetail();
- let rows=boardRows().filter(x=>!selectedNode||selectedNode==='all'||x.tasks.some(t=>t.r.id===selectedNode));
+ let rows=boardRows(group==='orders'?'all':customerView).filter(x=>!selectedNode||selectedNode==='all'||x.tasks.some(t=>t.r.id===selectedNode));
  if(selectedNode&&selectedNode!=='all')rows=rows.map(x=>({...x,...x.tasks.find(t=>t.r.id===selectedNode)}));
- const list=rows.filter(x=>boardMatch(x,statusFilter)).sort((a,b)=>({overdue:0,warning:1,normal:2,paused:3}[a.level]-{overdue:0,warning:1,normal:2,paused:3}[b.level])||((b.o[4]-b.r.value)-(a.o[4]-a.r.value)));
- const r=config.rules.find(r=>r.id===selectedNode),labels={all:'全部',overdue:'节点超时',warning:'节点预警',normal:'正常',today:'今日要求到货',missing:'到货时间待补充',arrivalLate:'到货超时'};
+ rows=rows.filter(x=>orderMatchesSearch(x));
+ const list=rows.filter(x=>boardMatch(x,statusFilter)).sort((a,b)=>({overdue:0,warning:1,normal:2,awaiting:3,paused:4}[a.level]-{overdue:0,warning:1,normal:2,awaiting:3,paused:4}[b.level])||((b.o[4]-b.r.value)-(a.o[4]-a.r.value)));
+ const r=config.rules.find(r=>r.id===selectedNode),labels={all:'全部',overdue:'节点超时',warning:'节点预警',normal:'正常',today:'今日要求到货',missing:'系统客户到货时间待补充',arrivalLate:'到货超时',awaiting:'节点待判定'};
  const keys=[['all','全部'],['overdue','超时'],['warning','预警'],['normal','正常']];
+ if(rows.some(x=>x.level==='awaiting'))keys.push(['awaiting','待判定']);
  const arrivalFilter=['today','missing','arrivalLate'].includes(statusFilter);
- return '<div class="overview-head"><div><h2>'+safe(r?r.name:'全部节点')+' · 订单列表</h2>'+(r?'<p>'+safe(r.from)+' → '+safe(r.to)+'</p>':'')+'</div><div class="inline-list-tools"><span class="badge gray">'+list.length+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">查看全部节点</button>':'')+'</div></div><div class="filter-tabs">'+keys.map(([key,label])=>'<button data-order-status="'+key+'" aria-pressed="'+(statusFilter===key)+'" class="'+(statusFilter===key?'active':'')+'" onclick="selectOrderStatus(\''+key+'\')">'+label+' '+rows.filter(x=>boardMatch(x,key)).length+'</button>').join('')+(arrivalFilter?'<button class="active" aria-pressed="true" onclick="selectOrderStatus(\'all\')">'+labels[statusFilter]+' ×</button>':'')+'</div><div class="oms-summary"><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>节点超时订单：<b>'+list.filter(x=>x.level==='overdue').length+' 单</b></span></div><div class="oms-order-scroll clarity-order-list">'+(list.length?omsColumnHead()+list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合条件的订单'+(customerView==='system'?'，可在客户到货配置中确认客户分类。':'。')+'</div>')+'</div>'+boardDraft();
+ return '<div class="overview-head"><div><h2>'+safe(r?r.name:'全部节点')+' · 订单列表</h2>'+(r?'<p>'+safe(r.from)+' → '+safe(r.to)+'</p>':'')+'</div><div class="inline-list-tools"><span class="badge gray">'+list.length+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">查看全部节点</button>':'')+'</div></div>'+orderSearchForm()+'<div class="filter-tabs">'+keys.map(([key,label])=>'<button data-order-status="'+key+'" aria-pressed="'+(statusFilter===key)+'" class="'+(statusFilter===key?'active':'')+'" onclick="selectOrderStatus(\''+key+'\')">'+label+' '+rows.filter(x=>boardMatch(x,key)).length+'</button>').join('')+(arrivalFilter?'<button class="active" aria-pressed="true" onclick="selectOrderStatus(\'all\')">'+labels[statusFilter]+' ×</button>':'')+'</div><div class="oms-summary"><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>节点超时订单：<b>'+list.filter(x=>x.level==='overdue').length+' 单</b></span></div><div class="oms-order-scroll clarity-order-list">'+(list.length?omsColumnHead()+list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合条件的订单'+(Object.values(orderSearch).some(Boolean)?'，请调整查询条件或清空查询。':customerView==='system'&&group==='flow'?'，可在客户到货配置中确认客户分类。':'。')+'</div>')+'</div>'+((group==='flow')?boardDraft():'');
 }
 function clarityOrderInfo(x,p){
  const c=x.client||boardRows().find(row=>row.o[0]===x.o[0])?.client;
@@ -416,6 +492,7 @@ function clarityOrderInfo(x,p){
  }
  const tasks=x.tasks||records().filter(t=>t.o[0]===x.o[0]);
  if(tasks.length>1)items.push('<span>当前待办：'+tasks.map(t=>'<span class="clarity-task">'+safe(t.r.name)+' · '+timing(t)+'</span>').join('')+'</span>');
+ if(x.sla?.kind==='system')items.push(nodeDeadlineInfo(x));
  if(p?.owner)items.push('<span>负责人：'+safe(p.owner)+'</span>');
  return items.length?'<div class="clarity-order-info">'+items.join('')+'</div>':'';
 }

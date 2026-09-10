@@ -52,11 +52,15 @@
   document.getElementById('fulfillmentImport').onsubmit=importLogistics;
   const firstSection=dialog.querySelector('section');
   firstSection.insertAdjacentHTML('beforeend','<details><summary>补充本机接单记录</summary><p>用于原型核对，不代替财务审核或工厂接单系统。</p><form id="acceptanceRecord"><div class="fulfillment-form"><label>工厂接单时间<input name="accepted" type="datetime-local" required></label><label>财务通过时间（可后补）<input name="finance" type="datetime-local"></label><label>接单库存选择<select name="stock" required><option value="">请选择</option><option value="stock">有货</option><option value="noStock">无货</option></select></label><label>是否需要回执<select name="receipt"><option value="yes">是</option><option value="no">否</option></select></label></div><button class="btn primary">保存本机接单记录</button></form></details>');
-  document.getElementById('acceptanceRecord').onsubmit=e=>{
-   e.preventDefault();try{if(db.orders[id]?.events.factoryAcceptedAt)throw Error('接单已记录，不能重新接单重置计时');const f=new FormData(e.target),accepted=new Date(f.get('accepted')).toISOString(),finance=f.get('finance')?new Date(f.get('finance')).toISOString():null,submitted=boardTime(p.createdAt);
+  const acceptance=document.getElementById('acceptanceRecord');
+  const localDate=v=>v?new Date(new Date(v).getTime()-new Date(v).getTimezoneOffset()*60000).toISOString().slice(0,16):'';
+  acceptance.elements.accepted.value=localDate(o.events.factoryAcceptedAt);acceptance.elements.finance.value=localDate(o.events.financeApprovedAt);acceptance.elements.stock.value=o.stock;acceptance.elements.receipt.value=o.receiptRequired?'yes':'no';
+  if(o.events.factoryAcceptedAt){acceptance.elements.accepted.readOnly=true;acceptance.elements.stock.disabled=true;acceptance.elements.receipt.disabled=true;}
+  acceptance.onsubmit=e=>{
+   e.preventDefault();try{const f=new FormData(e.target),accepted=o.events.factoryAcceptedAt||new Date(f.get('accepted')).toISOString(),finance=o.events.financeApprovedAt||(f.get('finance')?new Date(f.get('finance')).toISOString():null),submitted=boardTime(p.createdAt);
     if(Fulfillment.at(accepted)>Date.now()||Fulfillment.at(accepted)<submitted)throw Error('接单时间须在下单后且不晚于当前时间');
     if(finance&&(Fulfillment.at(finance)>Date.now()||Fulfillment.at(finance)<submitted))throw Error('财务通过时间须在下单后且不晚于当前时间');
-    const next=clone(db);next.orders[id]={...o,stock:f.get('stock'),receiptRequired:f.get('receipt')==='yes',events:{...o.events,submittedAt:new Date(submitted).toISOString(),factoryAcceptedAt:accepted,financeApprovedAt:finance}};commit(next);render();openFulfillment(id);notice('接单记录已保存在本机，计时起点已锁定。');
+    const next=clone(db);next.orders[id]={...o,stock:o.stock||f.get('stock'),receiptRequired:o.events.factoryAcceptedAt?o.receiptRequired:f.get('receipt')==='yes',events:{...o.events,submittedAt:new Date(submitted).toISOString(),factoryAcceptedAt:accepted,financeApprovedAt:finance}};commit(next);render();openFulfillment(id);notice('接单记录已保存在本机，计时起点已锁定。');
    }catch(error){notice(error.message);}
   };
   if(!dialog.open)dialog.showModal();

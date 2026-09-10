@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT=Path(r'E:\cxy')
 REF=ROOT/'04-需求管理/PRD-OMS发货单拆单与合单功能-v1.0.docx'
-SOURCE=ROOT/'04-需求管理/PRD-OMS订单履约时效管理-v1.0.md'
+SOURCE=ROOT/'04-需求管理/PRD-OMS订单履约时效管理-v1.1.md'
 OUTPUT=SOURCE.with_suffix('.docx')
 QA=ROOT/'脱骨侠发货单H5/tools/prd-qa-20260910/template-rewrite'
 EXPECTED='59bb9de4d3e5d42a01484ce3ea9300669903c3255a1642e2e7194bf2c839eb7c'
@@ -239,7 +239,7 @@ with ZipFile(OUTPUT) as z:
 assert hashlib.sha256(REF.read_bytes()).hexdigest()==EXPECTED
 assert E.tostring(doc.find('.//'+q('sectPr')))==E.tostring(sect)
 h1=doc.xpath('//w:p[w:pPr/w:pStyle[@w:val="Heading1"]]',namespaces=NS)
-assert len(h1)==10
+assert len(h1)==9
 text=''.join(doc.xpath('//w:t/text()',namespaces=NS))
 for forbidden in ['陈薪宇','多级拆合重组','售后完成后向旺店通推送1条','最小可拆条件','旺店通拆合单交互演示']:
     assert forbidden not in text,forbidden

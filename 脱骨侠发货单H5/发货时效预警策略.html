@@ -117,13 +117,14 @@ function classify(o,r){
 }
 
 function eventNodeRows(order,events,now=Date.now()){
- const edges={finance:['submittedAt','financeApprovedAt'],accept:['submittedAt','factoryAcceptedAt'],ship:['wdtSyncedAt','shippedAt'],pickup:['wmsReceivedAt','wmsOutboundAt'],sign:['wmsOutboundAt','signedAt'],receipt:['signedAt','receiptUploadedAt']};
+ const edges={finance:['submittedAt','financeApprovedAt'],accept:['submittedAt','factoryAcceptedAt'],ship:['factoryAcceptedAt','shippedAt'],pickup:['wmsReceivedAt','wmsOutboundAt'],sign:['wmsOutboundAt','signedAt'],receipt:['signedAt','receiptUploadedAt']};
  const time=v=>v?new Date(v).getTime():NaN;
- const e={...events};
+ const e=window.Fulfillment?Fulfillment.normalize(events):{...events};
  // Both WMS synchronization and tracking-number generation must be complete.
  if(e.wmsReceivedAt&&e.trackingNumber&&e.trackingCreatedAt)e.shippedAt=new Date(Math.max(time(e.wmsReceivedAt),time(e.trackingCreatedAt))).toISOString();
  return config.rules.flatMap(r=>{
  const [start,end]=edges[r.id],at=time(e[start]);
+ if(r.id==='receipt'&&omsProfiles[order[0]]?.receiptRequired===false)return [];
  if(!Number.isFinite(at)||at>now||Number.isFinite(time(e[end])))return [];
  const o=[...order];o[3]=e[start];o[4]=(now-at)/3600000;
  return [{o,r,level:classify(o,r)}];
@@ -250,7 +251,7 @@ function omsOrderCard(x,inDialog=false){
 }
 
 function syncMenuRoute(){
- const target=location.hash==='#orders'?'orders':location.hash==='#driver'?'driver':'flow';
+ const target=location.hash==='#orders'?'orders':location.hash==='#driver'?'flow':'flow';
  selectGroup(target);
 }
 window.addEventListener('hashchange',syncMenuRoute);
@@ -408,7 +409,7 @@ function withCustomerDeadline(x,data,now=Date.now()){
    const d=kaPlan(c,source,x.p.customerRequiredArrivalAt,now).deadlines.find(d=>d.id===x.r.id);
    sla.at=d.at;sla.warningAt=d.warningAt;
   }
-  const starts={finance:'submittedAt',accept:'submittedAt',ship:'wdtSyncedAt',pickup:'wmsReceivedAt',sign:'wmsOutboundAt',receipt:'signedAt'};
+  const starts={finance:'submittedAt',accept:'submittedAt',ship:'factoryAcceptedAt',pickup:'wmsReceivedAt',sign:'wmsOutboundAt',receipt:'signedAt'};
   const ends={finance:'financeApprovedAt',accept:'factoryAcceptedAt',ship:'shippedAt',pickup:'wmsOutboundAt',sign:'signedAt',receipt:'receiptUploadedAt'};
   const e=x.p.events||{},start=boardTime(e[starts[x.r.id]]);
   const unfinished=e[ends[x.r.id]]===null||(x.r.id==='ship'&&(e.wmsReceivedAt===null||e.trackingCreatedAt===null||e.trackingNumber===null));
@@ -501,5 +502,5 @@ function boardDraft(){
  try{const d=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(d?.ruleSnapshot?.type!=='system')return '';return '<details><summary>本地系统客户草稿（未提交，不计入订单）</summary><p>'+safe(d.fields.customerName)+' · 要求到货 '+safe(d.fields.customerRequiredArrivalAt||'待补充')+'</p><button class="btn" onclick="openKaOrder()">查看草稿</button></details>'}catch(e){return ''}
 }
 </script>
-</body>
+<link rel="stylesheet" href="履约业务交互.css"><script src="履约规则.js"></script><script src="履约业务交互.js"></script></body>
 </html>

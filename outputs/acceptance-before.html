@@ -1,0 +1,1075 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>发货时效预警策略</title>
+<style>
+:root{--red:#d92d20;--red-dark:#b42318;--ink:#25211f;--muted:#746d69;--line:#e9e4e1;--bg:#f5f3f1;--green:#12805c;--amber:#b75b08;--blue:#2869b2}*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--ink);font-size:14px}button,input,select{font:inherit}.topbar{height:68px;background:#211d1b;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100vw - 1240px)/2));box-shadow:0 2px 12px rgba(30,20,16,.12)}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:18px}.brand-mark{width:34px;height:34px;border-radius:9px;background:var(--red);display:grid;place-items:center}.topbar small{color:#aaa19d}.page{max-width:1240px;margin:0 auto;padding:26px 24px 60px}.page-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.page-head h1{font-size:24px;margin:0 0 7px}.page-head p{margin:0;color:var(--muted)}.badge{display:inline-flex;align-items:center;border-radius:99px;padding:6px 10px;font-size:12px;font-weight:700}.badge.green{background:#eaf7f1;color:var(--green)}.badge.gray{background:#eeeceb;color:#6f6966}.badge.amber{background:#fff1dc;color:var(--amber)}.badge.red{background:#fde9e6;color:var(--red)}.legend{display:flex;gap:8px;margin-bottom:16px}.layout{display:grid;grid-template-columns:230px minmax(0,1fr);gap:16px}.nav,.panel{background:#fff;border:1px solid #eeeae8;border-radius:14px;box-shadow:0 4px 16px rgba(50,35,28,.035)}.nav{padding:10px;height:max-content;position:sticky;top:18px}.tab{width:100%;border:0;background:transparent;border-radius:9px;padding:13px 12px;text-align:left;color:#6f6763;cursor:pointer;display:flex;justify-content:space-between;align-items:center}.tab.active{background:#fff0ed;color:var(--red);font-weight:800}.tab small{background:#f2efed;border-radius:99px;padding:2px 7px}.tab.active small{background:#ffdcd6}.panel{padding:20px}.panel-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding-bottom:17px;border-bottom:1px solid var(--line)}.panel-head h2{margin:0 0 6px;font-size:18px}.panel-head p{margin:0;color:var(--muted);font-size:13px}.card{border:1px solid var(--line);border-radius:12px;margin-top:14px;overflow:hidden}.card-head{padding:13px 15px;background:#fbfaf9;display:flex;justify-content:space-between;align-items:center}.card-body{padding:15px;display:grid;grid-template-columns:1.5fr repeat(3,minmax(105px,.7fr));gap:14px;align-items:end}.card-body.two{grid-template-columns:1fr 1fr}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input,.field select{width:100%;height:40px;border:1px solid var(--line);border-radius:8px;padding:0 10px;background:#fff;outline:none}.field input:focus,.field select:focus{border-color:#d78378;box-shadow:0 0 0 3px #fff0ed}.input-unit{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}.input-unit input{border:0;border-radius:0;min-width:0}.input-unit span{padding:0 10px;background:#faf8f7;color:#817874;display:flex;align-items:center}.note{grid-column:1/-1;background:#f5f8fb;border-radius:8px;padding:11px 12px;font-size:12px;color:#5f6c78}.toggle{width:44px;height:25px;border:0;border-radius:99px;background:#c9c2be;padding:3px;cursor:pointer}.toggle:after{content:'';display:block;width:19px;height:19px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px #777}.toggle.on{background:var(--green)}.toggle.on:after{transform:translateX(19px)}.driver-options{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px}.option{border:1px solid var(--line);border-radius:10px;padding:14px}.option label{font-weight:700}.option p{font-size:12px;color:var(--muted);margin:6px 0 0}.option input{margin-right:7px}.actions{position:sticky;bottom:0;margin:20px -20px -20px;padding:14px 20px;background:rgba(255,255,255,.97);border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.actions span{font-size:12px;color:var(--muted)}.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:10px 16px;cursor:pointer}.btn.primary{background:var(--red);border-color:var(--red);color:#fff;font-weight:700}.btn.primary:hover{background:var(--red-dark)}.dirty{color:var(--amber)!important;font-weight:700}.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);background:#211d1b;color:#fff;border-radius:9px;padding:11px 18px;opacity:0;pointer-events:none;transition:.2s;z-index:5}@media(max-width:820px){.topbar{padding:0 16px}.page{padding:20px 14px 50px}.layout{grid-template-columns:1fr}.nav{position:static;display:flex;overflow:auto}.tab{min-width:150px}.card-body,.card-body.two{grid-template-columns:1fr 1fr}.driver-options{grid-template-columns:1fr}.page-head{gap:12px}.page-head h1{font-size:21px}}@media(max-width:560px){.card-body,.card-body.two{grid-template-columns:1fr}.legend{overflow:auto}.page-head{display:block}.page-head>.badge{margin-top:12px}.actions{align-items:flex-start;gap:10px}.actions>div{display:flex;gap:6px}.btn{padding:9px 11px}}
+</style>
+<style>
+.node-orders{border-top:1px solid var(--line);background:#fff}.orders-head{padding:12px 15px;display:flex;justify-content:space-between;align-items:center;background:#fff}.orders-head strong{font-size:13px}.orders-head span{color:var(--muted);font-size:12px}.orders-toggle{border:0;background:transparent;color:var(--blue);font-weight:700;cursor:pointer;padding:5px}.order-table-wrap{overflow:auto;border-top:1px solid #f0edeb}.order-table{width:100%;border-collapse:collapse;min-width:760px}.order-table th{padding:10px 14px;text-align:left;color:#817a76;background:#fbfaf9;font-size:12px;font-weight:600}.order-table td{padding:12px 14px;border-top:1px solid #f1eeec;vertical-align:middle}.order-no{font-weight:750}.order-sub{font-size:12px;color:var(--muted);margin-top:3px}.time-progress{width:128px;height:6px;background:#eeeae8;border-radius:99px;overflow:hidden;margin-top:6px}.time-progress i{display:block;height:100%;border-radius:99px;background:var(--green)}.time-progress.warning i{background:var(--amber)}.time-progress.overdue i{background:var(--red)}.time-value{font-weight:750}.time-value.warning{color:var(--amber)}.time-value.overdue{color:var(--red)}.empty-orders{padding:24px;text-align:center;color:var(--muted)}
+</style>
+<style>
+[hidden]{display:none!important}.page{max-width:1480px}.layout{grid-template-columns:196px minmax(0,1fr)}.panel{min-width:0}.field label,.order-table th{font-size:14px}.order-table .badge{font-size:14px}.overview-head{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:20px}.overview-head h2{margin:0;font-size:20px}.overview-head p,.section-caption{color:var(--muted);font-size:13px;line-height:1.7;margin:6px 0 0}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}.metric{border:1px solid var(--line);background:#fff;border-radius:12px;padding:18px;text-align:left;cursor:pointer;color:var(--ink)}.metric:hover,.stage:hover{border-color:#d99085;box-shadow:0 4px 16px #3420190a}.metric strong{font-size:32px;display:block;margin:10px 0 7px;line-height:1.1}.metric small{font-size:12px;color:var(--muted)}.metric.danger{background:#fff4f2;border-color:#f3c5bc}.metric.danger strong{color:var(--red)}.metric.caution strong{color:var(--amber)}.metric.good strong{color:var(--green)}.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}.stage{background:#fff;border:1px solid var(--line);border-radius:12px;padding:17px;text-align:left;cursor:pointer;color:var(--ink)}.stage-top{display:flex;align-items:center;justify-content:space-between;font-size:16px;font-weight:700}.stage-index{font-size:12px;color:var(--muted);font-weight:400}.stage-total{font-size:30px;font-weight:750;margin:12px 0}.stage-total small{font-size:13px;font-weight:400;color:var(--muted);margin-left:6px}.segments{display:flex;height:6px;border-radius:9px;overflow:hidden;background:#eeeae8;gap:2px;margin:12px 0}.segments i{height:100%}.segments .normal{background:var(--green)}.segments .warning{background:#d68b28}.segments .overdue{background:var(--red)}.segments .paused{background:#aca6a2}.stage-counts{display:flex;gap:12px;font-size:13px;flex-wrap:wrap}.stage-counts .overdue{color:var(--red)}.stage-counts .warning{color:var(--amber)}.stage-foot{border-top:1px solid var(--line);margin-top:14px;padding-top:12px;display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}.stage-foot b{color:var(--blue);font-weight:600}.focus-note{margin-top:20px;background:#fff5f2;border-left:3px solid var(--red);border-radius:6px;padding:13px 16px;line-height:1.8;font-size:14px}.section-title{font-size:16px;margin:0}.back-link{border:0;background:transparent;padding:0;color:var(--blue);cursor:pointer;margin-bottom:16px}.detail-summary{padding:14px 16px;border:1px solid var(--line);background:#fbfaf9;border-radius:10px;margin:14px 0;color:var(--muted);line-height:1.8}.detail-summary b{color:var(--ink)}.filter-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0}.filter-tabs button{border:1px solid var(--line);padding:8px 12px;border-radius:8px;background:#fff;cursor:pointer;color:var(--muted)}.filter-tabs button.active{background:#211d1b;border-color:#211d1b;color:white}.order-table{min-width:880px}.detail-settings{border:1px solid var(--line);padding:12px 15px;border-radius:10px;margin-top:20px}.detail-settings summary{cursor:pointer;font-weight:600}.detail-settings .node-orders{display:none}.detail-settings .card{border:0}.detail-settings .card-body{padding:15px 0}.detail-settings .card-head{border-radius:8px}.order-dialog{width:min(640px,94vw);border:1px solid var(--line);border-radius:16px;padding:24px;color:var(--ink);box-shadow:0 20px 70px #211d1b33}.order-dialog::backdrop{background:#211d1b66}.dialog-head{display:flex;justify-content:space-between;align-items:center}.dialog-head h2{margin:0;font-size:20px}.order-kv{display:grid;grid-template-columns:1fr 1fr;gap:22px 16px;margin:24px 0}.order-kv dt{color:var(--muted);font-size:13px;margin-bottom:7px}.order-kv dd{margin:0;font-size:16px}.order-journey{display:flex;gap:7px;flex-wrap:wrap}.order-journey span{padding:7px 9px;background:#f3f1ef;border-radius:6px;color:var(--muted)}.order-journey .current{color:var(--red);background:#fff0ed;font-weight:700}.settings-info{margin-top:12px;color:var(--muted);font-size:13px}button:focus-visible,summary:focus-visible{outline:3px solid #2869b2;outline-offset:3px}@media(max-width:1000px){.layout{grid-template-columns:1fr}.nav{position:static;display:flex}.tab{min-width:170px}.metrics{gap:8px}.metric{padding:14px}}@media(max-width:680px){.metrics,.stage-grid{grid-template-columns:repeat(2,1fr)}.metric strong{font-size:27px}.overview-head{align-items:flex-start}.stage-counts{gap:7px}.stage{padding:12px}.stage-top{font-size:14px}.order-kv{grid-template-columns:1fr}.topbar small{display:none}}@media(max-width:420px){.stage-grid{grid-template-columns:1fr}}
+</style>
+<style>
+/* OMS visual language shared by the overview and the configuration document. */
+:root{--red:#409eff;--red-dark:#337ecc;--ink:#263c54;--muted:#7b8794;--line:#dcdfe6;--bg:#f5f7fa;--green:#67c23a;--amber:#e6a23c;--blue:#409eff}
+body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px;background:var(--bg)}.topbar{height:60px;background:#fff;color:#303133;padding:0 26px;border-bottom:1px solid var(--line);box-shadow:none;position:sticky;top:0;z-index:10}.brand{font-size:16px;gap:36px;white-space:nowrap}.brand-mark{display:none}.oms-system{height:59px;display:flex;align-items:center;padding:0 22px;background:#ecf5ff;font-size:14px;font-weight:400}.topbar small{color:#606266;font-size:13px}.page{max-width:none;margin:0 0 0 200px;padding:18px 22px 44px}.layout{display:block}.layout>.nav,.config-nav{position:fixed;top:60px;left:0;bottom:0;width:200px;background:#fff;border:0;border-right:1px solid var(--line);border-radius:0;box-shadow:none;padding:14px 0;height:auto;display:block;overflow:auto}.nav:before,.config-nav:before{content:"订单中心";display:block;padding:16px 24px;color:#303133;font-size:14px;margin-bottom:10px}.tab,.config-nav a{display:flex;width:100%;min-width:0;border-radius:0;padding:17px 22px;color:#303133;font-size:14px;line-height:1.6;gap:8px;white-space:normal}.tab.active,.config-nav a.active{background:#ecf5ff;color:#409eff;font-weight:600}.tab small{background:#f4f4f5;color:#909399}.tab:hover,.config-nav a:hover{background:#f5f7fa}.page-head{padding:12px 18px;background:#fff;border:1px solid var(--line);margin-bottom:16px;align-items:center}.page-head h1{font-size:20px;margin-bottom:5px;color:#303133}.page-head p{font-size:13px;color:#909399}.panel,.box,.card{border-radius:3px;box-shadow:none;border-color:var(--line)}.panel{padding:20px}.btn{border-radius:4px;font-size:14px;padding:9px 15px}.btn.primary{font-weight:400}.field input,.field select,.field textarea,.input-unit{border-radius:4px}.field input:focus,.field select:focus{border-color:#409eff;box-shadow:none}.badge{border:1px solid transparent;border-radius:3px;font-weight:400;padding:3px 7px}.badge.green{color:#67c23a;background:#f0f9eb;border-color:#e1f3d8}.badge.gray{color:#909399;background:#f4f4f5;border-color:#e9e9eb}.badge.red{color:#f56c6c;background:#fef0f0;border-color:#fde2e2}.badge.amber{color:#e6a23c;background:#fdf6ec;border-color:#faecd8}.metric,.stage{border-radius:4px;box-shadow:none}.metric:hover,.stage:hover{border-color:#409eff;box-shadow:none}.metric.danger{background:#fef0f0;border-color:#fde2e2}.metric.danger strong,.stage-counts .overdue,.time-value.overdue{color:#f56c6c}.metric.good strong{color:#67c23a}.metric.caution strong{color:#e6a23c}.segments .overdue,.time-progress.overdue i{background:#f56c6c}.segments .warning{background:#e6a23c}.focus-note{border-left-color:#e6a23c;background:#fdf6ec;border-radius:0}.filter-tabs button{border-radius:4px}.filter-tabs button.active{background:#409eff;border-color:#409eff}.detail-summary,.note,.match-result{border-radius:3px;background:#f5f7fa}.box-head{background:#fff}.tabs{background:#fff}.tabs a.active{color:#409eff;border-color:#409eff}.editor,.order-dialog{border-radius:5px}.order-dialog{width:min(1400px,96vw);max-height:92vh;overflow:auto;padding:22px}.order-journey .current{background:#ecf5ff;color:#409eff}.actions{border-radius:0}.storage-status{color:#909399}.box-body .error,.error{color:#f56c6c}.link-button.danger{color:#f56c6c}
+.oms-order-scroll{overflow-x:auto}.oms-column-head,.oms-order-body{display:grid;grid-template-columns:minmax(310px,2.2fr) 110px 115px minmax(170px,1.1fr) minmax(155px,1fr) 160px 120px;min-width:1240px}.oms-column-head{background:#fff;color:#303133;font-size:14px}.oms-column-head>div{padding:13px 10px}.oms-order{border:1px solid var(--line);margin-bottom:18px;min-width:1240px;background:#fff}.oms-order-head{background:#f7f7f9;padding:12px 10px;display:flex;gap:10px 18px;flex-wrap:wrap;align-items:center;border-bottom:1px solid var(--line);font-size:13px}.oms-order-head b{font-weight:400}.oms-order-head .sla-clock{color:#f56c6c;font-size:17px;margin-left:auto}.oms-order-head .sla-clock.normal{color:#67c23a}.oms-order-head .sla-clock.warning{color:#e6a23c}.oms-order-head .sla-clock.paused{color:#909399}.oms-order-body>div{padding:18px 12px;border-right:1px solid var(--line);display:flex;flex-direction:column;justify-content:center;min-width:0;font-size:14px;line-height:1.65}.oms-order-body>div:last-child{border-right:0}.oms-order-body .oms-products{grid-column:1/3;padding:0}.oms-product{display:grid;grid-template-columns:minmax(310px,2.2fr) 110px;flex:1;border-bottom:1px solid var(--line);min-height:162px}.oms-product:last-child{border-bottom:0}.oms-product-info{padding:18px 14px;display:flex;flex-direction:column;justify-content:space-between;gap:22px}.oms-product-name{font-size:14px;color:#263c54;line-height:1.5}.oms-product-price{padding:18px 12px;text-align:center;line-height:2}.oms-product-price em{font-style:normal;color:#67c23a}.oms-product-tags span{display:inline-block;color:#409eff;background:#ecf5ff;border:1px solid #d9ecff;border-radius:3px;padding:2px 7px;font-size:12px;margin:3px 5px 3px 0}.oms-money{color:#f56c6c;text-align:center}.oms-status-row{display:flex;align-items:center;gap:5px;margin:4px 0;white-space:nowrap;font-size:13px}.oms-blue-tag{background:#ecf5ff;border:1px solid #d9ecff;border-radius:3px;color:#409eff;padding:2px 7px;font-size:12px}.oms-receiver,.oms-customer{text-align:center}.oms-actions{gap:18px;text-align:center;align-items:center}.oms-order-foot{background:#e8f6f6;border-top:1px solid var(--line);padding:13px 18px;font-size:14px;color:#263c54}.oms-summary{background:#f5f7ff;border:0;padding:15px 18px;display:flex;gap:20px 34px;flex-wrap:wrap;margin:16px 0;font-size:14px}.oms-summary b{color:#ff6b35;font-size:16px}.oms-source-note{font-size:12px;color:#909399;margin:0 0 12px}.oms-preview-info{margin:14px 0;font-size:14px;color:#606266}.oms-node-tag{font-size:12px;border:1px solid #d9ecff;color:#409eff;background:#ecf5ff;padding:2px 7px;border-radius:3px}.oms-unknown{color:#909399;font-size:13px}.oms-order-body .oms-no-products{padding:20px;min-height:150px}.oms-current-info{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:18px 0}.oms-current-info span{font-size:14px}.section-title{color:#303133}@media(min-width:1600px){.stage-grid{grid-template-columns:repeat(6,1fr)}}@media(max-width:900px){.page{margin-left:170px;padding:14px}.layout>.nav,.config-nav{width:170px}.brand{gap:15px}.topbar{padding:0 16px}.tab,.config-nav a{padding:14px}.metrics{grid-template-columns:repeat(2,1fr)}.stage-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:620px){.page{margin-left:0;padding:10px}.layout>.nav,.config-nav{position:static;width:100%;display:flex;overflow:auto;padding:0;margin-bottom:12px;border:1px solid var(--line);background:white}.nav:before,.config-nav:before{display:none}.tab,.config-nav a{min-width:140px;padding:12px}.config-nav{margin:0}.brand{font-size:14px;gap:10px}.oms-system{padding:0 10px;font-size:13px}.page-head{padding:12px}.page-head h1{font-size:18px}.panel{padding:14px}.topbar small{display:none}.stage-grid{grid-template-columns:repeat(2,1fr)}.overview-head{flex-wrap:wrap}.oms-summary{gap:10px}.order-dialog{padding:12px}.page-head>.badge{margin-top:0}}
+</style>
+<style>
+.inline-order-details{border-top:1px solid var(--line);margin-top:24px;padding-top:22px;min-width:0}.inline-list-tools{display:flex;align-items:center;gap:14px}.stage.selected,.metric.selected{border-color:#409eff;background:#ecf5ff;box-shadow:inset 0 0 0 1px #409eff}.stage.selected .stage-top{color:#409eff}.stage.selected .stage-foot b{font-weight:700}.metric{padding:14px 16px}.metric strong{font-size:28px;margin:8px 0}.stage{padding:14px}.stage-total{font-size:26px;margin:8px 0}.stage-foot{margin-top:10px;padding-top:10px}.stage-counts{gap:8px}.overview-head{margin-bottom:16px}.focus-note{margin-top:16px;padding:10px 14px}.inline-order-details>.overview-head h2{font-size:18px}.inline-order-details .detail-summary{margin:10px 0;padding:10px 14px}.inline-order-details .oms-summary{margin:12px 0}@media(min-width:1350px){.stage-grid{grid-template-columns:repeat(6,minmax(0,1fr))}.stage-top{font-size:14px}.stage-counts{font-size:12px}}@media(max-width:680px){.inline-order-details{margin-top:18px;padding-top:18px}}
+</style><style>
+/* One sidebar layout for all SLA pages. */
+.sla-sidebar{position:fixed!important;inset:60px auto 0 0;width:200px;padding:18px 12px 24px;background:#fff;border-right:1px solid #e4e7ed;overflow-y:auto;z-index:9;box-sizing:border-box;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif}
+.sla-sidebar .sla-nav-group{margin:0 0 20px}.sla-sidebar .sla-nav-group:last-child{margin-bottom:0}
+.sla-sidebar .sla-nav-heading{margin:0 0 7px;padding:0 12px;font-size:12px;line-height:22px;font-weight:400;color:#909399;letter-spacing:1px}
+.sla-sidebar .sla-nav-item{position:relative;display:flex;align-items:center;gap:10px;min-height:44px;padding:11px 12px;margin:3px 0;color:#606266;background:transparent;border:0;border-radius:5px;text-decoration:none;font-size:14px;font-weight:400;line-height:22px;white-space:nowrap;box-sizing:border-box;cursor:pointer}
+.sla-sidebar .sla-nav-item:hover{background:#f5f7fa;color:#303133}
+.sla-sidebar .sla-nav-item.active{background:#ecf5ff;color:#409eff;font-weight:600}
+.sla-sidebar .sla-nav-item.active:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:#409eff}
+.sla-sidebar .sla-nav-item:focus-visible{outline:2px solid #409eff;outline-offset:2px}
+.sla-sidebar .sla-nav-icon{display:block;width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sla-sidebar .sla-nav-item span{display:block;flex:1;min-width:0}
+.sla-sidebar+.page,body>main.page{margin-left:200px}
+@media(max-width:900px) and (min-width:761px){.sla-sidebar{width:200px}.page,body>main.page{margin-left:200px}}
+@media(max-width:760px){.sla-sidebar{position:relative!important;inset:auto;width:100%;display:flex;gap:8px;padding:8px 10px;border-right:0;border-bottom:1px solid #e4e7ed;overflow-x:auto;overflow-y:hidden;z-index:1}.sla-sidebar .sla-nav-group{display:flex;gap:5px;margin:0;padding:0 8px 0 0;border-right:1px solid #ebeef5;flex-shrink:0}.sla-sidebar .sla-nav-group:last-child{border:0}.sla-sidebar .sla-nav-heading{display:none}.sla-sidebar .sla-nav-item{min-height:40px;margin:0;padding:9px 10px;gap:7px}.sla-sidebar .sla-nav-item.active:before{display:none}.sla-sidebar+.page,.page,body>main.page{margin-left:0}}
+</style>
+
+<style>
+.ka-drawer{position:fixed;inset:0 0 0 auto;margin:0;width:min(1520px,80vw);max-width:100vw;height:100dvh;max-height:100dvh;border:0;padding:0;color:#606266;background:white;box-shadow:-8px 0 32px #0002}
+.ka-drawer::backdrop{background:#0007}.ka-drawer form{height:100%;display:flex;flex-direction:column}.ka-head,.ka-foot{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;background:white}.ka-head h2{margin:0;font-size:20px;color:#303133;font-weight:500}.ka-body{flex:1;overflow:auto;padding:0 24px 24px}.ka-title{font-size:16px;color:#303133;border-bottom:1px solid #ebeef5;padding:12px 0;position:relative}.ka-title:before{content:"";position:absolute;width:4px;height:18px;left:-10px;background:#409eff;border-radius:2px}
+.ka-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 36px;margin:20px 0 30px}.ka-field{display:flex;align-items:center;gap:12px;min-width:0}.ka-field>span{width:120px;flex-shrink:0;text-align:right}.ka-field em{color:#f56c6c;font-style:normal}.ka-field input:not([type=radio]),.ka-field select,.ka-field textarea{width:100%;min-width:0;border:1px solid #dcdfe6;border-radius:3px;padding:8px 10px;background:white;color:#606266;font:inherit}.ka-field textarea{resize:vertical}.ka-wide{grid-column:1/-1}.ka-radio{display:flex;gap:20px;align-items:center}.ka-radio label{white-space:nowrap}.ka-radio input{accent-color:#409eff}.ka-arrival input{border-color:#409eff!important}.ka-hint{margin:0 0 20px;color:#909399;font-size:13px}.ka-foot{justify-content:flex-end;gap:12px;border-top:1px solid #ebeef5}.ka-foot small{margin-right:auto;color:#909399}.ka-primary{background:#409eff!important;border-color:#409eff!important;color:white!important}.ka-table{overflow:auto;border:1px solid #ebeef5;border-radius:3px;padding:16px 20px}.ka-table table{width:100%;min-width:1000px;border-collapse:collapse}.ka-table th,.ka-table td{padding:14px 8px;border-bottom:1px solid #ebeef5;text-align:center;font-weight:400}.ka-table th{color:#909399}.ka-table input{width:76px;padding:6px;border:1px solid #dcdfe6;border-radius:3px}.ka-table select{max-width:310px;padding:6px;border:1px solid #dcdfe6}.ka-table button{color:#409eff;background:none;border:0;cursor:pointer}.ka-add{text-align:center;padding-top:16px}.ka-message{color:#409eff;white-space:pre-line}.ka-close{border:0;background:white;font-size:24px;cursor:pointer}
+@media(max-width:900px){.ka-drawer{width:100vw}.ka-grid{grid-template-columns:1fr}.ka-wide{grid-column:auto}.ka-foot small{max-width:55%}}
+</style>
+<style>.system-orders-table th,.system-orders-table td{padding:16px;text-align:left;border-bottom:1px solid #ebeef5;line-height:1.7;vertical-align:top}.system-orders-table th{background:#f5f7fa;color:#909399;font-weight:400}</style><style>
+.board-metrics{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px;margin:16px 0 22px}.board-metrics .metric{min-width:0}.board-flow{display:grid;grid-template-columns:2fr 4fr;gap:18px}.board-flow h3{font-size:14px;margin:0 0 12px;color:#606266}.board-parallel{border:1px solid #b3d8ff;border-radius:4px;background:#f5faff;padding:14px}.board-parallel>div{display:grid;grid-template-columns:1fr 1fr;gap:12px}.board-sequence{padding:14px 0}.board-sequence>div{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.board-flow .stage{width:100%;min-width:0;padding:14px}.board-flow .stage-foot{line-height:1.6;font-size:12px;white-space:normal}.board-table-wrap{overflow:auto}.board-table{width:100%;min-width:1220px;border-collapse:collapse;font-size:14px}.board-table th{background:#f5f7fa;color:#909399;font-weight:400;white-space:nowrap}.board-table th,.board-table td{padding:14px 12px;border-bottom:1px solid #ebeef5;text-align:left;vertical-align:top;line-height:1.8}.board-table td:first-child{max-width:230px}.board-table small{color:#909399}.board-table summary{color:#409eff;cursor:pointer;white-space:nowrap}.board-products{max-width:280px;min-width:200px}.board-table td>div+div{margin-top:6px}.board-table .orders-toggle{margin-top:8px}@media(max-width:1200px){.board-flow{grid-template-columns:1fr}.board-metrics{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:640px){.board-metrics,.board-sequence>div{grid-template-columns:repeat(2,minmax(0,1fr))}}
+</style><style>
+.clarity-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:16px 0}.clarity-metrics .metric{min-width:0}.clarity-attention{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:4px 0 22px;font-size:14px;color:#909399}.clarity-attention button{font:inherit;border:1px solid #e4e7ed;padding:6px 12px;border-radius:4px;background:#fff;color:#606266;cursor:pointer}.clarity-attention button.selected{background:#ecf5ff;border-color:#409eff;color:#409eff}.clarity-attention b{margin-left:7px}.clarity-node-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.clarity-node-heading h3{font-size:16px;margin:0}.clarity-node-heading>span{font-size:13px;color:#909399}.clarity-stages{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px;margin-bottom:22px}.clarity-stages .stage{min-width:0;padding:16px 12px}.clarity-stages .stage-top{gap:6px;flex-wrap:wrap}.clarity-stages .stage-top>b{font-size:14px}.clarity-stages .stage-foot{font-size:13px;margin-top:12px}.clarity-counts{display:flex;gap:5px;justify-content:space-between;font-size:12px;margin-top:12px;flex-wrap:wrap}.clarity-counts b{font-weight:500}.clarity-counts .warning{color:#e6a23c}.clarity-counts .overdue{color:#f56c6c}.clarity-order-info{padding:12px 18px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;background:#f5faff;border-bottom:1px solid #ebeef5;font-size:14px}.clarity-task{display:inline-block;margin-left:12px}.clarity-order-list .oms-order-head .sla-clock{font-weight:500}.clarity-order-list .oms-product{min-height:132px}.clarity-order-list .oms-product-info{gap:14px;padding:16px}.clarity-order-list .oms-order-foot{padding:10px 18px}@media(max-width:1250px){.clarity-stages{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:760px){.clarity-metrics,.clarity-stages{grid-template-columns:repeat(2,minmax(0,1fr))}.clarity-node-heading>span{line-height:1.7}.clarity-attention{gap:8px}}
+</style><link rel="stylesheet" href="履约界面主题.css?v=2"></head>
+<body class="sla-polished">
+<header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="oms-system">OMS订单系统</span></div><small>经营管理视图</small></header>
+<nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a class="sla-nav-item" data-group="orders" href="发货时效预警策略.html#orders"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>订单列表</span></a><a id="navAcceptance" class="sla-nav-item" data-group="accept" href="发货时效预警策略.html#accept"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h4m-3 4 2 2 4-4"/></svg><span>订单接单列表</span></a><a id="navFlow" class="sla-nav-item active" data-group="flow" href="发货时效预警策略.html#flow" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="履约节点配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item" data-group="customers" href="系统客户配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>系统客户配置</span></a></div></nav>
+<main class="page"><header class="page-head"><div><h1>订单履约总览</h1><p>点击总览指标或履约节点，下方直接显示对应订单。</p></div></header><div class="layout"><section class="panel"><div id="content"></div><footer class="actions"><span id="saveState">上次保存：尚未保存</span><div><button class="btn" onclick="resetConfig()">恢复默认</button> <button class="btn primary" onclick="saveConfig()">保存并生效</button></div></footer></section></div></main><div class="toast" id="toast"></div>
+
+<dialog id="kaDrawer" class="ka-drawer" aria-labelledby="kaTitle">
+<form id="kaForm" onsubmit="saveKaOrder(event)">
+<header class="ka-head"><h2 id="kaTitle">新增</h2><button type="button" class="ka-close" aria-label="关闭下单" onclick="closeKaOrder()">×</button></header>
+<div class="ka-body"><h3 class="ka-title">客户信息填写</h3>
+<div class="ka-grid">
+<label class="ka-field"><span><em>* </em>客户名称</span><input name="customerName" list="kaCustomers" placeholder="请选择已配置的客户" required oninput="kaCustomerChanged()"><datalist id="kaCustomers"></datalist></label>
+<label class="ka-field"><span>系统名称</span><input name="systemName" readonly placeholder="随客户档案自动带出"></label>
+<div class="ka-field"><span>是否仓库收货</span><div class="ka-radio"><label><input type="radio" name="warehouse" value="是" > 是</label><label><input type="radio" name="warehouse" value="否" checked> 否</label></div></div>
+<label class="ka-field"><span><em>* </em>收货人员</span><input name="receiver" type="text" required placeholder="请输入收货人员"></label>
+<label class="ka-field"><span><em>* </em>手机号码</span><input name="phone" type="tel" required placeholder="请输入手机号码"></label>
+<label class="ka-field"><span><em>* </em>收货区域</span><input name="region" type="text" required placeholder="请输入收货区域"></label>
+<label class="ka-field ka-wide"><span><em>* </em>收货地址</span><input name="address" type="text" required placeholder="请输入收货地址"></label>
+<label class="ka-field ka-arrival"><span><em id="kaArrivalRequired">*</em> 客户要求到货时间</span><input name="customerRequiredArrivalAt" type="datetime-local" required onchange="kaCustomerChanged()"></label>
+<div class="ka-field"><span>客户类型</span><span id="kaCustomerType" style="width:auto;text-align:left">未匹配客户配置</span></div>
+<div class="ka-timing-mode-guide ka-wide"><span><b>系统默认时效</b> 非系统客户未填到货时间</span><span><b>系统客户时效</b> 必须按到货时间接单</span><span><b>磋商时效</b> 普通客户填写到货时间后可协商</span></div>
+<section id="kaArrivalEvidence" class="ka-arrival-evidence ka-wide" hidden>
+<div class="ka-evidence-head"><b><em>* </em>客户到货要求凭证</b><span>非系统客户填写到货时间后必填</span></div>
+<label class="ka-evidence-upload"><span>上传凭证</span><div><input name="arrivalEvidenceFile" type="file" accept=".png,.jpg,.jpeg,.pdf" onchange="kaEvidenceChanged()"><small id="kaEvidenceStatus">支持客户聊天截图、邮件、合同等 PNG、JPG、PDF 文件，单个不超过 2MB。</small></div></label>
+<label class="ka-evidence-note"><span>凭证说明</span><textarea name="arrivalEvidenceNote" maxlength="300" placeholder="可补充客户要求、沟通时间等信息（最多300字）"></textarea></label>
+</section>
+<label class="ka-field ka-wide"><span>特殊备注</span><textarea name="specialRemark" maxlength="500" placeholder="请输入特殊备注（最多500字）"></textarea></label>
+<div class="ka-field"><span>经销转私域</span><div class="ka-radio"><label><input type="radio" name="privateDomain" value="是" > 是</label><label><input type="radio" name="privateDomain" value="否" checked> 否</label></div></div>
+<div class="ka-field"><span>是否换货下单</span><div class="ka-radio"><label><input type="radio" name="exchange" value="是" > 是</label><label><input type="radio" name="exchange" value="否" checked> 否</label></div></div>
+<div class="ka-field"><span>是否回执</span><div class="ka-radio"><label><input type="radio" name="receiptRequired" value="是"> 是</label><label><input type="radio" name="receiptRequired" value="否" checked> 否</label></div></div>
+<div class="ka-field"><span>发货主体</span><div class="ka-radio"><label><input type="radio" name="shipper" value="卓希工厂" checked> 卓希工厂</label><label><input type="radio" name="shipper" value="运营中心" > 运营中心</label></div></div>
+<div class="ka-field ka-wide"><span>特殊情况说明</span><div id="kaRuleHint">选择客户后展示适用的时效规则。</div></div>
+<label class="ka-field ka-wide"><span>备注</span><textarea name="remark" maxlength="1024" placeholder="请输入备注（最多1024字）"></textarea></label>
+</div>
+<h3 class="ka-title">商品清单</h3><div class="ka-table"><table><thead><tr><th>序号</th><th>商品名称</th><th>单位</th><th>口味</th><th>红线价</th><th>售价(元)</th><th>数量</th><th>搭赠数量</th><th>搭赠比例</th><th>总数量</th><th>操作</th></tr></thead><tbody id="kaProducts"></tbody></table><div class="ka-add"><button type="button" class="btn" onclick="addKaProduct()">＋ 添加商品</button></div></div>
+<div id="kaSchedule"></div><label class="ka-field ka-wide" style="margin-top:20px"><span>修改原因</span><input name="changeReason" placeholder="修改已保存草稿的到货时间时必填"></label><p id="kaTotal" style="text-align:right">商品金额合计：¥ 0.00</p><p class="ka-message" id="kaMessage" role="status"></p><div id="kaHistory"></div></div>
+<footer class="ka-foot"><small>保存草稿，不提交真实订单。</small><button class="btn ka-primary" type="submit">保存</button><button class="btn" type="button" onclick="closeKaOrder()">取消</button></footer>
+</form></dialog>
+<dialog id="orderDialog" class="order-dialog" aria-label="订单详情"><div id="orderDetail"></div></dialog>
+<script>
+const defaults={product:{stock:24,noStock:72},rules:[{"id":"finance","name":"财务审核","from":"订单提交","to":"财务审核通过","value":2,"warn":80,"on":true,"note":"与工厂接单同时从订单提交开始，各自计时，互不等待。"},{"id":"accept","name":"工厂接单","from":"订单提交","to":"工厂接单完成","value":1,"warn":80,"on":true,"note":"与财务审核并行，不以财务审核通过作为接单计时起点。"},{"id":"ship","name":"发货","from":"工厂接单完成","to":"ERP同步WMS成功并生成快递单号","value":24,"warn":75,"on":true,"note":"从工厂接单开始，按接单时选择的有货或无货商品时效计算；财务通过且接单完成后才允许同步旺店通。"},{"id":"pickup","name":"揽收","from":"WMS收到ERP订单","to":"WMS出库完成","value":4,"warn":75,"on":true,"note":"以WMS出库作为揽收完成，不使用快递首次扫描时间。"},{"id":"sign","name":"签收","from":"WMS出库完成（揽收）","to":"客户签收收货","value":72,"warn":80,"on":true,"note":"从WMS出库至物流回传签收；无签收回传时，首次回执上传作为收货确认并标注来源。"},{"id":"receipt","name":"回执上传","from":"客户签收收货","to":"回执单首次成功上传","value":24,"warn":80,"on":true,"note":"按首次成功上传时间考核，审核和补传不重置时间；无物流签收时，以首次回执上传确认收货。"},{"id":"receiptReview","name":"回执审核","from":"回执单首次成功上传","to":"回执审核通过","value":24,"warn":80,"on":true,"note":"首次成功上传后开始计时，审核通过后完成；驳回和补传不重置起点。无需回执的订单不考核。"}],driver:{required:true,plate:true,source:'司机端上传',wdt:false}};
+
+function currentNodeRules(saved){
+ const previous=Array.isArray(saved)?saved:[];
+ return defaults.rules.map(base=>{
+  const old=previous.find(r=>r&&r.id===base.id);
+  if(!old)return {...base};
+  return {...base,
+   value:Number.isFinite(+old.value)&&+old.value>0?+old.value:base.value,
+   warn:Number.isFinite(+old.warn)&&+old.warn>0&&+old.warn<100?+old.warn:base.warn,
+   on:typeof old.on==='boolean'?old.on:base.on,
+   action:['企业微信群提醒'].includes(old.action)?old.action:'企业微信群提醒'};
+ });
+}
+
+const nodeOrders={"finance":[["o202609012139421","司会娟18501629050","¥660.00","演示节点起算",0.7],["o202609012054401","悦悦","¥430.00","演示节点起算",1.8],["o202609012053451","悦悦","¥430.00","演示节点起算",3.4]],"accept":[["o202609012052211","艺博（杨）","¥565.00","演示节点起算",0.5],["o202609012050151","倍思乐便利店15518537345","¥720.00","演示节点起算",1.3]],"ship":[["o202609012041501","江小囤和芝福购超市","¥332.50","演示节点起算",15.7],["o202609012023121","仓鼠便利店拿货群","¥174.00","演示节点起算",20.2],["o202609012022441","仓鼠便利店拿货群","¥245.00","演示节点起算",26.8]],"pickup":[["o202609011948071","京东便利店(麒麟门店)","¥1000.00","演示节点起算",1.4],["o202609011927571","蛋黄妈妈","¥700.00","演示节点起算",3.1]],"sign":[["o202609011900111","海里家里总部101元一包","¥404.00","演示节点起算",41.6],["o202609011852451","胡夏腾","¥285.00","演示节点起算",68.4],["o202609011850171","环中汇线下客户","¥760.00","演示节点起算",97.2]],"receipt":[["o202609011846141","邮优便利超市","¥397.00","演示节点起算",6.5],["o202609011844381","宅小熊","¥340.00","演示节点起算",27]]};
+const clone=x=>JSON.parse(JSON.stringify(x));let config=(()=>{try{const saved=JSON.parse(localStorage.getItem('shipping-sla-config'));return {...clone(defaults),...saved,rules:currentNodeRules(saved?.rules)}}catch(e){return clone(defaults)}})(),group='flow';
+function selectGroup(next,el){group=next;document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));el.classList.add('active');render()}
+function orderRows(r){const list=nodeOrders[r.id]||[];return list.map(o=>{const ratio=Math.round(o[4]/r.value*100),level=o[5],label=level==='overdue'?'已超时':level==='warning'?'临近预警':'正常',badge=level==='overdue'?'red':level==='warning'?'amber':'green';return `<tr><td><div class="order-no">${o[0]}</div><div class="order-sub">${o[1]}</div></td><td>${o[2]}</td><td>${o[3]}</td><td><span class="time-value ${level}">${o[4]} 小时 / ${r.value} 小时</span><div class="time-progress ${level}"><i style="width:${Math.min(ratio,100)}%"></i></div></td><td><span class="badge ${badge}">${label}</span></td><td><button class="orders-toggle" onclick="showToast('已打开订单 ${o[0]}')">查看订单</button></td></tr>`}).join('')}
+function ruleCard(r){const list=nodeOrders[r.id]||[],alerts=list.filter(o=>o[5]!=='normal').length;return `<article class="card"><div class="card-head"><b>${r.name}时效</b><button class="toggle ${r.on?'on':''}" aria-label="启用${r.name}时效" onclick="toggleRule('${r.id}',this)"></button></div><div class="card-body"><div class="field"><label>计时区间</label><select onchange="dirty()"><option>${r.from} → ${r.to}</option></select></div><div class="field"><label>时效阈值</label><div class="input-unit"><input type="number" min="1" value="${r.value}" data-id="${r.id}" data-key="value" oninput="updateRule(this)"><span>小时</span></div></div><div class="field"><label>提前提醒</label><div class="input-unit"><input type="number" min="1" max="99" value="${r.warn}" data-id="${r.id}" data-key="warn" oninput="updateRule(this)"><span>%</span></div></div><div class="field"><label>超时动作</label><select onchange="config.rules.find(x=>x.id==='${r.id}').action=this.value;dirty()">${['企业微信群提醒'].map(a=>`<option ${a===(r.action||'企业微信群提醒')?'selected':''}>${a}</option>`).join('')}</select></div><div class="note">ⓘ ${r.note}</div></div><section class="node-orders"><div class="orders-head"><div><strong>当前处于${r.name}节点的订单</strong> <span>共 ${list.length} 单${alerts?` · ${alerts} 单需关注`:''}</span></div><button class="orders-toggle" onclick="toggleOrders('${r.id}',this)">收起订单</button></div><div class="order-table-wrap" id="orders-${r.id}"><table class="order-table"><thead><tr><th>订单号 / 客户</th><th>订单金额</th><th>进入节点时间</th><th>已用时 / 阈值</th><th>时效状态</th><th>操作</th></tr></thead><tbody>${orderRows(r)||'<tr><td colspan="6" class="empty-orders">当前节点暂无订单</td></tr>'}</tbody></table></div></section></article>`}
+function renderConfig(){const c=document.getElementById('content');c.innerHTML=`<header class="panel-head"><div><h2>司机与车辆信息</h2><p>配置揽收前的信息完整性要求，并预留旺店通自动采集能力。</p></div></header><article class="card"><div class="card-head"><b>司机信息采集规则</b><button class="toggle ${config.driver.required?'on':''}" onclick="config.driver.required=!config.driver.required;this.classList.toggle('on');dirty()"></button></div><div class="card-body two"><div class="field"><label>信息采集节点</label><select onchange="dirty()"><option>司机揽收前</option><option>创建发货单时</option></select></div><div class="field"><label>当前采集方式</label><select onchange="config.driver.source=this.value;dirty()"><option ${config.driver.source==='司机端上传'?'selected':''}>司机端上传</option><option>后台管理员录入</option></select></div><div class="note">ⓘ 司机姓名、手机号和车牌号为必填项；缺失时禁止完成揽收，并生成信息缺失提醒。</div><div class="driver-options"><div class="option"><label><input type="checkbox" ${config.driver.plate?'checked':''} onchange="config.driver.plate=this.checked;dirty()">车牌号必填</label><p>支持司机端拍照上传或手动输入，后台可复核。</p></div><div class="option"><label><input type="checkbox" disabled>旺店通自动采集</label><p>待确认旺店通接口能力后开放，当前由司机端上传。</p></div></div></div></article>`}
+function toggleOrders(id,btn){const box=document.getElementById('orders-'+id),hidden=box.hidden;box.hidden=!hidden;btn.textContent=hidden?'收起订单':'展开订单'}function updateRule(el){const r=config.rules.find(x=>x.id===el.dataset.id);r[el.dataset.key]=+el.value;dirty();const box=document.getElementById('orders-'+r.id);if(box)box.querySelector('tbody').innerHTML=orderRows(r)}function toggleRule(id,el){const r=config.rules.find(x=>x.id===id);r.on=!r.on;el.classList.toggle('on',r.on);dirty()}function dirty(){const s=document.getElementById('saveState');s.textContent='有未保存的修改';s.classList.add('dirty')}function saveConfig(){localStorage.setItem('shipping-sla-config',JSON.stringify(config));const s=document.getElementById('saveState');s.textContent='已保存并生效 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});s.classList.remove('dirty');showToast('时效预警策略已保存并生效')}function resetConfig(){config=clone(defaults);render();dirty();showToast('已恢复默认配置，请保存后生效')}function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.opacity=1;t.style.transform='translate(-50%,0)';setTimeout(()=>{t.style.opacity=0;t.style.transform='translate(-50%,20px)'},1800)}
+
+let selectedNode=null, statusFilter='all', customerView='all';
+let orderSearch={orderNo:'',customer:'',start:'',end:''};
+const statusNames={all:'全部',normal:'正常',warning:'临近预警',overdue:'已超时',awaiting:'待判定',paused:'预警已关闭'};
+function safe(v){return String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function classify(o,r){
+ if(!r.on)return 'paused';
+ const hours=Number(r.value),warn=Number(r.warn);
+ if(!Number.isFinite(hours)||hours<=0)return 'paused';
+ return o[4]>=hours?'overdue':o[4]>=hours*warn/100?'warning':'normal';
+}
+
+function eventNodeRows(order,events,now=Date.now()){
+ const edges={finance:['submittedAt','financeApprovedAt'],accept:['submittedAt','factoryAcceptedAt'],ship:['factoryAcceptedAt','shippedAt'],pickup:['wmsReceivedAt','wmsOutboundAt'],sign:['wmsOutboundAt','signedAt'],receipt:['signedAt','receiptUploadedAt']};
+ const time=v=>v?new Date(v).getTime():NaN;
+ const e=window.Fulfillment?Fulfillment.normalize(events):{...events};
+ // Both WMS synchronization and tracking-number generation must be complete.
+ if(e.wmsReceivedAt&&e.trackingNumber&&e.trackingCreatedAt)e.shippedAt=new Date(Math.max(time(e.wmsReceivedAt),time(e.trackingCreatedAt))).toISOString();
+ return config.rules.flatMap(r=>{
+ const [start,end]=edges[r.id],at=time(e[start]);
+ if(r.id==='receipt'&&omsProfiles[order[0]]?.receiptRequired===false)return [];
+ if(!Number.isFinite(at)||at>now||Number.isFinite(time(e[end])))return [];
+ const o=[...order];o[3]=e[start];o[4]=(now-at)/3600000;
+ return [{o,r,level:classify(o,r)}];
+ });
+}
+function uniqueOrders(rows){
+ const rank={overdue:0,warning:1,awaiting:2,normal:3,paused:4},map=new Map();
+ rows.forEach(x=>{const prev=map.get(x.o[0]);if(!prev||rank[x.level]<rank[prev.level])map.set(x.o[0],x)});
+ return [...map.values()];
+}
+function records(id='all'){
+ const demo=config.rules.flatMap(r=>(nodeOrders[r.id]||[]).map(o=>({o,r,level:classify(o,r)})));
+ const events=new Map();
+ demo.forEach(x=>{const p=omsProfiles[x.o[0]];if(p?.events&&!events.has(x.o[0]))events.set(x.o[0],eventNodeRows(x.o,p.events))});
+ return [...demo.filter(x=>!events.has(x.o[0])),...[...events.values()].flat()].filter(x=>id==='all'||x.r.id===id);
+}
+function tally(rows){return rows.reduce((a,x)=>{a[x.level]++;a.all++;return a},{all:0,normal:0,warning:0,overdue:0,awaiting:0,paused:0})}
+function amount(rows){return rows.reduce((a,x)=>a+Number(x.o[2].replace(/[^\d.]/g,'')),0).toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2})}
+function duration(n){return Number(n.toFixed(1))+' 小时'}
+function timing(x){
+ if(x.level==='paused')return '预警已关闭';
+ if(x.sla?.kind==='system'){
+  if(x.level==='awaiting')return x.sla.message;
+  const hours=(Date.now()-x.sla.at)/3600000;
+  return hours>=0?'超时 '+duration(hours):'剩余 '+duration(-hours);
+ }
+ const diff=x.o[4]-Number(x.r.value);
+ return diff>=0?'超时 '+duration(diff):'剩余 '+duration(-diff);
+}
+function statusBadge(level){return '<span class="badge '+({normal:'green',warning:'amber',overdue:'red',awaiting:'gray',paused:'gray'}[level])+'">'+statusNames[level]+'</span>'}
+function selectGroup(next,el){if(next==='product'){location.href='商品发货时效配置.html';return;}group=next;selectedNode=null;statusFilter='all';document.querySelectorAll('.sla-nav-item').forEach(x=>{const active=x.dataset.group===next;x.classList.toggle('active',active);if(active)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current');});render()}
+function openNode(id,filter='all'){
+ group='flow';selectedNode=id;statusFilter=filter;
+ if(document.getElementById('inlineOrderDetails')){refreshOrderDetails();}else{render();}
+}
+function selectOrderStatus(status){
+ statusFilter=status;refreshOrderDetails();
+ const button=document.querySelector('[data-order-status="'+status+'"]');
+ if(button)button.focus({preventScroll:true});
+}
+function refreshOrderDetails(){
+ const details=document.getElementById('inlineOrderDetails');
+ if(details)details.innerHTML=nodeDetail();
+ document.querySelectorAll('[data-node-card]').forEach(el=>{
+  const active=el.dataset.nodeCard===(selectedNode||'all');
+  el.classList.toggle('selected',active);el.setAttribute('aria-pressed',String(active));
+ });
+ document.querySelectorAll('[data-metric-filter]').forEach(el=>{
+  const active=(!selectedNode||selectedNode==='all')&&el.dataset.metricFilter===statusFilter;
+  el.classList.toggle('selected',active);el.setAttribute('aria-pressed',String(active));
+ });
+}
+function overview(){
+ if(customerView==='system')return systemOverview();
+ const all=uniqueOrders(records()),stats=tally(all),late=all.filter(x=>x.level==='overdue');
+ const worst=late.slice().sort((a,b)=>(b.o[4]-b.r.value)-(a.o[4]-a.r.value))[0];
+ const tiles=[['all','当前在途订单','','覆盖全部履约节点'],['overdue','已超时订单','danger','涉及金额 ¥'+amount(late)],['warning','临近预警订单','caution','优先安排跟进，避免超时'],['normal','正常履约订单','good',stats.paused?stats.paused+' 单预警已关闭':'各节点按当前阈值判断']];
+ return customerViewTabs()+'<div class="overview-head"><div><h2>履约总览</h2><p>财务审核与工厂接单并行；总订单数去重，节点待办可同时计入两项。</p></div></div><div class="metrics">'+tiles.map(([key,title,color,sub])=>'<button class="metric '+color+'" data-metric-filter="'+key+'" aria-pressed="false" onclick="openNode(\'all\',\''+key+'\')"><span>'+title+'</span><strong>'+stats[key]+' <small>单</small></strong><small>'+sub+' →</small></button>').join('')+'</div><h3 class="section-title">各节点履约情况</h3><p class="section-caption">点击节点切换下方订单 · 红色为超时，橙色为临近预警</p><div class="stage-grid">'+config.rules.map((r,i)=>{
+ const s=tally(records(r.id));
+ return '<button class="stage" data-node-card="'+r.id+'" aria-pressed="false" onclick="openNode(\''+r.id+'\')"><div class="stage-top"><span>'+safe(r.name)+'</span><span class="stage-index">0'+(i+1)+'</span></div><div class="stage-total">'+s.all+'<small>单待完成</small></div><div class="segments">'+['normal','warning','overdue','paused'].map(k=>'<i class="'+k+'" style="width:'+(s.all?s[k]/s.all*100:0)+'%"></i>').join('')+'</div><div class="stage-counts"><span>正常 '+s.normal+'</span><span class="warning">临近 '+s.warning+'</span><span class="overdue">超时 '+s.overdue+'</span>'+(s.paused?'<span>关闭 '+s.paused+'</span>':'')+'</div><div class="stage-foot"><span>'+ (r.on?'阈值 '+safe(r.value)+' 小时':'预警已关闭')+'</span><b>查看下方订单 ↓</b></div></button>';
+ }).join('')+'</div>'+(worst?'<div class="focus-note"><b>优先关注：</b>'+safe(worst.r.name)+'节点最长超时 '+duration(worst.o[4]-worst.r.value)+'，订单 '+safe(worst.o[0])+'（'+safe(worst.o[1])+'）。<button class="orders-toggle" onclick="openNode(\''+worst.r.id+'\',\'overdue\')">查看超时订单 →</button></div>':'<div class="detail-summary">当前暂无超时订单。</div>');
+}
+function detailRows(rows){
+ return rows.map(x=>'<tr><td><div class="order-no">'+safe(x.o[0])+'</div><div class="order-sub">'+safe(x.o[1])+'</div></td><td>'+safe(x.r.name)+'</td><td>'+safe(x.o[2])+'</td><td>'+safe(x.o[3])+'</td><td><span class="time-value '+x.level+'">'+timing(x)+'</span><div class="order-sub">已用 '+duration(x.o[4])+' / '+safe(x.r.value)+' 小时</div><div class="time-progress '+x.level+'"><i style="width:'+Math.max(0,Math.min(100,x.o[4]/x.r.value*100))+'%"></i></div></td><td>'+statusBadge(x.level)+'</td><td><button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">查看详情</button></td></tr>').join('')||'<tr><td colspan="7" class="empty-orders">暂无符合当前状态的订单</td></tr>';
+}
+
+function legacyNodeDetail(){
+ if(group==='flow'&&customerView==='system')return systemOrderDetails();
+ const rows=uniqueOrders(records(selectedNode||'all')),s=tally(rows),r=config.rules.find(x=>x.id===selectedNode);
+ const list=rows.filter(x=>statusFilter==='all'||x.level===statusFilter).sort((a,b)=>({overdue:0,warning:1,normal:2,paused:3}[a.level]-{overdue:0,warning:1,normal:2,paused:3}[b.level])||(b.o[4]-b.r.value)-(a.o[4]-a.r.value));
+ return '<div class="overview-head"><div><h2>'+(r?safe(r.name)+' · 订单列表':'全部节点 · 订单列表')+'</h2><p>按当前履约节点展示订单，超时订单优先。</p></div><div class="inline-list-tools"><span class="badge gray">共 '+s.all+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">全部节点</button>':'')+'</div></div>'+(r?'<div class="detail-summary">计时区间 <b>'+safe(r.from)+' → '+safe(r.to)+'</b>　时效阈值 <b>'+safe(r.value)+' 小时</b>　提前提醒 <b>已用时达 '+safe(r.warn)+'%</b></div>':'')+'<div class="filter-tabs" aria-label="筛选订单时效状态">'+['all','overdue','warning','normal',...(s.paused?['paused']:[])].map(k=>'<button class="'+(statusFilter===k?'active':'')+'" aria-pressed="'+(statusFilter===k)+'" data-order-status="'+k+'" onclick="selectOrderStatus(\''+k+'\')">'+statusNames[k]+' '+s[k]+'</button>').join('')+'</div><div class="oms-summary"><span>当前筛选订单：<b>'+list.length+' 单</b></span><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>超时订单金额：<b>¥ '+amount(list.filter(x=>x.level==='overdue'))+'</b></span></div><div class="oms-order-scroll">'+omsColumnHead()+(list.length?list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合当前状态的订单</div>')+'</div>';
+}
+
+function render(){
+ document.querySelector('.actions').hidden=group==='flow';
+ document.querySelector('.page-head h1').textContent=group==='flow'?'订单履约总览':'发货时效预警策略';
+ document.querySelector('.page-head p').textContent=group==='flow'?'点击总览指标或履约节点，下方直接显示对应订单。':'维护商品发货时效和司机信息采集规则。';
+ if(group==='flow'){document.getElementById('content').innerHTML='<section id="overviewSurface">'+overview()+'</section><section id="inlineOrderDetails" class="inline-order-details" aria-label="订单明细">'+nodeDetail()+'</section>';refreshOrderDetails();}
+ else if(group==='orders'){
+ document.querySelector('.actions').hidden=true;
+ document.querySelector('.page-head h1').textContent='订单列表';
+ document.querySelector('.page-head p').textContent='经销 / KA下单与订单资料查询';
+ document.getElementById('content').innerHTML='<div class="card" style="padding:18px;margin-bottom:18px"><button class="btn ka-primary" onclick="openKaOrder()">＋ 经销/KA下单</button><span style="margin-left:16px;color:#909399">新增仅保存本机草稿。</span></div><section id="inlineOrderDetails">'+nodeDetail()+'</section>';
+ }else renderConfig();
+}
+
+function openOrder(id){
+ const row=boardRows('all').find(x=>x.o[0]===id);if(!row)return;
+ const x={...row,...(row.tasks.find(x=>x.r.id===selectedNode)||{})};
+ const d=document.getElementById('orderDialog');
+ document.getElementById('orderDetail').innerHTML='<div class="dialog-head"><h2>订单详情</h2><button class="btn" onclick="document.getElementById(\'orderDialog\').close()" aria-label="关闭订单详情">关闭</button></div><div class="oms-current-info"><span>当前节点：<b>'+safe(x.r.name)+'</b></span>'+nodeDeadlineInfo(x)+statusBadge(x.level)+'</div><div class="oms-order-scroll">'+omsColumnHead()+omsOrderCard(x,true)+'</div><h3 class="section-title" style="margin:18px 0 12px">订单待办节点（财务审核与工厂接单并行）</h3><div class="order-journey">'+config.rules.map(r=>'<span class="'+(r.id===x.r.id?'current':'')+'">'+safe(r.name)+(r.id===x.r.id?' · 当前':'')+'</span>').join('')+'</div>';
+ d.showModal();
+}
+
+function updateRule(el){
+ const r=config.rules.find(x=>x.id===el.dataset.id);r[el.dataset.key]=+el.value;dirty();
+}
+function refreshDetailSettings(){
+ if(group==='flow'&&selectedNode){render();const d=document.querySelector('.detail-settings');if(d)d.open=true;}
+}
+const originalToggle=toggleRule;
+toggleRule=function(id,el){originalToggle(id,el);refreshDetailSettings()};
+function saveConfig(){
+ if(config.rules.some(r=>!Number.isFinite(+r.value)||+r.value<=0||!Number.isFinite(+r.warn)||r.warn<=0||r.warn>=100)||config.product.stock<=0||config.product.noStock<=0){showToast('请填写大于 0 的时效，提前提醒比例须介于 0% 和 100% 之间');return;}
+ try{if(group==='driver'){const latest=JSON.parse(localStorage.getItem('shipping-sla-config')||'null');if(latest?.rules)config.rules=currentNodeRules(latest.rules);}localStorage.setItem('shipping-sla-config',JSON.stringify(config));document.getElementById('saveState').textContent='已保存到本机 · '+new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});document.getElementById('saveState').classList.remove('dirty');showToast('配置已保存到当前浏览器');refreshDetailSettings()}catch(e){showToast('保存失败，请检查浏览器存储设置')}
+}
+document.addEventListener('change',e=>{if(e.target.matches('[data-id][data-key]'))refreshDetailSettings()});
+function syncSavedRules(){try{const latest=JSON.parse(localStorage.getItem('shipping-sla-config')||'null');if(latest?.rules&&group==='flow'){config.rules=currentNodeRules(latest.rules);render();}}catch(e){showToast('无法读取最新节点配置，请检查浏览器存储');}}
+window.addEventListener('pageshow',syncSavedRules);
+window.addEventListener('storage',e=>{if(e.key==='shipping-sla-config')syncSavedRules();});
+
+const omsProfiles={"o202609012139421":{"source":"表格订单资料","createdAt":"2026-09-01 21:39:43","channel":"CRM","type":"普通订单","creator":"金丹丽","due":660,"total":660,"receiver":"司会娟","phone":"18501629050","address":"上海 上海市 闵行区莘庄镇龙茗路1933号","salesperson":"金丹丽","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-388克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2188","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:388g-含骨:无骨-口味:蒜香-辣度:微辣-渠道:冻品休食","price":16.5,"qty":40,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:388g","含骨:无骨","口味:蒜香","辣度:微辣","渠道:冻品休食"]}],"sourceRows":[2]},"o202609012054401":{"source":"表格订单资料","createdAt":"2026-09-01 20:54:41","channel":"CRM","type":"普通订单","creator":"栗顺","due":430,"total":430,"receiver":"悦悦（何鲜生）","phone":"15141150504","address":"陕西省西安市雁塔区长延堡街道昌明路 何鲜生三文鱼","salesperson":"吴佳琪","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克*5-柠檬-12个月-70%（无骨-冷冻-袋-线下）","sku":"2283","pack":"品牌:脱骨侠-固形物含量:70%-温层:冷冻-保质期:12个月-克重:500g*5-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:餐饮","price":107.5,"qty":4,"giftQty":0,"unit":"袋","tags":["品牌:脱骨侠","固形物含量:70%","温层:冷冻","保质期:12个月","克重:500g*5","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:餐饮"]}],"sourceRows":[3]},"o202609012053451":{"source":"表格订单资料","createdAt":"2026-09-01 20:53:45","channel":"CRM","type":"普通订单","creator":"栗顺","due":430,"total":430,"receiver":"悦悦（龙小鲜）","phone":"15141150504","address":"陕西省西安市未央区经济技术开发区贰号大院16号楼一单元一楼121.龙小鲜捞汁小海鲜","salesperson":"吴佳琪","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克*5-柠檬-12个月-70%（无骨-冷冻-袋-线下）","sku":"2283","pack":"品牌:脱骨侠-固形物含量:70%-温层:冷冻-保质期:12个月-克重:500g*5-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:餐饮","price":107.5,"qty":4,"giftQty":0,"unit":"袋","tags":["品牌:脱骨侠","固形物含量:70%","温层:冷冻","保质期:12个月","克重:500g*5","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:餐饮"]}],"sourceRows":[4]},"o202609012052211":{"source":"表格订单资料","createdAt":"2026-09-01 20:52:22","channel":"CRM","type":"普通订单","creator":"艾忠典","due":565,"total":565,"receiver":"杨","phone":"18865477288","address":"山东省济宁市嘉祥县黄垓镇黄东村","salesperson":"艾忠典","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"云南佤味-棒小爪-500克-牛皮-15天（100%-非虎皮有骨-冷藏-盒）","sku":"4180","pack":"品牌:棒小爪-固形物含量:100%-温层:冷藏-保质期:15天-克重:500g-含骨:非虎皮有骨-口味:牛皮佤味-辣度:无区分-渠道:线上","price":26,"qty":5,"giftQty":0,"unit":"盒","tags":["品牌:棒小爪","固形物含量:100%","温层:冷藏","保质期:15天","克重:500g","含骨:非虎皮有骨","口味:牛皮佤味","辣度:无区分","渠道:线上"]},{"name":"云南佤味鸡爪-棒小爪-500克-15天（100%-非虎皮有骨-冷藏-盒）","sku":"4153","pack":"品牌:棒小爪-固形物含量:100%-温层:冷藏-保质期:15天-克重:500g-含骨:非虎皮有骨-口味:佤味-辣度:无区分-渠道:线上","price":29,"qty":15,"giftQty":0,"unit":"盒","tags":["品牌:棒小爪","固形物含量:100%","温层:冷藏","保质期:15天","克重:500g","含骨:非虎皮有骨","口味:佤味","辣度:无区分","渠道:线上"]}],"sourceRows":[5,6]},"o202609012050151":{"source":"表格订单资料","createdAt":"2026-09-01 20:50:15","channel":"CRM","type":"普通订单","creator":"金丹丽","due":720,"total":720,"receiver":"倍思乐便利店","phone":"15518537345","address":"河南省濮阳市华龙区区金堤路益民路向西200米路南倍思乐便利店","salesperson":"金丹丽","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克-麻辣藤椒-9个月-60%（无骨-冷冻-罐）","sku":"4075","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:藤椒-辣度:无区分-渠道:冻品休食","price":20,"qty":3,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:藤椒","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-泡椒-9个月（60%-无骨-冷冻-罐-线下）","sku":"2756","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:泡椒-辣度:无区分-渠道:冻品休食","price":20,"qty":3,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:泡椒","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-川香红油-9个月（60%-无骨-冷冻-罐-线下）","sku":"2754","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:红油-辣度:无区分-渠道:冻品休食","price":20,"qty":6,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:红油","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-酸辣柠檬-9个月（60%-无骨-冷冻-罐）","sku":"3416","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:冻品休食","price":20,"qty":6,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-蒜香中辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2750","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:蒜香-辣度:中辣-渠道:冻品休食","price":20,"qty":6,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:蒜香","辣度:中辣","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-蒜香重辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2752","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:蒜香-辣度:重辣-渠道:冻品休食","price":20,"qty":6,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:蒜香","辣度:重辣","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2748","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:蒜香-辣度:微辣-渠道:冻品休食","price":20,"qty":6,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:蒜香","辣度:微辣","渠道:冻品休食"]}],"sourceRows":[7,8,9,10,11,12,13]},"o202609012041501":{"source":"表格订单资料","createdAt":"2026-09-01 20:41:51","channel":"CRM","type":"普通订单","creator":"徐晓菲111","due":332.5,"total":332.5,"receiver":"江小囤（中心店）融御华庭","phone":"13585349476","address":"江苏省 常州市 天宁区融御华庭1-1-9号江小囤精品超市（中心店）","salesperson":"徐晓菲111","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克-酸辣柠檬-9个月（60%-无骨-冷冻-罐）","sku":"3416","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:冻品休食","price":19.5,"qty":5,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:冻品休食"]},{"name":"佤味鸡爪-脱骨侠-328克-佤味-9个月冷冻(JX)（100%-非虎皮有骨-冷冻-盒）","sku":"3584","pack":"品牌:脱骨侠-固形物含量:100%-温层:冷冻-保质期:9个月-克重:328g-含骨:非虎皮有骨-口味:佤味-辣度:无区分-渠道:冻品休食","price":23.5,"qty":10,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:100%","温层:冷冻","保质期:9个月","克重:328g","含骨:非虎皮有骨","口味:佤味","辣度:无区分","渠道:冻品休食"]}],"sourceRows":[14,15]},"o202609012023121":{"source":"表格订单资料","createdAt":"2026-09-01 20:23:12","channel":"CRM","type":"普通订单","creator":"徐晓菲111","due":174,"total":174,"receiver":"石头","phone":"18680024248","address":"广东省 佛山市 禅城区南庄镇金盈绿岛国际中心A1座P12仓鼠便利超市","salesperson":"徐晓菲111","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-200克-柠檬-6个月（60%-无骨-冷冻-盒-线下）","sku":"2536","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:6个月-克重:200g-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:冻品休食","price":9,"qty":3,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:6个月","克重:200g","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-200克-蒜香重辣-6个月（60%-无骨-冷冻-盒-线下）","sku":"2314","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:6个月-克重:200g-含骨:无骨-口味:蒜香-辣度:重辣-渠道:冻品休食","price":9,"qty":3,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:6个月","克重:200g","含骨:无骨","口味:蒜香","辣度:重辣","渠道:冻品休食"]},{"name":"佤味鸡爪-脱骨侠-328克-佤味-9个月冷冻(JX)（100%-非虎皮有骨-冷冻-盒）","sku":"3584","pack":"品牌:脱骨侠-固形物含量:100%-温层:冷冻-保质期:9个月-克重:328g-含骨:非虎皮有骨-口味:佤味-辣度:无区分-渠道:冻品休食","price":24,"qty":5,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:100%","温层:冷冻","保质期:9个月","克重:328g","含骨:非虎皮有骨","口味:佤味","辣度:无区分","渠道:冻品休食"]}],"sourceRows":[16,17,18]},"o202609012022441":{"source":"表格订单资料","createdAt":"2026-09-01 20:22:45","channel":"CRM","type":"普通订单","creator":"徐晓菲111","due":245,"total":245,"receiver":"石头","phone":"18680024248","address":"广东省 佛山市 禅城区南庄镇金盈绿岛国际中心A1座P12仓鼠便利超市","salesperson":"徐晓菲111","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克-川香红油-9个月（60%-无骨-冷冻-罐-线下）","sku":"2754","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:红油-辣度:无区分-渠道:冻品休食","price":20,"qty":3,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:红油","辣度:无区分","渠道:冻品休食"]},{"name":"椒麻大杂烩-脱骨侠-508克-椒麻-9个月（60%-椒麻鸡胸骨系列-冷冻-盒-线下）","sku":"2542","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:508g-含骨:椒麻鸡胸骨系列-口味:椒麻-辣度:无区分-渠道:冻品休食","price":17,"qty":5,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:508g","含骨:椒麻鸡胸骨系列","口味:椒麻","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2748","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:蒜香-辣度:微辣-渠道:冻品休食","price":20,"qty":5,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:蒜香","辣度:微辣","渠道:冻品休食"]}],"sourceRows":[19,20,21]},"o202609011948071":{"source":"表格订单资料","createdAt":"2026-09-01 19:48:07","channel":"CRM","type":"普通订单","creator":"徐晓菲111","due":1000,"total":1000,"receiver":"京东便利店(麒麟门店)","phone":"13666443786","address":"江苏省 南京市 江宁区麒麟街道悦民公寓12幢104京东便利店(原金贝壳)","salesperson":"徐晓菲111","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克-川香红油-9个月（60%-无骨-冷冻-罐-线下）","sku":"2754","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:红油-辣度:无区分-渠道:冻品休食","price":20,"qty":10,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:红油","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-酸辣柠檬-9个月（60%-无骨-冷冻-罐）","sku":"3416","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:冻品休食","price":20,"qty":20,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2748","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:蒜香-辣度:微辣-渠道:冻品休食","price":20,"qty":20,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:蒜香","辣度:微辣","渠道:冻品休食"]}],"sourceRows":[22,23,24]},"o202609011927571":{"source":"表格订单资料","createdAt":"2026-09-01 19:27:58","channel":"CRM","type":"普通订单","creator":"徐晓菲111","due":700,"total":700,"receiver":"刘大姐","phone":"13140900970","address":"江苏省 苏州市 太仓市人民南路28-32号蛋黄妈妈小吃店","salesperson":"徐晓菲111","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","已开票"]],"products":[{"name":"佤味鸡爪-脱骨侠-328克-佤味-9个月冷冻(JX)（100%-非虎皮有骨-冷冻-盒）","sku":"3584","pack":"品牌:脱骨侠-固形物含量:100%-温层:冷冻-保质期:9个月-克重:328g-含骨:非虎皮有骨-口味:佤味-辣度:无区分-渠道:冻品休食","price":23,"qty":12,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:100%","温层:冷冻","保质期:9个月","克重:328g","含骨:非虎皮有骨","口味:佤味","辣度:无区分","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克*5-川香红油-12个月-70%（无骨-冷冻-袋-线下/线上）","sku":"2208","pack":"品牌:脱骨侠-固形物含量:70%-温层:冷冻-保质期:12个月-克重:500g*5-含骨:无骨-口味:红油-辣度:无区分-渠道:餐饮","price":106,"qty":4,"giftQty":0,"unit":"袋","tags":["品牌:脱骨侠","固形物含量:70%","温层:冷冻","保质期:12个月","克重:500g*5","含骨:无骨","口味:红油","辣度:无区分","渠道:餐饮"]}],"sourceRows":[25,26]},"o202609011900111":{"source":"表格订单资料","createdAt":"2026-09-01 19:00:12","channel":"CRM","type":"普通订单","creator":"徐晓菲111","due":404,"total":404,"receiver":"富贵","phone":"17396370859","address":"河南省 洛阳市 西工区唐宫路街道影院街10号院海里家里三文鱼","salesperson":"徐晓菲111","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克*5-柠檬-12个月-70%（无骨-冷冻-袋-线下）","sku":"2283","pack":"品牌:脱骨侠-固形物含量:70%-温层:冷冻-保质期:12个月-克重:500g*5-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:餐饮","price":101,"qty":4,"giftQty":0,"unit":"袋","tags":["品牌:脱骨侠","固形物含量:70%","温层:冷冻","保质期:12个月","克重:500g*5","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:餐饮"]}],"sourceRows":[27]},"o202609011852451":{"source":"表格订单资料","createdAt":"2026-09-01 18:52:45","channel":"CRM","type":"普通订单","creator":"艾忠典","due":285,"total":285,"receiver":"曹","phone":"17769531965","address":"山西省太原市杏花岭区杏花岭街道西华门路13号盛果仓","salesperson":"胡夏腾","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2748","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:蒜香-辣度:微辣-渠道:冻品休食","price":19,"qty":15,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:蒜香","辣度:微辣","渠道:冻品休食"]}],"sourceRows":[28]},"o202609011850171":{"source":"表格订单资料","createdAt":"2026-09-01 18:50:18","channel":"CRM","type":"普通订单","creator":"艾忠典","due":740,"total":760,"receiver":"大嘴","phone":"13070371555","address":"浙江省杭州市余杭区五常街道荆长路516号西溪旺角新疆大嘴烤羊肉","salesperson":"胡夏腾","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克*5-柠檬-12个月-70%（无骨-冷冻-袋-线下）","sku":"2283","pack":"品牌:脱骨侠-固形物含量:70%-温层:冷冻-保质期:12个月-克重:500g*5-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:餐饮","price":92.5,"qty":8,"giftQty":0,"unit":"袋","tags":["品牌:脱骨侠","固形物含量:70%","温层:冷冻","保质期:12个月","克重:500g*5","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:餐饮"]}],"sourceRows":[29]},"o202609011846141":{"source":"表格订单资料","createdAt":"2026-09-01 18:46:15","channel":"CRM","type":"普通订单","creator":"艾忠典","due":397,"total":397,"receiver":"佳吉购超市","phone":"15140714141","address":"辽宁省营口市盖州市太平洋佳吉购","salesperson":"胡夏腾","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"无骨鸡爪-脱骨侠-500克-蒜香微辣-9个月（60%-无骨-冷冻-罐-线下）","sku":"2748","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:蒜香-辣度:微辣-渠道:冻品休食","price":19.5,"qty":8,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:蒜香","辣度:微辣","渠道:冻品休食"]},{"name":"无骨鸡爪-脱骨侠-500克-酸辣柠檬-9个月（60%-无骨-冷冻-罐）","sku":"3416","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:500g-含骨:无骨-口味:酸辣柠檬-辣度:无区分-渠道:冻品休食","price":19.5,"qty":8,"giftQty":0,"unit":"罐","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:500g","含骨:无骨","口味:酸辣柠檬","辣度:无区分","渠道:冻品休食"]},{"name":"椒麻大杂烩-脱骨侠-508克-椒麻-9个月（60%-椒麻鸡胸骨系列-冷冻-盒-线下）","sku":"2542","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:508g-含骨:椒麻鸡胸骨系列-口味:椒麻-辣度:无区分-渠道:冻品休食","price":17,"qty":5,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:508g","含骨:椒麻鸡胸骨系列","口味:椒麻","辣度:无区分","渠道:冻品休食"]}],"sourceRows":[30,31,32]},"o202609011844381":{"source":"表格订单资料","createdAt":"2026-09-01 18:44:39","channel":"CRM","type":"普通订单","creator":"栗顺","due":340,"total":340,"receiver":"张伟","phone":"18670362779","address":"陕西省渭南市韩城市韩源南路东苑小区门口 宅小熊超市 一定要送上门","salesperson":"王婷婷1","factoryRemark":"","statuses":[["原单状态","已发货"],["原支付状态","已支付"],["原审核状态","已审批"],["原接单状态","已接单"],["原开票状态","待开票"]],"products":[{"name":"椒麻大杂烩-脱骨侠-508克-椒麻-9个月（60%-椒麻鸡胸骨系列-冷冻-盒-线下）","sku":"2542","pack":"品牌:脱骨侠-固形物含量:60%-温层:冷冻-保质期:9个月-克重:508g-含骨:椒麻鸡胸骨系列-口味:椒麻-辣度:无区分-渠道:冻品休食","price":17,"qty":20,"giftQty":0,"unit":"盒","tags":["品牌:脱骨侠","固形物含量:60%","温层:冷冻","保质期:9个月","克重:508g","含骨:椒麻鸡胸骨系列","口味:椒麻","辣度:无区分","渠道:冻品休食"]}],"sourceRows":[33]}};
+function omsColumnHead(){return '<div class="oms-column-head"><div>商品信息</div><div>单价 / 数量</div><div>应付金额</div><div>买家 / 收货人</div><div>客户名称</div><div>状态</div><div>操作</div></div>'}
+function omsProduct(p){
+ return '<div class="oms-product"><div class="oms-product-info"><div class="oms-product-name">'+safe(p.name)+'<div class="order-sub">商品编码：'+safe(p.sku)+'</div></div><div class="oms-product-tags">'+p.tags.map(t=>'<span>'+safe(t)+'</span>').join('')+'</div></div><div class="oms-product-price">¥ '+(p.price===null?'未提供':p.price.toFixed(2))+'<br>×'+safe(p.qty??'未提供')+' <em>'+safe(p.unit)+'</em>'+(p.giftQty?'<div class="order-sub">赠 '+safe(p.giftQty)+' '+safe(p.unit)+'</div>':'')+'</div></div>';
+}
+function omsOrderCard(x,inDialog=false){
+ const p=omsProfiles[x.o[0]],unknown='<span class="oms-unknown">未提供</span>';
+ const header='<div class="oms-order-head"><span>订单编号：<b>'+safe(x.o[0])+'</b></span><span>下单时间：'+(p?safe(p.createdAt):unknown)+'</span><span>订单来源：<span class="badge gray">'+(p?safe(p.channel):'未提供')+'</span></span><span>订单类型：<span class="badge gray">'+(p?safe(p.type):'未提供')+'</span></span><span>创建人：<span class="badge amber">'+(p?safe(p.creator):'未提供')+'</span></span><span class="oms-node-tag">'+safe(x.r.name)+'</span><span class="sla-clock '+x.level+'">'+safe(x.r.name)+' · '+timing(x)+'</span></div>';
+ const products=p?p.products.map(omsProduct).join(''):'<div class="oms-no-products"><span class="oms-unknown">该订单未提供商品明细</span><div class="order-sub">订单金额：'+safe(x.o[2])+'</div></div>';
+ const receiver=p?'收货人：'+safe(p.receiver)+'<br>手机号：'+safe(p.phone)+'<br>收货地址：'+safe(p.address):unknown;
+ const statuses=p?p.statuses.map(([k,v])=>'<div class="oms-status-row">'+safe(k)+'：<span class="'+(k==='订单状态'?'badge gray':'oms-blue-tag')+'">'+safe(v)+'</span></div>').join(''):'<div class="oms-unknown">业务状态未提供</div>';
+ return '<article class="oms-order">'+header+clarityOrderInfo(x,p)+'<div class="oms-order-body"><div class="oms-products">'+products+'</div><div class="oms-money">'+(p?'¥ '+p.due.toFixed(2)+'元':unknown)+'</div><div class="oms-receiver">'+receiver+'</div><div class="oms-customer">客户：'+safe(x.o[1])+'<br><span style="margin-top:8px">销售人员：'+(p?safe(p.salesperson):unknown)+'</span></div><div>'+statuses+'<div class="oms-status-row">时效状态：'+statusBadge(x.level)+'</div></div><div class="oms-actions">'+(inDialog?'<span class="oms-node-tag">'+safe(x.r.name)+' · 当前</span>':'<button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">▤ 订单详情</button>')+'</div></div><div class="oms-order-foot">工厂备注：'+(p?(safe(p.factoryRemark)||'未填写'):'未提供')+'</div>'+(p?'':'')+'</article>';
+}
+
+function syncMenuRoute(){
+ const target=location.hash==='#orders'?'orders':location.hash==='#driver'?'flow':'flow';
+ selectGroup(target);
+}
+window.addEventListener('hashchange',syncMenuRoute);
+syncMenuRoute();
+
+
+
+let kaItems=[];
+function kaCatalog(){return [...new Map(Object.values(omsProfiles).flatMap(p=>p.products).map(p=>[p.sku||p.name,p])).values()]}
+function openKaOrder(){
+ const form=document.getElementById('kaForm');form.reset();kaItems=[];
+ try{const draft=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(draft){for(const [k,v] of Object.entries(draft.fields||{})){if(form.elements.namedItem(k))form.elements.namedItem(k).value=v}kaItems=draft.products||[]}}catch(e){}
+ let clients=[];try{clients=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}').clients||[]}catch(e){}
+ const names=[...new Set([...clients.map(c=>c.name),...Object.keys(nodeOrders).flatMap(k=>nodeOrders[k].map(o=>o[1]))])];
+ document.getElementById('kaCustomers').innerHTML=names.map(n=>'<option value="'+safe(n)+'"></option>').join('');
+ document.getElementById('kaMessage').textContent='';renderKaHistory();renderKaProducts();kaCustomerChanged();document.getElementById('kaDrawer').showModal();
+}
+function closeKaOrder(){document.getElementById('kaDrawer').close()}
+
+function kaReadCustomer(){
+ const data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}');
+ const name=document.getElementById('kaForm').elements.customerName.value.trim();
+ const matches=(data.clients||[]).filter(c=>c.name===name);
+ return {data,c:matches.length===1?matches[0]:null};
+}
+function customerTimingRule(c,data){
+ const r=c.mode==='custom'?c.rule:data.defaultRule;
+ if(!r||['finance','accept','ship','pickup','warning','receipt','escalation'].some(k=>r[k]===null||r[k]===''||!Number.isFinite(Number(r[k]))||Number(r[k])<0)||!(Number(r.finance)>=Number(r.ship)&&Number(r.accept)>=Number(r.ship)&&Number(r.ship)>=Number(r.pickup))||Number(r.receipt)<=0)throw Error('客户时效配置无效，请先修正配置。');
+ return r;
+}
+function kaPlan(c,data,arrival,now=Date.now()){
+ if(!c)throw Error('请先在系统客户配置中维护并选择客户；同名客户需使用唯一名称。');
+ if(c.type!=='system')return {type:'standard',timingMode:arrival?'negotiated':'default',scheme:arrival?'磋商时效':'系统默认时效',rule:JSON.parse(JSON.stringify(config)),deadlines:[]};
+ const r=customerTimingRule(c,data);
+ const at=boardTime(arrival);if(at===null)throw Error('系统客户必须填写客户要求到货时间。');
+ const deadlines=['finance','accept','ship','pickup','sign'].map((id,i)=>({id,name:['财务审核（并行）','工厂接单（并行）','发货（生成单号）','揽收（WMS出库）','签收'][i],at:at-(id==='sign'?0:Number(r[id])*3600000),warningAt:at-(id==='sign'?0:Number(r[id])*3600000)-Number(r.warning)*3600000}));
+ return {type:'system',timingMode:'system',clientId:c.id,scheme:c.mode==='custom'?'系统客户专属时效':'系统客户默认时效',rule:JSON.parse(JSON.stringify(r)),deadlines,risk:deadlines.some(d=>d.at<now)};
+}
+function kaDate(at){return new Date(at).toLocaleString('zh-CN',{hour12:false,timeZone:'Asia/Shanghai'})}
+function kaCustomerChanged(){
+ const f=document.getElementById('kaForm'),hint=document.getElementById('kaRuleHint'),schedule=document.getElementById('kaSchedule');
+ try{
+ const {data,c}=kaReadCustomer(),system=c?.type==='system';
+ f.elements.customerRequiredArrivalAt.required=system;document.getElementById('kaArrivalRequired').hidden=!system;
+ f.elements.systemName.value=system?(c.systemName||''):'';
+ document.getElementById('kaCustomerType').textContent=c?(system?'系统客户 · 系统客户时效':f.elements.customerRequiredArrivalAt.value?'非系统客户 · 磋商时效':'非系统客户 · 系统默认时效'):'未匹配客户配置';
+ hint.textContent=system?'系统客户时效：必须接单，按客户要求到货时间倒排。':c?(f.elements.customerRequiredArrivalAt.value?'磋商时效：工厂可拒绝，协商修改到货时间后再接单。':'系统默认时效：按内部配置的商品及节点时效执行。'):'请先在系统客户配置中维护客户类型。';
+ const needsEvidence=!!c&&!system&&!!f.elements.customerRequiredArrivalAt.value;
+ let savedEvidence=null;try{const draft=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(draft?.fields?.customerName===f.elements.customerName.value&&draft?.fields?.customerRequiredArrivalAt===f.elements.customerRequiredArrivalAt.value)savedEvidence=draft.arrivalEvidence}catch(e){}
+ const evidence=document.getElementById('kaArrivalEvidence');evidence.hidden=!needsEvidence;
+ f.elements.arrivalEvidenceFile.required=needsEvidence&&!savedEvidence;
+ document.getElementById('kaEvidenceStatus').textContent=savedEvidence?'已保存凭证：'+savedEvidence.name+'；可重新选择文件替换。':'支持 PNG、JPG、PDF，单个文件不超过 2MB。';
+ if(needsEvidence)hint.textContent='已填写客户要求到货时间，请上传客户聊天记录或其他有效凭证。';
+ schedule.innerHTML='';
+ if(!c||!system)return;
+ const previous=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');
+ const preserved=previous?.ruleSnapshot&&previous.fields.customerName===f.elements.customerName.value;
+ const plan=kaPlan(preserved?{...c,type:previous.ruleSnapshot.type,mode:'default'}:c,preserved?{defaultRule:previous.ruleSnapshot.rule}:data,f.elements.customerRequiredArrivalAt.value);
+ if(preserved)plan.scheme='已保存规则快照';
+ schedule.innerHTML='<h3 class="ka-title">履约时效预览 · '+safe(plan.scheme)+'</h3><div class="ka-table"><table><thead><tr><th>节点</th><th>最晚完成时间</th><th>预警时间</th><th>下单风险</th></tr></thead><tbody>'+plan.deadlines.map(d=>'<tr><td>'+d.name+'</td><td>'+kaDate(d.at)+'</td><td>'+kaDate(d.warningAt)+'</td><td style="color:'+(d.at<Date.now()?'#f56c6c':'#67c23a')+'">'+(d.at<Date.now()?'倒排截止已过，需协调交期':'可安排')+'</td></tr>').join('')+'<tr><td>回执上传</td><td colspan="3">实际签收后 '+plan.rule.receipt+' 小时；未签收不开始计时</td></tr></tbody></table></div>';
+ }catch(e){hint.textContent=e.message;schedule.innerHTML=''}
+}
+function kaEvidenceChanged(){
+ const file=document.getElementById('kaForm').elements.arrivalEvidenceFile.files[0],status=document.getElementById('kaEvidenceStatus');
+ status.textContent=file?'已选择：'+file.name+' · '+(file.size/1024).toFixed(1)+' KB':'支持 PNG、JPG、PDF，单个文件不超过 2MB。';
+}
+function kaReadEvidence(file){return new Promise((resolve,reject)=>{if(!file){resolve(null);return}if(!/\.(png|jpe?g|pdf)$/i.test(file.name)||!file.size||file.size>2*1024*1024){reject(Error('客户到货要求凭证仅支持不超过 2MB 的 PNG、JPG 或 PDF 文件。'));return}const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,size:file.size,data:reader.result,uploadedAt:new Date().toISOString()});reader.onerror=()=>reject(Error('客户到货要求凭证读取失败，请重新选择文件。'));reader.readAsDataURL(file)})}
+function addKaProduct(){const p=kaCatalog()[0];if(p){kaItems.push({...p,qty:1,giftQty:0,price:Number(String(p.price).replace(/[^0-9.]/g,''))||0});renderKaProducts()}}
+function renderKaProducts(){
+ const cat=kaCatalog();
+ document.getElementById('kaProducts').innerHTML=kaItems.length?kaItems.map((p,i)=>'<tr><td>'+(i+1)+'</td><td><select aria-label="商品名称" onchange="changeKaProduct('+i+',this.value)">'+cat.map((v,j)=>'<option value="'+j+'" '+((v.sku||v.name)===(p.sku||p.name)?'selected':'')+'>'+safe(v.name)+'</option>').join('')+'</select></td><td>'+safe(p.unit||'—')+'</td><td>—</td><td>—</td>'+['price','qty','giftQty'].map(k=>'<td><input aria-label="'+({price:'售价',qty:'数量',giftQty:'搭赠数量'}[k])+'" type="number" min="'+(k==='qty'?1:0)+'" step="'+(k==='price'?'0.01':'1')+'" required value="'+Number(p[k]||0)+'" onchange="updateKaItem('+i+',\''+k+'\',this.value)"></td>').join('')+'<td>'+((p.giftQty||0)/p.qty*100).toFixed(1)+'%</td><td>'+(Number(p.qty)+Number(p.giftQty||0))+'</td><td><button type="button" onclick="kaItems.splice('+i+',1);renderKaProducts()">删除</button></td></tr>').join(''):'<tr><td colspan="11" style="color:#909399;padding:30px">暂无数据</td></tr>';
+ document.getElementById('kaTotal').textContent='商品金额合计：¥ '+kaItems.reduce((s,p)=>s+Number(p.price)*Number(p.qty),0).toFixed(2);
+}
+function changeKaProduct(i,j){const p=kaCatalog()[Number(j)];kaItems[i]={...p,qty:1,giftQty:0,price:Number(String(p.price).replace(/[^0-9.]/g,''))||0};renderKaProducts()}
+function updateKaItem(i,k,v){kaItems[i][k]=Number(v);renderKaProducts()}
+async function saveKaOrder(e){
+ e.preventDefault();const f=document.getElementById('kaForm'),m=document.getElementById('kaMessage');
+ if(!f.reportValidity())return;
+ const fields=Object.fromEntries(new FormData(f).entries());
+ delete fields.arrivalEvidenceFile;
+ if(fields.customerRequiredArrivalAt&&new Date(fields.customerRequiredArrivalAt)<=new Date()){m.textContent='客户要求到货时间必须晚于当前时间。';return}
+ if(!kaItems.length){m.textContent='请至少添加一件商品。';return}
+ if(kaItems.some(p=>!Number.isInteger(p.qty)||p.qty<1||!Number.isInteger(p.giftQty)||p.giftQty<0||!Number.isFinite(p.price)||p.price<0)){m.textContent='请检查商品售价、数量和搭赠数量。';return}
+ try{
+ const {data,c}=kaReadCustomer();
+ let previous=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');
+ const needsEvidence=!!c&&c.type!=='system'&&!!fields.customerRequiredArrivalAt;
+ const reusableEvidence=previous?.fields?.customerName===fields.customerName&&previous?.fields?.customerRequiredArrivalAt===fields.customerRequiredArrivalAt?previous.arrivalEvidence:null;
+ const evidenceFile=f.elements.arrivalEvidenceFile.files[0],arrivalEvidence=evidenceFile?await kaReadEvidence(evidenceFile):reusableEvidence||null;
+ if(needsEvidence&&!arrivalEvidence)throw Error('非系统客户填写客户要求到货时间后，请上传客户聊天记录或其他凭证。');
+ const changed=previous&&previous.fields.customerRequiredArrivalAt!==fields.customerRequiredArrivalAt;
+ if(changed&&!fields.changeReason.trim())throw Error('修改客户要求到货时间，请填写修改原因。');
+ const same=previous?.ruleSnapshot&&previous.fields.customerName===fields.customerName;
+ const source=same?{defaultRule:previous.ruleSnapshot.rule}:data;
+ const plan=kaPlan(same?{...c,type:previous.ruleSnapshot.type,mode:'default'}:c,source,fields.customerRequiredArrivalAt);
+ if(plan.risk&&!confirm('部分节点倒排截止时间已过，存在无法按期到货的风险。是否仍保存草稿？'))return;
+ const history=previous?.history||[];
+ if(changed)history.push({at:new Date().toISOString(),actor:'本机操作人（未登录）',before:previous.fields.customerRequiredArrivalAt,after:fields.customerRequiredArrivalAt,reason:fields.changeReason.trim()});
+ localStorage.setItem('oms-ka-order-draft-v1',JSON.stringify({fields,products:kaItems,arrivalEvidence:needsEvidence?arrivalEvidence:null,nodeRuleSnapshot:previous?.nodeRuleSnapshot||clone(config.rules),productRuleSnapshot:previous?.productRuleSnapshot||JSON.parse(localStorage.getItem("shipping-product-schemes-v1")||"null"),savedAt:new Date().toISOString(),ruleSnapshot:same?previous.ruleSnapshot:plan,calculatedSchedule:plan.deadlines,history}));
+renderKaHistory();m.textContent='下单草稿已保存在本机。客户要求到货时间：'+(fields.customerRequiredArrivalAt?fields.customerRequiredArrivalAt.replace('T',' '):'未填写（非系统客户选填）')+'。规则已留存快照，重新打开可继续编辑；尚未提交真实订单。'}catch(e){m.textContent=e.message||'保存失败，请检查浏览器存储空间后重试。'}
+}
+
+
+function renderKaHistory(){
+ let draft;try{draft=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null')}catch(e){}
+ const h=draft?.history||[];
+ document.getElementById('kaHistory').innerHTML=h.length?'<h3 class="ka-title">到货时间修改记录</h3><div class="ka-table"><table><thead><tr><th>修改时间</th><th>操作人</th><th>修改前</th><th>修改后</th><th>原因</th></tr></thead><tbody>'+h.map(x=>'<tr><td>'+safe(kaDate(x.at))+'</td><td>'+safe(x.actor)+'</td><td>'+safe(x.before||'未填写')+'</td><td>'+safe(x.after||'未填写')+'</td><td>'+safe(x.reason)+'</td></tr>').join('')+'</tbody></table></div>':'';
+}
+
+function customerViewTabs(){
+ return '<div class="filter-tabs" aria-label="客户订单范围">'+[['all','全部订单'],['system','系统客户订单']].map(([id,name])=>'<button aria-pressed="'+(customerView===id)+'" class="'+(customerView===id?'active':'')+'" onclick="switchCustomerView(\''+id+'\')">'+name+'</button>').join('')+'</div>';
+}
+function switchCustomerView(view){customerView=view;selectedNode=null;statusFilter='all';render()}
+function systemOrderData(){
+ let data;try{data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}');if(!Array.isArray(data.clients||[]))throw Error()}catch(e){return {rows:[],error:'客户配置读取失败，请检查系统客户配置后刷新。'}}
+ const rows=records().flatMap(x=>{
+  const clients=(data.clients||[]).filter(c=>c.name===x.o[1]);
+  if(clients.length!==1||clients[0].type!=='system')return [];
+  const p=omsProfiles[x.o[0]]||{},arrival=p.customerRequiredArrivalAt||null;
+  return [{...x,client:clients[0],arrival,profile:p}];
+ });
+ return {rows};
+}
+function systemOverview(){
+ const raw=systemOrderData(),rows=uniqueOrders(raw.rows),error=raw.error;
+ return customerViewTabs()+'<div class="overview-head"><div><h2>系统客户订单</h2><p>查看连锁商超订单的到货要求和当前履约节点。</p></div><a class="btn" href="系统客户配置.html">客户设置</a></div>'+(error?'<p role="alert">'+safe(error)+'</p>':'')+'<div class="oms-summary"><span>系统客户订单 <b>'+rows.length+' 单</b></span><span>待补充到货时间 <b>'+rows.filter(x=>!x.arrival).length+' 单</b></span><span>订单金额 <b>¥ '+amount(rows)+'</b></span></div><h3 class="section-title">按当前节点查看</h3><div class="filter-tabs">'+[['all','全部'],...config.rules.map(r=>[r.id,r.name])].map(([id,name])=>'<button data-node-card="'+id+'" aria-pressed="'+((selectedNode||'all')===id)+'" onclick="openNode(\''+id+'\')">'+name+' '+rows.filter(x=>id==='all'||x.r.id===id).length+'</button>').join('')+'</div><p class="oms-source-note">按客户配置中的唯一客户名称匹配导入订单；未提供到货时间和真实完成记录的订单，不判定到货超时。</p>';
+}
+function systemOrderDetails(){
+ const {rows,error}=systemOrderData(),list=uniqueOrders(rows.filter(x=>!selectedNode||selectedNode==='all'||x.r.id===selectedNode));
+ let draft=null;try{const d=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(d?.ruleSnapshot?.type==='system')draft=d}catch(e){}
+ const draftHtml=draft?'<details style="margin-top:20px;border:1px solid #dcdfe6;padding:16px"><summary style="cursor:pointer;color:#409eff">本地系统客户草稿（未提交，不计入上方订单）</summary><p>客户：'+safe(draft.fields.customerName)+'　要求到货：'+safe(draft.fields.customerRequiredArrivalAt?.replace('T',' ')||'待补充')+'</p><p>收货人：'+safe(draft.fields.receiver)+'　金额：¥ '+draft.products.reduce((s,p)=>s+Number(p.price)*Number(p.qty),0).toFixed(2)+'</p><button class="btn" onclick="openKaOrder()">查看 / 编辑草稿</button></details>':'';
+ return '<div class="overview-head"><h2>系统客户订单明细</h2><span class="badge gray">当前 '+list.length+' 单</span></div>'+(error?'<p role="alert">'+safe(error)+'</p>':'')+'<div style="overflow-x:auto"><table style="width:100%;min-width:980px;border-collapse:collapse" class="system-orders-table"><thead><tr><th>订单 / 客户</th><th>所属系统</th><th>要求到货时间</th><th>当前节点</th><th>到货状态</th><th>订单金额</th><th>操作</th></tr></thead><tbody>'+list.map(x=>'<tr><td>'+safe(x.o[0])+'<div style="margin-top:6px">'+safe(x.o[1])+'</div></td><td>'+safe(x.client.systemName||'未填写')+'</td><td>'+safe(x.arrival?x.arrival.replace('T',' '):'待补充')+'</td><td>'+safe(x.r.name)+'</td><td><span class="badge amber">'+(x.arrival?'待同步实际履约记录':'待补充到货时间')+'</span></td><td>'+safe(x.o[2])+'</td><td><button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">订单详情</button></td></tr>').join('')+'</tbody></table></div>'+(!list.length?'<div class="empty-orders">暂无匹配的系统客户订单。<br>请在“系统客户配置”中维护客户类型，客户名称需与订单一致。<br>现有订单仍保留在“全部订单”中。</div>':'')+draftHtml;
+}
+
+
+function boardRows(scope=customerView){
+ let data={};try{data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}')||{}}catch(e){}
+ const clients=Array.isArray(data.clients)?data.clients:[],groups=new Map();
+ records().forEach(x=>{if(!groups.has(x.o[0]))groups.set(x.o[0],[]);groups.get(x.o[0]).push(x)});
+ return [...groups.values()].map(raw=>{
+  const p=omsProfiles[raw[0].o[0]]||{},matches=clients.filter(c=>c.name===raw[0].o[1]),matched=matches.length===1?matches[0]:null;
+  const snap=p.ruleSnapshot,client=snap&&['system','standard'].includes(snap.type)?{...(matched||{}),name:raw[0].o[1],type:snap.type,systemName:snap.systemName||matched?.systemName||p.systemName||''}:matched;
+  const tasks=raw.map(x=>withCustomerDeadline({...x,p,client},data));
+  return {...uniqueOrders(tasks)[0],p,client,tasks,arrival:boardTime(p.customerRequiredArrivalAt),signed:boardTime(p.events?.signedAt)};
+ }).filter(x=>scope!=='system'||x.client?.type==='system');
+}
+function boardTime(v){
+ if(v===null||v===undefined||v==='')return null;
+ if(typeof v==='number')return Number.isFinite(v)?v:null;
+ let value=String(v).trim();
+ if(/^\d{4}-\d{2}-\d{2}$/.test(value))value+='T00:00:00+08:00';
+ else if(/^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}(:\d{2}(\.\d+)?)?$/.test(value))value=value.replace(' ','T')+'+08:00';
+ const at=Date.parse(value);return Number.isFinite(at)?at:null;
+}
+function withCustomerDeadline(x,data,now=Date.now()){
+ if(x.client?.type!=='system'||x.r.id==='receiptReview')return x;
+ const sla={kind:'system',at:null,warningAt:null,ruleName:'按当前客户配置计算',message:''};
+ try{
+  const snap=x.p.ruleSnapshot;
+  if(snap&&snap.type!=='system')throw Error('订单规则快照与客户类型不一致');
+  const c=snap?{...x.client,mode:'default'}:x.client,source=snap?{defaultRule:snap.rule}:data;
+  if(snap)sla.ruleName='按订单保存规则计算';
+  const rule=customerTimingRule(c,source);
+  if(x.r.id==='receipt'){
+   sla.receiptHours=Number(rule.receipt);
+   const signed=boardTime(x.p.events?.signedAt);
+   if(signed===null||signed>now)sla.message='待实际签收后计算';
+   else {sla.at=signed+Number(rule.receipt)*3600000;sla.warningAt=Math.max(signed,sla.at-Number(rule.warning)*3600000);}
+  }else if(boardTime(x.p.customerRequiredArrivalAt)===null)sla.message='客户要求到货时间待补充';
+  else {
+   const d=kaPlan(c,source,x.p.customerRequiredArrivalAt,now).deadlines.find(d=>d.id===x.r.id);
+   sla.at=d.at;sla.warningAt=d.warningAt;
+  }
+  const starts={finance:'submittedAt',accept:'submittedAt',ship:'factoryAcceptedAt',pickup:'wmsReceivedAt',sign:'wmsOutboundAt',receipt:'signedAt'};
+  const ends={finance:'financeApprovedAt',accept:'factoryAcceptedAt',ship:'shippedAt',pickup:'wmsOutboundAt',sign:'signedAt',receipt:'receiptUploadedAt'};
+  const e=x.p.events||{},start=boardTime(e[starts[x.r.id]]);
+  const unfinished=e[ends[x.r.id]]===null||(x.r.id==='ship'&&(e.wmsReceivedAt===null||e.trackingCreatedAt===null||e.trackingNumber===null));
+  sla.observed=start!==null&&start<=now&&unfinished;
+  if(sla.at!==null&&!sla.observed)sla.message='履约记录待同步';
+ }catch(e){sla.message='客户时效配置待检查';}
+ const level=!x.r.on?'paused':sla.at===null||!sla.observed?'awaiting':now>=sla.at?'overdue':now>=sla.warningAt?'warning':'normal';
+ return {...x,sla,level};
+}
+function nodeDeadlineInfo(x){
+ if(x.sla?.kind!=='system')return '<span>节点时效：'+safe(x.r.value)+' 小时</span><span>已用时：'+duration(x.o[4])+'</span>';
+ const sla=x.sla;
+ return '<span>本节点最晚完成：<b>'+(sla.at===null?safe(sla.message):safe(kaDate(sla.at)))+'</b></span><span class="sub">'+safe(sla.ruleName)+(x.r.id==='receipt'?' · 实际签收后'+(sla.receiptHours?' '+sla.receiptHours+' 小时':'计时'):' · 按要求到货时间倒排')+'</span>';
+}
+function orderMatchesSearch(x,q=orderSearch){
+ if(q.orderNo&&!String(x.o[0]).toLowerCase().includes(q.orderNo.toLowerCase()))return false;
+ if(q.customer&&!String(x.o[1]).toLowerCase().includes(q.customer.toLowerCase()))return false;
+ if(q.start||q.end){
+  const at=boardTime(x.p?.createdAt);if(at===null)return false;
+  const day=boardDay(at);if(q.start&&day<q.start||q.end&&day>q.end)return false;
+ }
+ return true;
+}
+function orderSearchForm(){
+ return '<form class="order-search" onsubmit="applyOrderSearch(event)" aria-label="订单查询"><div class="field"><label for="orderQueryNo">订单号</label><input id="orderQueryNo" name="orderNo" value="'+safe(orderSearch.orderNo)+'" placeholder="输入订单号" maxlength="100"></div><div class="field"><label for="orderQueryCustomer">客户名称</label><input id="orderQueryCustomer" name="customer" value="'+safe(orderSearch.customer)+'" placeholder="输入客户名称" maxlength="100"></div><div class="field"><label for="orderQueryStart">下单开始日期</label><input id="orderQueryStart" name="start" type="date" value="'+safe(orderSearch.start)+'"></div><div class="field"><label for="orderQueryEnd">下单结束日期</label><input id="orderQueryEnd" name="end" type="date" value="'+safe(orderSearch.end)+'"></div><div class="order-search-actions"><button class="btn primary" type="submit">查询</button><button class="btn" type="button" onclick="resetOrderSearch()">清空查询</button></div><p id="orderQueryError" class="error" role="alert"></p></form>'+(group==='flow'?'<p class="order-search-note">查询仅筛选下方订单，不改变上方总览统计。</p>':'')+(Object.values(orderSearch).some(Boolean)?'<p class="order-search-applied">当前查询：'+[orderSearch.orderNo?'订单号包含“'+safe(orderSearch.orderNo)+'”':'',orderSearch.customer?'客户包含“'+safe(orderSearch.customer)+'”':'',orderSearch.start||orderSearch.end?'下单日期 '+safe(orderSearch.start||'不限')+' 至 '+safe(orderSearch.end||'不限'):''].filter(Boolean).join(' · ')+'</p>':'');
+}
+function applyOrderSearch(event){
+ event.preventDefault();const f=event.currentTarget.elements,next={};
+ ['orderNo','customer','start','end'].forEach(k=>next[k]=f[k].value.trim());
+ if(next.start&&next.end&&next.start>next.end){document.getElementById('orderQueryError').textContent='开始日期不能晚于结束日期';return}
+ orderSearch=next;refreshOrderDetails();
+}
+function resetOrderSearch(){orderSearch={orderNo:'',customer:'',start:'',end:''};refreshOrderDetails()}
+function orderUrgency(x,now=Date.now()){return x.sla?.kind==='system'?(x.sla.at===null?-Infinity:(now-x.sla.at)/3600000):x.o[4]-x.r.value}
+function boardDay(t){return new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(t))}
+function arrivalStatus(x,now=Date.now()){
+ if(x.arrival===null)return {key:'missing',text:'到货时间待补充',color:'gray'};
+ if(x.signed!==null)return {key:x.signed>x.arrival?'late':'signed',text:x.signed>x.arrival?'超期签收':'按时签收',color:x.signed>x.arrival?'red':'green'};
+ // No signature event alone is not evidence that delivery has not occurred.
+ if(x.p.events?.signedAt===null)return {key:x.arrival<=now?'late':'pending',text:x.arrival<=now?'到货已超时':'待到货',color:x.arrival<=now?'red':'gray'};
+ return {key:'unknown',text:'签收记录待同步',color:'gray'};
+}
+function boardMatch(x,key){
+ if(key==='today')return x.arrival!==null&&boardDay(x.arrival)===boardDay(Date.now());
+ if(key==='missing')return x.client?.type==='system'&&x.arrival===null;
+ if(key==='arrivalLate')return arrivalStatus(x).key==='late';
+ return key==='all'||x.level===key;
+}
+
+function boardOverview(){
+ const rows=boardRows(),system=customerView==='system';
+ const tiles=system?[['all','系统客户订单','','当前履约中的订单'],['arrivalLate','到货超时','danger','超过客户要求到货时间'],['today','今日要求到货','caution','按客户要求的日期统计'],['missing','到货时间待补充','','需补充客户到货要求']]:[['all','履约中订单','','订单总数已去重'],['overdue','已超时订单','danger','优先跟进处理'],['warning','即将超时订单','caution','提前安排，避免超时'],['normal','正常履约订单','good','节点时效正常']];
+ const extra=system?[['overdue','节点超时'],['warning','节点预警']]:[['today','今日要求到货'],['missing','系统客户到货待补充'],['arrivalLate','到货超时']];
+ if(rows.some(x=>x.level==='awaiting'))extra.push(['awaiting','节点待判定']);
+ return customerViewTabs()+'<div class="clarity-metrics">'+tiles.map(([key,title,color,sub])=>'<button class="metric '+color+'" data-metric-filter="'+key+'" aria-pressed="false" onclick="openNode(\'all\',\''+key+'\')"><span>'+title+'</span><strong>'+rows.filter(x=>boardMatch(x,key)).length+' <small>单</small></strong><small>'+sub+'</small></button>').join('')+'</div><div class="clarity-attention"><span>'+(system?'节点提醒':'到货提醒')+'</span>'+extra.map(([key,label])=>'<button data-metric-filter="'+key+'" aria-pressed="false" onclick="openNode(\'all\',\''+key+'\')">'+label+' <b>'+rows.filter(x=>boardMatch(x,key)).length+'</b></button>').join('')+'</div><div class="clarity-node-heading"><h3>按履约节点查看</h3><span>财务审核与工厂接单并行，订单总数不重复计算</span></div><div class="clarity-stages">'+config.rules.map((r,i)=>{
+ const s=tally(rows.flatMap(x=>x.tasks).filter(x=>x.r.id===r.id));
+ return '<button class="stage" data-node-card="'+r.id+'" aria-pressed="false" onclick="openNode(\''+r.id+'\')"><div class="stage-top"><b>'+safe(r.name)+'</b>'+(i<2?'<span class="oms-node-tag">并行</span>':'')+'</div><div class="stage-total">'+s.all+'<small>单待完成</small></div><div class="segments">'+['normal','warning','overdue','awaiting','paused'].map(k=>'<i class="'+k+'" style="width:'+(s.all?s[k]/s.all*100:0)+'%"></i>').join('')+'</div><div class="clarity-counts"><span>正常 <b>'+s.normal+'</b></span><span class="warning">预警 <b>'+s.warning+'</b></span><span class="overdue">超时 <b>'+s.overdue+'</b></span>'+(s.awaiting?'<span>待判定 <b>'+s.awaiting+'</b></span>':'')+'</div><div class="stage-foot">'+(system?(r.id==='receiptReview'?'首次上传后 '+safe(r.value)+' 小时':r.id==='receipt'?'签收后按客户规则计时':'按客户要求到货时间倒排'):(r.id==='ship'?'按接单有货／无货商品时效':'普通订单 '+safe(r.value)+' 小时')+(rows.some(x=>x.client?.type==='system')?' · 系统客户单独计算':''))+(r.on?'':' · 提醒已关闭')+'</div></button>';
+ }).join('')+'</div>';
+}
+function overview(){return boardOverview()}
+function nodeDetail(){
+ let rows=boardRows(group==='orders'?'all':customerView).filter(x=>!selectedNode||selectedNode==='all'||x.tasks.some(t=>t.r.id===selectedNode));
+ if(selectedNode&&selectedNode!=='all')rows=rows.map(x=>({...x,...x.tasks.find(t=>t.r.id===selectedNode)}));
+ rows=rows.filter(x=>orderMatchesSearch(x));
+ const list=rows.filter(x=>boardMatch(x,statusFilter)).sort((a,b)=>({overdue:0,warning:1,awaiting:2,normal:3,paused:4}[a.level]-{overdue:0,warning:1,awaiting:2,normal:3,paused:4}[b.level])||(orderUrgency(b)-orderUrgency(a)));
+ const r=config.rules.find(r=>r.id===selectedNode),labels={all:'全部',overdue:'节点超时',warning:'节点预警',normal:'正常',today:'今日要求到货',missing:'系统客户到货时间待补充',arrivalLate:'到货超时',awaiting:'节点待判定'};
+ const keys=[['all','全部'],['overdue','超时'],['warning','预警'],['normal','正常']];
+ if(rows.some(x=>x.level==='awaiting'))keys.push(['awaiting','待判定']);
+ const arrivalFilter=['today','missing','arrivalLate'].includes(statusFilter);
+ return '<div class="overview-head"><div><h2>'+safe(r?r.name:'全部节点')+' · 订单列表</h2>'+(r?'<p>'+safe(r.from)+' → '+safe(r.to)+'</p>':'')+'</div><div class="inline-list-tools"><span class="badge gray">'+list.length+' 单</span>'+(r?'<button class="orders-toggle" onclick="openNode(\'all\')">查看全部节点</button>':'')+'</div></div>'+orderSearchForm()+'<div class="filter-tabs">'+keys.map(([key,label])=>'<button data-order-status="'+key+'" aria-pressed="'+(statusFilter===key)+'" class="'+(statusFilter===key?'active':'')+'" onclick="selectOrderStatus(\''+key+'\')">'+label+' '+rows.filter(x=>boardMatch(x,key)).length+'</button>').join('')+(arrivalFilter?'<button class="active" aria-pressed="true" onclick="selectOrderStatus(\'all\')">'+labels[statusFilter]+' ×</button>':'')+'</div><div class="oms-summary"><span>订单金额合计：<b>¥ '+amount(list)+'</b></span><span>节点超时订单：<b>'+list.filter(x=>x.level==='overdue').length+' 单</b></span></div><div class="oms-order-scroll clarity-order-list">'+(list.length?omsColumnHead()+list.map(x=>omsOrderCard(x)).join(''):'<div class="empty-orders">暂无符合条件的订单'+(Object.values(orderSearch).some(Boolean)?'，请调整查询条件或清空查询。':customerView==='system'&&group==='flow'?'，可在系统客户配置中确认客户分类。':'。')+'</div>')+'</div>'+((group==='flow')?boardDraft():'');
+}
+function clarityOrderInfo(x,p){
+ const c=x.client||boardRows().find(row=>row.o[0]===x.o[0])?.client;
+ const info={arrival:boardTime(p?.customerRequiredArrivalAt),signed:boardTime(p?.events?.signedAt),p:p||{}},ar=arrivalStatus(info);
+ const items=[];
+ if(c?.type==='system')items.push('<span class="oms-node-tag">系统客户'+(c.systemName?' · '+safe(c.systemName):'')+'</span>');
+ if(c?.type==='system'||info.arrival!==null){
+ items.push('<span>客户要求到货：<b>'+safe(info.arrival===null?'待补充':kaDate(info.arrival))+'</b></span>');
+ // The missing arrival message already appears beside its label.
+ if(ar.key!=='missing')items.push('<span>到货状态：<span class="badge '+ar.color+'">'+ar.text+'</span></span>');
+ }
+ const tasks=x.tasks||records().filter(t=>t.o[0]===x.o[0]);
+ if(tasks.length>1)items.push('<span>当前待办：'+tasks.map(t=>'<span class="clarity-task">'+safe(t.r.name)+' · '+timing(t)+'</span>').join('')+'</span>');
+ if(x.sla?.kind==='system')items.push(nodeDeadlineInfo(x));
+ if(p?.owner)items.push('<span>负责人：'+safe(p.owner)+'</span>');
+ return items.length?'<div class="clarity-order-info">'+items.join('')+'</div>':'';
+}
+function boardDraft(){
+ if(customerView!=='system')return '';
+ try{const d=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(d?.ruleSnapshot?.type!=='system')return '';return '<details><summary>本地系统客户草稿（未提交，不计入订单）</summary><p>'+safe(d.fields.customerName)+' · 要求到货 '+safe(d.fields.customerRequiredArrivalAt||'待补充')+'</p><button class="btn" onclick="openKaOrder()">查看草稿</button></details>'}catch(e){return ''}
+}
+</script>
+<!-- fulfillment-bundle:start -->
+<style>
+.fulfillment-summary{margin-top:24px;padding:20px;background:#f5f8ff;border:1px solid #e4eaf5;border-radius:10px}.fulfillment-summary p{color:#64748b;line-height:1.8}.fulfillment-dialog{width:min(1200px,94vw);max-height:90vh;border:0;border-radius:14px;padding:0;color:#243447}.fulfillment-dialog::backdrop{background:#15263b66}.fulfillment-dialog>header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1px solid #e5eaf2}.fulfillment-dialog h2{margin:0}.fulfillment-dialog header p{margin:8px 0 0;color:#718096}.fulfillment-body{padding:20px 24px;overflow:auto}.fulfillment-body section{margin:24px 0}.fulfillment-body p{line-height:1.8;color:#64748b}.fulfillment-facts{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:18px;background:#f8fafc;border-radius:8px}.fulfillment-scroll{overflow:auto}.fulfillment-scroll table{width:100%;border-collapse:collapse;font-size:13px}.fulfillment-scroll th,.fulfillment-scroll td{padding:14px 10px;border-bottom:1px solid #e6ebf2;text-align:left;vertical-align:top}.fulfillment-scroll th{background:#f4f7fc;white-space:nowrap}.fulfillment-scroll small{display:block;color:#718096;line-height:1.8;margin-top:6px}.fulfillment-scroll .btn{display:block;font-size:12px;margin-bottom:6px;white-space:nowrap}.fulfillment-form{display:grid;grid-template-columns:1fr 1fr;gap:16px}.fulfillment-form label{display:grid;gap:8px}.fulfillment-form input,.fulfillment-form select{height:38px;padding:6px;border:1px solid #d7e0ec;border-radius:6px;min-width:0;width:100%}.fulfillment-body summary{cursor:pointer;color:#2563eb}.fulfillment-body #fulfillmentMessage{color:#b45309}@media(max-width:640px){.fulfillment-form,.fulfillment-facts{grid-template-columns:1fr}}
+/* Full OMS order detail, separated from the order-list card layout. */
+.od-document{background:#fff;color:#40536d;font-size:13px}.od-section{padding:18px 0;border-bottom:1px solid #edf1f7}.od-section h3{font-size:15px;color:#273b54;border-left:3px solid #409eff;padding-left:10px;margin:0 0 20px}.od-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px 28px}.od-field{display:flex;gap:8px;line-height:1.8;min-width:0}.od-field>span{flex-shrink:0;color:#6c7c91}.od-field>b{font-weight:400;overflow-wrap:anywhere}.od-notes{display:grid;gap:10px;margin-top:18px}.od-status{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:18px}.od-table-scroll{overflow:auto}.od-product-table{width:100%;min-width:1020px;border-collapse:collapse;font-size:12px}.od-product-table th,.od-product-table td{padding:12px 10px;border:1px solid #e7edf5;text-align:left}.od-product-table th{background:#f8faff;color:#7e8da2;font-weight:500}.od-product-table td:first-child{width:30%;min-width:260px}.od-product-table td>b{font-weight:400;line-height:1.8}.od-product-table small{display:block;color:#90a0b4;margin-top:5px}.od-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:7px}.od-tags span{font-size:11px;color:#409eff;background:#eef6ff;border:1px solid #d9ebff;padding:2px 5px;border-radius:3px}.od-amounts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin:24px 0 4px}.od-amounts>div{display:flex;gap:8px}.od-amounts b{font-weight:400;color:#8090a5}.od-amounts .od-total{grid-column:1/-1;justify-content:flex-end}.od-total b{font-size:17px;color:#ef6a45;font-weight:600}.od-log{list-style:none;padding:0;margin:0}.od-log li{display:grid;grid-template-columns:170px 1fr;gap:24px;position:relative;padding:0 0 16px}.od-log time{font-size:12px;color:#8a99ac;padding:10px 0}.od-log li>span{padding:10px 14px;background:#f6f8fb;border-radius:4px;line-height:1.6}.od-footnote{font-size:12px;color:#9aa7b8;margin-top:20px}
+.od-document .detail-flow-track{align-items:stretch;gap:8px}.od-document .detail-flow-parallel{display:contents}.od-document .detail-flow-parallel>small{display:none}.od-document .detail-flow-node{min-width:160px;padding:12px}.od-document .detail-flow-arrow{align-self:center}.od-document .detail-flow-node header{flex-wrap:wrap}.od-document .detail-fulfillment{padding:16px}.od-document .detail-flow-title>span{font-size:11px}
+@media(max-width:800px){.od-grid,.od-amounts{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.od-grid,.od-amounts{grid-template-columns:1fr}.od-log li{grid-template-columns:1fr;gap:0}}
+/* Sales can see the accepted plan without opening a second dialog. */
+.sales-shipping-plan{padding:18px 20px;background:#f8faff;border-top:1px solid #e5edf8}
+.sales-shipping-plan>header{display:flex;align-items:center;justify-content:space-between;gap:16px;color:#345579}
+.sales-shipping-plan>header span,.sales-shipping-plan>small{font-size:12px;color:#8193ad}
+.sales-shipping-plan .acceptance-plan{grid-template-columns:repeat(6,minmax(140px,1fr));overflow:auto;margin:14px 0}
+.sales-shipping-plan .acceptance-plan>div{background:white;padding:12px}
+@media(max-width:900px){.sales-shipping-plan .acceptance-plan{grid-template-columns:repeat(3,minmax(140px,1fr))}.sales-shipping-plan>header{align-items:flex-start;flex-direction:column}}
+
+</style>
+<script>
+/* source: 履约规则.js */
+(function(root){
+ 'use strict';
+ const HOUR=3600000;
+ const REVIEW={id:'receiptReview',name:'回执审核',from:'回执单首次成功上传',to:'回执审核通过',value:24,warn:80,on:true};
+ const ensureRules=rules=>rules.some(r=>r.id==='receiptReview')?rules:[...rules,{...REVIEW}];
+ function review(shipment,decision,time,reason=''){
+  if(!shipment||at(shipment.events?.firstReceiptUploadedAt)===null)throw Error('请先上传回执');
+  if(!['approved','rejected'].includes(decision))throw Error('审核结果无效');
+  if(shipment.receiptReview!=='待审核')throw Error('当前回执不在待审核状态');
+  if(at(time)===null||at(time)<at(shipment.receipts?.at(-1)?.uploadedAt||shipment.events.firstReceiptUploadedAt))throw Error('审核时间不能早于上传时间');
+  if(decision==='rejected'&&!reason.trim())throw Error('请填写驳回原因');
+  const next=clone(shipment);next.receiptReview=decision==='approved'?'审核通过':'已驳回';
+  next.events.receiptApprovedAt=decision==='approved'?time:null;
+  next.reviewHistory=[...(next.reviewHistory||[]),{decision,time,reason:reason.trim()}];return next;
+ }
+ const at=v=>v===null||v===undefined||v===''?null:Number.isFinite(+v)&&typeof v==='number'?v:Number.isFinite(Date.parse(v))?Date.parse(v):null;
+ const clone=v=>JSON.parse(JSON.stringify(v));
+ function normalize(events={}){
+  const e={...events};
+  if(at(e.firstReceiptUploadedAt)!==null)e.receiptUploadedAt=e.firstReceiptUploadedAt;
+  else if(at(e.receiptUploadedAt)!==null)e.firstReceiptUploadedAt=e.receiptUploadedAt;
+  if(at(e.signedAt)===null&&at(e.receiptUploadedAt)!==null){e.signedAt=e.receiptUploadedAt;e.signSource='回执确认';}
+  if(at(e.wmsReceivedAt)!==null&&at(e.trackingCreatedAt)!==null&&e.trackingNumber)e.shippedAt=new Date(Math.max(at(e.wmsReceivedAt),at(e.trackingCreatedAt))).toISOString();
+  else e.shippedAt=null;
+  return e;
+ }
+ function canSync(e){return at(e.financeApprovedAt)!==null&&at(e.factoryAcceptedAt)!==null;}
+ function upload(shipment,time,file){
+  if(at(time)===null)throw Error('上传时间无效');
+  if(!file||!file.name)throw Error('请选择回执文件');
+  const next=clone(shipment),e=next.events||{};
+  if(!shipment.receiptOnly&&at(e.wmsOutboundAt)===null)throw Error('尚无出库记录，不能上传收货回执');
+  if(!shipment.receiptOnly&&at(time)<at(e.wmsOutboundAt))throw Error('上传时间不能早于出库时间');
+  e.firstReceiptUploadedAt=e.firstReceiptUploadedAt||e.receiptUploadedAt||time;
+  e.receiptUploadedAt=e.firstReceiptUploadedAt;
+  e.receiptApprovedAt=null;next.events=normalize(e);next.receiptReview='待审核';
+  next.receipts=[...(next.receipts||[]),{...file,uploadedAt:time}];
+  return next;
+ }
+ function stage(order,shipment,id,now=Date.now()){
+  const e=normalize({...order.events,...shipment?.events}),r=ensureRules(order.rules).find(r=>r.id===id);
+  if(!r)return {id,state:'awaiting',reason:'规则待补充'};
+  if(['receipt','receiptReview'].includes(id)&&order.receiptRequired===false)return {id,state:'skipped',reason:'无需回执'};
+  const edge={finance:['submittedAt','financeApprovedAt'],accept:['submittedAt','factoryAcceptedAt'],ship:['factoryAcceptedAt','shippedAt'],pickup:['wmsReceivedAt','wmsOutboundAt'],sign:['wmsOutboundAt','signedAt'],receipt:['signedAt','firstReceiptUploadedAt'],receiptReview:['firstReceiptUploadedAt','receiptApprovedAt']}[id];
+  const start=at(e[edge[0]]),end=at(e[edge[1]]);
+  if(start===null)return {id,state:'awaiting',reason:'起算记录待同步'};
+  let hours=Number(r.value);
+  if(id==='ship'&&order.type!=='system'){
+   if(!['stock','noStock'].includes(order.stock))return {id,state:'awaiting',reason:'接单有货状态待同步'};
+   const values=(shipment?.lines||order.lines||[]).map(l=>Number(l[order.stock]??order.lines?.find(original=>original.key===l.key)?.[order.stock]));
+   if(!values.length||values.some(v=>!Number.isFinite(v)||v<=0))return {id,state:'awaiting',reason:'商品时效待同步'};
+   hours=Math.min(...values);
+  }
+  const rule=order.customerRule;
+  const deadline=order.type==='system'&&!['receipt','receiptReview'].includes(id)?at(order.arrival)===null||!rule?null:at(order.arrival)-(id==='sign'?0:Number(rule[id])*HOUR):start+(order.type==='system'&&id==='receipt'?Number(rule?.receipt):hours)*HOUR;
+  if(!Number.isFinite(deadline))return {id,state:'awaiting',reason:'截止时间待补充'};
+  const warning=order.type==='system'&&id!=='receiptReview'?Math.max(start,deadline-Number(rule.warning)*HOUR):start+hours*HOUR*Number(r.warn)/100;
+  return {id,start,end,deadline,warning,signSource:e.signSource||'物流回传',elapsed:((end??now)-start)/HOUR,state:end!==null?(end<=deadline?'completed':'completedLate'):!r.on?'paused':now>=deadline?'overdue':now>=warning?'warning':'normal'};
+ }
+ function validateLinks(order,shipments){
+  const totals=new Map((order.lines||[]).map(l=>[l.key,Number(l.qty)])),allocated=new Map();
+  for(const s of shipments){
+   if(!s.id)throw Error('发货单号必填');
+   for(const l of s.lines||[]){if(l.orderId!==order.id)continue;if(!totals.has(l.key)||!(l.qty>0))throw Error('商品或关联数量无效');allocated.set(l.key,(allocated.get(l.key)||0)+Number(l.qty));}
+  }
+  for(const [key,qty] of allocated)if(qty>totals.get(key))throw Error('发货单关联数量超过原订单数量');
+  return [...totals].every(([key,qty])=>allocated.get(key)===qty);
+ }
+ function plan(order,acceptedAt){
+  const accepted=at(acceptedAt),result={};if(accepted===null)throw Error('接单时间无效');
+  if(!['stock','noStock'].includes(order.stock))throw Error('请选择整单库存状态');
+  const values=(order.lines||[]).map(l=>Number(l[order.stock]));
+  if(!values.length||values.some(v=>!Number.isFinite(v)||v<=0))throw Error('商品时效缺失，请先维护商品时效');
+  const e=normalize(order.events||{}),rule=order.customerRule;
+  for(const id of ['finance','accept','ship','pickup','sign','receipt','receiptReview']){
+   const r=ensureRules(order.rules).find(r=>r.id===id);if(!r)throw Error('节点规则缺失');
+   const actual=at(e[{finance:'financeApprovedAt',accept:'factoryAcceptedAt',ship:'shippedAt',pickup:'wmsOutboundAt',sign:'signedAt',receipt:'firstReceiptUploadedAt',receiptReview:'receiptApprovedAt'}[id]]);
+   let deadline=null;
+   if(order.type==='system'&&!['receipt','receiptReview'].includes(id)){
+    const offset=Number(id==='sign'?0:rule?.[id]);if(at(order.arrival)!==null&&Number.isFinite(offset))deadline=at(order.arrival)-offset*HOUR;
+   }else if(id==='finance')deadline=at(e.submittedAt)===null?null:at(e.submittedAt)+Number(r.value)*HOUR;
+   else if(id==='accept')deadline=at(e.submittedAt)===null?null:at(e.submittedAt)+Number(r.value)*HOUR;
+   else {
+    const start=id==='receiptReview'?at(e.firstReceiptUploadedAt)??result.receipt?.estimated:id==='ship'?accepted:id==='pickup'?at(e.wmsReceivedAt)??result.ship?.estimated:id==='sign'?at(e.wmsOutboundAt)??result.pickup?.estimated:at(e.signedAt)??result.sign?.estimated;
+    const hours=id==='ship'?Math.min(...values):id==='receipt'&&order.type==='system'?Number(rule?.receipt):Number(r.value);
+    if(start!==null&&start!==undefined&&Number.isFinite(hours))deadline=start+hours*HOUR;
+   }
+   const skip=['receipt','receiptReview'].includes(id)&&order.receiptRequired===false;
+   result[id]={deadline:skip?null:deadline,actual:id==='accept'?accepted:actual,estimated:skip?null:id==='accept'?accepted:actual??deadline,skipped:skip};
+  }
+  return result;
+ }
+ const api={ensureRules,review,at,normalize,canSync,upload,stage,validateLinks,plan};
+ root.Fulfillment=api;if(typeof module!=='undefined')module.exports=api;
+})(typeof window==='undefined'?globalThis:window);
+
+</script>
+<script>
+/* source: 时效交互案例.js */
+/* Reusable local demo orders for checking every timing-mode interaction. */
+(() => {
+ const H=3600000,DAY=24*H,now=Date.now(),iso=t=>new Date(t).toISOString(),clone=v=>JSON.parse(JSON.stringify(v));
+ const base=clone(Object.values(omsProfiles)[0]);
+ const rule={finance:72,accept:60,ship:48,pickup:36,receipt:24,warning:4,escalation:2};
+ const cases=[
+  {id:'demo-system-pending',customer:'演示系统客户·待接单',mode:'system',state:'pending',arrival:now+7*DAY},
+  {id:'demo-system-accepted',customer:'演示系统客户·已接单',mode:'system',state:'accepted',arrival:now+8*DAY},
+  {id:'demo-negotiated-pending',customer:'演示普通客户·待接单',mode:'negotiated',state:'pending',arrival:now+5*DAY},
+  {id:'demo-negotiated-rejected',customer:'演示普通客户·待磋商',mode:'negotiated',state:'rejected',arrival:now+3*DAY},
+  {id:'demo-negotiated-resolved',customer:'演示普通客户·已完成磋商',mode:'negotiated',state:'resolved',arrival:now+9*DAY},
+  {id:'demo-negotiated-accepted',customer:'演示普通客户·已接单',mode:'negotiated',state:'accepted',arrival:now+10*DAY}
+ ];
+ for(const c of cases){
+  const profile=clone(base),system=c.mode==='system';
+  Object.assign(profile,{source:'交互演示数据',createdAt:iso(now-2*H),customerRequiredArrivalAt:iso(c.arrival),ruleSnapshot:{type:system?'system':'standard',timingMode:c.mode,rule:system?clone(rule):clone(config)},customerCategory:system?'系统客户':'普通客户',systemName:system?'演示商超系统':'',arrivalEvidence:system?null:{name:'客户沟通记录.png'}});
+  profile.statuses=(profile.statuses||[]).map(([k,v])=>[k,k.includes('接单状态')?(c.state==='accepted'?'已接单':'待接单'):v]);
+  omsProfiles[c.id]=profile;
+  const row=[c.id,c.customer,'¥ '+Number(profile.due||0).toFixed(2),iso(now-2*H),0.5,'normal'];
+  (nodeOrders[c.state==='accepted'?'ship':'accept']||(nodeOrders.accept=[])).push(row);
+ }
+ window.omsTimingDemoCases=cases;
+ window.omsSeedTimingDemoOrders=db=>{
+  for(const c of cases){
+   if(!['rejected','resolved','accepted'].includes(c.state)||db.orders[c.id])continue;
+   const p=omsProfiles[c.id],system=c.mode==='system',accepted=c.state==='accepted'?iso(now-H):null;
+   const order={id:c.id,type:system?'system':'standard',timingMode:c.mode,arrival:iso(c.arrival),customerRule:system?clone(rule):null,receiptRequired:true,rules:clone(config.rules),stock:c.state==='accepted'?'stock':'',lines:p.products.map((v,i)=>({key:String(i),sku:v.sku,qty:Number(v.qty)+Number(v.giftQty||0),stock:24,noStock:72})),events:{submittedAt:iso(now-2*H),factoryAcceptedAt:accepted},arrivalEvidence:system?null:{name:'客户沟通记录.png',data:'data:image/png;base64,iVBORw0KGgo='}};
+   if(c.state==='rejected')order.negotiation={status:'rejected',reason:'当前排产无法满足原到货时间',rejectedAt:iso(now-H),history:[{action:'rejected',at:iso(now-H),reason:'当前排产无法满足原到货时间',arrival:order.arrival}]};
+   if(c.state==='resolved')order.negotiation={status:'resolved',reason:'当前排产无法满足原到货时间',rejectedAt:iso(now-2*H),resolvedAt:iso(now-H),history:[{action:'rejected',at:iso(now-2*H),reason:'当前排产无法满足原到货时间',arrival:iso(now+3*DAY)},{action:'resolved',at:iso(now-H),before:iso(now+3*DAY),after:order.arrival,evidenceName:'客户沟通记录.png'}]};
+   if(c.state==='accepted'){order.negotiation=c.mode==='negotiated'?{status:'resolved',resolvedAt:iso(now-2*H),history:[]}:undefined;order.plan=Fulfillment.plan(order,accepted);}
+   db.orders[c.id]=order;
+  }
+  return db;
+ };
+ window.resetTimingDemoCases=()=>{const db=JSON.parse(localStorage.getItem('oms-fulfillment-v2')||'{"orders":{},"shipments":{}}');for(const c of cases)delete db.orders[c.id];omsSeedTimingDemoOrders(db);localStorage.setItem('oms-fulfillment-v2',JSON.stringify(db));location.reload();};
+})();
+
+</script>
+<script>
+/* source: 履约业务交互.js */
+/* Local prototype interactions; no external messages or business-system writes. */
+(() => {
+ const KEY='oms-fulfillment-v2', esc=v=>safe(v??''), clone=v=>JSON.parse(JSON.stringify(v));
+ let db,ready=true,activeOrder;
+ try{db=JSON.parse(localStorage.getItem(KEY)||'{"orders":{},"shipments":{}}');if(!db.orders||!db.shipments)throw Error();}catch(e){ready=false;db={orders:{},shipments:{}};}
+ if(window.omsSeedTimingDemoOrders){db=window.omsSeedTimingDemoOrders(db);localStorage.setItem(KEY,JSON.stringify(db));}
+ function commit(next){if(!ready)throw Error('履约资料读取失败，请刷新后重试');localStorage.setItem(KEY,JSON.stringify(next));db=next;}
+ function profile(id){return omsProfiles[id]||{};}
+ function links(id){return Object.values(db.shipments).filter(s=>!s.receiptOnly&&s.lines.some(l=>l.orderId===id));}
+ function fmt(v){return v?kaDate(v):'待同步';}
+ function notice(message){document.getElementById('fulfillmentMessage').textContent=message;}
+ function order(id){
+  if(db.orders[id])return {...db.orders[id],rules:Fulfillment.ensureRules(db.orders[id].rules)};
+  const p=profile(id),snapshot=historicalRules[id];
+  const type=p.ruleSnapshot?.type||'standard',arrival=p.customerRequiredArrivalAt||null,timingMode=p.ruleSnapshot?.timingMode||(type==='system'?'system':arrival?'negotiated':'default');
+  return {id,stock:p.stock||'',receiptRequired:p.receiptRequired!==false,rules:Fulfillment.ensureRules(clone(snapshot.rules)),events:{...p.events},type,timingMode,customerRule:p.ruleSnapshot?.rule,arrival,arrivalEvidence:p.arrivalEvidence||null,lines:p.products.map((p,i)=>({key:String(i),sku:p.sku,qty:Number(p.qty)+Number(p.giftQty||0),stock:24,noStock:72})),version:snapshot.version};
+ }
+ // Freeze existing order thresholds once; subsequent configuration saves affect new orders only.
+ const SNAP='oms-rule-snapshots-v2';let historicalRules={};
+ try{
+  historicalRules=JSON.parse(localStorage.getItem(SNAP)||'{}');
+  Object.keys(omsProfiles).forEach(id=>{if(!historicalRules[id])historicalRules[id]={version:'历史规则保留',rules:clone(config.rules)};});
+  localStorage.setItem(SNAP,JSON.stringify(historicalRules));
+ }catch(e){ready=false;showToast('历史规则保存失败，禁止修改履约资料');}
+ window.getOrderAcceptanceContext=id=>clone(order(id));
+ window.acceptOrderLocally=function(id,stock,lines,customerSnapshot){
+  if(!['stock','noStock'].includes(stock))throw Error('请选择有货发货或无货发货');
+  const o=order(id);if(o.events.factoryAcceptedAt)throw Error('订单已接单，请勿重复操作');
+  if(o.timingMode==='negotiated'&&o.negotiation?.status==='rejected')throw Error('请先完成线下磋商并更新客户要求到货时间。');
+  const next=clone(db),now=new Date().toISOString();
+  next.orders[id]={...o,...customerSnapshot,stock,lines:clone(lines),events:{...o.events,submittedAt:o.events.submittedAt||new Date(boardTime(profile(id).createdAt)).toISOString(),factoryAcceptedAt:now}};
+  next.orders[id].plan=Fulfillment.plan(next.orders[id],now);
+  commit(next);return clone(next.orders[id]);
+ };
+ window.rejectNegotiatedOrderLocally=function(id,reason){
+  const o=order(id);if(o.type==='system'||o.timingMode==='system')throw Error('系统客户不可拒绝接单。');
+  if(o.timingMode!=='negotiated'&&!o.arrival)throw Error('系统默认时效订单无需发起到货时间磋商。');
+  if(o.events.factoryAcceptedAt)throw Error('订单已接单，不能拒绝。');if(!String(reason||'').trim())throw Error('请填写拒绝接单原因。');
+  const next=clone(db),now=new Date().toISOString();next.orders[id]={...o,timingMode:'negotiated',negotiation:{status:'rejected',reason:String(reason).trim(),rejectedAt:now,history:[...(o.negotiation?.history||[]),{action:'rejected',at:now,reason:String(reason).trim(),arrival:o.arrival||null}]}};commit(next);render();return clone(next.orders[id]);
+ };
+ window.resolveNegotiatedOrderLocally=function(id,arrival,evidence){
+  const o=order(id);if(o.type==='system')throw Error('系统客户不进入磋商流程。');if(o.negotiation?.status!=='rejected')throw Error('当前订单未处于待磋商状态。');
+  const at=Fulfillment.at(arrival);if(at===null||at<=Date.now())throw Error('请填写晚于当前时间的新到货时间。');if(!evidence?.name||!evidence?.data)throw Error('请上传本次磋商凭证。');
+  const next=clone(db),now=new Date().toISOString(),history=[...(o.negotiation.history||[]),{action:'resolved',at:now,before:o.arrival||null,after:new Date(at).toISOString(),evidenceName:evidence.name}];
+  next.orders[id]={...o,arrival:new Date(at).toISOString(),timingMode:'negotiated',arrivalEvidence:evidence,negotiation:{...o.negotiation,status:'resolved',resolvedAt:now,history}};commit(next);render();return clone(next.orders[id]);
+ };
+ const originalRecords=records;
+ records=function(id='all'){
+  const base=originalRecords('all');
+  const result=base.filter(x=>!db.orders[x.o[0]]).map(x=>{const r=historicalRules[x.o[0]]?.rules.find(r=>r.id===x.r.id)||x.r;return {...x,r,level:classify(x.o,r)};});
+  Object.values(db.orders).forEach(savedOrder=>{
+   const o=order(savedOrder.id);
+   const original=Object.values(nodeOrders).flat().find(x=>x[0]===o.id);if(!original)return;
+   const shipments=links(o.id),covered=Fulfillment.validateLinks(o,shipments);
+   for(const r of o.rules){
+    const batch=['finance','accept'].includes(r.id)?[null]:shipments.length?shipments:[null];
+    const states=batch.map(s=>Fulfillment.stage(o,s?{...s,lines:s.lines.filter(l=>l.orderId===o.id)}:null,r.id));
+    if(!covered&&!['finance','accept'].includes(r.id))states.push(Fulfillment.stage(o,null,r.id));
+    const pending=states.filter(s=>!['completed','completedLate','skipped'].includes(s.state)&&s.reason!=='起算记录待同步');if(!pending.length)continue;
+    const rank={overdue:0,warning:1,awaiting:2,normal:3,paused:4};pending.sort((a,b)=>rank[a.state]-rank[b.state]);
+    const s=pending[0],row=[...original];row[3]=s.start?new Date(s.start).toISOString():'';row[4]=s.elapsed||0;
+    const threshold=s.deadline&&s.start?(s.deadline-s.start)/3600000:r.value;
+    result.push({o:row,r:{...r,value:threshold},level:s.state,localStage:s});
+   }
+  });
+  return result.filter(x=>id==='all'||x.r.id===id);
+ };
+ const oldDeadline=withCustomerDeadline;
+ withCustomerDeadline=function(x,data,now){if(x.localStage)return x;return oldDeadline(x,data,now);};
+ const originalDetail=openOrder;
+ openOrder=function(id){originalDetail(id);const detail=document.getElementById('orderDetail');if(!detail)return;detail.insertAdjacentHTML('beforeend','<section class="fulfillment-summary"><h3>发货单与回执</h3><p>原订单不变；拆合单只调整发货单。继承接单时间、有货状态及原规则，不重新计时。</p><button class="btn primary" onclick="openFulfillment(\''+esc(id)+'\')">查看履约资料</button><span> '+links(id).length+' 张关联发货单 · '+esc(order(id).version)+'</span></section>');};
+ window.openFulfillment=function(id){
+  activeOrder=id;let dialog=document.getElementById('fulfillmentDialog');
+  if(!dialog){dialog=document.createElement('dialog');dialog.id='fulfillmentDialog';dialog.className='fulfillment-dialog';document.body.append(dialog);}
+  const o=order(id),p=profile(id),list=links(id);
+  dialog.innerHTML='<header><div><h2>履约资料</h2><p>原订单 '+esc(id)+'</p></div><button class="btn" onclick="document.getElementById(\'fulfillmentDialog\').close()">关闭</button></header><div class="fulfillment-body"><p class="note">资料仅保存本机。物流回传、回执审核及企业微信群通知尚未连接业务系统。</p><section><h3>接单与计时</h3><div class="fulfillment-facts"><span>库存选择：<b>'+({stock:'有货',noStock:'无货'}[o.stock]||'待接单系统同步')+'</b></span><span>接单时间：'+fmt(o.events.factoryAcceptedAt)+'</span><span>财务审核：'+(o.events.financeApprovedAt?'已通过':'待同步')+'</span><span>同步旺店通：'+(Fulfillment.canSync(o.events)?'满足前置条件':'须财务通过且工厂接单完成')+'</span></div><p>发货从工厂接单起算，接单时整单选择有货或无货。按连续小时统计，配置变更不影响本订单。</p></section><section><h3>关联发货单 <small>'+list.length+' 张</small></h3><div class="fulfillment-scroll"><table><thead><tr><th>发货单号／关联订单</th><th>本单数量</th><th>物流来源／单号</th><th>签收来源／时间</th><th>首次回执／审核</th><th>操作</th></tr></thead><tbody>'+(list.map(s=>{const e=Fulfillment.normalize(s.events);return '<tr><td>'+esc(s.id)+'<small>'+s.lines.map(l=>esc(l.orderId)+' · '+esc(l.sku)+' × '+l.qty).join('<br>')+'</small></td><td>'+s.lines.filter(l=>l.orderId===id).reduce((a,l)=>a+l.qty,0)+'</td><td>'+esc(s.source)+'<small>'+esc(s.company||'无物流公司')+'<br>'+esc(s.trackingNumber||'无可查询单号')+'</small></td><td>'+esc(e.signSource||'待物流回传')+'<small>'+fmt(e.signedAt)+'</small></td><td>'+fmt(e.firstReceiptUploadedAt)+'<small>'+esc(s.receiptReview||'未上传')+'</small></td><td><label class="btn">上传回执<input hidden type="file" accept=".pdf,.png,.jpg,.jpeg" onchange="uploadFulfillmentReceipt(\''+esc(s.id)+'\',this)"></label>'+(s.receipts?.length?'<button class="btn" onclick="viewFulfillmentReceipt(\''+esc(s.id)+'\')">查看回执</button>':'')+'</td></tr>';}).join('')||'<tr><td colspan="6">暂无发货单关联资料，请从发货单系统同步或填写下方物流资料。</td></tr>')+'</tbody></table></div></section><details><summary>导入物流资料并关联发货单</summary><p>使用物流导入表中的发货单号、发货方式、日期、数量、物流公司和单号。费用不参与时效判断；不采集司机资料。没有物流单号时，上传回执确认收货。</p><form id="fulfillmentImport"><div class="fulfillment-form"><label>发货单号<input name="shipment" required maxlength="80"></label><label>发货方式<input name="method" required maxlength="30" placeholder="快递／物流／自配送"></label><label>发货日期<input name="date" type="date" required></label><label>商品<select name="line">'+p.products.map((p,i)=>'<option value="'+i+'">'+esc(p.name)+'</option>').join('')+'</select></label><label>本单发货数量<input name="qty" type="number" min="1" step="1" required></label><label>物流公司<input name="company" maxlength="80"></label><label>物流单号<input name="tracking" maxlength="100"></label><label>WMS出库时间<input name="outbound" type="datetime-local" required></label></div><p>发货日期不代替出库时间。相同发货单号可关联多个原订单；同一商品再次录入会更新该关联数量。</p><button class="btn primary">保存本机物流资料</button></form></details><p id="fulfillmentMessage" role="status"></p><p class="note">回执需要审核，时效按第一次成功上传计算。审核驳回、补传不重置首次时间；无签收回传时标记为“回执确认”。</p></div>';
+  document.getElementById('fulfillmentImport').onsubmit=importLogistics;
+  dialog.querySelectorAll('.fulfillment-scroll tbody tr').forEach((row,i)=>{
+   const shipment=list[i];if(!shipment)return;const cell=row.lastElementChild;
+   const last=shipment.reviewHistory?.at(-1);if(last){const detail=document.createElement('small');detail.textContent=(last.decision==='approved'?'审核通过：':'驳回：')+fmt(last.time)+(last.reason?' · '+last.reason:'');cell.append(detail);}
+   if(shipment.receiptReview!=='待审核')return;
+   const reason=document.createElement('input');reason.placeholder='驳回时填写原因';reason.setAttribute('aria-label','回执审核意见');reason.maxLength=300;cell.append(reason);
+   [['approved','审核通过'],['rejected','驳回补传']].forEach(([decision,label])=>{const button=document.createElement('button');button.className='btn';button.textContent=label;button.onclick=()=>{try{const next=clone(db);next.orders[activeOrder]=order(activeOrder);next.shipments[shipment.id]=Fulfillment.review(next.shipments[shipment.id],decision,new Date().toISOString(),reason.value);commit(next);render();openFulfillment(activeOrder);notice('审核结果已保存本机');}catch(e){notice(e.message);}};cell.append(button);});
+  });
+  const firstSection=dialog.querySelector('section');
+  firstSection.insertAdjacentHTML('beforeend','<details><summary>补充本机接单记录</summary><p>用于原型核对，不代替财务审核或工厂接单系统。</p><form id="acceptanceRecord"><div class="fulfillment-form"><label>工厂接单时间<input name="accepted" type="datetime-local" required></label><label>财务通过时间（可后补）<input name="finance" type="datetime-local"></label><label>接单库存选择<select name="stock" required><option value="">请选择</option><option value="stock">有货</option><option value="noStock">无货</option></select></label><label>是否需要回执<select name="receipt"><option value="yes">是</option><option value="no">否</option></select></label></div><button class="btn primary">保存本机接单记录</button></form></details>');
+  const acceptance=document.getElementById('acceptanceRecord');
+  const localDate=v=>v?new Date(new Date(v).getTime()-new Date(v).getTimezoneOffset()*60000).toISOString().slice(0,16):'';
+  acceptance.elements.accepted.value=localDate(o.events.factoryAcceptedAt);acceptance.elements.finance.value=localDate(o.events.financeApprovedAt);acceptance.elements.stock.value=o.stock;acceptance.elements.receipt.value=o.receiptRequired?'yes':'no';
+  if(o.events.factoryAcceptedAt){acceptance.elements.accepted.readOnly=true;acceptance.elements.stock.disabled=true;acceptance.elements.receipt.disabled=true;}
+  acceptance.onsubmit=e=>{
+   e.preventDefault();try{const f=new FormData(e.target),accepted=o.events.factoryAcceptedAt||new Date(f.get('accepted')).toISOString(),finance=o.events.financeApprovedAt||(f.get('finance')?new Date(f.get('finance')).toISOString():null),submitted=boardTime(p.createdAt);
+    if(Fulfillment.at(accepted)>Date.now()||Fulfillment.at(accepted)<submitted)throw Error('接单时间须在下单后且不晚于当前时间');
+    if(finance&&(Fulfillment.at(finance)>Date.now()||Fulfillment.at(finance)<submitted))throw Error('财务通过时间须在下单后且不晚于当前时间');
+    const next=clone(db);next.orders[id]={...o,stock:o.stock||f.get('stock'),receiptRequired:o.events.factoryAcceptedAt?o.receiptRequired:f.get('receipt')==='yes',events:{...o.events,submittedAt:new Date(submitted).toISOString(),factoryAcceptedAt:accepted,financeApprovedAt:finance}};commit(next);render();openFulfillment(id);notice('接单记录已保存在本机，计时起点已锁定。');
+   }catch(error){notice(error.message);}
+  };
+  if(!dialog.open)dialog.showModal();
+ };
+ function importLogistics(event){
+  event.preventDefault();try{
+   const f=new FormData(event.target),o=order(activeOrder),id=String(f.get('shipment')).trim(),key=String(f.get('line')),qty=Number(f.get('qty')),outbound=new Date(f.get('outbound')).toISOString();
+   if(!/^[\w\u4e00-\u9fff-]{1,80}$/.test(id))throw Error('发货单号仅支持字母、数字、中文、下划线和短横线');
+   if(!Fulfillment.canSync(o.events))throw Error('请先补充财务通过及工厂接单记录，才能关联已发货物流资料');
+   if(Fulfillment.at(outbound)<Fulfillment.at(o.events.factoryAcceptedAt)||Fulfillment.at(outbound)>Date.now())throw Error('出库时间必须在接单后且不晚于当前时间');
+   const next=clone(db),old=next.shipments[id];
+   if(old&&(old.method!==f.get('method')||old.date!==f.get('date')||Fulfillment.at(old.events.wmsOutboundAt)!==Fulfillment.at(outbound)))throw Error('该发货单已存在，发货方式、日期或出库时间不一致，请检查');
+   if(old&&(old.company!==f.get('company')||old.trackingNumber!==f.get('tracking')))throw Error('该发货单已存在，物流公司或单号不一致，请检查');
+   const line={...o.lines.find(l=>l.key===key),orderId:activeOrder,qty};
+   const s=old||{id,source:'物流信息导入',company:f.get('company'),trackingNumber:f.get('tracking'),method:f.get('method'),date:f.get('date'),lines:[],events:{wmsOutboundAt:outbound}};
+   s.lines=s.lines.filter(l=>!(l.orderId===activeOrder&&l.key===key));s.lines.push(line);next.shipments[id]=s;
+   Fulfillment.validateLinks(o,Object.values(next.shipments));next.orders[activeOrder]=o;commit(next);render();openFulfillment(activeOrder);notice('本机物流资料已保存；未触发实际物流查询。');
+  }catch(e){notice(e.message);}
+ }
+ window.uploadFulfillmentReceipt=async function(id,input){
+  try{const file=input.files[0];if(!file)return;if(!/\.(pdf|png|jpe?g)$/i.test(file.name)||file.size>2*1024*1024||!file.size)throw Error('请选择不超过 2MB 的 PDF、PNG 或 JPG 文件（本机存储限制）');
+   const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(Error('文件读取失败'));r.readAsDataURL(file);});
+   const next=clone(db);next.shipments[id]=Fulfillment.upload(next.shipments[id],new Date().toISOString(),{name:file.name,data});commit(next);render();openFulfillment(activeOrder);notice('回执已保存本机，首次上传时间已保留；可在履约资料中审核。');
+  }catch(e){notice(e.message);input.value='';}
+ };
+ window.viewFulfillmentReceipt=id=>{const file=db.shipments[id]?.receipts?.at(-1);if(!file)return;const a=document.createElement('a');a.href=file.data;a.download=file.name;a.click();};
+ window.receiptStore={read:()=>clone(db),ensure:orderId=>{const existing=Object.values(db.shipments).find(s=>s.receiptOnly&&s.lines?.some(l=>l.orderId===orderId));if(existing)return existing.id;const next=clone(db),id='receipt-'+orderId;next.shipments[id]={id,receiptOnly:true,source:'回执单列表',lines:[{orderId,key:'receipt',qty:0}],events:{},receipts:[]};if(!next.orders[orderId])next.orders[orderId]=order(orderId);commit(next);return id;},save:(id,change)=>{const next=clone(db);if(!next.shipments[id])throw Error('回执记录不存在');next.shipments[id]=change(next.shipments[id]);for(const l of next.shipments[id].lines)if(!next.orders[l.orderId])next.orders[l.orderId]=order(l.orderId);commit(next);render();}};
+ // The removed driver route no longer exposes a hidden legacy configuration.
+ if(location.hash==='#driver')location.hash='#flow';
+ render();
+})();
+
+</script>
+<script>
+/* source: 履约流程展示.js */
+/* Presentation only: estimates never write back actual fulfillment events. */
+(() => {
+ const originalOverview=boardOverview, originalInfo=clarityOrderInfo;
+ boardOverview=function(){
+  const root=document.createElement('div');root.innerHTML=originalOverview();
+  const stages=root.querySelector('.clarity-stages');if(!stages)return root.innerHTML;
+  stages.classList.add('workflow-five');
+  const heading=root.querySelector('.clarity-node-heading');
+  if(heading)heading.innerHTML='<div><div class="workflow-eyebrow">FULFILLMENT WORKFLOW</div><h3>按履约步骤查看</h3><p>从接单到回执，沿着订单前进的方向，定位每一步待办。</p></div><div class="workflow-guide">① — ⑥ 履约顺序<br><span>点击步骤筛选订单</span></div>';
+  const finance=stages.querySelector('[data-node-card="finance"]');
+  if(finance){const count=finance.querySelector('.stage-total')?.textContent||'';const bar=document.createElement('div');bar.className='workflow-finance';bar.innerHTML='<button class="btn" data-node-card="finance" aria-pressed="false" onclick="openNode(\'finance\')">财务审核 · '+safe(count)+'</button><span>与接单并行；财务审核通过且工厂接单后，方可同步旺店通。</span>';stages.after(bar);finance.remove();}
+  const labels={accept:['接单','工厂确认订单'],ship:['发货','备货并生成物流单号'],pickup:['揽收','仓库完成出库'],sign:['签收','客户确认收货'],receipt:['回执上传','上传收货凭证'],receiptReview:['回执审核','核验回执并审核通过']};
+  [...stages.children].forEach((card,i)=>{
+   const label=labels[card.dataset.nodeCard];if(!label)return;
+   card.querySelector('.stage-top').innerHTML='<div class="workflow-step-title"><span class="workflow-number">'+String(i+1).padStart(2,'0')+'</span><b>'+label[0]+'</b></div><p>'+label[1]+'</p>';
+   card.querySelector('.segments')?.remove();
+   const counts=card.querySelector('.clarity-counts');if(counts){const late=counts.querySelector('.overdue'),warning=counts.querySelector('.warning');if(warning)counts.prepend(warning);if(late)counts.prepend(late);}
+  });
+  return root.innerHTML;
+ };
+ function estimate(x,p){
+  const now=Date.now(),hour=3600000,id=x.r.id,nextId={finance:'ship',accept:'ship',ship:'pickup',pickup:'sign',sign:'receipt',receipt:'receiptReview'}[id];
+  const current=x.localStage?.deadline??x.sla?.at??(x.level==='awaiting'?null:now+(Number(x.r.value)-Number(x.o[4]))*hour);
+  const remaining=t=>t==null?'待补充计时信息':t<=now?'已超时 '+duration((now-t)/hour):'剩余 '+duration((t-now)/hour);
+  const box=(label,value,sub,tone='')=>'<div class="flow-time '+tone+'" title="'+safe(sub||'')+'"><span>'+safe(label)+'</span><strong>'+safe(value)+'</strong><small>'+safe(sub||'')+'</small></div>';
+  let html=box('当前 · '+x.r.name,remaining(current),current==null?'起算记录或时效待同步':'截止 '+kaDate(current),current!=null&&current<=now?'late':'');
+  if(!nextId)return html+box('后续流程','回执审核通过后完成','回执审核独立处理，不重置首次上传时间');
+  const next=config.rules.find(r=>r.id===nextId);if(!next)return html;
+  let start=current==null||current<=now?null:current,end=null,source='按本节点按时完成推算，非实际承诺';
+  if(id==='finance'){
+   const accepted=boardTime(p.events?.factoryAcceptedAt),acceptTask=x.tasks?.find(t=>t.r.id==='accept');
+   start=accepted??(acceptTask?now+(Number(acceptTask.r.value)-Number(acceptTask.o[4]))*hour:null);
+   if(start!==null&&start<=now&&accepted===null)start=null;
+   source='发货计时从工厂接单开始；同步还需财务通过';
+  }
+  let local;try{local=JSON.parse(localStorage.getItem('oms-fulfillment-v2')||'{}').orders?.[x.o[0]];}catch(e){}
+  if(x.client?.type==='system'&&nextId!=='receiptReview'){
+   try{const data=JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}'),rule=p.ruleSnapshot?.rule||customerTimingRule(x.client,data),arrival=boardTime(p.customerRequiredArrivalAt);end=nextId==='receipt'?(start===null?null:start+Number(rule.receipt)*hour):(arrival===null?null:arrival-Number(nextId==='sign'?0:rule[nextId])*hour);source='按客户交期倒排；预计开始不代表实际完成';}catch(e){}
+  }else if(nextId==='ship'){
+   const stock=local?.stock||p.stock,lines=local?.lines||p.products||[],values=lines.map(l=>Number(l[stock]));
+   if(start!==null&&['stock','noStock'].includes(stock)&&values.length&&values.every(v=>Number.isFinite(v)&&v>0))end=start+Math.min(...values)*hour;
+   else source='接单时选择整单有货／无货后，按订单商品时效计算截止';
+  }else if(start!==null)end=start+Number(next.value)*hour;
+  const startText=start===null?'开始时间待确定':start<=now?'已到预计开始时间':'预计 '+duration((start-now)/hour)+' 后开始';
+  html+=box('下一步 · '+next.name,startText,start===null?'当前节点超时或资料缺失，不顺延计划':kaDate(start));
+  html+=box(next.name+'预计完成',end===null?'截止时间待确定':remaining(end),end===null?source:'预计截止 '+kaDate(end),end!==null&&end<=now?'late':'');
+  return html+'<p class="flow-time-note">'+safe(source)+(id==='accept'?'；可开始发货计时，但须财务通过后才可同步旺店通。':'')+'</p>';
+ }
+ clarityOrderInfo=function(x,p){return originalInfo(x,p)+'<div class="order-flow-times">'+estimate(x,p||{})+'</div>';};
+ const originalOpen=openOrder;
+ openOrder=function(id){
+  originalOpen(id);
+  const target=document.getElementById('orderDetail');if(!target)return;
+  target.querySelector('.order-journey')?.remove();
+  [...target.querySelectorAll('.section-title')].filter(e=>e.textContent.includes('订单待办节点')).forEach(e=>e.remove());
+  const p=omsProfiles[id]||{};let saved;
+  try{saved=JSON.parse(localStorage.getItem('oms-fulfillment-v2')||'{}').orders?.[id];}catch(e){}
+  const e=Fulfillment.normalize({...p.events,...saved?.events}),rules=Fulfillment.ensureRules(saved?.rules||config.rules),now=Date.now(),H=3600000;
+  const row=boardRows('all').find(x=>x.o[0]===id),tasks=row?.tasks||records().filter(x=>x.o[0]===id);
+  const ends={finance:'financeApprovedAt',accept:'factoryAcceptedAt',ship:'shippedAt',pickup:'wmsOutboundAt',sign:'signedAt',receipt:'firstReceiptUploadedAt',receiptReview:'receiptApprovedAt'};
+  const starts={finance:'submittedAt',accept:'submittedAt',ship:'factoryAcceptedAt',pickup:'wmsReceivedAt',sign:'wmsOutboundAt',receipt:'signedAt',receiptReview:'firstReceiptUploadedAt'};
+  const estimates={},cards={};let customerRule;
+  if(row?.client?.type==='system')try{customerRule=p.ruleSnapshot?.rule||customerTimingRule(row.client,JSON.parse(localStorage.getItem('shipping-customer-arrival-v1')||'{}'));}catch(error){}
+  const time=t=>t===null?'待同步':kaDate(t);
+  rules.forEach(r=>{
+   const task=tasks.find(t=>t.r.id===r.id),actual=boardTime(e[ends[r.id]]),actualStart=boardTime(e[starts[r.id]]);
+   let start=actualStart,deadline=null,basis='按订单节点时限推算';
+   if(start===null){
+    if(['finance','accept'].includes(r.id))start=boardTime(e.submittedAt)||boardTime(p.createdAt);
+    else {const previous={ship:'accept',pickup:'ship',sign:'pickup',receipt:'sign',receiptReview:'receipt'}[r.id];start=boardTime(e[ends[previous]])??estimates[previous]??null;basis='以上一步预计完成时间推算';}
+   }
+   let hours=Number(r.value);
+   if(r.id==='ship'){
+    const stock=saved?.stock||p.stock,lines=saved?.lines||p.products||[],values=lines.map(l=>Number(l[stock]));
+    hours=['stock','noStock'].includes(stock)&&values.length&&values.every(v=>Number.isFinite(v)&&v>0)?Math.min(...values):null;
+    basis=hours===null?'待接单库存选择及商品时效同步':'按接单有货／无货商品时效推算';
+   }
+   if(start!==null&&hours!==null)deadline=start+hours*H;
+   if(task&&!customerRule&&task.level!=='awaiting'&&Number.isFinite(Number(task.o[4]))){deadline=task.localStage?.deadline??now+(Number(task.r.value)-Number(task.o[4]))*H;basis='按当前节点已用时及保存时限计算';}
+   if(customerRule&&r.id!=='receiptReview'){const arrival=boardTime(p.customerRequiredArrivalAt);deadline=r.id==='receipt'?(start===null?null:start+Number(customerRule.receipt)*H):(arrival===null?null:arrival-Number(r.id==='sign'?0:customerRule[r.id])*H);basis=r.id==='receipt'?'签收后按客户回执时限计算':'按客户要求到货时间倒排';}
+   if(!Number.isFinite(deadline))deadline=null;
+   if(saved?.plan?.[r.id]){deadline=saved.plan[r.id].deadline;basis='按接单时保存的计划展示';}
+   estimates[r.id]=deadline;
+   const skip=['receipt','receiptReview'].includes(r.id)&&(saved?.receiptRequired??p.receiptRequired)===false;
+   const running=actualStart!==null||!!(task&&task.level!=='awaiting');
+   const status=skip?'无需回执':actual!==null?'已完成':running?'进行中':'待开始';
+   const late=!skip&&deadline!==null&&(actual??now)>deadline&&(actual!==null||running);
+   cards[r.id]='<article class="detail-flow-node '+(actual!==null?'done':running?'active':'')+'"><header><b>'+safe(r.name)+'</b><span class="badge '+(skip?'gray':late?'red':actual!==null?'green':running?'':'gray')+'">'+(late?(actual!==null?'超时完成':'已超时'):status)+'</span></header><dl><dt>预计完成</dt><dd>'+safe(skip?'不考核':deadline===null?'待确定':time(deadline))+'</dd><dt>实际完成</dt><dd class="actual">'+safe(actual!==null?time(actual):skip?'—':'尚无完成记录')+'</dd></dl><p>'+safe(skip?'不计入回执时效':actual!==null?'完成时间来源：'+(r.id==='sign'?(e.signSource||'物流回传'):r.id==='receipt'?'首次成功上传':'业务事件'):running&&deadline!==null?(deadline<=now?'已超时 '+duration((now-deadline)/H):'剩余 '+duration((deadline-now)/H)):basis)+'</p></article>';
+  });
+  const section=document.createElement('section');section.className='detail-fulfillment';
+  section.innerHTML='<div class="detail-flow-title"><h3>履约时效流程</h3><span>预计时间用于安排进度，实际时间以业务记录为准</span></div><div class="detail-flow-track"><div class="detail-flow-parallel"><small>并行处理 · 两项完成后可同步旺店通</small>'+cards.finance+cards.accept+'</div>'+['ship','pickup','sign','receipt','receiptReview'].map(id=>'<span class="detail-flow-arrow" aria-hidden="true">→</span>'+cards[id]).join('')+'</div><p class="detail-flow-caption">发货从工厂接单开始计时；拆合单不重置起点。分批履约的实际完成时间需结合关联发货单查看，未取得整单完成记录时不提前标记完成。</p>';
+  target.querySelector('.dialog-head')?.after(section);
+ };
+ render();
+})();
+
+</script>
+<script>
+/* source: 订单接单.js */
+(() => {
+ const H=3600000,read=k=>JSON.parse(localStorage.getItem(k)||'{}');
+ let filter='pending',query='',active=null,selection='',lines=[],snapshot={};
+ const saved=id=>read('oms-fulfillment-v2').orders?.[id];
+ const accepted=id=>saved(id)?.events?.factoryAcceptedAt||omsProfiles[id]?.events?.factoryAcceptedAt;
+ const nav=document.getElementById('navAcceptance');
+ const previousRender=render;
+ render=function(){previousRender();if(location.hash==='#accept')renderAcceptance();};
+ function renderAcceptance(){
+  document.querySelector('.page-head h1').textContent='订单接单列表';document.querySelector('.page-head p').textContent='整单选择有货或无货，预览后续计划，再确认接单。';
+  document.querySelectorAll('.sla-nav-item').forEach(a=>{a.classList.toggle('active',a===nav);a.removeAttribute('aria-current');});nav.setAttribute('aria-current','page');
+  const rows=Object.entries(omsProfiles).filter(([id,p])=>(filter==='all'||(filter==='accepted')===!!accepted(id))&&(!query||(id+' '+(p.customer||'')+' '+p.products.map(v=>v.name).join(' ')).includes(query)));
+  const body=rows.map(([id,p])=>{
+   const o=getOrderAcceptanceContext(id),row=Object.values(nodeOrders).flat().find(v=>v[0]===id),mode=o.timingMode||(o.type==='system'?'system':o.arrival?'negotiated':'default');
+   const label={default:'系统默认时效',system:'系统客户时效',negotiated:'磋商时效'}[mode],state=o.negotiation?.status==='rejected'?'<small class="negotiation-rejected">待线下磋商</small>':o.negotiation?.status==='resolved'?'<small class="negotiation-resolved">已更新到货时间</small>':'';
+   let actions='<button class="btn primary" onclick="showAcceptance(\''+safe(id)+'\',\'accept\')">工厂接单</button>';
+   if(accepted(id))actions='<button class="btn" onclick="openOrder(\''+safe(id)+'\')">查看节点</button>';
+   else if(mode==='negotiated'&&o.negotiation?.status==='rejected')actions='<button class="btn negotiation-upload" onclick="showAcceptance(\''+safe(id)+'\',\'resolve\')">客服上传磋商结果</button>';
+   else if(mode==='negotiated'&&o.negotiation?.status!=='resolved')actions+='<button class="btn negotiation-reject" onclick="showAcceptance(\''+safe(id)+'\',\'reject\')">拒绝接单</button>';
+   return '<tr><td><b>'+safe(id)+'</b><br>'+safe(row?.[1]||'')+'</td><td><span class="timing-mode '+mode+'">'+label+'</span>'+state+'</td><td>'+p.products.map(v=>safe(v.name)+' × '+safe(v.qty)).join('<br>')+'</td><td>¥ '+Number(p.due||0).toFixed(2)+'</td><td>'+(accepted(id)?safe(({stock:'有货发货',noStock:'无货发货'})[o?.stock]||'已接单')+'<br>'+safe(kaDate(accepted(id))):'待接单')+'</td><td><div class="acceptance-row-actions">'+actions+'</div></td></tr>';
+  }).join('');
+  document.getElementById('content').innerHTML='<section class="acceptance-panel"><div class="acceptance-toolbar"><div class="filter-tabs">'+[['pending','待接单'],['accepted','已接单'],['all','全部']].map(([key,label])=>'<button class="'+(key===filter?'active':'')+'" onclick="acceptanceFilter(\''+key+'\')">'+label+'</button>').join('')+'</div><form onsubmit="acceptanceSearch(event)"><input name="query" value="'+safe(query)+'" placeholder="搜索订单号 / 商品"><button class="btn">查询</button></form></div><div class="timing-demo-guide"><div><b>可操作时效案例</b><span>系统客户：待接单、已接单</span><span>磋商时效：待接单、待磋商、已完成磋商、已接单</span></div><button class="btn" onclick="resetTimingDemoCases()">重置演示案例</button></div><div class="timing-mode-legend"><span><b>系统默认时效</b> 内部时效流程</span><span><b>系统客户时效</b> 必须接单</span><span><b>磋商时效</b> 可拒绝并协商到货时间</span></div><div class="table-wrap"><table><thead><tr><th>订单 / 客户</th><th>时效类型</th><th>商品</th><th>金额</th><th>库存 / 接单时间</th><th>操作</th></tr></thead><tbody>'+body+'</tbody></table>'+(rows.length?'':'<p class="empty-orders">暂无符合条件的订单</p>')+'</div></section>';
+ }
+ window.acceptanceFilter=v=>{filter=v;render();};window.acceptanceSearch=e=>{e.preventDefault();query=e.target.elements.query.value.trim();render();};
+ window.showAcceptance=(id,intent='accept')=>{
+  active=id;selection='';const p=omsProfiles[id];
+  const plans=p.productRuleSnapshot?.plans||read('shipping-product-schemes-v1').plans||[];
+  lines=p.products.map((v,i)=>{const plan=plans.find(s=>s.enabled&&s.skus.includes(String(v.sku).toUpperCase()));return {key:String(i),sku:v.sku,qty:Number(v.qty)+Number(v.giftQty||0),stock:Number(v.stock??plan?.stock??24),noStock:Number(v.noStock??plan?.noStock??72)};});
+  const row=boardRows('all').find(x=>x.o[0]===id),context=getOrderAcceptanceContext(id),type=row?.client?.type==='system'?'system':context.type||row?.client?.type||'standard';
+  snapshot={type,timingMode:context.timingMode||(type==='system'?'system':context.arrival||p.customerRequiredArrivalAt?'negotiated':'default'),arrival:context.arrival||p.customerRequiredArrivalAt,negotiation:context.negotiation};
+  if(snapshot.type==='system')snapshot.customerRule=p.ruleSnapshot?.rule||customerTimingRule(row.client,read('shipping-customer-arrival-v1'));
+  let d=document.getElementById('acceptanceDialog');if(!d){d=document.createElement('dialog');d.id='acceptanceDialog';d.className='acceptance-dialog';document.body.append(d);}
+  const modeLabel={default:'系统默认时效',system:'系统客户时效',negotiated:'磋商时效'}[snapshot.timingMode],modeText=snapshot.timingMode==='system'?'系统客户订单不可拒绝，必须按照客户要求到货时间履约。':snapshot.timingMode==='negotiated'?'普通客户填写了到货时间；工厂可接单，也可拒绝后线下磋商。':'按内部配置的商品和履约节点时效执行。';
+  const rejected=snapshot.timingMode==='negotiated'&&snapshot.negotiation?.status==='rejected';
+  const productTable='<div class="acceptance-product-hours"><table class="acceptance-product-table"><caption>商品发货明细（共 '+lines.length+' 项）</caption><thead><tr><th>序号</th><th>商品名称</th><th>商品编码</th><th>数量（含赠品）</th><th>有货时限</th><th>无货时限</th></tr></thead><tbody>'+lines.map((l,i)=>'<tr><td>'+(i+1)+'</td><td>'+safe(p.products[i].name)+'</td><td>'+safe(l.sku||'—')+'</td><td>'+safe(l.qty)+'</td><td><b>'+l.stock+' 小时</b></td><td><b>'+l.noStock+' 小时</b></td></tr>').join('')+'</tbody></table></div>';
+  const choices='<div class="acceptance-choice-title"><b>选择接单方式</b><span>有货、无货将展示对应的预测节点时效</span></div><div class="acceptance-choice-grid"><button class="acceptance-choice" data-choice="stock" onclick="chooseAcceptance(\'stock\')"><i></i><b>有货发货</b><small>按有货时效预测履约节点</small></button><button class="acceptance-choice" data-choice="noStock" onclick="chooseAcceptance(\'noStock\')"><i></i><b>无货发货</b><small>按无货时效预测履约节点</small></button>'+(snapshot.timingMode==='negotiated'?'<button class="acceptance-choice reject" data-choice="reject" onclick="chooseAcceptance(\'reject\')"><i></i><b>'+(snapshot.negotiation?.status==='resolved'?'继续拒接':'拒接')+'</b><small>填写原因后进入磋商</small></button>':'')+'</div><div id="acceptancePreview" class="acceptance-preview-empty">请选择接单方式查看后续节点预测</div><div class="acceptance-decision-buttons"><button id="confirmAcceptance" class="btn primary" disabled onclick="confirmAcceptance()">确认接单</button></div>';
+  const content=rejected?negotiationEditor():productTable+choices;
+  d.innerHTML='<div class="dialog-head"><h2>'+(rejected?'客服上传磋商结果':'工厂接单')+'</h2><button class="btn" onclick="document.getElementById(\'acceptanceDialog\').close()">关闭</button></div><div class="acceptance-order-ref"><span>订单编号</span><b>'+safe(id)+'</b></div><div class="acceptance-mode-banner '+snapshot.timingMode+'"><b>'+modeLabel+'</b><span>'+modeText+'</span>'+(snapshot.arrival?'<small>'+(snapshot.negotiation?.status==='resolved'?'变更后':'当前')+'要求到货：'+safe(kaDate(snapshot.arrival))+'</small>':'')+'</div>'+content+'<p id="acceptanceError" class="error" role="alert"></p>';if(!d.open)d.showModal();if(intent==='reject'&&!rejected)setTimeout(()=>chooseAcceptance('reject'));if(intent==='resolve')setTimeout(()=>document.getElementById('negotiatedArrival')?.focus());
+ };
+ window.chooseAcceptance=choice=>{selection=choice;document.querySelectorAll('.acceptance-choice').forEach(el=>el.classList.toggle('selected',el.dataset.choice===choice));const preview=document.getElementById('acceptancePreview'),confirm=document.getElementById('confirmAcceptance');document.getElementById('acceptanceError').textContent='';confirm.disabled=false;if(choice==='reject'){preview.className='acceptance-reject-panel';preview.innerHTML='<label class="negotiation-reason">'+(snapshot.negotiation?.status==='resolved'?'继续拒接原因':'拒接原因')+'<input id="negotiationReason" maxlength="300" placeholder="请填写无法按客户时间履约的具体原因"></label>';confirm.textContent=snapshot.negotiation?.status==='resolved'?'确认继续拒接':'确认拒接';confirm.className='btn danger';setTimeout(()=>document.getElementById('negotiationReason')?.focus());return}confirm.textContent='确认接单';confirm.className='btn primary';preview.className='';previewAcceptance(choice);};
+ function negotiationEditor(){return '<section class="negotiation-editor"><b>待线下磋商</b><p>拒绝原因：'+safe(snapshot.negotiation?.reason||'—')+'</p><label>协商后的客户要求到货时间<input id="negotiatedArrival" type="datetime-local"></label><label>本次磋商凭证<input id="negotiatedEvidence" type="file" accept=".png,.jpg,.jpeg,.pdf"></label><button class="btn primary" onclick="saveNegotiation()">保存磋商结果，再次接单</button></section>'}
+ window.previewAcceptance=stock=>{
+  selection=stock;const now=Date.now(),p=omsProfiles[active],context=getOrderAcceptanceContext(active),rules=context.rules,times={},shipHours=Math.min(...lines.map(l=>l[stock]));
+  const plan=Fulfillment.plan({...context,...snapshot,stock,lines,events:{...context.events,submittedAt:context.events.submittedAt||boardTime(p.createdAt)}},now);
+  rules.forEach(r=>{times[r.id]=plan[r.id].estimated;});
+  const arrival=Fulfillment.at(snapshot.arrival),sign=Fulfillment.at(times.sign),check=snapshot.timingMode==='negotiated'&&arrival!==null?'<p class="negotiated-result '+(sign!==null&&sign<=arrival?'ok':'risk')+'">协商到货校验：预计签收 '+(sign===null?'待确定':safe(kaDate(sign)))+'；客户要求 '+safe(kaDate(arrival))+' · '+(sign!==null&&sign<=arrival?'可以按期完成':'预计无法按期完成，建议拒绝并继续磋商')+'</p>':'';
+  document.getElementById('acceptancePreview').innerHTML='<p class="note">'+(snapshot.type==='system'?'系统客户仍按要求到货时间倒排，库存选择不覆盖客户交期。':snapshot.timingMode==='negotiated'?'磋商时效按内部节点推算，并校验能否满足协商后的到货时间。':'所选商品发货时限：'+shipHours+' 小时。后续节点按上一步预计完成时间推算。')+'</p>'+check+'<div class="acceptance-product-hours"><table class="acceptance-product-table"><caption>商品发货明细（共 '+lines.length+' 项）</caption><thead><tr><th scope="col">序号</th><th scope="col">商品名称</th><th scope="col">商品编码</th><th scope="col">数量（含赠品）</th><th scope="col">'+(stock==='stock'?'有货':'无货')+'发货时限</th></tr></thead><tbody>'+lines.map((l,i)=>'<tr><td>'+(i+1)+'</td><td>'+safe(p.products[i].name)+'</td><td>'+safe(l.sku||'—')+'</td><td>'+safe(l.qty)+'</td><td><b>'+l[stock]+' 小时</b></td></tr>').join('')+'</tbody></table></div><div class="acceptance-plan">'+rules.map(r=>'<div><small>'+safe(r.name)+(r.id==='finance'||r.id==='accept'?' · 并行':'')+'</small><b>'+safe(times[r.id]===null?'待补充客户到货时间':kaDate(times[r.id]))+'</b><span>'+ (r.id==='accept'?'确认时完成接单':r.id==='finance'?(p.events?.financeApprovedAt?'已审核通过':'审核截止，不自动通过'):'预计完成')+'</span></div>').join('')+'</div><p class="sub">后续时间是计划，不是实际完成记录。未取得商品时效的展示数据沿用页面 24 / 72 小时默认值；多商品暂按最早时限预览。</p>';
+  document.getElementById('confirmAcceptance').disabled=snapshot.timingMode==='negotiated'&&snapshot.negotiation?.status==='rejected';
+ };
+ window.rejectAcceptance=()=>{try{const reason=document.getElementById('negotiationReason').value.trim();rejectNegotiatedOrderLocally(active,reason);showAcceptance(active);document.getElementById('acceptanceError').textContent='已拒绝接单，请线下沟通后填写新的到货时间并上传凭证。';}catch(e){document.getElementById('acceptanceError').textContent=e.message;}};
+ function readNegotiationEvidence(file){return new Promise((resolve,reject)=>{if(!file){reject(Error('请上传本次磋商的聊天记录或其他凭证。'));return}if(!/\.(png|jpe?g|pdf)$/i.test(file.name)||!file.size||file.size>2*1024*1024){reject(Error('磋商凭证仅支持不超过 2MB 的 PNG、JPG 或 PDF。'));return}const reader=new FileReader();reader.onload=()=>resolve({name:file.name,type:file.type,size:file.size,data:reader.result,uploadedAt:new Date().toISOString()});reader.onerror=()=>reject(Error('磋商凭证读取失败。'));reader.readAsDataURL(file)})}
+ window.saveNegotiation=async()=>{try{const arrival=document.getElementById('negotiatedArrival').value,file=document.getElementById('negotiatedEvidence').files[0],evidence=await readNegotiationEvidence(file);resolveNegotiatedOrderLocally(active,arrival,evidence);showAcceptance(active);document.getElementById('acceptanceError').textContent='磋商结果已上传，等待工厂接单或继续拒接。';}catch(e){document.getElementById('acceptanceError').textContent=e.message;}};
+ window.acceptWithStock=stock=>{try{selection=stock;acceptOrderLocally(active,stock,lines,snapshot);document.getElementById('acceptanceDialog').close();render();showToast((stock==='stock'?'有货发货':'无货发货')+'接单成功');}catch(e){document.getElementById('acceptanceError').textContent=e.message;}};
+ window.confirmAcceptance=()=>{if(selection==='reject'){rejectAcceptance();return}try{if(!selection)throw Error('请先选择有货发货或无货发货。');acceptOrderLocally(active,selection,lines,snapshot);document.getElementById('acceptanceDialog').close();render();showToast('接单成功，销售可在订单列表查看发货及后续节点计划');}catch(e){document.getElementById('acceptanceError').textContent=e.message;}};
+ const priorInfo=clarityOrderInfo;
+ clarityOrderInfo=function(x,p){
+  const local=saved(x.o[0]),profile=p||omsProfiles[x.o[0]]||{},context=getOrderAcceptanceContext(x.o[0]);
+  const acceptedAt=Fulfillment.at(local?.events?.factoryAcceptedAt??profile.events?.factoryAcceptedAt);
+  const acceptedStatus=(profile.statuses||[]).some(([name,value])=>name.includes('接单状态')&&value==='已接单');
+  if(acceptedAt===null&&!acceptedStatus)return priorInfo(x,p);
+  const o={...context,...local,id:x.o[0],rules:Fulfillment.ensureRules(local?.rules||context.rules),plan:local?.plan||{}};
+  let fallbackPlan={};if(acceptedAt!==null)try{fallbackPlan=Fulfillment.plan(o,acceptedAt);}catch(e){}
+
+  const db=read('oms-fulfillment-v2'),shipments=Object.values(db.shipments||{}).filter(s=>s.lines?.some(l=>l.orderId===o.id)),events=Fulfillment.normalize({...p?.events,...o.events});
+  let covered=false;try{covered=shipments.length>0&&Fulfillment.validateLinks(o,shipments);}catch(e){}
+  const ends={finance:'financeApprovedAt',accept:'factoryAcceptedAt',ship:'shippedAt',pickup:'wmsOutboundAt',sign:'signedAt',receipt:'firstReceiptUploadedAt',receiptReview:'receiptApprovedAt'};
+  const steps=Fulfillment.ensureRules(o.rules).map(r=>{
+   const item=o.plan[r.id]||fallbackPlan[r.id],skip=['receipt','receiptReview'].includes(r.id)&&o.receiptRequired===false;
+   let actual=Fulfillment.at(events[ends[r.id]]);
+   if(shipments.length&&!['finance','accept'].includes(r.id)){const times=shipments.map(s=>Fulfillment.at(Fulfillment.normalize(s.events)[ends[r.id]]));actual=covered&&times.every(t=>t!==null)?Math.max(...times):null;}
+   const done=actual!==null||(r.id==='accept'&&acceptedStatus),state=skip?'无需回执':done?'实际':'预计',time=done?actual:item?.estimated,full=skip?'不考核':time==null?(done?'待同步':'待确定'):kaDate(time),short=full.replace(/^\d{4}\//,'').replace(/:\d{2}$/,'');
+   return '<span class="sales-plan-item '+(skip?'is-skipped':done?'is-done':'is-pending')+'" title="'+safe(r.name+' · '+state+'：'+full)+'"><span>'+safe(r.name)+'</span><b>'+safe((skip?'':state+' ')+short)+'</b>'+(done&&!skip?'<em>✓ 已完成</em>':skip?'<em>不考核</em>':'')+'</span>';
+  });
+  const flow='<span class="sales-plan-parallel"><small>并行</small>'+steps.slice(0,2).join('<i class="sales-plan-parallel-divider"> / </i>')+'</span>'+steps.slice(2).map(step=>'<i class="sales-plan-arrow" aria-hidden="true">→</i>'+step).join('');
+  return '<section class="sales-shipping-plan sales-plan-inline" aria-label="发货及履约计划"><b class="sales-plan-label" title="未完成节点显示预计时间；完成状态以实际履约记录为准">履约计划</b><div class="sales-plan-items">'+flow+'</div><button class="orders-toggle sales-plan-detail" onclick="openOrder(\''+safe(x.o[0])+'\')">详情 →</button></section>';
+ };
+ const priorCard=omsOrderCard;
+ omsOrderCard=function(x,inDialog){const el=document.createElement('div');el.innerHTML=priorCard(x,inDialog);const o=getOrderAcceptanceContext(x.o[0]),mode=o.timingMode||(o.type==='system'?'system':o.arrival?'negotiated':'default'),label={default:'系统默认时效',system:'系统客户时效',negotiated:'磋商时效'}[mode];el.querySelector('.oms-order-head')?.insertAdjacentHTML('beforeend','<span class="timing-mode '+mode+'">'+label+'</span>');el.querySelector('.sales-plan-label')?.insertAdjacentHTML('afterend','<span class="timing-mode '+mode+'" style="flex-shrink:0" aria-label="时效类型：'+label+'">'+label+'</span>');if(!inDialog&&saved(x.o[0])?.events.factoryAcceptedAt)el.querySelector('.oms-actions')?.insertAdjacentHTML('beforeend','<button class="orders-toggle" onclick="openOrder(\''+safe(x.o[0])+'\')">查看发货计划 →</button>');return el.innerHTML;};
+ render();
+})();
+
+</script>
+<script>
+/* source: 订单详情展示.js */
+/* Full OMS detail layout. Missing source fields are never fabricated. */
+(() => {
+ const previous=openOrder;
+ const val=v=>v===null||v===undefined||v===''?'—':safe(v);
+ const money=v=>v===null||v===undefined||v===''||!Number.isFinite(Number(v))?'—':'¥ '+Number(v).toFixed(2);
+ const field=(name,value)=>'<div class="od-field"><span>'+safe(name)+'：</span><b>'+val(value)+'</b></div>';
+ const block=(title,body)=>'<section class="od-section"><h3>'+title+'</h3>'+body+'</section>';
+ openOrder=function(id){
+  previous(id);
+  const target=document.getElementById('orderDetail'),p=omsProfiles[id];if(!target||!p)return;
+  const flow=target.querySelector('.detail-fulfillment'),shipments=target.querySelector('.fulfillment-summary');
+  let local;try{local=JSON.parse(localStorage.getItem('oms-fulfillment-v2')||'{}').orders?.[id];}catch(e){}
+  const row=boardRows('all').find(x=>x.o[0]===id),e=Fulfillment.normalize({...p.events,...local?.events});
+  const status=(p.statuses||[]).map(([key,value])=>'<span>'+safe(key)+'：<b class="badge gray">'+safe(value)+'</b></span>').join('');
+  const receipt=local?.receiptRequired??p.receiptRequired;
+  const timingMode=local?.timingMode||p.ruleSnapshot?.timingMode||(p.ruleSnapshot?.type==='system'?'system':p.customerRequiredArrivalAt?'negotiated':'default'),timingLabel={default:'系统默认时效',system:'系统客户时效',negotiated:'磋商时效'}[timingMode];
+  const products=(p.products||[]).map(v=>'<tr><td><b>'+val(v.name)+'</b><small>商品编码：'+val(v.sku)+'</small><div class="od-tags">'+(v.tags||[]).map(t=>'<span>'+safe(t)+'</span>').join('')+'</div></td><td>'+money(v.factoryPrice)+'</td><td>'+money(v.price)+'</td><td>'+val(v.qty)+'</td><td>'+val(v.giftQty??0)+'</td><td>'+val(Number(v.qty||0)+Number(v.giftQty||0))+'</td><td>'+val(v.giftRatio)+'</td><td>'+money(v.coupon)+'</td><td>'+money(v.creditAmount)+'</td><td>'+money(v.paidAmount)+'</td><td>'+money(v.lineTotal??(v.price!=null&&v.qty!=null?Number(v.price)*Number(v.qty):null))+'</td></tr>').join('');
+  const logs=[{time:p.createdAt,text:'订单创建 · '+(p.creator||'创建人未提供')}];
+  [['financeApprovedAt','财务审核通过'],['factoryAcceptedAt','工厂接单完成'+(local?.stock?' · '+(local.stock==='stock'?'有货发货':'无货发货'):'')],['shippedAt','发货完成'],['wmsOutboundAt','WMS 出库（揽收）'],['signedAt',e.signSource==='回执确认'?'回执确认收货':'物流签收'],['firstReceiptUploadedAt','首次回执上传'],['receiptApprovedAt','回执审核通过']].forEach(([key,text])=>{if(e[key])logs.push({time:e[key],text});});
+  if(p.paidAt)logs.push({time:p.paidAt,text:'客户付款成功'});
+  const grid=items=>'<div class="od-grid">'+items.join('')+'</div>';
+  target.innerHTML='<div class="dialog-head"><h2>订单详情</h2><button class="btn" aria-label="关闭订单详情" onclick="document.getElementById(\'orderDialog\').close()">返回列表</button></div><div class="od-document">'+
+   block('订单信息',grid([field('订单号',id),field('买家',row?.o[1]),field('订单类型',p.type),field('订单来源',p.channel),field('客户类别',p.customerCategory),field('支付单号',p.paymentReference),field('付款方式',p.paymentMethod),field('销售人员',p.salesperson),field('销售区域',p.salesRegion),field('经销转私域',p.privateTransfer),field('订单用途',p.purpose),field('客户区域',p.customerRegion),field('发货主体',p.shippingEntity),field('是否回执',receipt===undefined?null:receipt?'是':'否'),field('下单时间',p.createdAt)])+'<div class="od-notes">'+field('买家留言',p.buyerNote)+field('工厂备注',p.factoryRemark)+field('商品清单附件',p.attachmentName)+'</div>')+
+   block('认证信息',grid([field('我方主体',p.ourEntity),field('对方主体',p.customerEntity)]))+
+   block('订单状态','<div class="od-status">'+status+'</div>'+grid([field('时效类型',timingLabel),field('客户要求到货时间',(local?.arrival||p.customerRequiredArrivalAt)?kaDate(local?.arrival||p.customerRequiredArrivalAt):null),field('预计发货完成',local?.plan?.ship?.estimated?kaDate(local.plan.ship.estimated):null),field('当前履约节点',row?.r.name),field('磋商状态',timingMode==='negotiated'?({rejected:'待线下磋商',resolved:'已完成磋商'}[local?.negotiation?.status]||'未拒绝接单'):null),field('到货凭证',local?.arrivalEvidence?.name||p.arrivalEvidence?.name)])+'<div id="odFlowSlot"></div>')+
+   block('商品信息','<div class="od-table-scroll"><table class="od-product-table"><thead><tr>'+['商品','出厂价','成交价','数量','搭赠数量','总数量','搭赠比例','抵扣券','上账','实付','合计'].map(v=>'<th>'+v+'</th>').join('')+'</tr></thead><tbody>'+products+'</tbody></table></div><div class="od-amounts">'+[['商品原价总额',p.originalAmount],['运费金额',p.freight],['优惠券优惠',p.couponDiscount],['VIP 优惠',p.vipDiscount],['抵扣券使用金额',p.couponUsed],['上账使用金额',p.creditAmount],['已付金额',p.paidAmount],['调整价格',p.adjustment],['授信支付金额',p.creditPaid],['钱包支付金额',p.walletPaid],['商品总价',p.totalAmount],['核销费用',p.writeoffAmount]].map(([k,v])=>'<div><span>'+k+'：</span><b>'+money(v)+'</b></div>').join('')+'<div class="od-total"><span>应付金额：</span><b>'+money(p.due)+'</b></div></div>')+
+   block('发货信息',grid([field('收货人',p.receiver),field('联系电话',p.phone),field('收货地址',p.address)])+'<div id="odShipmentsSlot"></div>')+
+   block('订单操作日志','<ol class="od-log">'+logs.filter(l=>boardTime(l.time)!==null).sort((a,b)=>boardTime(b.time)-boardTime(a.time)).map(l=>'<li><time>'+safe(kaDate(l.time))+'</time><span>'+safe(l.text)+'</span></li>').join('')+'</ol>')+
+   '<p class="od-footnote">未提供的字段以“—”展示；预计时间与实际完成记录分开显示。</p></div>';
+  if(flow)target.querySelector('#odFlowSlot').append(flow);
+  if(shipments)target.querySelector('#odShipmentsSlot').append(shipments);
+ };
+})();
+
+</script>
+<script>
+/* source: 回执单列表.js */
+/* Receipt list shares shipment records and review events with the fulfillment board. */
+(() => {
+ let nav=document.getElementById('navReceipts');
+ if(!nav){nav=document.createElement('a');nav.id='navReceipts';nav.className='sla-nav-item';nav.href='#receipts';nav.innerHTML='<svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>回执单列表</span>';document.getElementById('navAcceptance').after(nav);}
+ let tab='全部',filters={},page=1,size=10,selected=new Set();const esc=v=>safe(v??'—');
+ const status=s=>s?(s.receiptReview==='已驳回'?'审核驳回':s.receiptReview||'未上传'):'未上传';
+ function rows(){const db=receiptStore.read(),out=[];for(const [id,p] of Object.entries(omsProfiles)){const list=Object.values(db.shipments).filter(s=>s.lines.some(l=>l.orderId===id));if(!list.length&&!(p.statuses||[]).some(v=>v[1]==='已发货'))continue;for(const s of list.length?list:[null]){const original=Object.values(nodeOrders).flat().find(o=>o[0]===id);out.push({key:id+'|'+(s?.id||''),id,p,s,customer:original?.[1]||p.customer||'—'});}}return out;}
+ const multiple=(text,value)=>!text||text.split(/[,，\s]+/).filter(Boolean).some(q=>value.includes(q));
+ function filtered(){return rows().filter(r=>multiple(filters.order,r.id)&&multiple(filters.shipment,r.s?.id||'')&&(!filters.customer||r.customer.includes(filters.customer))&&(!filters.tracking||(r.s?.trackingNumber||'').includes(filters.tracking))&&(!filters.category||r.p.customerCategory===filters.category)&&(!filters.upload||(filters.upload==='yes')===!!r.s?.receipts?.length)&&(!filters.correct||(filters.correct==='yes')===((r.s?.receipts?.length||0)>1))&&(!filters.start||r.p.createdAt?.slice(0,10)>=filters.start)&&(!filters.end||r.p.createdAt?.slice(0,10)<=filters.end));}
+ const oldRender=render;render=function(){oldRender();if(location.hash==='#receipts')draw();};
+ function draw(){document.querySelector('.page-head h1').textContent='回执单列表';document.querySelector('.page-head p').textContent='客服直接上传回执单，审核人员完成审核；审核结果同步履约节点。';document.querySelectorAll('.sla-nav-item').forEach(a=>{a.classList.toggle('active',a===nav);a.removeAttribute('aria-current');});nav.setAttribute('aria-current','page');
+ const all=filtered(),list=all.filter(r=>tab==='全部'||status(r.s)===tab),pages=Math.max(1,Math.ceil(list.length/size));page=Math.min(page,pages);
+ const input=(name,title,placeholder='')=>'<label>'+title+'<input name="'+name+'" value="'+esc(filters[name]||'')+'" placeholder="'+placeholder+'"></label>';
+ const select=(name,title,opts)=>'<label>'+title+'<select name="'+name+'"><option value="">全部</option>'+opts.map(([v,t])=>'<option value="'+esc(v)+'" '+(filters[name]===v?'selected':'')+'>'+esc(t)+'</option>').join('')+'</select></label>';
+ document.getElementById('content').innerHTML='<section class="receipt-panel"><form id="receiptSearch" class="receipt-search">'+input('order','订单编号','多个订单号以逗号隔开')+input('customer','客户名称','请输入客户名称')+select('correct','是否更正',[['yes','是'],['no','否']])+input('tracking','物流单号','请输入物流单号')+input('shipment','发货单号','多个发货单号以逗号隔开')+'<label>创建时间<div class="receipt-dates"><input aria-label="开始日期" type="date" name="start" value="'+esc(filters.start||'')+'"><input aria-label="结束日期" type="date" name="end" value="'+esc(filters.end||'')+'"></div></label>'+select('category','客户类别',[...new Set(rows().map(r=>r.p.customerCategory).filter(Boolean))].map(v=>[v,v]))+select('upload','是否上传回执',[['no','未上传'],['yes','已上传']])+'<div class="receipt-search-actions"><button class="btn primary">搜索</button><button class="btn" type="reset">重置</button><button class="btn" type="button" id="receiptExport">导出</button><button class="btn" type="button" id="receiptDownload">下载回执文件</button></div></form></section><section class="receipt-panel"><div class="filter-tabs" id="receiptTabs">'+['全部','待审核','审核通过','审核驳回'].map(t=>'<button data-tab="'+t+'" class="'+(tab===t?'active':'')+'">'+t+' '+all.filter(r=>t==='全部'||status(r.s)===t).length+'</button>').join('')+'</div><p class="sub">客服上传回执单后进入待审核；审核驳回后可补传，更正不重置首次上传时间。</p><div class="receipt-table-wrap"><table class="receipt-table"><thead><tr><th><input type="checkbox" id="receiptSelectAll" aria-label="选择本页"></th>'+['订单编号','发货单号','客户名称','收货人','收货地址','订单类型','订单状态','物流单号','审核状态','更正状态','操作'].map(t=>'<th>'+t+'</th>').join('')+'</tr></thead><tbody>'+list.slice((page-1)*size,page*size).map(r=>'<tr><td><input type="checkbox" data-key="'+esc(r.key)+'" aria-label="选择 '+esc(r.id)+'" '+(selected.has(r.key)?'checked':'')+'></td>'+[r.id,r.s?.receiptOnly?'—':r.s?.id,r.customer,r.p.receiver,r.p.address,r.p.type,(r.p.statuses||[]).find(v=>v[0].includes('单状态'))?.[1],r.s?.trackingNumber,status(r.s),(r.s?.receipts?.length||0)>1?'是':'否'].map(v=>'<td title="'+esc(v)+'">'+esc(v)+'</td>').join('')+'<td><button class="orders-toggle" data-action="upload" data-key="'+esc(r.key)+'">上传回执单</button> <button class="orders-toggle" data-action="audit" data-key="'+esc(r.key)+'">审核</button></td></tr>').join('')+(list.length?'':'<tr><td colspan="12" class="empty-orders">暂无符合条件的回执单</td></tr>')+'</tbody></table></div><div class="receipt-pagination"><span>共 '+list.length+' 条</span><select id="receiptSize" aria-label="每页条数">'+[10,20,50].map(n=>'<option '+(size===n?'selected':'')+' value="'+n+'">'+n+'条/页</option>').join('')+'</select><button class="btn" id="receiptPrev" '+(page===1?'disabled':'')+'>上一页</button><span>'+page+' / '+pages+'</span><button class="btn" id="receiptNext" '+(page===pages?'disabled':'')+'>下一页</button></div></section>';
+ document.getElementById('receiptSearch').onsubmit=e=>{e.preventDefault();filters=Object.fromEntries(new FormData(e.target));page=1;selected.clear();draw();};document.getElementById('receiptSearch').onreset=()=>{filters={};page=1;selected.clear();draw();};
+ document.getElementById('receiptTabs').onclick=e=>{if(e.target.dataset.tab){tab=e.target.dataset.tab;page=1;selected.clear();draw();}};
+ document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>openReceipt(b.dataset.key,b.dataset.action));
+ document.querySelectorAll('[data-key][type=checkbox]').forEach(c=>c.onchange=()=>c.checked?selected.add(c.dataset.key):selected.delete(c.dataset.key));document.getElementById('receiptSelectAll').onchange=e=>{document.querySelectorAll('[data-key][type=checkbox]').forEach(c=>{c.checked=e.target.checked;c.onchange();});};
+ document.getElementById('receiptPrev').onclick=()=>{page--;draw();};document.getElementById('receiptNext').onclick=()=>{page++;draw();};document.getElementById('receiptSize').onchange=e=>{size=+e.target.value;page=1;draw();};
+ document.getElementById('receiptExport').onclick=()=>{const values=[['订单编号','发货单号','客户名称','物流单号','审核状态'],...list.filter(r=>!selected.size||selected.has(r.key)).map(r=>[r.id,r.s?.id,r.customer,r.s?.trackingNumber,status(r.s)])];download(URL.createObjectURL(new Blob(['\ufeff'+values.map(v=>v.map(x=>'"'+String(x??'').replace(/^[=+@-]/,"'$&").replaceAll('"','""')+'"').join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'})),'回执单列表.csv',true);};
+ document.getElementById('receiptDownload').onclick=()=>{const files=list.filter(r=>selected.has(r.key)&&r.s?.receipts?.length);if(!files.length)return showToast('请勾选已上传回执的记录');const seen=new Set();files.forEach(r=>{if(seen.has(r.s.id))return;seen.add(r.s.id);const f=r.s.receipts.at(-1);download(f.data,r.s.id+'-'+f.name);});};
+ }
+ function download(url,name,revoke=false){const a=document.createElement('a');a.href=url;a.download=name;a.click();if(revoke)setTimeout(()=>URL.revokeObjectURL(url),1000);}
+ function openReceipt(key,action){let r=rows().find(r=>r.key===key);if(!r)return;if(!r.s){const receiptId=receiptStore.ensure(r.id);draw();r=rows().find(item=>item.id===r.id&&item.s?.id===receiptId);if(!r)return;key=r.key;}
+ let d=document.getElementById('receiptDialog');if(!d){d=document.createElement('dialog');d.id='receiptDialog';d.className='acceptance-dialog receipt-dialog';document.body.append(d);}const s=r.s,file=s.receipts?.at(-1);
+ d.innerHTML='<div class="dialog-head"><h2>回执单 · '+esc(s.id)+'</h2><button class="btn" id="receiptClose">关闭</button></div><p>订单：'+esc(r.id)+' · '+esc(status(s))+'</p><p>首次上传：'+esc(s.events?.firstReceiptUploadedAt?kaDate(s.events.firstReceiptUploadedAt):'未上传')+'</p>'+(file?(/\.(png|jpe?g)$/i.test(file.name)?'<img class="receipt-image" src="'+esc(file.data)+'" alt="回执单">':'<p>回执文件：'+esc(file.name)+'</p>')+'<button class="btn" id="receiptFile">下载查看回执</button>':'<p class="empty-orders">尚未上传回执</p>')+'<label class="receipt-upload">上传 / 补传回执<input id="receiptUpload" type="file" accept=".pdf,.png,.jpg,.jpeg"></label><label class="receipt-note">回执备注<textarea id="receiptNote">'+esc(s.receiptNote||'')+'</textarea></label><button class="btn" id="receiptSaveNote">保存备注</button>'+(status(s)==='待审核'?'<label class="receipt-note">审核意见<textarea id="receiptReason" placeholder="驳回时必须填写原因"></textarea></label><button class="btn primary" id="receiptApprove">审核通过</button> <button class="btn" id="receiptReject">驳回补传</button>':'')+'<p id="receiptMessage" role="status"></p><h3>审核记录</h3>'+(s.reviewHistory||[]).map(h=>'<p>'+esc(kaDate(h.time))+' · '+(h.decision==='approved'?'审核通过':'审核驳回')+' · '+esc(h.reason||'—')+'</p>').join('');
+ d.querySelector('#receiptClose').onclick=()=>d.close();if(file)d.querySelector('#receiptFile').onclick=()=>download(file.data,file.name);
+ const message=t=>d.querySelector('#receiptMessage').textContent=t;
+ d.querySelector('#receiptSaveNote').onclick=()=>{try{const note=d.querySelector('#receiptNote').value;receiptStore.save(s.id,x=>({...x,receiptNote:note}));message('备注已保存');}catch(e){message(e.message);}};
+ d.querySelector('#receiptUpload').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;if(!/\.(pdf|png|jpe?g)$/i.test(f.name)||!f.size||f.size>2*1024*1024)throw Error('请选择不超过 2MB 的 PDF、PNG 或 JPG');const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(Error('读取失败'));reader.readAsDataURL(f);});receiptStore.save(s.id,x=>Fulfillment.upload(x,new Date().toISOString(),{name:f.name,data}));openReceipt(key,'view');}catch(e){message(e.message);}};
+ for(const [id,decision] of [['receiptApprove','approved'],['receiptReject','rejected']]){const b=d.querySelector('#'+id);if(b)b.onclick=()=>{try{receiptStore.save(s.id,x=>Fulfillment.review(x,decision,new Date().toISOString(),d.querySelector('#receiptReason').value));openReceipt(key,'view');}catch(e){message(e.message);}};}
+ if(!d.open)d.showModal();if(action==='upload')d.querySelector('#receiptUpload').click();if(action==='audit'&&status(s)!=='待审核')message(s.receipts?.length?'当前回执无需审核或已完成审核。':'请先上传回执单，再进行审核。');
+ }
+ const oldOpenNode=openNode;openNode=function(id,...args){if(id==='receiptReview'){tab='待审核';page=1;location.hash='#receipts';render();return;}oldOpenNode(id,...args);};
+ render();
+})();
+
+</script>
+<!-- fulfillment-bundle:end -->
+</body>
+</html>

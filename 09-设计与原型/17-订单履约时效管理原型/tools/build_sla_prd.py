@@ -8,8 +8,8 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT/'订单履约时效管理PRD_V1.0_20260910.md'
-OUTPUT=ROOT/'订单履约时效管理PRD_V1.0_20260910.docx'
+SOURCE=ROOT/'订单履约时效管理PRD_V1.1_20260911.md'
+OUTPUT=ROOT/'订单履约时效管理PRD_V1.1_20260911.docx'
 doc=Document()
 section=doc.sections[0]
 section.page_width=Inches(8.5);section.page_height=Inches(11)

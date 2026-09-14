@@ -3,15 +3,17 @@
  const KEY='oms-fulfillment-v2', esc=v=>safe(v??''), clone=v=>JSON.parse(JSON.stringify(v));
  let db,ready=true,activeOrder;
  try{db=JSON.parse(localStorage.getItem(KEY)||'{"orders":{},"shipments":{}}');if(!db.orders||!db.shipments)throw Error();}catch(e){ready=false;db={orders:{},shipments:{}};}
+ if(window.omsSeedTimingDemoOrders){db=window.omsSeedTimingDemoOrders(db);localStorage.setItem(KEY,JSON.stringify(db));}
  function commit(next){if(!ready)throw Error('履约资料读取失败，请刷新后重试');localStorage.setItem(KEY,JSON.stringify(next));db=next;}
  function profile(id){return omsProfiles[id]||{};}
- function links(id){return Object.values(db.shipments).filter(s=>s.lines.some(l=>l.orderId===id));}
+ function links(id){return Object.values(db.shipments).filter(s=>!s.receiptOnly&&s.lines.some(l=>l.orderId===id));}
  function fmt(v){return v?kaDate(v):'待同步';}
  function notice(message){document.getElementById('fulfillmentMessage').textContent=message;}
  function order(id){
-  if(db.orders[id])return db.orders[id];
+  if(db.orders[id])return {...db.orders[id],rules:Fulfillment.ensureRules(db.orders[id].rules)};
   const p=profile(id),snapshot=historicalRules[id];
-  return {id,stock:p.stock||'',receiptRequired:p.receiptRequired!==false,rules:clone(snapshot.rules),events:{...p.events},type:p.ruleSnapshot?.type||'standard',customerRule:p.ruleSnapshot?.rule,arrival:p.customerRequiredArrivalAt,lines:p.products.map((p,i)=>({key:String(i),sku:p.sku,qty:Number(p.qty)+Number(p.giftQty||0),stock:24,noStock:72})),version:snapshot.version};
+  const type=p.ruleSnapshot?.type||'standard',arrival=p.customerRequiredArrivalAt||null,timingMode=p.ruleSnapshot?.timingMode||(type==='system'?'system':arrival?'negotiated':'default');
+  return {id,stock:p.stock||'',receiptRequired:p.receiptRequired!==false,rules:Fulfillment.ensureRules(clone(snapshot.rules)),events:{...p.events},type,timingMode,customerRule:p.ruleSnapshot?.rule,arrival,arrivalEvidence:p.arrivalEvidence||null,lines:p.products.map((p,i)=>({key:String(i),sku:p.sku,qty:Number(p.qty)+Number(p.giftQty||0),stock:24,noStock:72})),version:snapshot.version};
  }
  // Freeze existing order thresholds once; subsequent configuration saves affect new orders only.
  const SNAP='oms-rule-snapshots-v2';let historicalRules={};
@@ -20,18 +22,41 @@
   Object.keys(omsProfiles).forEach(id=>{if(!historicalRules[id])historicalRules[id]={version:'历史规则保留',rules:clone(config.rules)};});
   localStorage.setItem(SNAP,JSON.stringify(historicalRules));
  }catch(e){ready=false;showToast('历史规则保存失败，禁止修改履约资料');}
+ window.getOrderAcceptanceContext=id=>clone(order(id));
+ window.acceptOrderLocally=function(id,stock,lines,customerSnapshot){
+  if(!['stock','noStock'].includes(stock))throw Error('请选择有货发货或无货发货');
+  const o=order(id);if(o.events.factoryAcceptedAt)throw Error('订单已接单，请勿重复操作');
+  if(o.timingMode==='negotiated'&&o.negotiation?.status==='rejected')throw Error('请先完成线下磋商并更新客户要求到货时间。');
+  const next=clone(db),now=new Date().toISOString();
+  next.orders[id]={...o,...customerSnapshot,stock,lines:clone(lines),events:{...o.events,submittedAt:o.events.submittedAt||new Date(boardTime(profile(id).createdAt)).toISOString(),factoryAcceptedAt:now}};
+  next.orders[id].plan=Fulfillment.plan(next.orders[id],now);
+  commit(next);return clone(next.orders[id]);
+ };
+ window.rejectNegotiatedOrderLocally=function(id,reason){
+  const o=order(id);if(o.type==='system'||o.timingMode==='system')throw Error('系统客户不可拒绝接单。');
+  if(o.timingMode!=='negotiated'&&!o.arrival)throw Error('系统默认时效订单无需发起到货时间磋商。');
+  if(o.events.factoryAcceptedAt)throw Error('订单已接单，不能拒绝。');if(!String(reason||'').trim())throw Error('请填写拒绝接单原因。');
+  const next=clone(db),now=new Date().toISOString();next.orders[id]={...o,timingMode:'negotiated',negotiation:{status:'rejected',reason:String(reason).trim(),rejectedAt:now,history:[...(o.negotiation?.history||[]),{action:'rejected',at:now,reason:String(reason).trim(),arrival:o.arrival||null}]}};commit(next);render();return clone(next.orders[id]);
+ };
+ window.resolveNegotiatedOrderLocally=function(id,arrival,evidence){
+  const o=order(id);if(o.type==='system')throw Error('系统客户不进入磋商流程。');if(o.negotiation?.status!=='rejected')throw Error('当前订单未处于待磋商状态。');
+  const at=Fulfillment.at(arrival);if(at===null||at<=Date.now())throw Error('请填写晚于当前时间的新到货时间。');if(!evidence?.name||!evidence?.data)throw Error('请上传本次磋商凭证。');
+  const next=clone(db),now=new Date().toISOString(),history=[...(o.negotiation.history||[]),{action:'resolved',at:now,before:o.arrival||null,after:new Date(at).toISOString(),evidenceName:evidence.name}];
+  next.orders[id]={...o,arrival:new Date(at).toISOString(),timingMode:'negotiated',arrivalEvidence:evidence,negotiation:{...o.negotiation,status:'resolved',resolvedAt:now,history}};commit(next);render();return clone(next.orders[id]);
+ };
  const originalRecords=records;
  records=function(id='all'){
   const base=originalRecords('all');
   const result=base.filter(x=>!db.orders[x.o[0]]).map(x=>{const r=historicalRules[x.o[0]]?.rules.find(r=>r.id===x.r.id)||x.r;return {...x,r,level:classify(x.o,r)};});
-  Object.values(db.orders).forEach(o=>{
+  Object.values(db.orders).forEach(savedOrder=>{
+   const o=order(savedOrder.id);
    const original=Object.values(nodeOrders).flat().find(x=>x[0]===o.id);if(!original)return;
    const shipments=links(o.id),covered=Fulfillment.validateLinks(o,shipments);
    for(const r of o.rules){
     const batch=['finance','accept'].includes(r.id)?[null]:shipments.length?shipments:[null];
     const states=batch.map(s=>Fulfillment.stage(o,s?{...s,lines:s.lines.filter(l=>l.orderId===o.id)}:null,r.id));
     if(!covered&&!['finance','accept'].includes(r.id))states.push(Fulfillment.stage(o,null,r.id));
-    const pending=states.filter(s=>!['completed','completedLate','skipped'].includes(s.state));if(!pending.length)continue;
+    const pending=states.filter(s=>!['completed','completedLate','skipped'].includes(s.state)&&s.reason!=='起算记录待同步');if(!pending.length)continue;
     const rank={overdue:0,warning:1,awaiting:2,normal:3,paused:4};pending.sort((a,b)=>rank[a.state]-rank[b.state]);
     const s=pending[0],row=[...original];row[3]=s.start?new Date(s.start).toISOString():'';row[4]=s.elapsed||0;
     const threshold=s.deadline&&s.start?(s.deadline-s.start)/3600000:r.value;
@@ -50,6 +75,13 @@
   const o=order(id),p=profile(id),list=links(id);
   dialog.innerHTML='<header><div><h2>履约资料</h2><p>原订单 '+esc(id)+'</p></div><button class="btn" onclick="document.getElementById(\'fulfillmentDialog\').close()">关闭</button></header><div class="fulfillment-body"><p class="note">资料仅保存本机。物流回传、回执审核及企业微信群通知尚未连接业务系统。</p><section><h3>接单与计时</h3><div class="fulfillment-facts"><span>库存选择：<b>'+({stock:'有货',noStock:'无货'}[o.stock]||'待接单系统同步')+'</b></span><span>接单时间：'+fmt(o.events.factoryAcceptedAt)+'</span><span>财务审核：'+(o.events.financeApprovedAt?'已通过':'待同步')+'</span><span>同步旺店通：'+(Fulfillment.canSync(o.events)?'满足前置条件':'须财务通过且工厂接单完成')+'</span></div><p>发货从工厂接单起算，接单时整单选择有货或无货。按连续小时统计，配置变更不影响本订单。</p></section><section><h3>关联发货单 <small>'+list.length+' 张</small></h3><div class="fulfillment-scroll"><table><thead><tr><th>发货单号／关联订单</th><th>本单数量</th><th>物流来源／单号</th><th>签收来源／时间</th><th>首次回执／审核</th><th>操作</th></tr></thead><tbody>'+(list.map(s=>{const e=Fulfillment.normalize(s.events);return '<tr><td>'+esc(s.id)+'<small>'+s.lines.map(l=>esc(l.orderId)+' · '+esc(l.sku)+' × '+l.qty).join('<br>')+'</small></td><td>'+s.lines.filter(l=>l.orderId===id).reduce((a,l)=>a+l.qty,0)+'</td><td>'+esc(s.source)+'<small>'+esc(s.company||'无物流公司')+'<br>'+esc(s.trackingNumber||'无可查询单号')+'</small></td><td>'+esc(e.signSource||'待物流回传')+'<small>'+fmt(e.signedAt)+'</small></td><td>'+fmt(e.firstReceiptUploadedAt)+'<small>'+esc(s.receiptReview||'未上传')+'</small></td><td><label class="btn">上传回执<input hidden type="file" accept=".pdf,.png,.jpg,.jpeg" onchange="uploadFulfillmentReceipt(\''+esc(s.id)+'\',this)"></label>'+(s.receipts?.length?'<button class="btn" onclick="viewFulfillmentReceipt(\''+esc(s.id)+'\')">查看回执</button>':'')+'</td></tr>';}).join('')||'<tr><td colspan="6">暂无发货单关联资料，请从发货单系统同步或填写下方物流资料。</td></tr>')+'</tbody></table></div></section><details><summary>导入物流资料并关联发货单</summary><p>使用物流导入表中的发货单号、发货方式、日期、数量、物流公司和单号。费用不参与时效判断；不采集司机资料。没有物流单号时，上传回执确认收货。</p><form id="fulfillmentImport"><div class="fulfillment-form"><label>发货单号<input name="shipment" required maxlength="80"></label><label>发货方式<input name="method" required maxlength="30" placeholder="快递／物流／自配送"></label><label>发货日期<input name="date" type="date" required></label><label>商品<select name="line">'+p.products.map((p,i)=>'<option value="'+i+'">'+esc(p.name)+'</option>').join('')+'</select></label><label>本单发货数量<input name="qty" type="number" min="1" step="1" required></label><label>物流公司<input name="company" maxlength="80"></label><label>物流单号<input name="tracking" maxlength="100"></label><label>WMS出库时间<input name="outbound" type="datetime-local" required></label></div><p>发货日期不代替出库时间。相同发货单号可关联多个原订单；同一商品再次录入会更新该关联数量。</p><button class="btn primary">保存本机物流资料</button></form></details><p id="fulfillmentMessage" role="status"></p><p class="note">回执需要审核，时效按第一次成功上传计算。审核驳回、补传不重置首次时间；无签收回传时标记为“回执确认”。</p></div>';
   document.getElementById('fulfillmentImport').onsubmit=importLogistics;
+  dialog.querySelectorAll('.fulfillment-scroll tbody tr').forEach((row,i)=>{
+   const shipment=list[i];if(!shipment)return;const cell=row.lastElementChild;
+   const last=shipment.reviewHistory?.at(-1);if(last){const detail=document.createElement('small');detail.textContent=(last.decision==='approved'?'审核通过：':'驳回：')+fmt(last.time)+(last.reason?' · '+last.reason:'');cell.append(detail);}
+   if(shipment.receiptReview!=='待审核')return;
+   const reason=document.createElement('input');reason.placeholder='驳回时填写原因';reason.setAttribute('aria-label','回执审核意见');reason.maxLength=300;cell.append(reason);
+   [['approved','审核通过'],['rejected','驳回补传']].forEach(([decision,label])=>{const button=document.createElement('button');button.className='btn';button.textContent=label;button.onclick=()=>{try{const next=clone(db);next.orders[activeOrder]=order(activeOrder);next.shipments[shipment.id]=Fulfillment.review(next.shipments[shipment.id],decision,new Date().toISOString(),reason.value);commit(next);render();openFulfillment(activeOrder);notice('审核结果已保存本机');}catch(e){notice(e.message);}};cell.append(button);});
+  });
   const firstSection=dialog.querySelector('section');
   firstSection.insertAdjacentHTML('beforeend','<details><summary>补充本机接单记录</summary><p>用于原型核对，不代替财务审核或工厂接单系统。</p><form id="acceptanceRecord"><div class="fulfillment-form"><label>工厂接单时间<input name="accepted" type="datetime-local" required></label><label>财务通过时间（可后补）<input name="finance" type="datetime-local"></label><label>接单库存选择<select name="stock" required><option value="">请选择</option><option value="stock">有货</option><option value="noStock">无货</option></select></label><label>是否需要回执<select name="receipt"><option value="yes">是</option><option value="no">否</option></select></label></div><button class="btn primary">保存本机接单记录</button></form></details>');
   const acceptance=document.getElementById('acceptanceRecord');
@@ -83,10 +115,11 @@
  window.uploadFulfillmentReceipt=async function(id,input){
   try{const file=input.files[0];if(!file)return;if(!/\.(pdf|png|jpe?g)$/i.test(file.name)||file.size>2*1024*1024||!file.size)throw Error('请选择不超过 2MB 的 PDF、PNG 或 JPG 文件（本机存储限制）');
    const data=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=()=>reject(Error('文件读取失败'));r.readAsDataURL(file);});
-   const next=clone(db);next.shipments[id]=Fulfillment.upload(next.shipments[id],new Date().toISOString(),{name:file.name,data});commit(next);render();openFulfillment(activeOrder);notice('回执已保存本机，首次上传时间已保留；实际审核待接入。');
+   const next=clone(db);next.shipments[id]=Fulfillment.upload(next.shipments[id],new Date().toISOString(),{name:file.name,data});commit(next);render();openFulfillment(activeOrder);notice('回执已保存本机，首次上传时间已保留；可在履约资料中审核。');
   }catch(e){notice(e.message);input.value='';}
  };
  window.viewFulfillmentReceipt=id=>{const file=db.shipments[id]?.receipts?.at(-1);if(!file)return;const a=document.createElement('a');a.href=file.data;a.download=file.name;a.click();};
+ window.receiptStore={read:()=>clone(db),ensure:orderId=>{const existing=Object.values(db.shipments).find(s=>s.receiptOnly&&s.lines?.some(l=>l.orderId===orderId));if(existing)return existing.id;const next=clone(db),id='receipt-'+orderId;next.shipments[id]={id,receiptOnly:true,source:'回执单列表',lines:[{orderId,key:'receipt',qty:0}],events:{},receipts:[]};if(!next.orders[orderId])next.orders[orderId]=order(orderId);commit(next);return id;},save:(id,change)=>{const next=clone(db);if(!next.shipments[id])throw Error('回执记录不存在');next.shipments[id]=change(next.shipments[id]);for(const l of next.shipments[id].lines)if(!next.orders[l.orderId])next.orders[l.orderId]=order(l.orderId);commit(next);render();}};
  // The removed driver route no longer exposes a hidden legacy configuration.
  if(location.hash==='#driver')location.hash='#flow';
  render();

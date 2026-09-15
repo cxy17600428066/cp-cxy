@@ -15,4 +15,4 @@ try{
  & 'C:\Users\admin\.cache\codex-runtimes\codex-primary-runtime\dependencies\native\poppler\Library\bin\pdftoppm.exe' -png -r 120 $pdf (Join-Path $out 'page')
  "PASS pages=$pages"|Set-Content -LiteralPath $status -Encoding UTF8
 }catch{"FAIL $($_.Exception.Message)"|Set-Content -LiteralPath $status -Encoding UTF8;throw
-}finally{if($opened){$opened.Close(0);[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($opened)};if($word){$word.Quit();[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($w
+}finally{if($opened){$opened.Close(0);[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($opened)};if($word){$word.Quit();[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($word)}}

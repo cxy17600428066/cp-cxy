@@ -1,0 +1,22 @@
+const fs = require('fs');
+const { chromium } = require('C:/Users/admin/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
+(async()=>{
+ const browser=await chromium.launch({headless:true});
+ const page=await browser.newPage({viewport:{width:1024,height:900}});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ await page.setContent(fs.readFileSync('C:/Users/admin/.codex/visualizations/2026/10/07/01a113f3-1f33-7d40-bf39-7aaed264b0b9/custom-activity.html','utf8'));
+ if(await page.locator('#total').innerText()!=='1,746.88')throw Error('total');
+ await page.locator('#sales').fill('10000');
+ if(await page.locator('#ratio').innerText()!=='17.47%')throw Error('ratio');
+ await page.locator('#cap').fill('100');await page.locator('button[type=submit]').click();
+ if(!(await page.locator('#feedback').innerText()).includes('低于'))throw Error('cap validation');
+ await page.locator('#cap').fill('1746.88');await page.locator('button[type=submit]').click();
+ if(!(await page.locator('#feedback').innerText()).includes('校验通过'))throw Error('submit');
+ await page.locator('#add').click();if(await page.locator('#cost-rows tr').count()!==4)throw Error('add');
+ await page.setViewportSize({width:360,height:900});
+ if(await page.evaluate(()=>document.documentElement.scrollWidth>360))throw Error('page overflow');
+ await page.screenshot({path:'E:/cxy/work/custom-activity-mobile.png',fullPage:true});
+ if(errors.length)throw Error(errors.join(','));
+ console.log('Verified: totals, sales ratio, cap validation, submit, add row, 360px layout.');
+ await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

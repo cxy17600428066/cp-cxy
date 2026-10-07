@@ -7,6 +7,10 @@ const { chromium } = require('C:/Users/admin/.cache/codex-runtimes/codex-primary
  await page.setContent(fs.readFileSync('C:/Users/admin/.codex/visualizations/2026/10/07/01a113f3-1f33-7d40-bf39-7aaed264b0b9/custom-activity.html','utf8'));
  if(await page.locator('#total').innerText()!=='1,746.88')throw Error('total');
  await page.locator('#sales').fill('10000');
+ await page.locator('#choose-stores').click();
+ await page.locator('#store-options input').first().check();
+ await page.locator('#confirm-stores').click();
+ if(await page.locator('#store-count').innerText()!=='已选1家')throw Error('store selection');
  if(await page.locator('#ratio').innerText()!=='17.47%')throw Error('ratio');
  await page.locator('#cap').fill('100');await page.locator('button[type=submit]').click();
  if(!(await page.locator('#feedback').innerText()).includes('低于'))throw Error('cap validation');

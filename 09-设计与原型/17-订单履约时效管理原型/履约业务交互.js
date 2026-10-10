@@ -14,12 +14,15 @@
   const merged={...(p?.events||{}),...(saved.events||{})};
   linked.forEach(s=>{const se=Fulfillment.normalize(s.events||{});Object.keys(se).forEach(k=>{if(se[k]&&(!merged[k]||Fulfillment.at(se[k])>Fulfillment.at(merged[k])))merged[k]=se[k];});});
   const events=Fulfillment.normalize(merged),source=String((p?.statuses||[]).find(([k])=>String(k).includes('单状态'))?.[1]||'');
+  const accepted=String((p?.statuses||[]).find(([k])=>String(k).includes('接单状态'))?.[1]||''),approved=String((p?.statuses||[]).find(([k])=>String(k).includes('审核状态'))?.[1]||'');
   if(/取消|关闭/.test(source))return {label:source,events,basis:'订单关闭记录'};
   if(events.signedAt)return {label:'已签收',events,basis:'实际签收时间'};
   if(events.wmsOutboundAt)return {label:'运输中',events,basis:'实际出库时间'};
   if(events.shippedAt)return {label:'已发货',events,basis:'实际发货事件'};
   if(events.factoryAcceptedAt)return {label:'待发货',events,basis:'已接单，尚无实际发货事件'};
+  if(/已接单/.test(accepted))return {label:'待发货',events,basis:'订单已接单，实际接单时间待同步；尚无实际发货事件'};
   if(events.financeApprovedAt)return {label:'待接单',events,basis:'财务已审核，尚未接单'};
+  if(/已审批|已审核|审核通过/.test(approved))return {label:'待接单',events,basis:'订单已审核，实际审核时间待同步；尚未接单'};
   return {label:'待审核',events,basis:'尚无审核、接单或发货完成记录'};
  };
  function order(id){

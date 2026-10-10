@@ -75,7 +75,7 @@ const assert=require('node:assert/strict');
  await page.locator('#cfg-warn').fill('24');
  await page.getByRole('button',{name:'保存配置',exact:true}).click();
  assert.equal(await page.evaluate(()=>state.config.warn),24);
- await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'计划发货管理',exact:true}).click();
+ await page.setViewportSize({width:390,height:844});await page.locator('#nav-plans').click();
  await page.screenshot({path:'E:/cxy/09-设计与原型/计划发货管理-手机预览.png',fullPage:true});
  assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
  assert.deepEqual(errors,[]);console.log('PASS: 数量守恒、来源时间、表单校验、低价推荐、同步失败与重试、发货回传、草稿恢复、晚到确认、取消释放、合单限制、配置保存、持久化、移动端宽度；无浏览器脚本错误。');

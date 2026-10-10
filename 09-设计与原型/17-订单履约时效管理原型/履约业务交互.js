@@ -9,6 +9,19 @@
  function links(id){return Object.values(db.shipments).filter(s=>!s.receiptOnly&&s.lines.some(l=>l.orderId===id));}
  function fmt(v){return v?kaDate(v):'待同步';}
  function notice(message){document.getElementById('fulfillmentMessage').textContent=message;}
+ window.truthfulOrderState=function(id,p=profile(id),store=db){
+  const saved=store?.orders?.[id]||{},linked=Object.values(store?.shipments||{}).filter(s=>s.lines?.some(l=>l.orderId===id));
+  const merged={...(p?.events||{}),...(saved.events||{})};
+  linked.forEach(s=>{const se=Fulfillment.normalize(s.events||{});Object.keys(se).forEach(k=>{if(se[k]&&(!merged[k]||Fulfillment.at(se[k])>Fulfillment.at(merged[k])))merged[k]=se[k];});});
+  const events=Fulfillment.normalize(merged),source=String((p?.statuses||[]).find(([k])=>String(k).includes('单状态'))?.[1]||'');
+  if(/取消|关闭/.test(source))return {label:source,events,basis:'订单关闭记录'};
+  if(events.signedAt)return {label:'已签收',events,basis:'实际签收时间'};
+  if(events.wmsOutboundAt)return {label:'运输中',events,basis:'实际出库时间'};
+  if(events.shippedAt)return {label:'已发货',events,basis:'实际发货事件'};
+  if(events.factoryAcceptedAt)return {label:'待发货',events,basis:'已接单，尚无实际发货事件'};
+  if(events.financeApprovedAt)return {label:'待接单',events,basis:'财务已审核，尚未接单'};
+  return {label:'待审核',events,basis:'尚无审核、接单或发货完成记录'};
+ };
  function order(id){
   if(db.orders[id])return {...db.orders[id],rules:Fulfillment.ensureRules(db.orders[id].rules)};
   const p=profile(id),snapshot=historicalRules[id];

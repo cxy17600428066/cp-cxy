@@ -254,14 +254,10 @@ function omsOrderCard(x,inDialog=false){
  const receiver=p?'收货人：'+safe(p.receiver)+'<br>手机号：'+safe(p.phone)+'<br>收货地址：'+safe(p.address):unknown;
  let statuses='<div class="oms-unknown">业务状态未提供</div>';
  if(p){
-  const cleanStatuses=p.statuses.map(([k,v])=>[k==='原单状态'?'订单状态':String(k).replace(/^原/,''),v]).filter(([k])=>k!=='发货状态');
-  const tasks=x.tasks||[x],stageRank={finance:0,accept:0,ship:1,pickup:2,sign:3,receipt:4,receiptReview:5};
-  const hasShipEvent=['shippedAt','trackingCreatedAt','wmsReceivedAt','wmsOutboundAt'].some(key=>p.events?.[key]);
-  const passedShip=tasks.some(task=>(stageRank[task.r?.id]??0)>stageRank.ship);
-  const shippingStatus=hasShipEvent||passedShip?'已发货':'未发货';
-  const acceptanceIndex=cleanStatuses.findIndex(([k])=>k==='接单状态'),shippingIndex=acceptanceIndex<0?cleanStatuses.length:acceptanceIndex+1;
-  cleanStatuses.splice(shippingIndex,0,['发货状态',shippingStatus]);
-  statuses=cleanStatuses.map(([k,v])=>'<div class="oms-status-row '+(k==='发货状态'?'shipping-status '+(v==='已发货'?'shipped':'unshipped'):'')+'">'+safe(k)+'：<span class="'+(k==='发货状态'?'badge '+(v==='已发货'?'green':'gray'):k==='订单状态'?'badge gray':'oms-blue-tag')+'">'+safe(v)+'</span></div>').join('');
+  const truth=window.truthfulOrderState?truthfulOrderState(x.o[0],p):{label:'待同步',basis:'履约事件待同步'};
+  const cleanStatuses=p.statuses.map(([k,v])=>[String(k).replace(/^原/,''),v]).filter(([k])=>!['单状态','订单状态','发货状态'].includes(k));
+  cleanStatuses.unshift(['订单状态',truth.label]);
+  statuses=cleanStatuses.map(([k,v])=>'<div class="oms-status-row '+(k==='订单状态'?'shipping-status '+(['已发货','运输中','已签收'].includes(v)?'shipped':'unshipped'):'')+'"'+(k==='订单状态'?' title="'+safe(truth.basis)+'"':'')+'>'+safe(k)+'：<span class="'+(k==='订单状态'?'badge '+(['已发货','运输中','已签收'].includes(v)?'green':'gray'):'oms-blue-tag')+'">'+safe(v)+'</span></div>').join('');
  }
  return '<article class="oms-order sla-level-'+safe(x.level)+'">'+header+clarityOrderInfo(x,p)+'<div class="oms-order-body"><div class="oms-products">'+products+'</div><div class="oms-money">'+(p?'¥ '+p.due.toFixed(2)+'元':unknown)+'</div><div class="oms-receiver">'+receiver+'</div><div class="oms-customer">客户：'+safe(x.o[1])+'<br><span style="margin-top:8px">销售人员：'+(p?safe(p.salesperson):unknown)+'</span></div><div>'+statuses+'<div class="oms-status-row sla-status-highlight">时效状态：'+statusBadge(x.level)+'</div></div><div class="oms-actions">'+(inDialog?'<span class="oms-node-tag">'+safe(x.r.name)+' · 当前</span>':'<button class="orders-toggle" onclick="openOrder(\''+x.o[0]+'\')">▤ 订单详情</button>')+'</div></div><div class="oms-order-foot">工厂备注：'+(p?(safe(p.factoryRemark)||'未填写'):'未提供')+'</div>'+(p?'':'')+'</article>';
 }
@@ -702,6 +698,19 @@ function boardDraft(){
  function links(id){return Object.values(db.shipments).filter(s=>!s.receiptOnly&&s.lines.some(l=>l.orderId===id));}
  function fmt(v){return v?kaDate(v):'待同步';}
  function notice(message){document.getElementById('fulfillmentMessage').textContent=message;}
+ window.truthfulOrderState=function(id,p=profile(id),store=db){
+  const saved=store?.orders?.[id]||{},linked=Object.values(store?.shipments||{}).filter(s=>s.lines?.some(l=>l.orderId===id));
+  const merged={...(p?.events||{}),...(saved.events||{})};
+  linked.forEach(s=>{const se=Fulfillment.normalize(s.events||{});Object.keys(se).forEach(k=>{if(se[k]&&(!merged[k]||Fulfillment.at(se[k])>Fulfillment.at(merged[k])))merged[k]=se[k];});});
+  const events=Fulfillment.normalize(merged),source=String((p?.statuses||[]).find(([k])=>String(k).includes('单状态'))?.[1]||'');
+  if(/取消|关闭/.test(source))return {label:source,events,basis:'订单关闭记录'};
+  if(events.signedAt)return {label:'已签收',events,basis:'实际签收时间'};
+  if(events.wmsOutboundAt)return {label:'运输中',events,basis:'实际出库时间'};
+  if(events.shippedAt)return {label:'已发货',events,basis:'实际发货事件'};
+  if(events.factoryAcceptedAt)return {label:'待发货',events,basis:'已接单，尚无实际发货事件'};
+  if(events.financeApprovedAt)return {label:'待接单',events,basis:'财务已审核，尚未接单'};
+  return {label:'待审核',events,basis:'尚无审核、接单或发货完成记录'};
+ };
  function order(id){
   if(db.orders[id])return {...db.orders[id],rules:Fulfillment.ensureRules(db.orders[id].rules)};
   const p=profile(id),snapshot=historicalRules[id];
@@ -817,7 +826,6 @@ function boardDraft(){
  if(location.hash==='#driver')location.hash='#flow';
  render();
 })();
-
 </script>
 <script>
 /* source: 履约流程展示.js */
@@ -1044,8 +1052,8 @@ function boardDraft(){
   const target=document.getElementById('orderDetail'),p=omsProfiles[id];if(!target||!p)return;
   const flow=target.querySelector('.detail-fulfillment'),shipments=target.querySelector('.fulfillment-summary');
   let local;try{local=JSON.parse(localStorage.getItem('oms-fulfillment-v2')||'{}').orders?.[id];}catch(e){}
-  const row=boardRows('all').find(x=>x.o[0]===id),e=Fulfillment.normalize({...p.events,...local?.events});
-  const status=(p.statuses||[]).map(([key,value])=>'<span>'+safe(key)+'：<b class="badge gray">'+safe(value)+'</b></span>').join('');
+  const row=boardRows('all').find(x=>x.o[0]===id),truth=truthfulOrderState(id,p),e=truth.events;
+  const status='<span>订单状态：<b class="badge gray">'+safe(truth.label)+'</b></span>'+(p.statuses||[]).filter(([key])=>!['原单状态','订单状态','发货状态'].includes(key)).map(([key,value])=>'<span>'+safe(String(key).replace(/^原/,''))+'：<b class="badge gray">'+safe(value)+'</b></span>').join('');
   const receipt=local?.receiptRequired??p.receiptRequired;
   const timingMode=local?.timingMode||p.ruleSnapshot?.timingMode||(p.ruleSnapshot?.type==='system'?'system':p.customerRequiredArrivalAt?'negotiated':'default'),timingLabel={default:'系统默认时效',system:'系统客户时效',negotiated:'磋商时效'}[timingMode];
   const products=(p.products||[]).map(v=>'<tr><td><b>'+val(v.name)+'</b><small>商品编码：'+val(v.sku)+'</small><div class="od-tags">'+(v.tags||[]).map(t=>'<span>'+safe(t)+'</span>').join('')+'</div></td><td>'+money(v.factoryPrice)+'</td><td>'+money(v.price)+'</td><td>'+val(v.qty)+'</td><td>'+val(v.giftQty??0)+'</td><td>'+val(Number(v.qty||0)+Number(v.giftQty||0))+'</td><td>'+val(v.giftRatio)+'</td><td>'+money(v.coupon)+'</td><td>'+money(v.creditAmount)+'</td><td>'+money(v.paidAmount)+'</td><td>'+money(v.lineTotal??(v.price!=null&&v.qty!=null?Number(v.price)*Number(v.qty):null))+'</td></tr>').join('');
@@ -1056,7 +1064,7 @@ function boardDraft(){
   target.innerHTML='<div class="dialog-head"><h2>订单详情</h2><button class="btn" aria-label="关闭订单详情" onclick="document.getElementById(\'orderDialog\').close()">返回列表</button></div><div class="od-document">'+
    block('订单信息',grid([field('订单号',id),field('买家',row?.o[1]),field('订单类型',p.type),field('订单来源',p.channel),field('客户类别',p.customerCategory),field('支付单号',p.paymentReference),field('付款方式',p.paymentMethod),field('销售人员',p.salesperson),field('销售区域',p.salesRegion),field('经销转私域',p.privateTransfer),field('订单用途',p.purpose),field('客户区域',p.customerRegion),field('发货主体',p.shippingEntity),field('是否回执',receipt===undefined?null:receipt?'是':'否'),field('下单时间',p.createdAt)])+'<div class="od-notes">'+field('买家留言',p.buyerNote)+field('工厂备注',p.factoryRemark)+field('商品清单附件',p.attachmentName)+'</div>')+
    block('认证信息',grid([field('我方主体',p.ourEntity),field('对方主体',p.customerEntity)]))+
-   block('订单状态','<div class="od-status">'+status+'</div>'+grid([field('时效类型',timingLabel),field('客户要求到货时间',(local?.arrival||p.customerRequiredArrivalAt)?kaDate(local?.arrival||p.customerRequiredArrivalAt):null),field('预计发货完成',local?.plan?.ship?.estimated?kaDate(local.plan.ship.estimated):null),field('当前履约节点',row?.r.name),field('磋商状态',timingMode==='negotiated'?({rejected:'待线下磋商',resolved:'已完成磋商'}[local?.negotiation?.status]||'未拒绝接单'):null),field('到货凭证',local?.arrivalEvidence?.name||p.arrivalEvidence?.name)])+'<div id="odFlowSlot"></div>')+
+   block('订单状态','<div class="od-status">'+status+'</div>'+grid([field('状态依据',truth.basis),field('时效类型',timingLabel),field('客户要求到货时间',(local?.arrival||p.customerRequiredArrivalAt)?kaDate(local?.arrival||p.customerRequiredArrivalAt):null),field('预计发货完成',local?.plan?.ship?.estimated?kaDate(local.plan.ship.estimated):null),field('实际发货完成',e.shippedAt?kaDate(e.shippedAt):'待完成'),field('当前履约节点',row?.r.name),field('磋商状态',timingMode==='negotiated'?({rejected:'待线下磋商',resolved:'已完成磋商'}[local?.negotiation?.status]||'未拒绝接单'):null),field('到货凭证',local?.arrivalEvidence?.name||p.arrivalEvidence?.name)])+'<div id="odFlowSlot"></div>')+
    block('商品信息','<div class="od-table-scroll"><table class="od-product-table"><thead><tr>'+['商品','出厂价','成交价','数量','搭赠数量','总数量','搭赠比例','抵扣券','上账','实付','合计'].map(v=>'<th>'+v+'</th>').join('')+'</tr></thead><tbody>'+products+'</tbody></table></div><div class="od-amounts">'+[['商品原价总额',p.originalAmount],['运费金额',p.freight],['优惠券优惠',p.couponDiscount],['VIP 优惠',p.vipDiscount],['抵扣券使用金额',p.couponUsed],['上账使用金额',p.creditAmount],['已付金额',p.paidAmount],['调整价格',p.adjustment],['授信支付金额',p.creditPaid],['钱包支付金额',p.walletPaid],['商品总价',p.totalAmount],['核销费用',p.writeoffAmount]].map(([k,v])=>'<div><span>'+k+'：</span><b>'+money(v)+'</b></div>').join('')+'<div class="od-total"><span>应付金额：</span><b>'+money(p.due)+'</b></div></div>')+
    block('发货信息',grid([field('收货人',p.receiver),field('联系电话',p.phone),field('收货地址',p.address)])+'<div id="odShipmentsSlot"></div>')+
    block('订单操作日志','<ol class="od-log">'+logs.filter(l=>boardTime(l.time)!==null).sort((a,b)=>boardTime(b.time)-boardTime(a.time)).map(l=>'<li><time>'+safe(kaDate(l.time))+'</time><span>'+safe(l.text)+'</span></li>').join('')+'</ol>')+
@@ -1065,7 +1073,6 @@ function boardDraft(){
   if(shipments)target.querySelector('#odShipmentsSlot').append(shipments);
  };
 })();
-
 </script>
 <script>
 /* source: 回执单列表.js */
@@ -1075,7 +1082,7 @@ function boardDraft(){
  if(!nav){nav=document.createElement('a');nav.id='navReceipts';nav.className='sla-nav-item';nav.href='#receipts';nav.innerHTML='<svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>回执单列表</span>';document.getElementById('navAcceptance').after(nav);}
  let tab='全部',filters={},page=1,size=10,selected=new Set();const esc=v=>safe(v??'—');
  const status=s=>s?(s.receiptReview==='已驳回'?'审核驳回':s.receiptReview||'未上传'):'未上传';
- function rows(){const db=receiptStore.read(),out=[];for(const [id,p] of Object.entries(omsProfiles)){const list=Object.values(db.shipments).filter(s=>s.lines.some(l=>l.orderId===id));if(!list.length&&!(p.statuses||[]).some(v=>v[1]==='已发货'))continue;for(const s of list.length?list:[null]){const original=Object.values(nodeOrders).flat().find(o=>o[0]===id);out.push({key:id+'|'+(s?.id||''),id,p,s,customer:original?.[1]||p.customer||'—'});}}return out;}
+ function rows(){const db=receiptStore.read(),out=[];for(const [id,p] of Object.entries(omsProfiles)){const list=Object.values(db.shipments).filter(s=>s.lines.some(l=>l.orderId===id));const truth=truthfulOrderState(id,p,db);if(!list.length&&!['已发货','运输中','已签收'].includes(truth.label))continue;for(const s of list.length?list:[null]){const original=Object.values(nodeOrders).flat().find(o=>o[0]===id);out.push({key:id+'|'+(s?.id||''),id,p,s,truth,customer:original?.[1]||p.customer||'—'});}}return out;}
  const multiple=(text,value)=>!text||text.split(/[,，\s]+/).filter(Boolean).some(q=>value.includes(q));
  function filtered(){return rows().filter(r=>multiple(filters.order,r.id)&&multiple(filters.shipment,r.s?.id||'')&&(!filters.customer||r.customer.includes(filters.customer))&&(!filters.tracking||(r.s?.trackingNumber||'').includes(filters.tracking))&&(!filters.category||r.p.customerCategory===filters.category)&&(!filters.upload||(filters.upload==='yes')===!!r.s?.receipts?.length)&&(!filters.correct||(filters.correct==='yes')===((r.s?.receipts?.length||0)>1))&&(!filters.start||r.p.createdAt?.slice(0,10)>=filters.start)&&(!filters.end||r.p.createdAt?.slice(0,10)<=filters.end));}
  const oldRender=render;render=function(){oldRender();if(location.hash==='#receipts')draw();};
@@ -1083,7 +1090,7 @@ function boardDraft(){
  const all=filtered(),list=all.filter(r=>tab==='全部'||status(r.s)===tab),pages=Math.max(1,Math.ceil(list.length/size));page=Math.min(page,pages);
  const input=(name,title,placeholder='')=>'<label>'+title+'<input name="'+name+'" value="'+esc(filters[name]||'')+'" placeholder="'+placeholder+'"></label>';
  const select=(name,title,opts)=>'<label>'+title+'<select name="'+name+'"><option value="">全部</option>'+opts.map(([v,t])=>'<option value="'+esc(v)+'" '+(filters[name]===v?'selected':'')+'>'+esc(t)+'</option>').join('')+'</select></label>';
- document.getElementById('content').innerHTML='<section class="receipt-panel"><form id="receiptSearch" class="receipt-search">'+input('order','订单编号','多个订单号以逗号隔开')+input('customer','客户名称','请输入客户名称')+select('correct','是否更正',[['yes','是'],['no','否']])+input('tracking','物流单号','请输入物流单号')+input('shipment','发货单号','多个发货单号以逗号隔开')+'<label>创建时间<div class="receipt-dates"><input aria-label="开始日期" type="date" name="start" value="'+esc(filters.start||'')+'"><input aria-label="结束日期" type="date" name="end" value="'+esc(filters.end||'')+'"></div></label>'+select('category','客户类别',[...new Set(rows().map(r=>r.p.customerCategory).filter(Boolean))].map(v=>[v,v]))+select('upload','是否上传回执',[['no','未上传'],['yes','已上传']])+'<div class="receipt-search-actions"><button class="btn primary">搜索</button><button class="btn" type="reset">重置</button><button class="btn" type="button" id="receiptExport">导出</button><button class="btn" type="button" id="receiptDownload">下载回执文件</button></div></form></section><section class="receipt-panel"><div class="filter-tabs" id="receiptTabs">'+['全部','待审核','审核通过','审核驳回'].map(t=>'<button data-tab="'+t+'" class="'+(tab===t?'active':'')+'">'+t+' '+all.filter(r=>t==='全部'||status(r.s)===t).length+'</button>').join('')+'</div><p class="sub">客服上传回执单后进入待审核；审核驳回后可补传，更正不重置首次上传时间。</p><div class="receipt-table-wrap"><table class="receipt-table"><thead><tr><th><input type="checkbox" id="receiptSelectAll" aria-label="选择本页"></th>'+['订单编号','发货单号','客户名称','收货人','收货地址','订单类型','订单状态','物流单号','审核状态','更正状态','操作'].map(t=>'<th>'+t+'</th>').join('')+'</tr></thead><tbody>'+list.slice((page-1)*size,page*size).map(r=>'<tr><td><input type="checkbox" data-key="'+esc(r.key)+'" aria-label="选择 '+esc(r.id)+'" '+(selected.has(r.key)?'checked':'')+'></td>'+[r.id,r.s?.receiptOnly?'—':r.s?.id,r.customer,r.p.receiver,r.p.address,r.p.type,(r.p.statuses||[]).find(v=>v[0].includes('单状态'))?.[1],r.s?.trackingNumber,status(r.s),(r.s?.receipts?.length||0)>1?'是':'否'].map(v=>'<td title="'+esc(v)+'">'+esc(v)+'</td>').join('')+'<td><button class="orders-toggle" data-action="upload" data-key="'+esc(r.key)+'">上传回执单</button> <button class="orders-toggle" data-action="audit" data-key="'+esc(r.key)+'">审核</button></td></tr>').join('')+(list.length?'':'<tr><td colspan="12" class="empty-orders">暂无符合条件的回执单</td></tr>')+'</tbody></table></div><div class="receipt-pagination"><span>共 '+list.length+' 条</span><select id="receiptSize" aria-label="每页条数">'+[10,20,50].map(n=>'<option '+(size===n?'selected':'')+' value="'+n+'">'+n+'条/页</option>').join('')+'</select><button class="btn" id="receiptPrev" '+(page===1?'disabled':'')+'>上一页</button><span>'+page+' / '+pages+'</span><button class="btn" id="receiptNext" '+(page===pages?'disabled':'')+'>下一页</button></div></section>';
+ document.getElementById('content').innerHTML='<section class="receipt-panel"><form id="receiptSearch" class="receipt-search">'+input('order','订单编号','多个订单号以逗号隔开')+input('customer','客户名称','请输入客户名称')+select('correct','是否更正',[['yes','是'],['no','否']])+input('tracking','物流单号','请输入物流单号')+input('shipment','发货单号','多个发货单号以逗号隔开')+'<label>创建时间<div class="receipt-dates"><input aria-label="开始日期" type="date" name="start" value="'+esc(filters.start||'')+'"><input aria-label="结束日期" type="date" name="end" value="'+esc(filters.end||'')+'"></div></label>'+select('category','客户类别',[...new Set(rows().map(r=>r.p.customerCategory).filter(Boolean))].map(v=>[v,v]))+select('upload','是否上传回执',[['no','未上传'],['yes','已上传']])+'<div class="receipt-search-actions"><button class="btn primary">搜索</button><button class="btn" type="reset">重置</button><button class="btn" type="button" id="receiptExport">导出</button><button class="btn" type="button" id="receiptDownload">下载回执文件</button></div></form></section><section class="receipt-panel"><div class="filter-tabs" id="receiptTabs">'+['全部','待审核','审核通过','审核驳回'].map(t=>'<button data-tab="'+t+'" class="'+(tab===t?'active':'')+'">'+t+' '+all.filter(r=>t==='全部'||status(r.s)===t).length+'</button>').join('')+'</div><p class="sub">客服上传回执单后进入待审核；审核驳回后可补传，更正不重置首次上传时间。</p><div class="receipt-table-wrap"><table class="receipt-table"><thead><tr><th><input type="checkbox" id="receiptSelectAll" aria-label="选择本页"></th>'+['订单编号','发货单号','客户名称','收货人','收货地址','订单类型','订单状态','物流单号','审核状态','更正状态','操作'].map(t=>'<th>'+t+'</th>').join('')+'</tr></thead><tbody>'+list.slice((page-1)*size,page*size).map(r=>'<tr><td><input type="checkbox" data-key="'+esc(r.key)+'" aria-label="选择 '+esc(r.id)+'" '+(selected.has(r.key)?'checked':'')+'></td>'+[r.id,r.s?.receiptOnly?'—':r.s?.id,r.customer,r.p.receiver,r.p.address,r.p.type,r.truth.label,r.s?.trackingNumber,status(r.s),(r.s?.receipts?.length||0)>1?'是':'否'].map(v=>'<td title="'+esc(v)+'">'+esc(v)+'</td>').join('')+'<td><button class="orders-toggle" data-action="upload" data-key="'+esc(r.key)+'">上传回执单</button> <button class="orders-toggle" data-action="audit" data-key="'+esc(r.key)+'">审核</button></td></tr>').join('')+(list.length?'':'<tr><td colspan="12" class="empty-orders">暂无符合条件的回执单</td></tr>')+'</tbody></table></div><div class="receipt-pagination"><span>共 '+list.length+' 条</span><select id="receiptSize" aria-label="每页条数">'+[10,20,50].map(n=>'<option '+(size===n?'selected':'')+' value="'+n+'">'+n+'条/页</option>').join('')+'</select><button class="btn" id="receiptPrev" '+(page===1?'disabled':'')+'>上一页</button><span>'+page+' / '+pages+'</span><button class="btn" id="receiptNext" '+(page===pages?'disabled':'')+'>下一页</button></div></section>';
  document.getElementById('receiptSearch').onsubmit=e=>{e.preventDefault();filters=Object.fromEntries(new FormData(e.target));page=1;selected.clear();draw();};document.getElementById('receiptSearch').onreset=()=>{filters={};page=1;selected.clear();draw();};
  document.getElementById('receiptTabs').onclick=e=>{if(e.target.dataset.tab){tab=e.target.dataset.tab;page=1;selected.clear();draw();}};
  document.querySelectorAll('[data-action]').forEach(b=>b.onclick=()=>openReceipt(b.dataset.key,b.dataset.action));
@@ -1106,8 +1113,8 @@ function boardDraft(){
  const oldOpenNode=openNode;openNode=function(id,...args){if(id==='receiptReview'){tab='待审核';page=1;location.hash='#receipts';render();return;}oldOpenNode(id,...args);};
  render();
 })();
-
 </script>
 <!-- fulfillment-bundle:end -->
 </body>
 </html>
+

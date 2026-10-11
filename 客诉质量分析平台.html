@@ -140,8 +140,8 @@ dialog{border:1px solid #dce2ee;box-shadow:0 24px 80px #16213d33;border-radius:1
 <script>
 // 管理层演示口径与日期固定，不用于真实风险或决策判断。
 const bossDate='2026-10-11';
-const bossNav=document.createElement('button');bossNav.dataset.page='boss';bossNav.innerHTML='<span class="navicon">◈</span>老板经营总览';$('nav').prepend(bossNav);bossNav.onclick=()=>navigate('boss');
-titles.boss=['脱骨侠 · 经营与质量决策总览','先看影响与风险，再看责任、期限和需要决策的事项'];
+const bossNav=document.createElement('button');bossNav.dataset.page='boss';bossNav.innerHTML='<span class="navicon">◈</span>经营总览';$('nav').prepend(bossNav);bossNav.onclick=()=>navigate('boss');
+titles.boss=['经营总览','先看影响与风险，再看责任、期限和需要决策的事项'];
 const cases=[
 {name:'残骨集中反馈 · LM1002',ids:['CS-202610-001','CS-202610-010'],risk:'质量问题已核查；影响范围待确认',control:'同批次库存范围待核查；暂存隔离状态未提供',owner:'生产主管',due:'2026-10-12',next:'核对同批次出货与库存，补充控制记录',decision:'是否增加剔骨复核资源',options:'建议先补充同批次抽检与工位负荷数据，再评估增配复核人员。',status:'待提交评估'},
 {name:'包装漏液重复反馈 · XL1003',ids:['CS-202610-002','CS-202610-006'],risk:'包装问题已核查；整改效果待复核',control:'封口参数已调整；整改后反馈需复核',owner:'包装主管',due:'2026-10-10',next:'复核整改执行时间与后续批次封口抽检记录',decision:'是否投入封口检测设备',options:'需比较人工抽检与设备方案的成本、检出能力及实施周期。',status:'待补充方案'},

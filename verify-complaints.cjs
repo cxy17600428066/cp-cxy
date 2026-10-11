@@ -3,7 +3,7 @@ const html=fs.readFileSync('E:/cxy/客诉质量分析平台.html','utf8');
 const scripts=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(x=>x[1]);
 scripts.forEach(s=>new Function(s));
 const nodes=new Map();
-function element(){return {value:'全部',textContent:'',innerHTML:'',style:{},dataset:{},children:[],classList:{toggle(){}},append(){},before(){},prepend(){},insertBefore(){},setAttribute(){},querySelectorAll(){return []},insertAdjacentHTML(){},showModal(){},close(){}}}
+function element(){return {value:'全部',textContent:'',innerHTML:'',style:{},dataset:{},children:[],classList:{toggle(){}},append(){},before(){},prepend(){},insertBefore(){},setAttribute(){},removeAttribute(){},addEventListener(){},scrollIntoView(){},querySelectorAll(){return []},insertAdjacentHTML(){},showModal(){},close(){}}}
 const document={querySelector(s){if(!nodes.has(s))nodes.set(s,element());return nodes.get(s)},querySelectorAll(){return []},createElement:element};
 document.querySelector('#search').value='';
 const context=vm.createContext({document,localStorage:{getItem(){return null},setItem(){}},console,setTimeout,Blob,URL});

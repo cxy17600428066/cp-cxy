@@ -29,8 +29,8 @@ normal.font.name = '微软雅黑'
 normal._element.rPr.rFonts.set(qn('w:eastAsia'), '微软雅黑')
 normal.font.size = Pt(10.5)
 normal.font.color.rgb = RGBColor(0, 0, 0)
-normal.paragraph_format.space_after = Pt(6)
-normal.paragraph_format.line_spacing = 1.35
+normal.paragraph_format.space_after = Pt(5)
+normal.paragraph_format.line_spacing = 1.28
 
 for sty_name, size, before, after in [('Title', 22, 0, 18), ('Heading 1', 15, 16, 8), ('Heading 2', 12, 10, 5)]:
     st = styles[sty_name]
@@ -42,17 +42,23 @@ for sty_name, size, before, after in [('Title', 22, 0, 18), ('Heading 1', 15, 16
     st.paragraph_format.space_before = Pt(before)
     st.paragraph_format.space_after = Pt(after)
     st.paragraph_format.keep_with_next = True
+    pPr = st._element.get_or_add_pPr()
+    pBdr = pPr.find(qn('w:pBdr'))
+    if pBdr is not None: pPr.remove(pBdr)
 
 if '正文要点' not in styles:
     s = styles.add_style('正文要点', WD_STYLE_TYPE.PARAGRAPH)
     s.base_style = styles['Normal']
     s.paragraph_format.left_indent = Cm(0.65)
     s.paragraph_format.first_line_indent = Cm(-0.35)
-    s.paragraph_format.space_after = Pt(4)
+    s.paragraph_format.space_after = Pt(2.5)
 
 def add_title(text):
     p = doc.add_paragraph(style='Title')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    pPr = p._p.get_or_add_pPr()
+    pBdr = pPr.find(qn('w:pBdr'))
+    if pBdr is not None: pPr.remove(pBdr)
     set_font(p.add_run(text), size=22, bold=True)
 
 def add_intro(text):

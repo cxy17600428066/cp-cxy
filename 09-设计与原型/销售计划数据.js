@@ -28,7 +28,7 @@
   function chain(p){return p.business==='online'?['丹总']:['大区审核','中心审核','严总'];}
   function match(p,o){return p.business===o.business&&p.product===o.product&&p.unit===o.unit&&o.date>=p.start&&o.date<=p.end&&(p.business==='online'?p.channel===o.channel:(p.center===o.center&&p.area===o.area&&p.province===o.province&&(p.kind==='month'||p.customer===o.customer)));}
   function linked(d,p){return d.orders.filter(o=>{const k=o.id+':'+p.kind;return Object.hasOwn(d.manualLinks,k)?d.manualLinks[k]===p.id:match(p,o);});}
-  function actual(d,p){const list=linked(d,p);if(d.rules.overlap==='pending'||d.rules.returns==='pending')return null;return list.reduce((s,o)=>s+(o.status==='取消'?0:o.qty)-(d.rules.returns==='net'&&o.status!=='取消'?o.returned:0),0);}
+  function actual(d,p){const list=linked(d,p);if(d.rules.overlap==='pending'||d.rules.returns==='pending'||list.some(o=>d.plans.filter(x=>x.kind===p.kind&&!x.rejected&&x.stage>=chain(x).length&&linked(d,x).some(v=>v.id===o.id)).length>1))return null;return list.reduce((s,o)=>s+(o.status==='取消'?0:o.qty)-(d.rules.returns==='net'&&o.status!=='取消'?o.returned:0),0);}
   function status(d,p){if(p.archived)return '已归档';if(p.rejected)return '已驳回';if(p.stage<0)return '草稿';return p.stage>=chain(p).length?'已确认':chain(p)[p.stage]+'中';}
   function windowState(d,kind,now=new Date()){const w=d.windows[kind];if(!w.open||!w.close)return '截止时间待配置';const n=now.getTime(),a=new Date(w.open).getTime(),b=new Date(w.close).getTime();if(n<a)return '未开始';if(n>b)return '已截止';return b-n<=86400000?'即将截止':'可填报';}
   root.SalesPlan={KEY,centers,areas,channels,owners,customers,seed,load,save,chain,match,linked,actual,status,windowState};

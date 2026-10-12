@@ -5,7 +5,7 @@
   const snapshot=p=>Object.fromEntries(['business','kind','center','area','province','customer','channel','start','end','product','qty','unit','note','owner'].map(k=>[k,p[k]??'']));
   const names={start:'计划开始',end:'计划结束',product:'商品',qty:'数量',unit:'单位',note:'说明',customer:'客户',channel:'渠道'};
   const pending=(d,p)=>d.adjustments.some(a=>a.plan===p.id&&['待OA审批','待计划部门审核'].includes(a.status));
-  function eligible(p){return !p.archived&&p.start>today();}
+  function eligible(p){return !p.archived&&!p.productionLocked&&p.start>today();}
   function validate(d,p,x){
     const scopeError=PlanBusiness.fillGuard(d,p.business==='online'?'线上运营':'省区填报',{...p,...x});if(scopeError)return scopeError;
     if(!eligible(p)||x.start<=today())return '原计划及调整后的开始日期必须晚于今天（北京时间）。';

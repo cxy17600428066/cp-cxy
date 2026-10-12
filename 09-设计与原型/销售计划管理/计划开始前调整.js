@@ -7,6 +7,7 @@
   const pending=(d,p)=>d.adjustments.some(a=>a.plan===p.id&&['待OA审批','待计划部门审核'].includes(a.status));
   function eligible(p){return !p.archived&&p.start>today();}
   function validate(d,p,x){
+    const scopeError=PlanBusiness.fillGuard(d,p.business==='online'?'线上运营':'省区填报',{...p,...x});if(scopeError)return scopeError;
     if(!eligible(p)||x.start<=today())return '原计划及调整后的开始日期必须晚于今天（北京时间）。';
     if(!x.start||!x.end||x.start>x.end)return '请选择有效计划日期。';
     if(p.kind==='month'&&(x.start.slice(0,7)!==x.end.slice(0,7)||!x.start.endsWith('-01')||new Date(x.end+'T12:00:00').getDate()!==new Date(Number(x.start.slice(0,4)),Number(x.start.slice(5,7)),0).getDate()))return '月计划必须选择完整自然月。';

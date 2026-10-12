@@ -6,7 +6,7 @@
   const organization=Object.fromEntries(centers.map(center=>[center,structuredClone(areas)]));
   const channels=['天猫','京东','抖音'];
   const owners={'上海':'林可','江苏':'林可','浙江':'林可','广东':'周宁','广西':'周宁','福建':'周宁','北京':'王澄','天津':'王澄','河北':'王澄','湖北':'陈晨','四川':'陈晨','重庆':'陈晨'};
-  const customers=[{name:'永辉华东大区',province:'上海'},{name:'盒马鲜生',province:'广东'},{name:'沃尔玛',province:'北京'},{name:'天虹到家',province:'湖北'},{name:'大润发华东',province:'江苏'}];
+  const customers=[{name:'永辉华东大区',province:'上海'},{name:'上海客户B（演示）',province:'上海'},{name:'盒马鲜生',province:'广东'},{name:'广东客户B（演示）',province:'广东'},{name:'沃尔玛',province:'北京'},{name:'天虹到家',province:'湖北'},{name:'大润发华东',province:'江苏'}];
   const products=['川香红油','酸辣柠檬','麻辣藤椒','青椒脱脱','香辣泡椒'].map((name,i)=>({id:'SKU00'+(i+1),name:'脱骨侠'+name+'无骨鸡爪',enabled:true,scope:'全部',from:'2026-01-01',to:'',unit:'袋'}));
   const seedPlans=[
     {id:'PM001',kind:'month',business:'offline',center:'大客中心',area:'华东区域',province:'上海',customer:'',channel:'',product:'SKU001',start:'2026-10-01',end:'2026-10-31',qty:32000,owner:'林可',stage:3},

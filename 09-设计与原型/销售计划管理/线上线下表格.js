@@ -1,0 +1,14 @@
+(function(){
+ const label=b=>b==='online'?'线上':'线下';
+ function decorate(a){const f=a.filters(),d=a.data(),view=a.view(),content=document.getElementById('content');
+  const fixed=view==='review'&&['大区审核','中心审核','严总','丹总'].includes(a.role())||['省区填报','线上运营'].includes(a.role());
+  const tabs=document.createElement('section');tabs.className='card business-switch';tabs.innerHTML=`<div class="summary-tabs" role="group" aria-label="线上线下业务"><button data-business="offline" aria-pressed="${f.business==='offline'}" ${fixed&&f.business!=='offline'?'disabled':''}>线下</button><button data-business="online" aria-pressed="${f.business==='online'}" ${fixed&&f.business!=='online'?'disabled':''}>线上</button></div><p>当前查看：${label(f.business)} · ${f.business==='online'?'按渠道、商品展示；线上运营填报，丹总审核。':'按中心、大区、省区、客户、商品展示；逐级审核。'}数据不跨业务合并统计。</p>`;
+  content.prepend(tabs);tabs.querySelectorAll('[data-business]').forEach(b=>b.onclick=()=>{f.business=b.dataset.business;f.center=f.area=f.province=f.channel='all';a.render();});
+  document.querySelector('[data-filter=business]')?.closest('label')?.remove();
+  content.querySelector('h1')?.insertAdjacentText('afterbegin',label(f.business)+' · ');
+  if(view==='adjustments'){const table=content.querySelector('.card:not(.business-switch) table');table?.querySelectorAll(':scope>tbody>tr').forEach((row,i)=>{const p=d.plans.find(p=>p.id===d.adjustments[i]?.plan);row.hidden=row.hidden||!p||p.business!==f.business||!PlanBusiness.canView(d,a.role(),p);});}
+  if(view==='products'){const table=content.querySelector('table');table?.querySelectorAll(':scope>tbody>tr').forEach((row,i)=>{const scope=d.products[i]?.scope;row.hidden=!(scope==='all'||scope===f.business);});}
+  if(view==='progress'&&f.business==='online'){const ps=a.rows();content.querySelectorAll(':scope>.card:not(.business-switch),:scope>.task-context').forEach(e=>e.remove());const section=document.createElement('section');section.className='card';section.innerHTML='<h1>线上 · 渠道填报进度</h1><div class="table-wrap"><table><thead><tr><th>渠道</th><th>商品明细数</th><th>填报状态</th></tr></thead><tbody>'+SalesPlan.channels.map(c=>{const xs=ps.filter(p=>p.channel===c);return '<tr><td>'+c+'</td><td>'+xs.length+'</td><td>'+(xs.some(p=>p.rejected)?'待补充':xs.some(p=>p.stage>=0)?'已提交':xs.length?'草稿未提交':'未填报')+'</td></tr>';}).join('')+'</tbody></table></div>';content.append(section);}
+ }
+ window.BusinessTables={decorate};
+})();

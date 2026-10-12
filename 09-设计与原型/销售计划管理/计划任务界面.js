@@ -1,6 +1,6 @@
 (function(){
  const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- const titles={'大区审核':'省区商品计划审核','中心审核':'大区商品计划审核','严总':'中心计划确认','丹总':'线上计划审核','计划部门':'数量调整审核'};
+ const titles={'大区审核':'省区商品计划审核','中心审核':'大区商品计划审核','严总':'中心计划审核','丹总':'线上计划审核','计划部门':'数量调整审核'};
  function decorate(a){if(document.body.dataset.page==='screen')return;const role=a.role(),view=a.view(),f=a.filters(),d=a.data(),kind=f.kind==='month'?'月度':'周';
   document.querySelector('main>.notice')?.remove();document.querySelector('.phase-banner')?.remove();const header=document.querySelector('header .row');const demo=document.createElement('span');demo.className='tag';demo.textContent='演示环境';header.prepend(demo);
   const nav=document.querySelector('nav');const keys=role==='省区填报'||role==='线上运营'?['adjustments']:role==='计划部门'?['adjustments']:role==='商品管理员'?['products']:role==='规则管理员'?['rules']:['review','adjustments'];const extras=[];

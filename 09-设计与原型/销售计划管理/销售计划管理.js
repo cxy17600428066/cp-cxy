@@ -8,7 +8,8 @@
   const options=(list,val,all='')=>(all?`<option value="all">${all}</option>`:'')+list.map(v=>`<option ${v===val?'selected':''} value="${esc(v)}">${esc(v)}</option>`).join('');
   const rows=()=>d.plans.filter(p=>PlanBusiness.canView(d,role,p)&&(filters.business==='all'||p.business===filters.business)&&p.kind===filters.kind&&(!filters.cycle||(filters.kind==='month'?p.start.slice(0,7)===filters.cycle:p.start===filters.cycle))&&(filters.center==='all'||p.center===filters.center)&&(filters.area==='all'||p.area===filters.area)&&(filters.province==='all'||p.province===filters.province)&&(filters.channel==='all'||p.channel===filters.channel)&&p.unit===filters.unit);
   const subject=p=>p.business==='online'?p.channel:(p.province+' · '+(p.customer||'客户待维护'));
-  function persist(){try{M.save(d);return true;}catch(e){message('保存失败：浏览器存储不可用，请检查权限；请保留当前页面。');return false;}}
+  let storageBaseline=localStorage.getItem(M.KEY);
+  function persist(){try{if(localStorage.getItem(M.KEY)!==storageBaseline){message('数据已在其他窗口更新，当前输入仍保留。请关闭表单、刷新数据后核对并重新提交。');return false;}M.save(d);storageBaseline=localStorage.getItem(M.KEY);return true;}catch(e){message('保存失败：浏览器存储不可用，请检查权限；请保留当前页面。');return false;}}
   function message(s){const el=document.getElementById('message');el.textContent=s;el.style.display='block';setTimeout(()=>el.style.display='none',7000);}
   function log(p,action,extra={}){p.history.push({at:new Date().toISOString(),by:role,action,version:p.version,...extra});PlanBusiness.onLog(d,p,role,action);}
   PlanBusiness.initialize(d);
@@ -60,7 +61,7 @@
     if(type.startsWith('link-')){if(!['大区审核','中心审核','严总','丹总'].includes(role))return message('当前角色无订单关联处理权限。');const o=d.orders.find(x=>x.id===id),kind=type.slice(5),eligible=d.plans.filter(p=>p.kind===kind&&M.match(p,o));modal('处理订单关联',`<p>${id} · ${kind==='month'?'月度':'周'}计划；仅可选择同周期与业务维度的计划。</p><select id="link" aria-label="关联计划"><option value="">暂不关联</option>${options(eligible.map(p=>p.id),'')}</select><button id="saveLink">保存关联</button>`);document.getElementById('saveLink').onclick=()=>{d.manualLinks[id+':'+kind]=document.getElementById('link').value;eligible.forEach(p=>log(p,'人工处理订单关联 '+id));if(persist()){document.getElementById('dialog').close();render();}};return;}
     if(type==='rules-save'){if(role!=='规则管理员')return;for(const k of ['month','week']){const a=document.getElementById(k+'Open').value,b=document.getElementById(k+'Close').value;if(!a||!b||a>=b){document.getElementById('rulesError').textContent='请填写完整窗口，截止时间须晚于开放时间。';return;}}for(const k of ['month','week'])d.windows[k]={open:document.getElementById(k+'Open').value,close:document.getElementById(k+'Close').value};d.rules.overlap=document.getElementById('overlap').value;d.rules.returns=document.getElementById('returns').value;if(persist()){render();message('已保存演示配置；正式配置仍需业务确认。');}return;}
   }
-  window.addEventListener('storage',e=>{if(e.key===M.KEY){try{d=M.load();if(!document.getElementById('dialog')?.open)render();}catch(err){message(err.message);}}});
-  window.addEventListener('focus',()=>{try{d=M.load();if(!document.getElementById('dialog')?.open)render();}catch(e){message(e.message);}});
+  window.addEventListener('storage',e=>{if(e.key===M.KEY){try{if(document.getElementById('dialog')?.open){message('其他窗口已更新计划，当前表单输入已保留，提交前请刷新核对。');return;}d=M.load();storageBaseline=localStorage.getItem(M.KEY);render();}catch(err){message(err.message);}}});
+  window.addEventListener('focus',()=>{try{if(document.getElementById('dialog')?.open)return;d=M.load();storageBaseline=localStorage.getItem(M.KEY);render();}catch(e){message(e.message);}});
   render();
 })();

@@ -7,7 +7,7 @@
   document.querySelector('[data-filter=business]')?.closest('label')?.remove();
   content.querySelector('h1')?.insertAdjacentText('afterbegin',label(f.business)+' · ');
   if(view==='adjustments'){const table=content.querySelector('.card:not(.business-switch) table');table?.querySelectorAll(':scope>tbody>tr').forEach((row,i)=>{const p=d.plans.find(p=>p.id===d.adjustments[i]?.plan);row.hidden=row.hidden||!p||p.business!==f.business||!PlanBusiness.canView(d,a.role(),p);});}
-  if(view==='products'){const table=content.querySelector('table');table?.querySelectorAll(':scope>tbody>tr').forEach((row,i)=>{const scope=d.products[i]?.scope;row.hidden=!(scope==='all'||scope===f.business);});}
+  if(view==='products'){const table=content.querySelector('table');table?.querySelectorAll(':scope>tbody>tr').forEach((row,i)=>{const scope=d.products[i]?.scope;row.hidden=!(scope==='all'||scope==='全部'||scope===f.business||scope===label(f.business));});}
   if(view==='progress'&&f.business==='online'){const ps=a.rows();content.querySelectorAll(':scope>.card:not(.business-switch),:scope>.task-context').forEach(e=>e.remove());const section=document.createElement('section');section.className='card';section.innerHTML='<h1>线上 · 渠道填报进度</h1><div class="table-wrap"><table><thead><tr><th>渠道</th><th>商品明细数</th><th>填报状态</th></tr></thead><tbody>'+SalesPlan.channels.map(c=>{const xs=ps.filter(p=>p.channel===c);return '<tr><td>'+c+'</td><td>'+xs.length+'</td><td>'+(xs.some(p=>p.rejected)?'待补充':xs.some(p=>p.stage>=0)?'已提交':xs.length?'草稿未提交':'未填报')+'</td></tr>';}).join('')+'</tbody></table></div>';content.append(section);}
  }
  window.BusinessTables={decorate};

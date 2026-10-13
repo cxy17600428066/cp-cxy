@@ -1,7 +1,7 @@
 (function(){
  const label=b=>b==='online'?'线上':'线下';
  function decorate(a){const f=a.filters(),d=a.data(),view=a.view(),content=document.getElementById('content');
-  const fixed=!['salesHistory','monthRecap'].includes(view)&&(view==='review'&&['大区审核','中心审核','严总','丹总'].includes(a.role())||['省区填报','线上运营'].includes(a.role()));
+  const fixed=!['salesHistory','monthRecap'].includes(view)&&(['review','adjustments'].includes(view)&&['大区审核','中心审核','严总','丹总'].includes(a.role())||['省区填报','线上运营'].includes(a.role()));
   const tabs=document.createElement('section');tabs.className='card business-switch';tabs.innerHTML=`<div class="summary-tabs" role="group" aria-label="线上线下业务"><button data-business="offline" aria-pressed="${f.business==='offline'}" ${fixed&&f.business!=='offline'?'disabled':''}>线下</button><button data-business="online" aria-pressed="${f.business==='online'}" ${fixed&&f.business!=='online'?'disabled':''}>线上</button></div><p>当前查看：${label(f.business)} · ${f.business==='online'?'按渠道、商品展示；线上运营填报，丹总审核。':'按中心、大区、省区、客户、商品展示；逐级审核。'}数据不跨业务合并统计。</p>`;
   content.prepend(tabs);document.querySelectorAll('[data-filter]').forEach(el=>{const k=el.dataset.filter;if(f.business==='online'&&['center','area','province'].includes(k)||f.business==='offline'&&k==='channel')el.closest('label')?.remove();});tabs.querySelectorAll('[data-business]').forEach(b=>b.onclick=()=>{f.business=b.dataset.business;f.center=f.area=f.province=f.channel='all';a.render();});
   document.querySelector('[data-filter=business]')?.closest('label')?.remove();

@@ -38,7 +38,7 @@
     for(const [i,status] of ['待OA审批','已通过','已驳回'].entries()){const p=plan('DEMO-加急-'+i,'month',i===2?'online':'offline',i===2?1:3,i+1);const before=p.qty,a={id:'DEMO-A'+i,plan:p.id,base:1,before,after:before+500,reason:'促销补量（演示）',approver:i===2?'丹总':'严总',status,at:stamp,reviewAt:status==='待OA审批'?'':stamp,opinion:status==='已通过'?'同意补量（演示）':status==='已驳回'?'补量依据不足（演示）':'',attachment:'促销说明-演示.pdf'};if(status==='已通过'){p.qty=a.after;p.version=2;p.versions.push({version:2,qty:p.qty,reason:a.reason,content:snapshot(p)});}p.history.push({at:stamp,action:'加急调整'+status+'（演示）',by:a.approver,opinion:a.opinion});if(!d.adjustments.some(v=>v.id===a.id))d.adjustments.push(a);}
     const confirmed=d.plans.filter(p=>p.demo&&p.stage>=chain(p).length&&!p.rejected&&!p.archived&&!p.id.startsWith('DEMO-开始前'));
     confirmed.forEach((p,i)=>{const id='DEMO-ORDER-'+p.id;if(!d.orders.some(o=>o.id===id))d.orders.push({id,business:p.business,date:p.start,center:p.center,area:p.area,province:p.province,customer:p.customer||customers.find(c=>c.province===p.province)?.name||'',channel:p.channel,product:p.product,qty:Math.round(p.qty*(i%3===0?1.15:i%3===1?.7:1)),unit:p.unit,status:'有效',returned:i%3===1?50:0,source:p.business==='online'?'旺店通':'OMS',demo:true});});
-    if(!d.products.some(p=>p.id==='DEMO-STOP'))d.products.push({id:'DEMO-STOP',name:'停用商品示例',scope:'全部',enabled:false,from:'2026-01-01',to:'2026-09-30',unit:'袋'});
+    if(!d.products.some(p=>p.id==='DEMO-STOP'))d.products.push({id:'DEMO-STOP',name:'糖醋无骨鸡爪',scope:'全部',enabled:false,from:'2026-01-01',to:'2026-09-30',unit:'袋'});
     d.productHistory.push({at:stamp,id:'DEMO-STOP',action:'商品停用（演示）',by:'商品管理员',before:{enabled:true},after:{enabled:false}});
     d.nodeDemoVersion=1;return d;
   }

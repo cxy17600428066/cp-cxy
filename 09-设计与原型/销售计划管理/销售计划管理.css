@@ -77,3 +77,7 @@ body:not(.screen) header{height:auto;min-height:58px}#salesPerson{max-width:360p
 .quantity-totals th{position:static!important;white-space:normal;background:#eef4ff!important;color:#173d71;font-weight:600}.quantity-totals span{font-weight:400;color:#475467}.quantity-inline-summary{padding:12px 16px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#f8faff;white-space:normal}
 
 
+/* Role overview: preserve readable status text and unit-specific quantities. */
+.role-home table td{white-space:normal;overflow:visible;text-overflow:clip;min-width:120px;max-width:320px;overflow-wrap:anywhere}
+.role-home .metrics{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+@media(max-width:480px){.role-home .metrics{grid-template-columns:1fr}.role-home .task-context{align-items:stretch}.role-home .task-context button{width:100%}}

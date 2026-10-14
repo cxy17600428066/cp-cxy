@@ -18,6 +18,7 @@
   let taskStatus='all';
   const uxApi={data:()=>d,role:()=>role,view:()=>view,kind:()=>filters.kind,filters:()=>filters,status:()=>taskStatus,setStatus:s=>{taskStatus=s;render();},rows,render,persist,message,modal,log,planTable,action,openQuantity:(p,options)=>{const guard=PlanBusiness.adjustGuard(d,p,p.qty);if(guard)return message(guard);adjustment(p,options);SalesUX.adjustPreview(uxApi,p);},setView:v=>{view=v;render();},drill:(list)=>{modal('计划与订单明细',planTable(list));}};
   try{const saved=JSON.parse(localStorage.getItem('tgx_plan_filters'));if(saved)filters={...filters,...saved};}catch{}
+  if(!SalesUnits.units.includes(filters.unit))filters.unit='袋';
   if(view==='salesHistory'){const b=new URLSearchParams(location.search).get('business');if(['online','offline'].includes(b))filters.business=b;}
   function render(){OrderPolicy.begin(d);
     BusinessRelease.syncChanges(d);document.querySelector('nav')?._headerObserver?.disconnect();StableSidebar.capture();

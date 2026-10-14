@@ -22,7 +22,7 @@
  }
  if(d.presentationDataVersion===1)return;
  const examples=[...d.closedLoopExamples];
- examples.forEach((x,i)=>{const rows=d.plans.filter(p=>p.id.startsWith('LOOP-'+i+'-'));if(!rows.length)return;
+ examples.forEach((x,i)=>{const rows=d.plans.filter(p=>p.id.startsWith('LOOP-'+i+'-'));if(!rows.length&&i!==9)return;
  const dt=new Date('2027-03-01T12:00:00Z');dt.setUTCDate(dt.getUTCDate()+i*7);const start=dt.toISOString().slice(0,10);dt.setUTCDate(dt.getUTCDate()+6);const end=dt.toISOString().slice(0,10),map=new Map(),coverage=d.coveragePeriods.find(c=>c.id==='LOOP-COVER-'+i),batch=d.submissionBatches.find(b=>b.id==='LOOP-SUB-'+i);
  const cov=structuredClone(coverage);cov.id='DEMO-WEEK-COVER-'+i;cov.kind='week';cov.start=start;cov.end=end;d.coveragePeriods.push(cov);d.periodWindows['week:'+start]={open:'2020-01-01T00:00:00+08:00',close:'2035-01-01T00:00:00+08:00',demo:true};
  rows.forEach(p=>{const q=structuredClone(p);q.id='DEMO-WEEK-'+p.id;map.set(p.id,q.id);q.kind='week';q.start=start;q.end=end;q.submissionBatchId=batch?'DEMO-WEEK-'+batch.id:undefined;q.versions.forEach(v=>{if(v.content){v.content.kind='week';v.content.start=start;v.content.end=end;}});d.plans.push(q);if(q.taskConfirmation)d.taskConfirmations.push({plan:q.id,type:'新计划任务',...q.taskConfirmation});});

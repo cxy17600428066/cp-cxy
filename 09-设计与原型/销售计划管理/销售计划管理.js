@@ -2,7 +2,7 @@
   'use strict';
   const M=SalesPlan, screen=document.body.dataset.page==='screen', esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let d;try{d=M.load();}catch(e){document.getElementById('root').textContent=e.message;return;}
-  let view=screen?'analysis':document.body.dataset.initialView==='salesHistory'?'salesHistory':'plans', role='省区填报', filters={business:'all',kind:'month',center:'all',area:'all',province:'all',channel:'all',unit:'袋',cycle:'2026-10'}, focused=null;
+  let view=screen?'analysis':document.body.dataset.initialView==='salesHistory'?'salesHistory':document.body.dataset.initialView==='urgentDemo'?'demoStates':'plans', role='省区填报', filters={business:'all',kind:'month',center:'all',area:'all',province:'all',channel:'all',unit:'袋',cycle:'2026-10'}, focused=null;
   const fmt=n=>n===null?'待确认口径':Number(n).toLocaleString('zh-CN'), product=id=>M.productName(d,id);
   const tag=s=>`<span class="tag ${s==='已确认'?'good':'warn'}">${esc(s)}</span>`;
   const options=(list,val,all='')=>(all?`<option value="all">${all}</option>`:'')+list.map(v=>`<option ${v===val?'selected':''} value="${esc(v)}">${esc(v)}</option>`).join('');

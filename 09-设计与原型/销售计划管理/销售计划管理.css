@@ -86,3 +86,5 @@ body:not(.screen) header{height:auto;min-height:58px}#salesPerson{max-width:360p
 .role-home .table-wrap table{min-width:1500px}
 .returned-review-table td,.returned-review-table td small{white-space:normal;overflow:visible;text-overflow:clip;overflow-wrap:anywhere}
 .returned-review-table td:nth-child(3){min-width:240px}
+.adjust-record-table>tbody>tr>td:nth-child(3){white-space:normal;min-width:160px;max-width:240px;overflow-wrap:anywhere}
+.adjust-record-table>tbody>tr>td:nth-child(4){white-space:normal;min-width:200px;max-width:300px;overflow-wrap:anywhere}

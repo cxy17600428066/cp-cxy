@@ -32,7 +32,7 @@
  if(support){support.querySelector('summary').textContent=['商品管理员','规则管理员'].includes(role)?'查询与配置':'查询与支持';
  const move=key=>{const button=nav.querySelector('[data-nav-key="'+key+'"]');if(button)support.append(button);return button;};
  if(fill||review){const task=move('acceptance');if(task)task.textContent='计划确认进度';move('monthRecap');}
- if(role==='计划部门'){const demand=nav.querySelector('[data-nav-key=demand]');if(demand)nav.insertBefore(demand,support);nav.querySelector('[data-nav-key=acceptance]').textContent='任务确认';}
+ if(role==='计划部门'){const demand=nav.querySelector('[data-nav-key=demand]');if(demand)nav.insertBefore(demand,support);const confirm=nav.querySelector('[data-nav-key=confirmHub]')||nav.querySelector('[data-nav-key=acceptance]');if(confirm)confirm.textContent='任务确认';}
  if(role!=='商品管理员')nav.querySelector('[data-nav-key=products]')?.remove();
  if(['商品管理员','规则管理员'].includes(role)){['monthRecap','salesHistory','analysis','demand','orders'].forEach(key=>nav.querySelector('[data-nav-key="'+key+'"]')?.remove());const primary=role==='商品管理员'?'products':'businessRules',b=nav.querySelector('[data-nav-key="'+primary+'"]');if(b)nav.insertBefore(b,support);}
  }

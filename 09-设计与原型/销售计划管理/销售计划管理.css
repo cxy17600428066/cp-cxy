@@ -90,4 +90,6 @@ body:not(.screen) header{height:auto;min-height:58px}#salesPerson{max-width:360p
 .adjust-record-table>tbody>tr>td:nth-child(4){white-space:normal;min-width:200px;max-width:300px;overflow-wrap:anywhere}
 /* 正式系统视图：隐藏说明性辅助文案，保留错误、状态、业务证据和操作反馈。 */
 .system-helper-hidden,.task-context>div>p,.task-eyebrow,.phase-banner,.role-demo-tools,#content>[data-trust]{display:none!important}
+main>.notice:first-child{display:none!important}
+
 

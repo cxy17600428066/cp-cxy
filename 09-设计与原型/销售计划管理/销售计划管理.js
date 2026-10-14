@@ -13,6 +13,8 @@
   function message(s){const el=document.getElementById('message');el.textContent=s;el.style.display='block';setTimeout(()=>el.style.display='none',7000);}
   function log(p,action,extra={}){p.history.push({at:new Date().toISOString(),by:role,action,version:p.version,...extra});PlanBusiness.onLog(d,p,role,action);}
   PlanBusiness.initialize(d);BusinessRelease.initialize(d);PlanWorkflow.initialize(d);TaskConfirmation.initialize(d);OrderPolicy.initialize(d);
+  {const backup=structuredClone(d);try{PlanOperations.seedDemo(d);if(!persist())Object.assign(d,backup);}catch(e){Object.assign(d,backup);console.error("演示数据准备失败",e);}}
+
   let taskStatus='all';
   const uxApi={data:()=>d,role:()=>role,view:()=>view,kind:()=>filters.kind,filters:()=>filters,status:()=>taskStatus,setStatus:s=>{taskStatus=s;render();},rows,render,persist,message,modal,log,planTable,action,openQuantity:(p,options)=>{const guard=PlanBusiness.adjustGuard(d,p,p.qty);if(guard)return message(guard);adjustment(p,options);SalesUX.adjustPreview(uxApi,p);},setView:v=>{view=v;render();},drill:(list)=>{modal('计划与订单明细',planTable(list));}};
   try{const saved=JSON.parse(localStorage.getItem('tgx_plan_filters'));if(saved)filters={...filters,...saved};}catch{}

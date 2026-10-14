@@ -8,7 +8,7 @@ d.roles.forEach((role,j)=>{svg.append(el("rect",{x:12+j*laneWidth,y:0,width:lane
 const map=new Map(d.nodes.map(n=>[n[0],{data:n,x:12+n[1]*laneWidth+laneWidth/2,y:header+n[2]*rowHeight+rowHeight/2}]));
 d.edges.forEach(([from,to,label,type])=>{const a=map.get(from),b=map.get(to);if(!a||!b)throw Error("泳道连接缺少节点");const red=type==="return",color=red?"#bf574e":"#58739b";let points,labelX,labelY;const bottom=a.y+66,top=b.y-66;
 if(a.x===b.x&&b.data[2]===a.data[2]+1){points=[[a.x,bottom],[b.x,top]];labelX=a.x+8;labelY=(bottom+top)/2;}
-else if(a.x===b.x){const side=a.x+laneWidth/2-10;points=[[a.x+108,a.y],[side,a.y],[side,b.y],[b.x+108,b.y]];labelX=side-8;labelY=(a.y+b.y)/2;}
+else if(a.x===b.x){const side=a.x+laneWidth/2-10;points=[[a.x+108,a.y],[side,a.y],[side,b.y],[b.x+108,b.y]];labelX=side-(String(label||"").length*13)-8;labelY=(a.y+b.y)/2;}
 else if(b.y>a.y){const gap=top-16;points=[[a.x,bottom],[a.x,gap],[b.x,gap],[b.x,top]];labelX=(a.x+b.x)/2;labelY=gap-7;}
 else{const side=b.x-laneWidth/2+10;points=[[a.x-108,a.y],[side,a.y],[side,b.y],[b.x-108,b.y]];labelX=(a.x+side)/2;labelY=a.y-8;}
 svg.append(el("polyline",{points:points.map(p=>p.join(",")).join(" "),fill:"none",stroke:color,"stroke-width":1.6,"stroke-dasharray":red?"6 4":"none","marker-end":"url(#arrow"+i+(red?"returned":"forward")+")"}));if(label){const w=[...label].length*13+12;svg.append(el("rect",{x:labelX-4,y:labelY-15,width:w,height:21,rx:3,fill:"#ffffff"}));svg.append(el("text",{x:labelX,y:labelY,fill:color,"font-size":13},label));}});

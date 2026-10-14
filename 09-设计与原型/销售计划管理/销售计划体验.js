@@ -1,6 +1,6 @@
 (function(){
  'use strict';
- const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), units=['箱','包','袋','盒','罐','支'];
+ const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])), units=['袋','罐','包','盒'];
  const option=(xs,value)=>xs.map(x=>`<option value="${E(x)}" ${x===value?'selected':''}>${E(x)}</option>`).join('');
  const canFill=(role,business)=>role===(business==='online'?'线上运营':'省区填报');
  const read=k=>{try{return JSON.parse(localStorage.getItem(k));}catch{return null;}};

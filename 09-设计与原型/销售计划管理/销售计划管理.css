@@ -81,3 +81,6 @@ body:not(.screen) header{height:auto;min-height:58px}#salesPerson{max-width:360p
 .role-home table td{white-space:normal;overflow:visible;text-overflow:clip;min-width:120px;max-width:320px;overflow-wrap:anywhere}
 .role-home .metrics{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
 @media(max-width:480px){.role-home .metrics{grid-template-columns:1fr}.role-home .task-context{align-items:stretch}.role-home .task-context button{width:100%}}
+.role-home .home-results strong,.role-home .home-achievement strong{overflow-wrap:anywhere;font-size:24px}
+.role-home .home-results small{display:block;margin-top:8px;line-height:1.6}
+.role-home .table-wrap table{min-width:1500px}

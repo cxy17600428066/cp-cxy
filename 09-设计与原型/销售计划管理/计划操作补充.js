@@ -33,7 +33,7 @@
  TaskConfirmation.initialize(d);BusinessRelease.syncChanges(d);d.presentationDataVersion=2;
  }
  function demoMenu(a){
- if(document.body.dataset.page==='screen')return;const bar=document.querySelector('header .row');if(!bar||document.getElementById('demoSceneMenu'))return;
+ if(document.body.dataset.page==='screen'||['商品管理员','规则管理员'].includes(a.role()))return;const bar=document.querySelector('header .row');if(!bar||document.getElementById('demoSceneMenu'))return;
  const button=document.createElement('button');button.id='demoSceneMenu';button.textContent='演示场景';bar.append(button);
  button.onclick=()=>{const d=a.data(),role=a.role(),list=d.closedLoopExamples.filter(x=>x.role===role||['省区填报','线上运营'].includes(role)&&x.business===(role==='线上运营'?'online':'offline')&&['plans','acceptance'].includes(x.view));
  a.modal('选择演示场景','<div class="table-wrap"><table><thead><tr><th>场景</th><th>业务</th><th>类型 / 周期</th><th>操作</th></tr></thead><tbody>'+list.map((x,i)=>'<tr><td>'+E(x.name)+'</td><td>'+(x.business==='online'?'线上':'线下')+'</td><td>'+(x.kind==='month'?'月度':'周')+' / '+E(x.start)+'</td><td><button data-ready-scene="'+i+'">进入</button></td></tr>').join('')+'</tbody></table></div><div class="actions"><button id="readySales">历史销售与订单</button><button id="readyActual">实际达成</button><button id="readyHome">首页统计</button><button id="readyUrgent">加急处理</button></div>');

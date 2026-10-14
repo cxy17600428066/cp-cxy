@@ -20,9 +20,9 @@
  for(const business of ['offline','online'])for(const month of ['2026-09','2026-10'])for(let day=1;day<=(month==='2026-09'?30:14);day++)(business==='offline'?subjects:SalesPlan.channels.slice(0,1).map(channel=>({channel}))).forEach((c,ci)=>products.forEach((product,pi)=>{const owner=business==='offline'?d.customerOwners[c.name]:{},id='SHOW-ORDER-'+business+'-'+month+'-'+day+'-'+ci+'-'+pi;if(orderIds.has(id))return;orderIds.add(id);d.orders.push({id,orderId:id,lineId:'1',business,source:business==='offline'?'OMS':'旺店通',platform:business==='offline'?'OMS':'旺店通',orderedAt:month+'-'+String(day).padStart(2,'0')+'T10:00:00+08:00',updatedAt:'2026-10-14T12:00:00+08:00',center:owner.center||'',area:owner.area||'',province:business==='offline'?c.province:'',customer:business==='offline'?c.name:'',salesPersonId:owner.salesId||'',channel:business==='online'?c.channel:'',product:product.id,unit:'袋',qty:50+(day*7+ci*13+pi*17)%160,returned:day%7===0?5:0,status:day%13===0?'取消':'有效',demo:true,presentationDemo:true});}));
  d.presentationSalesVersion=1;
  }
- if(d.presentationDataVersion===1)return;
- const examples=[...d.closedLoopExamples];
- examples.forEach((x,i)=>{const rows=d.plans.filter(p=>p.id.startsWith('LOOP-'+i+'-'));if(!rows.length&&i!==9)return;
+ if(d.presentationDataVersion===2)return;
+ const examples=d.closedLoopExamples.filter(x=>x.kind==='month');
+ examples.forEach((x,i)=>{if(d.coveragePeriods.some(c=>c.id==='DEMO-WEEK-COVER-'+i))return;const rows=d.plans.filter(p=>p.id.startsWith('LOOP-'+i+'-'));if(!rows.length&&i!==9)return;
  const dt=new Date('2027-03-01T12:00:00Z');dt.setUTCDate(dt.getUTCDate()+i*7);const start=dt.toISOString().slice(0,10);dt.setUTCDate(dt.getUTCDate()+6);const end=dt.toISOString().slice(0,10),map=new Map(),coverage=d.coveragePeriods.find(c=>c.id==='LOOP-COVER-'+i),batch=d.submissionBatches.find(b=>b.id==='LOOP-SUB-'+i);
  const cov=structuredClone(coverage);cov.id='DEMO-WEEK-COVER-'+i;cov.kind='week';cov.start=start;cov.end=end;d.coveragePeriods.push(cov);d.periodWindows['week:'+start]={open:'2020-01-01T00:00:00+08:00',close:'2035-01-01T00:00:00+08:00',demo:true};
  rows.forEach(p=>{const q=structuredClone(p);q.id='DEMO-WEEK-'+p.id;map.set(p.id,q.id);q.kind='week';q.start=start;q.end=end;q.submissionBatchId=batch?'DEMO-WEEK-'+batch.id:undefined;q.versions.forEach(v=>{if(v.content){v.content.kind='week';v.content.start=start;v.content.end=end;}});d.plans.push(q);if(q.taskConfirmation)d.taskConfirmations.push({plan:q.id,type:'新计划任务',...q.taskConfirmation});});
@@ -30,7 +30,7 @@
  d.adjustments.filter(c=>map.has(c.plan)).slice().forEach(c=>{const copy=structuredClone(c);copy.id='DEMO-WEEK-'+c.id;copy.plan=map.get(c.plan);delete copy.documentId;d.adjustments.push(copy);});
  d.closedLoopExamples.push({...x,name:x.name.replace('月度','周'),kind:'week',start,end,demo:true});
  });
- TaskConfirmation.initialize(d);BusinessRelease.syncChanges(d);d.presentationDataVersion=1;
+ TaskConfirmation.initialize(d);BusinessRelease.syncChanges(d);d.presentationDataVersion=2;
  }
  function demoMenu(a){
  if(document.body.dataset.page==='screen')return;const bar=document.querySelector('header .row');if(!bar||document.getElementById('demoSceneMenu'))return;

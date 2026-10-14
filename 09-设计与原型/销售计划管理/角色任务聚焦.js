@@ -16,7 +16,7 @@
  const quantity=xs=>{const sums=new Map();xs.forEach(p=>sums.set(p.unit,(sums.get(p.unit)||0)+Number(p.qty||0)));return [...sums].map(([u,n])=>n.toLocaleString('zh-CN')+' '+E(u)).join(' / ')||'—';};
  function home(a){
  const d=a.data(),role=a.role(),fill=['省区填报','线上运营'].includes(role),review=['大区审核','中心审核','严总','线上领导','丹总'].includes(role),admin=['商品管理员','规则管理员'].includes(role),business=['线上运营','线上领导','丹总'].includes(role)?'online':role==='计划部门'?homeBusiness:'offline',key=({'省区填报':'customer','线上运营':'channel','大区审核':'province','中心审核':'area','严总':'center','线上领导':'channel','丹总':'channel'})[role]|| (business==='online'?'channel':'center'),label=({customer:'客户',channel:'渠道',province:'省区',area:'大区',center:'中心'})[key];
- const xs=d.plans.filter(p=>!p.achievementDemo&&!p.archived&&PlanBusiness.canView(d,role,p)&&p.business===business&&p.kind===homeKind&&p.start.slice(0,7)===homeMonth),groups=new Map();
+ const xs=d.plans.filter(p=>(a.filters().achievementDemo?!!p.achievementDemo:!p.achievementDemo)&&!p.archived&&PlanBusiness.canView(d,role,p)&&p.business===business&&p.kind===homeKind&&p.start.slice(0,7)===homeMonth),groups=new Map();
  xs.forEach(p=>{const id=JSON.stringify([business==='offline'?p.center:'', ['province','customer'].includes(key)?p.area:'',key==='customer'?p.province:'',p[key],p.start,p.end]);const g=groups.get(id)||{name:p[key]||'未维护',start:p.start,end:p.end,plans:[]};g.plans.push(p);groups.set(id,g);});
  const ready=g=>g.plans.every(p=>!p.rejected&&!PlanChange.pending(d,p)&&SalesPlan.chain(p)[p.stage]===role)&&!BusinessRelease.reviewGuard(d,g.plans,role),effective=p=>SalesPlan.effective(p),draft=xs.filter(p=>p.stage<0&&!p.rejected),returned=xs.filter(p=>p.rejected),pending=xs.filter(p=>!p.rejected&&p.stage>=SalesPlan.chain(p).length&&!effective(p));
  const changes=d.adjustments.filter(c=>{const p=xs.find(p=>p.id===c.plan);return p&&c.approver===role&&['待计划部门确认','待OA审批'].includes(c.status);});
@@ -48,5 +48,5 @@
  if(demo.children.length>1)content.append(demo);if(a.filters().achievementDemo){demo.open=true;const notice=[...content.querySelectorAll('.notice')].find(el=>el.textContent.startsWith('纯模拟达成数据'));if(notice){if(hero)hero.after(notice);else content.prepend(notice);}}
  if(nav){const active=nav.querySelector('button[aria-current=true]');const parent=active?.closest('details');if(parent)parent.open=true;}
  }
- window.RoleFocus={roles,decorate};
+ window.RoleFocus={roles,decorate,demoHome:(a,b)=>{homeMonth='2026-08';homeKind='month';homeBusiness=b;a.filters().achievementDemo=true;a.setView('home');}};
 })();

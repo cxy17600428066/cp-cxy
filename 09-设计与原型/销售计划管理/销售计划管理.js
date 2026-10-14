@@ -69,6 +69,6 @@
   }
   window.addEventListener('storage',e=>{if(e.key===M.KEY){try{if(document.getElementById('dialog')?.open){message('其他窗口已更新计划，当前表单输入已保留，提交前请刷新核对。');return;}d=M.load();storageBaseline=localStorage.getItem(M.KEY);render();}catch(err){message(err.message);}}});
   window.addEventListener('focus',()=>{try{if(document.getElementById('dialog')?.open)return;d=M.load();storageBaseline=localStorage.getItem(M.KEY);render();}catch(e){message(e.message);}});
-  if(!screen&&document.body.dataset.initialView==='urgentDemo'){try{UrgentAdjustmentDemo.add(d);persist();}catch(e){message(e.message);}}
   render();
+  if(!screen&&document.body.dataset.initialView==='urgentDemo'){const backup=structuredClone(d);try{UrgentAdjustmentDemo.add(d);if(persist())render();else Object.assign(d,backup);}catch(e){Object.assign(d,backup);message(e.message);}}
 })();

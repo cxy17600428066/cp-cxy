@@ -91,5 +91,7 @@ body:not(.screen) header{height:auto;min-height:58px}#salesPerson{max-width:360p
 /* 正式系统视图：隐藏说明性辅助文案，保留错误、状态、业务证据和操作反馈。 */
 .system-helper-hidden,.task-context>div>p,.task-eyebrow,.phase-banner,.role-demo-tools,#content>[data-trust]{display:none!important}
 main>.notice:first-child{display:none!important}
+.planner-sales-filters label{display:flex;flex-direction:column;gap:8px;flex:1 1 160px}.planner-sales-chart{height:auto;min-height:180px;width:100%;background:#f9fbff;border:1px solid var(--line);border-radius:8px;margin:16px 0}.planner-sales-chart text{fill:var(--muted);font-size:13px}#plannerSalesTable td,#plannerEstimates td{white-space:normal;min-width:90px}#plannerCoverage{font-size:13px;color:var(--muted)}
+
 
 

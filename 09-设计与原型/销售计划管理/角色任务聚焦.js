@@ -44,7 +44,7 @@
  // Keep testing controls available, but remove them from the normal task surface.
  const demo=document.createElement('details');demo.className='role-demo-tools';demo.innerHTML='<summary>原型演示工具</summary>';
  const sample=document.getElementById('showAchievementDemo');if(sample)demo.append(sample);
- const urgent=document.getElementById('addUrgentAdjustmentDemo')?.closest('section');if(urgent&&view!=='demoStates')demo.append(urgent);
+ const urgent=document.getElementById('addUrgentAdjustmentDemo')?.closest('section');if(urgent&&!['demoStates','urgentDemo'].includes(view))demo.append(urgent);
  if(demo.children.length>1)content.append(demo);if(a.filters().achievementDemo){demo.open=true;const notice=[...content.querySelectorAll('.notice')].find(el=>el.textContent.startsWith('纯模拟达成数据'));if(notice){if(hero)hero.after(notice);else content.prepend(notice);}}
  if(nav){const active=nav.querySelector('button[aria-current=true]');const parent=active?.closest('details');if(parent)parent.open=true;}
  }

@@ -2,10 +2,11 @@
  const E=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  const roles={
  '省区填报':{name:'省区销售填报',goal:'按客户填报商品需求，核对全部客户后整单提交；审批与确认进度随原计划跟踪。',home:'填写月度 / 周计划',scope:'客户 → 商品'},
- '线上运营':{name:'线上销售填报',goal:'按渠道填报商品需求，整单提交丹总审核；计划部门确认后生效。',home:'填写月度 / 周计划',scope:'渠道 → 商品'},
+ '线上运营':{name:'线上销售填报',goal:'按渠道填报商品需求，整单提交线上领导初审，再交丹总审核；计划部门确认后生效。',home:'填写月度 / 周计划',scope:'渠道 → 商品'},
  '大区审核':{name:'大区计划审核',goal:'核对各省区完整填报，查看客户与商品来源后审核整份省区计划。',home:'审核省区计划',scope:'省区 → 客户 → 商品'},
  '中心审核':{name:'中心计划审核',goal:'核对各大区汇总需求，逐层查看省区与客户明细，再审核完整大区汇总。',home:'审核大区计划',scope:'大区 → 省区 → 客户'},
  '严总':{name:'中心计划审核',goal:'审核各中心的完整需求，可下钻大区、省区与客户；通过后交计划部门确认。',home:'审核中心计划',scope:'中心 → 大区 → 省区'},
+ '线上领导':{name:'线上领导审核',goal:'核对各渠道完整商品计划，审核通过后提交丹总；仅处理线上计划。',home:'初审渠道计划',scope:'渠道 → 商品'},
  '丹总':{name:'线上计划审核',goal:'审核各渠道商品需求，核对依据后通过或驳回；仅处理线上计划。',home:'审核渠道计划',scope:'渠道 → 商品'},
  '计划部门':{name:'计划任务确认',goal:'查看销售需求和前置审批，确认接收后生效；不审核或驳回销售需求。',home:'确认销售计划任务',scope:'新计划 / 调整任务'},
  '商品管理员':{name:'商品维护',goal:'维护可填报鸡爪商品的名称、适用业务、启用状态和有效期；不参与计划审批。',home:'维护可填报商品',scope:'商品及有效期'},
@@ -14,7 +15,7 @@
  let homeMonth='2026-10',homeKind='month',homeBusiness='offline';
  const quantity=xs=>{const sums=new Map();xs.forEach(p=>sums.set(p.unit,(sums.get(p.unit)||0)+Number(p.qty||0)));return [...sums].map(([u,n])=>n.toLocaleString('zh-CN')+' '+E(u)).join(' / ')||'—';};
  function home(a){
- const d=a.data(),role=a.role(),fill=['省区填报','线上运营'].includes(role),review=['大区审核','中心审核','严总','丹总'].includes(role),admin=['商品管理员','规则管理员'].includes(role),business=['线上运营','丹总'].includes(role)?'online':role==='计划部门'?homeBusiness:'offline',key=({'省区填报':'customer','线上运营':'channel','大区审核':'province','中心审核':'area','严总':'center','丹总':'channel'})[role]|| (business==='online'?'channel':'center'),label=({customer:'客户',channel:'渠道',province:'省区',area:'大区',center:'中心'})[key];
+ const d=a.data(),role=a.role(),fill=['省区填报','线上运营'].includes(role),review=['大区审核','中心审核','严总','线上领导','丹总'].includes(role),admin=['商品管理员','规则管理员'].includes(role),business=['线上运营','线上领导','丹总'].includes(role)?'online':role==='计划部门'?homeBusiness:'offline',key=({'省区填报':'customer','线上运营':'channel','大区审核':'province','中心审核':'area','严总':'center','线上领导':'channel','丹总':'channel'})[role]|| (business==='online'?'channel':'center'),label=({customer:'客户',channel:'渠道',province:'省区',area:'大区',center:'中心'})[key];
  const xs=d.plans.filter(p=>!p.achievementDemo&&!p.archived&&PlanBusiness.canView(d,role,p)&&p.business===business&&p.kind===homeKind&&p.start.slice(0,7)===homeMonth),groups=new Map();
  xs.forEach(p=>{const id=JSON.stringify([business==='offline'?p.center:'', ['province','customer'].includes(key)?p.area:'',key==='customer'?p.province:'',p[key],p.start,p.end]);const g=groups.get(id)||{name:p[key]||'未维护',start:p.start,end:p.end,plans:[]};g.plans.push(p);groups.set(id,g);});
  const ready=g=>g.plans.every(p=>!p.rejected&&!PlanChange.pending(d,p)&&SalesPlan.chain(p)[p.stage]===role)&&!BusinessRelease.reviewGuard(d,g.plans,role),effective=p=>SalesPlan.effective(p),draft=xs.filter(p=>p.stage<0&&!p.rejected),returned=xs.filter(p=>p.rejected),pending=xs.filter(p=>!p.rejected&&p.stage>=SalesPlan.chain(p).length&&!effective(p));
@@ -27,7 +28,7 @@
  document.getElementById('homePrimary').onclick=()=>go(target,[...groups.values()][0]);document.getElementById('homeAdjustments')?.addEventListener('click',()=>go('adjustments',[...groups.values()][0]));document.querySelectorAll('[data-home-group]').forEach(b=>b.onclick=()=>go(target,[...groups.values()][Number(b.dataset.homeGroup)]));document.getElementById('homeMonth')?.addEventListener('change',e=>{if(e.target.value){homeMonth=e.target.value;a.render();}});document.querySelectorAll('[data-home-kind]').forEach(b=>b.onclick=()=>{homeKind=b.dataset.homeKind;a.render();});const bs=document.getElementById('homeBusiness');if(bs){bs.value=homeBusiness;bs.onchange=e=>{homeBusiness=e.target.value;a.render();};}
  document.querySelector('.breadcrumb').textContent='生产管理 / 计划管理 / 首页';
  }
- function decorate(a){if(document.body.dataset.page==='screen')return;const role=a.role(),view=a.view(),config=roles[role],content=document.getElementById('content'),nav=document.getElementById('stableSidebar');if(!config)return;const fill=['省区填报','线上运营'].includes(role),review=['大区审核','中心审核','严总','丹总'].includes(role),support=nav?.querySelector('.nav-more');
+ function decorate(a){if(document.body.dataset.page==='screen')return;const role=a.role(),view=a.view(),config=roles[role],content=document.getElementById('content'),nav=document.getElementById('stableSidebar');if(!config)return;const fill=['省区填报','线上运营'].includes(role),review=['大区审核','中心审核','严总','线上领导','丹总'].includes(role),support=nav?.querySelector('.nav-more');
  if(support){support.querySelector('summary').textContent=['商品管理员','规则管理员'].includes(role)?'查询与配置':'查询与支持';
  const move=key=>{const button=nav.querySelector('[data-nav-key="'+key+'"]');if(button)support.append(button);return button;};
  if(fill||review){const task=move('acceptance');if(task)task.textContent='计划确认进度';move('monthRecap');}

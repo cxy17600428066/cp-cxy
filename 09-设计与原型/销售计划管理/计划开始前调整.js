@@ -2,7 +2,7 @@
   'use strict';
   const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const today=()=>new Intl.DateTimeFormat('sv-SE',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
-  const snapshot=p=>Object.fromEntries(['business','kind','center','area','province','customer','channel','start','end','product','qty','unit','note','owner'].map(k=>[k,p[k]??'']));
+  const snapshot=p=>Object.fromEntries(['business','kind','center','area','province','customer','channel','start','end','product','qty','unit','note','owner',...(p.planName?['planName']:[])].map(k=>[k,p[k]??'']));
   const names={start:'计划开始',end:'计划结束',product:'商品',qty:'数量',unit:'单位',note:'说明',customer:'客户',channel:'渠道'};
   const pending=(d,p)=>d.adjustments.some(a=>a.plan===p.id&&['待OA审批','待计划部门确认'].includes(a.status));
   function eligible(p){return !p.archived&&!p.productionLocked&&p.start>today();}

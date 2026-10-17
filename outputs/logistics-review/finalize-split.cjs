@@ -1,0 +1,4 @@
+const fs=require('fs');let f=__dirname+'/test-split-workflow.cjs',s=fs.readFileSync(f,'utf8');s=s.replace("await p.getByRole('button',{name:'修改需求',exact:true}).click()","await p.locator('#modal').getByRole('button',{name:'修改需求',exact:true}).click()");fs.writeFileSync(f,s);
+f=__dirname+'/prototype.js';s=fs.readFileSync(f,'utf8').replace("return p.estimate?.status==='confirmed'&&p.estimate.planVersion===p.version?p.estimate.quote:null","return p.status==='published'&&p.estimate?.status==='confirmed'&&p.estimate.planVersion===p.version?p.estimate.quote:null");
+s=s.replace("let arrive=transit?now()+(transit+config.process+config.buffer)*H:null","let arrive=transit?Math.max(now()+config.process*H,w.plannedShip?new Date(w.plannedShip).getTime():0)+(transit+config.buffer)*H:null");fs.writeFileSync(f,s);
+f=__dirname+'/build-prototype.cjs';s=fs.readFileSync(f,'utf8').replace('仓库（选物流 / 估价）','仓库（物流估价）');fs.writeFileSync(f,s);

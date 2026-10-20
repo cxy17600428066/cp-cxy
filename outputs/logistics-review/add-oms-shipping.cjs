@@ -1,0 +1,5 @@
+const fs=require('fs'),file=__dirname+'/prototype.js';let s=fs.readFileSync(file,'utf8');s=s.split('\n').map(line=>{if(line.startsWith('plansView=function(){let host=document.createElement(\'div\');host.innerHTML=shippingBasePlansView();'))return 'plansView=function(){return omsShipmentPlans(shippingBasePlansView())};';if(line.startsWith('function registerShipment('))return "function registerShipment(){toast('发货状态取自OMS订单，无需登记')}";if(line.startsWith('function confirmShipment('))return "function confirmShipment(){toast('发货状态取自OMS订单，不允许手工修改')}";return line}).join('\n');
+s=s.replace("id,source:id,customer,temp,city,district,addr","id,source:id,customer,temp,city,district,addr");
+// 新建演示订单附带明确标注的OMS示例数据；现有旧订单不推断为未发货。
+s=s.replace("({id,source:id,customer,temp,city,district,address:addr,phone:","({id,source:id,omsOrderIds:[id],oms:{orderId:id,shippingStatus:'unshipped',updatedAt:t,shipments:[],source:'demo'},customer,temp,city,district,address:addr,phone:");
+s=s.replace('render();setInterval(',fs.readFileSync(__dirname+'/oms-shipping.js','utf8')+'\nrender();setInterval(');new Function(s);fs.writeFileSync(file,s);console.log('已移除登记发货，改为OMS订单状态只读汇总');

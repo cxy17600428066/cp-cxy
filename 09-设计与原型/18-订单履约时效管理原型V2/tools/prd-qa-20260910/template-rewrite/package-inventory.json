@@ -1,0 +1,117 @@
+{
+  "reference": "E:\\cxy\\04-需求管理\\PRD-OMS发货单拆单与合单功能-v1.0.docx",
+  "sha256": "59bb9de4d3e5d42a01484ce3ea9300669903c3255a1642e2e7194bf2c839eb7c",
+  "parts": {
+    "[Content_Types].xml": {
+      "size": 2044,
+      "sha256": "ecbe3f7dfd70530319fed457805e79a3df0cc177119a7d97bacbb25f516c7adb",
+      "mode": "preserve-only"
+    },
+    "_rels/.rels": {
+      "size": 734,
+      "sha256": "a9ae57efe9186f07d48303bcac5d54c7e359bf3f503939c03ad2954e5c59a5c4",
+      "mode": "preserve-only"
+    },
+    "docProps/core.xml": {
+      "size": 891,
+      "sha256": "3a38c66b6da99c00ed6428731faba04dad4e2782ad5c23d57c4dcbf6a5bbe2dd",
+      "mode": "editable"
+    },
+    "docProps/app.xml": {
+      "size": 1132,
+      "sha256": "be664981c3141cddfc59362beb287ebf20d0773660e2dd6faac5968a5930a081",
+      "mode": "preserve-only"
+    },
+    "word/document.xml": {
+      "size": 357535,
+      "sha256": "ec332d42c845fc47ce1124b7a4226e076b895728aceb6658f433278867cefbf8",
+      "mode": "editable"
+    },
+    "word/_rels/document.xml.rels": {
+      "size": 1883,
+      "sha256": "9abdad61c8ee1b92a1fe204654d0e8853f5402c22aa614eb8dc6781d4d999daf",
+      "mode": "preserve-only"
+    },
+    "word/styles.xml": {
+      "size": 350603,
+      "sha256": "31bc3be935c4f1da8736b34d57d62f4c1235e72856c5c5c6a2139fdd6816fd5d",
+      "mode": "preserve-only"
+    },
+    "word/stylesWithEffects.xml": {
+      "size": 438131,
+      "sha256": "463ae0928cf0d84775dbf8cf18d6c3029f6707c81bf590f6d6dd8757a5e93f15",
+      "mode": "preserve-only"
+    },
+    "word/settings.xml": {
+      "size": 2535,
+      "sha256": "51a0d348fe85965c66e4748a03c3c0d055d78455514f03cb121c334af7d73689",
+      "mode": "preserve-only"
+    },
+    "word/webSettings.xml": {
+      "size": 438,
+      "sha256": "349d36de7434d09f86987ff671d8814964a0588c1e630c06e562cda7e75e9f95",
+      "mode": "preserve-only"
+    },
+    "word/fontTable.xml": {
+      "size": 2811,
+      "sha256": "79385fb7f60247507ecaffc292e9ebd52ea0657b8634f629ba6fccc54011d6bb",
+      "mode": "preserve-only"
+    },
+    "word/theme/theme1.xml": {
+      "size": 10939,
+      "sha256": "e3a8ab7db9ca7afca56f5f2820a56e8b660016c647773555b060b0a02ac76941",
+      "mode": "preserve-only"
+    },
+    "customXml/item1.xml": {
+      "size": 262,
+      "sha256": "a86086ffc5d8e83ebd6c71a55d1d2efaa31b137977f5f3a752366e1023612144",
+      "mode": "preserve-only"
+    },
+    "customXml/_rels/item1.xml.rels": {
+      "size": 295,
+      "sha256": "1ca6c9a64edcebe24ee703a54403611b322d96da33371779e742d2d3f7ed7a6c",
+      "mode": "preserve-only"
+    },
+    "customXml/itemProps1.xml": {
+      "size": 354,
+      "sha256": "c542307b13ec29a8b546217bb37936ab4822e044b265d2952985ec3d6afed24e",
+      "mode": "preserve-only"
+    },
+    "word/numbering.xml": {
+      "size": 5513,
+      "sha256": "70976f19cbcd896e51890859fe6ecb3467a5a7ad0c040160fedc5a1993cb09ce",
+      "mode": "preserve-only"
+    },
+    "word/header1.xml": {
+      "size": 1870,
+      "sha256": "959e9f961f879358eb45ffafbb3301d84e524f939a55609279be38a20b017ac6",
+      "mode": "editable"
+    },
+    "word/footer1.xml": {
+      "size": 1828,
+      "sha256": "fdf19468167403fcfad44115ded49dcdf5025d72594118a28dd96d9e72b9c928",
+      "mode": "preserve-only"
+    },
+    "word/media/image1.png": {
+      "size": 125428,
+      "sha256": "778a62f46b81badae86644121ff250e30bb25e2ccd60a095008a2e7264c97df4",
+      "mode": "editable"
+    },
+    "word/media/image2.png": {
+      "size": 76186,
+      "sha256": "64160408a1fc79361700bcb25d8a1d09b148952494a46723d8a765d5fa688769",
+      "mode": "editable"
+    },
+    "word/media/image3.png": {
+      "size": 144377,
+      "sha256": "4ac65916ad475330116a021e2efe5c8f82e8410734cf2dcc77153f8be04eae8a",
+      "mode": "editable"
+    },
+    "docProps/thumbnail.jpeg": {
+      "size": 8324,
+      "sha256": "96367138dc44ce09bf2c8f0f8e49348a1478d2c5c0af69bbc2bbc38b63cdcead",
+      "mode": "preserve-only"
+    }
+  },
+  "relationships": "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\"><Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/><Relationship Id=\"rId4\" Type=\"http://schemas.microsoft.com/office/2007/relationships/stylesWithEffects\" Target=\"stylesWithEffects.xml\"/><Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/><Relationship Id=\"rId6\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/webSettings\" Target=\"webSettings.xml\"/><Relationship Id=\"rId7\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/><Relationship Id=\"rId8\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme1.xml\"/><Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/customXml\" Target=\"../customXml/item1.xml\"/><Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering\" Target=\"numbering.xml\"/><Relationship Id=\"rId9\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/header\" Target=\"header1.xml\"/><Relationship Id=\"rId10\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer\" Target=\"footer1.xml\"/><Relationship Id=\"rId11\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/image1.png\"/><Relationship Id=\"rId12\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/image2.png\"/><Relationship Id=\"rId13\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/image3.png\"/></Relationships>"
+}

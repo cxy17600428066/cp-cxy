@@ -1,0 +1,28 @@
+const { chromium } = require('playwright');
+const path = require('path');
+(async()=>{
+ const browser=await chromium.launch({headless:true,executablePath:'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'});
+ const page=await browser.newPage({viewport:{width:1440,height:900}});
+ const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ const base='file:///'+path.resolve(__dirname,'..','发货时效预警策略.html').replace(/\\/g,'/');
+ await page.goto(base+'#receipts');await page.waitForTimeout(900);
+ const menu=await page.locator('.sla-sidebar .sla-nav-item span:last-child').allTextContents();
+ const expected=['订单列表','订单接单列表','履约总览','重点客户关注','回执单列表','售后时效管理','商品时效配置','履约节点配置','客户履约配置','运输资料'];
+ if(JSON.stringify(menu)!==JSON.stringify(expected))throw Error('菜单顺序不正确：'+menu.join(' / '));
+ if(await page.locator('#navReceipts.active').count()!==1)throw Error('回执单菜单选中态不正确');
+ await page.screenshot({path:path.resolve(__dirname,'v2-sidebar-preview.png'),fullPage:false});
+ await page.goto(base+'#accept');await page.waitForTimeout(1800);
+ if(await page.locator('.v2-case').count()!==4)throw Error('四类接单案例未显示');
+ await page.locator('.v2-case').first().click();
+ if(!await page.locator('#v2Dialog').isVisible())throw Error('接单弹窗未打开');
+ await page.screenshot({path:path.resolve(__dirname,'v2-acceptance-preview.png'),fullPage:true});
+ await page.keyboard.press('Escape');
+ await page.goto(base+'#key-customers');await page.waitForTimeout(600);
+ if(!await page.getByText('重点客户今日履约').count())throw Error('重点客户页未显示');
+ await page.goto('file:///'+path.resolve(__dirname,'..','客户履约配置.html').replace(/\\/g,'/'));await page.waitForTimeout(600);
+ if(!await page.getByText('签约主体与费用').count())throw Error('客户配置页未显示');
+ await page.screenshot({path:path.resolve(__dirname,'v2-customer-config-preview.png'),fullPage:true});
+ if(errors.length)throw Error(errors.join('\n'));
+ console.log('V2 UI verification passed');await browser.close();
+})().catch(e=>{console.error(e);process.exit(1)});

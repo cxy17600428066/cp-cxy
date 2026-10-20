@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict'),F=require('../履约规则.js');
+const H=3600000,t=Date.parse('2026-09-10T10:00:00+08:00');
+const o={stock:'stock',type:'standard',receiptRequired:true,lines:[{stock:24,noStock:72}],events:{submittedAt:t-H},rules:['finance','accept','ship','pickup','sign','receipt'].map((id,i)=>({id,value:[2,1,24,4,72,24][i]}))};
+const a=F.plan(o,t),b=F.plan({...o,stock:'noStock'},t);
+assert.equal(a.ship.deadline,t+24*H);assert.equal(b.ship.deadline,t+72*H);
+assert.equal(a.pickup.deadline,a.ship.deadline+4*H);assert.equal(a.sign.deadline,a.pickup.deadline+72*H);
+assert.equal(a.receipt.deadline,a.sign.deadline+24*H);assert.equal(a.accept.actual,t);
+assert.equal(a.finance.actual,null);assert.equal(F.canSync({...o.events,factoryAcceptedAt:t}),false);
+assert.equal(F.plan({...o,receiptRequired:false},t).receipt.skipped,true);
+assert.throws(()=>F.plan({...o,stock:''},t));
+const system={...o,type:'system',arrival:t+100*H,customerRule:{finance:72,accept:60,ship:48,pickup:36,receipt:24}};
+assert.equal(F.plan(system,t).ship.deadline,t+52*H);assert.equal(F.plan(system,t).receipt.deadline,t+124*H);
+assert.equal(F.plan({...system,arrival:null},t).ship.deadline,null);
+assert.equal(o.events.factoryAcceptedAt,undefined);
+console.log('PASS: 14 acceptance-plan assertions (stock, parallel gate, downstream plan, system arrival, receipt skip, no mutation)');

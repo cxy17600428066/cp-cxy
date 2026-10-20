@@ -1,0 +1,1 @@
+const fs=require('fs'),f=__dirname+'/prototype.js';let s=fs.readFileSync(f,'utf8').replace("if(o.oms?.orderId&&!state.omsOrderStates[o.oms.orderId])","if(state.omsShippingVersion!==1&&o.oms?.orderId&&!state.omsOrderStates[o.oms.orderId])");fs.writeFileSync(f,s);

@@ -1,0 +1,1 @@
+const fs=require('fs'),file=__dirname+'/prototype.js';let s=fs.readFileSync(file,'utf8');s=s.replace('render();setInterval(',fs.readFileSync(__dirname+'/batch-orders.js','utf8')+'\nrender();setInterval(');new Function(s);fs.writeFileSync(file,s);console.log('已增加跨页选择、全选筛选结果、分组预览和批量创建草稿');

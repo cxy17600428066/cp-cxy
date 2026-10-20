@@ -159,5 +159,11 @@ showWizard=function(){batchBaseShowWizard();if(!planner()||wizard?.mode!=='plan'
 function filterWizardOrders(v){wizardOrderSearch=v;let labels=[...$('modalBody').querySelectorAll('label.quote')];labels.forEach(label=>label.hidden=!label.textContent.toLowerCase().includes(v.toLowerCase()))}
 function selectWizardOrders(){if(!planner()||wizard?.editId)return;let ids=[...$('modalBody').querySelectorAll('label.quote')].filter(l=>!l.hidden).map(l=>l.querySelector('input').getAttribute('onchange').match(/chooseOrder\('([^']+)'/)[1]);wizard.orderIds=[...new Set([...wizard.orderIds,...ids])];showWizard()}
 
+
+const bulkStartBase=startPlan;
+startPlan=function(){wizardOrderSearch='';bulkStartBase()};
+const bulkEntryPlansBase=plansView;
+plansView=function(){let host=document.createElement('div');host.innerHTML=bulkEntryPlansBase();if(planner()){let title=host.querySelector('.title'),primary=title.querySelector('button'),actions=document.createElement('div');actions.className='row';if(primary){primary.before(actions);actions.append(primary)}else title.append(actions);let batch=document.createElement('button');batch.textContent='批量选单建计划';batch.setAttribute('onclick',"go('orders')");actions.prepend(batch)}return host.innerHTML};
+
 render();setInterval(()=>{if(!$('modal').open&&!['INPUT','SELECT','TEXTAREA'].includes(document.activeElement.tagName))render()},60000);
 </script></body></html>

@@ -1,0 +1,13 @@
+from pathlib import Path
+p=Path(__file__).parent.parent/'履约V2扩展.js'
+s=p.read_text(encoding='utf-8')
+old='<div class="v2-form"><label class="v2-field wide"><span>快速接单监控节点（可自定义）</span><label><input type="checkbox" checked> 发货</label>　<label><input type="checkbox" checked> 揽收</label>　<label><input type="checkbox" checked> 签收</label>　<label><input type="checkbox"> 回执审核</label></label></div>'
+new='<div class="v2-strip"><strong>快速接单</strong><span>本次只确认库存状态；跟踪节点由“履约节点配置”统一控制。</span></div>'+"'+stockChoice(enough)+'"
+s=s.replace(old,new)
+s=s.replace('按商品有货/无货配置执行并监控。','确认有货或无货后按配置时效执行。')
+s=s.replace("return '<div class=\"v2-choice-grid\"><label class=\"v2-choice\"><input type=\"radio\" name=\"decision\" value=\"stock\" checked>","return '<div class=\"v2-strip\"><strong>系统默认时效接单</strong><span>必须确认有货或无货；后续跟踪节点读取履约节点配置。</span></div><div class=\"v2-choice-grid\"><label class=\"v2-choice\"><input type=\"radio\" name=\"decision\" value=\"stock\" checked>")
+s=s.replace('按有货节点时效执行。','按有货时效执行。')
+s=s.replace('经销商 · 工厂默认时间','经销商 · 系统默认时效')
+s=s.replace("['大客快速接单','自定义监控节点']","['大客快速接单','确认有货 / 无货']")
+s=s.replace("['经销商默认时间','有货 / 无货协商']","['系统默认时效接单','确认有货 / 无货']")
+p.write_text(s,encoding='utf-8')

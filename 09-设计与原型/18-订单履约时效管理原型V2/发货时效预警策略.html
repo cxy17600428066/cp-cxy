@@ -68,9 +68,9 @@ body{font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif;font-size:14px
 <label class="ka-field ka-wide"><span><em>* </em>收货地址</span><input name="address" type="text" required placeholder="请输入收货地址"></label>
 <label class="ka-field ka-arrival"><span><em id="kaArrivalRequired">*</em> 客户要求到货时间</span><input name="customerRequiredArrivalAt" type="datetime-local" required onchange="kaCustomerChanged()"></label>
 <div class="ka-field"><span>客户类型</span><span id="kaCustomerType" style="width:auto;text-align:left">未匹配客户配置</span></div>
-<div class="ka-timing-mode-guide ka-wide"><span><b>系统默认时效</b> 非系统客户未填到货时间</span><span><b>系统客户时效</b> 必须按到货时间接单</span><span><b>磋商时效</b> 普通客户填写到货时间后可协商</span></div>
+<div class="ka-timing-mode-guide ka-wide"><span><b>工厂默认时间</b> 经销商默认选择，可按商品和节点配置执行</span><span><b>大客指定时间</b> 从客户档案自动带出，不可拒绝接单</span><span><b>经销商指定时间</b> 选择后必须上传附件，可申请延期</span></div>
 <section id="kaArrivalEvidence" class="ka-arrival-evidence ka-wide" hidden>
-<div class="ka-evidence-head"><b><em>* </em>客户到货要求凭证</b><span>非系统客户填写到货时间后必填</span></div>
+<div class="ka-evidence-head"><b><em>* </em>客户到货要求凭证</b><span>经销商选择指定到货时间后必填</span></div>
 <label class="ka-evidence-upload"><span>上传凭证</span><div><input name="arrivalEvidenceFile" type="file" accept=".png,.jpg,.jpeg,.pdf" onchange="kaEvidenceChanged()"><small id="kaEvidenceStatus">支持客户聊天截图、邮件、合同等 PNG、JPG、PDF 文件，单个不超过 2MB。</small></div></label>
 <label class="ka-evidence-note"><span>凭证说明</span><textarea name="arrivalEvidenceNote" maxlength="300" placeholder="可补充客户要求、沟通时间等信息（最多300字）"></textarea></label>
 </section>
@@ -310,7 +310,7 @@ function kaCustomerChanged(){
  f.elements.customerRequiredArrivalAt.required=system;document.getElementById('kaArrivalRequired').hidden=!system;
  f.elements.systemName.value=system?(c.systemName||''):'';
  document.getElementById('kaCustomerType').textContent=c?(system?'系统客户 · 系统客户时效':f.elements.customerRequiredArrivalAt.value?'非系统客户 · 磋商时效':'非系统客户 · 系统默认时效'):'未匹配客户配置';
- hint.textContent=system?'系统客户时效：必须接单，按客户要求到货时间倒排。':c?(f.elements.customerRequiredArrivalAt.value?'磋商时效：工厂可拒绝，协商修改到货时间后再接单。':'系统默认时效：按内部配置的商品及节点时效执行。'):'请先在客户履约配置中维护客户类型。';
+ hint.textContent=system?'大客指定时间：从客户档案带出，工厂按期发货或申请延期。':c?(f.elements.customerRequiredArrivalAt.value?'经销商指定时间：需上传附件，工厂按期发货或申请延期。':'工厂默认时间：按内部配置的商品及节点时效执行。'):'请先在客户履约配置中维护客户类型。';
  const needsEvidence=!!c&&!system&&!!f.elements.customerRequiredArrivalAt.value;
  let savedEvidence=null;try{const draft=JSON.parse(localStorage.getItem('oms-ka-order-draft-v1')||'null');if(draft?.fields?.customerName===f.elements.customerName.value&&draft?.fields?.customerRequiredArrivalAt===f.elements.customerRequiredArrivalAt.value)savedEvidence=draft.arrivalEvidence}catch(e){}
  const evidence=document.getElementById('kaArrivalEvidence');evidence.hidden=!needsEvidence;

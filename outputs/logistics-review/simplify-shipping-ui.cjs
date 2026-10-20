@@ -1,0 +1,10 @@
+const fs=require('fs');
+const path=__dirname+'/prototype.js';
+let s=fs.readFileSync(path,'utf8');
+const button='<button class="link" onclick="shipmentDetail(\'${id}\')">查看OMS发货</button>';
+if(!s.includes(button))throw Error('未找到OMS发货入口');
+s=s.replace(button,'');
+const old="if(block)block.innerHTML='<h3>OMS订单发货状态</h3>'+omsSummaryHtml(p);$('modalFoot').querySelectorAll('button[onclick^=\"registerShipment\"]').forEach(b=>b.remove())";
+if(!s.includes(old))throw Error('未找到详情状态区');
+s=s.replace(old,"if(block)block.remove();$('modalFoot').querySelectorAll('button[onclick^=\"registerShipment\"],button[onclick^=\"shipmentDetail\"]').forEach(b=>b.remove())");
+fs.writeFileSync(path,s);

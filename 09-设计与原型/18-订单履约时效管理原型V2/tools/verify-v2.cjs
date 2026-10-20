@@ -29,6 +29,7 @@ const path = require('path');
  await page.goto('file:///'+path.resolve(__dirname,'..','客户履约配置.html').replace(/\\/g,'/'));await page.waitForTimeout(600);
  if(!await page.getByText('签约主体与费用').count())throw Error('客户配置页未显示');
  if(await page.locator('.sla-sidebar .sla-nav-item').count()!==10)throw Error('客户配置页菜单未统一');
+ if(await page.locator('.inherit').count()!==1)throw Error('客户配置继承状态未显示');
  await page.screenshot({path:path.resolve(__dirname,'v2-customer-config-preview.png'),fullPage:true});
  if(errors.length)throw Error(errors.join('\n'));
  console.log('V2 UI verification passed');await browser.close();

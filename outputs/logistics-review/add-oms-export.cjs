@@ -1,0 +1,1 @@
+const fs=require('fs'),file=__dirname+'/prototype.js';let s=fs.readFileSync(file,'utf8').replace('render();setInterval(',fs.readFileSync(__dirname+'/oms-export.js','utf8')+'\nrender();setInterval(');new Function(s);fs.writeFileSync(file,s);

@@ -35,3 +35,8 @@ const orderBaseFreightRows=temperatureFreightRows;
 temperatureFreightRows=function(p){return p.estimate?.orderTemperatureQuotes?.map(g=>({temp:g.temp,name:g.quote?.name,total:g.quote?.total}))||orderBaseFreightRows(p)};
 const orderBaseDetail=detail;
 detail=function(id){orderBaseDetail(id);let p=state.plans.find(p=>p.id===id);if(!p?.estimate?.orderTemperatureQuotes)return;let block=$('modalBody').querySelector('.temperature-freight');if(block)block.innerHTML=orderFreightHtml(p)};
+function planTemperatureLabel(p){return [...new Set(orderTempGroups(p).map(g=>TEMP_NAMES[g.temp]))].join(' / ')||'温层待确认'}
+const orderTemperaturePlansView=plansView;
+plansView=function(){let host=document.createElement('div');host.innerHTML=orderTemperaturePlansView();host.querySelectorAll('tbody tr').forEach(tr=>{let id=tr.querySelector('button[onclick^="detail"]')?.getAttribute('onclick').match(/detail\('([^']+)'\)/)?.[1],p=state.plans.find(p=>p.id===id);if(!p)return;let c=tr.children[1];c.querySelectorAll('.tag').forEach(t=>t.remove());c.querySelectorAll('.row').forEach(t=>t.remove());let tags=document.createElement('div');tags.innerHTML=badge(planTemperatureLabel(p));c.append(tags)});return host.innerHTML};
+const orderTemperatureOrdersView=ordersView;
+ordersView=function(){let host=document.createElement('div');host.innerHTML=orderTemperatureOrdersView();host.querySelectorAll('tbody tr').forEach(tr=>{let input=tr.querySelector('input[aria-label^="选择 "]'),id=input?.getAttribute('aria-label').slice(3),o=state.orders.find(o=>o.id===id);if(o)tr.children[3].innerHTML=o.items.map((i,index)=>`<div class="section">${badge(TEMP_NAMES[itemTemp(o,index)])} ${esc(i.name)} × ${i.qty}</div>`).join('')});return host.innerHTML};

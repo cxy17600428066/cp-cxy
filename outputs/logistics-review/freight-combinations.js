@@ -15,7 +15,7 @@ function buildOrderCombinations(p,orderId){
 }
 function chooseCombination(orderId,key,manual=false){
  let c=buildOrderCombinations(wizard,orderId).find(c=>c.key===key);if(!c)return;
- for(let {group:g,quote:q} of c.parts){g.product=q.id;g.comboQuote=JSON.parse(JSON.stringify(q));g.temperatureConfirmed=g.temp==='normal'||!!g.temperatureSupport?.[q.id];g.riskAck=!!wizard.combinationRisk?.[orderId];if(q.manual)g.reason=g.reason||'选择整单物流组合，采用有依据的确认报价'}
+ for(let {group:g,quote:q} of c.parts){if(g.product!==q.id){let stored=(g.quoteOverrides||[]).find(v=>v.fields.product===q.id&&v.packageKey===comboPackageKey(wizard,g));for(let k of ['manualTotal','manualHours','manualSource','customCarrierName','customServiceConfirmed'])g[k]=stored?.fields[k]??''}g.product=q.id;g.comboQuote=JSON.parse(JSON.stringify(q));g.temperatureConfirmed=g.temp==='normal'||!!g.temperatureSupport?.[q.id];g.riskAck=!!wizard.combinationRisk?.[orderId];if(q.manual)g.reason=g.reason||'选择整单物流组合，采用有依据的确认报价'}
  wizard.selectedCombinations||={};wizard.selectedCombinations[orderId]=key;
  if(manual){wizard.combinationReasons||={};wizard.combinationReasons[orderId]=wizard.combinationReasons[orderId]||''}
 }

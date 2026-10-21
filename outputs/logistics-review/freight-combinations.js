@@ -6,7 +6,7 @@ function combinationCandidates(p,g){
  for(let v of g.quoteOverrides||[]){if(v.packageKey!==comboPackageKey(p,g))continue;let q=orderBaseQuoteProducts({...w,...v.fields}).find(q=>q.id===v.fields.product);if(q){let i=qs.findIndex(x=>x.id===q.id);if(i<0)qs.push(q);else qs[i]=q}}
  return qs.sort((a,b)=>(a.total??Infinity)-(b.total??Infinity));
 }
-function comboKey(parts){return parts.map(x=>x.group.key+':'+x.quote.id+':'+(x.quote.customCarrierName||'')).join('|')}
+function comboKey(parts){return parts.map(x=>x.group.key+':'+x.quote.id).join('|')}
 function buildOrderCombinations(p,orderId){
  let groups=(p.freightGroups||[]).filter(g=>g.orderId===orderId),combos=[{parts:[]}];
  if(!groups.length)return [];
@@ -29,7 +29,7 @@ const combinationPreviousWizard=showWizard;
 const combinationPreviousSaveActive=saveActiveFreight;
 saveActiveFreight=function(){if(wizard?.comboRepairKey)combinationPreviousSaveActive()};
 function openCombinationQuote(key){wizard.comboRepairKey=key;loadFreightGroup(key);showWizard()}
-function closeCombinationQuote(){combinationPreviousSaveActive();let g=wizard.freightGroups.find(g=>g.key===wizard.comboRepairKey);let q=g&&orderBaseQuoteProducts({...wizard,...g,temp:g.temp==='normal'?'normal':'cold'}).find(q=>q.id===g.product);if(q?.ready){let fields=Object.fromEntries(freightFields.map(k=>[k,g[k]]));g.quoteOverrides||=[];g.quoteOverrides=g.quoteOverrides.filter(v=>v.fields.product!==g.product);g.quoteOverrides.push({packageKey:comboPackageKey(wizard,g),fields});if(g.temperatureConfirmed){g.temperatureSupport||={};g.temperatureSupport[q.id]=true}}wizard.comboRepairKey=null;wizard.activeFreightKey=null;showWizard()}
+function closeCombinationQuote(){combinationPreviousSaveActive();let g=wizard.freightGroups.find(g=>g.key===wizard.comboRepairKey);let q=g&&orderBaseQuoteProducts({...wizard,...g,temp:g.temp==='normal'?'normal':'cold'}).find(q=>q.id===g.product);if(g)g.quoteOverrides=(g.quoteOverrides||[]).filter(v=>v.fields.product!==g.product);if(q?.ready){let fields=Object.fromEntries(freightFields.map(k=>[k,g[k]]));g.quoteOverrides.push({packageKey:comboPackageKey(wizard,g),fields});if(g.temperatureConfirmed){g.temperatureSupport||={};g.temperatureSupport[q.id]=true}}wizard.comboRepairKey=null;wizard.activeFreightKey=null;wizard.selectedCombinations={};showWizard()}
 showWizard=function(){
  if(!planner()||wizard?.mode!=='plan')return;
  if(wizard.step!==3&&wizard.step!==4){combinationPreviousWizard();if(wizard.step===2){let hint=$('modalBody').querySelector('.section>p.muted');if(hint)hint.textContent='填写商品温层及各温层实际包裹，系统自动计算常温物流＋冷运物流的整单组合总价，并按总价优先低价推荐。'}return}
@@ -40,6 +40,8 @@ showWizard=function(){
 };
 const combinationPreviousFreightQuote=freightQuote;
 freightQuote=function(p,g){return g.comboQuote||combinationPreviousFreightQuote(p,g)};
+const combinationPreviousAggregate=freightAggregate;
+freightAggregate=function(p){let q=combinationPreviousAggregate(p);if(Number.isFinite(q.total))q.total=Math.round(q.total*100)/100;return q};
 const combinationPreviousValidStep=validStep;
 validStep=function(){if(wizard?.mode!=='plan'||wizard.step<3)return combinationPreviousValidStep();if(wizard.comboRepairKey){$('error').textContent='请先应用报价，返回整单组合比价。';return false}for(let id of wizard.orderIds){let combos=buildOrderCombinations(wizard,id),selected=combos.find(c=>c.key===wizard.selectedCombinations?.[id]);let err='';if(!selected?.priced)err='报价或时效不完整，请补充后重新比价。';else if(selected.parts.some(x=>x.group.temp!=='normal'&&!x.group.temperatureSupport?.[x.quote.id]))err='请确认所选组合的冷运产品支持对应温层。';else if(!selected.onTime&&!wizard.combinationRisk?.[id])err='请先确认晚到风险或选择符合时效的组合。';else if(selected.key!==combos[0]?.key&&!wizard.combinationReasons?.[id]?.trim())err='请填写选择较高价组合的原因。';if(err){$('error').textContent=id+'：'+err;return false}chooseCombination(id,selected.key)}return true};
 const combinationPreviousPackage=freightPackage;

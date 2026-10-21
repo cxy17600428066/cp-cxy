@@ -1,0 +1,7 @@
+const fs=require('fs');
+let test=fs.readFileSync(__dirname+'/test-freight-combinations.cjs','utf8').replace('/整单预估运费/','/整单组合/');
+const marker="await p.locator('#role').selectOption('warehouse');";
+test=test.replace(marker,`await p.getByRole('button',{name:'整单组合',exact:true}).click();assert.equal(await p.locator('tbody .freight-item-view').count(),0);assert.match(await p.locator('tbody').innerText(),/¥100.00/);await p.getByRole('button',{name:'温层明细',exact:true}).click();assert.equal(await p.locator('tbody .combo-total').count(),0);assert.match(await p.locator('tbody').innerText(),/常温商品/);assert.match(await p.locator('tbody').innerText(),/冷藏商品/);await p.getByRole('button',{name:'同时展示',exact:true}).click();assert.equal(await p.locator('tbody .freight-both-view').count(),1);assert.equal(await p.evaluate(()=>activeQuote(state.plans[0]).total),100);`+marker);
+test=test.replace("await p.screenshot({path:__dirname+'/整单组合比价-验收.png',fullPage:true});",`await p.locator('#modal').getByRole('button',{name:'整单组合',exact:true}).click();assert.equal(await p.locator('#modal details.breakdown[open]').count(),0);await p.locator('#modal').getByRole('button',{name:'同时展示',exact:true}).click();assert.ok(await p.locator('#modal details.breakdown[open]').count()>0);await p.screenshot({path:__dirname+'/整单与温层双视图-验收.png',fullPage:true});`);
+test=test.replace("console.log('PASS:","console.log('PASS: 三种展示切换、费用一致、已选组合保留；");
+fs.writeFileSync(__dirname+'/test-freight-views-run.cjs',test);

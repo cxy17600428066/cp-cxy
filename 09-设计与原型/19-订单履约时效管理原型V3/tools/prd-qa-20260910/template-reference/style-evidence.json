@@ -1,0 +1,170 @@
+{
+  "input": "E:\\cxy\\04-\u9700\u6c42\u7ba1\u7406\\PRD-OMS\u53d1\u8d27\u5355\u62c6\u5355\u4e0e\u5408\u5355\u529f\u80fd-v1.0.docx",
+  "fonts_by_char_count": {
+    "Microsoft YaHei": 11016
+  },
+  "direct_run_formatting_runs": 499,
+  "direct_paragraph_formatting_paragraphs": 486,
+  "heading_like_paragraphs_not_heading_style": [
+    {
+      "para_index": 1,
+      "text": "PRODUCT REQUIREMENTS DOCUMENT",
+      "style": "Normal"
+    },
+    {
+      "para_index": 2,
+      "text": "OMS\u53d1\u8d27\u5355\u62c6\u5355\u4e0e\u5408\u5355\u529f\u80fd",
+      "style": "Normal"
+    },
+    {
+      "para_index": 4,
+      "text": "\u6587\u6863\u7248\u672c\uff1av1.0",
+      "style": "Normal"
+    },
+    {
+      "para_index": 5,
+      "text": "\u6587\u6863\u72b6\u6001\uff1a\u8bc4\u5ba1\u7a3f",
+      "style": "Normal"
+    },
+    {
+      "para_index": 6,
+      "text": "\u6240\u5c5e\u7cfb\u7edf\uff1aOMS\u8ba2\u5355\u7cfb\u7edf / \u53d1\u8d27\u7ba1\u7406",
+      "style": "Normal"
+    },
+    {
+      "para_index": 7,
+      "text": "\u5173\u8054\u5e73\u53f0\uff1a\u65fa\u5e97\u901a",
+      "style": "Normal"
+    },
+    {
+      "para_index": 8,
+      "text": "\u9700\u6c42\u8d1f\u8d23\u4eba\uff1a\u9648\u85aa\u5b87",
+      "style": "Normal"
+    },
+    {
+      "para_index": 9,
+      "text": "\u7f16\u5236\u65e5\u671f\uff1a2026-08-28",
+      "style": "Normal"
+    },
+    {
+      "para_index": 10,
+      "text": "\u539f\u578b\u6587\u4ef6\uff1a\u65fa\u5e97\u901a\u62c6\u5408\u5355\u4ea4\u4e92\u6f14\u793a.html",
+      "style": "Normal"
+    },
+    {
+      "para_index": 20,
+      "text": "\u5b8c\u6574\u6eaf\u6e90\uff1a\u5efa\u7acb\u201c\u539f\u59cb\u8ba2\u5355\u2014\u539f\u53d1\u8d27\u5355\u2014\u62c6\u5408\u6279\u6b21\u2014\u7ed3\u679c\u53d1\u8d27\u5355\u2014\u65fa\u5e97\u901a\u5355\u201d\u7684\u7a33\u5b9a\u5173\u7cfb\u94fe\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 21,
+      "text": "\u7edf\u4e00\u64cd\u4f5c\uff1a\u6240\u6709\u53d1\u8d27\u5355\u91cd\u7ec4\u5747\u5728OMS\u5b8c\u6210\uff0c\u65fa\u5e97\u901a\u53ea\u63a5\u6536OMS\u751f\u6210\u7684\u5f53\u524d\u6709\u6548\u53d1\u8d27\u5355\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 22,
+      "text": "\u524d\u7f6e\u5904\u7406\uff1a\u65b0\u53d1\u8d27\u5355\u5c1a\u672a\u540c\u6b65\u65fa\u5e97\u901a\u65f6\u5373\u53ef\u62c6\u5355\u6216\u5408\u5355\uff0c\u51cf\u5c11\u5148\u540c\u6b65\u3001\u518d\u9a73\u56de\u3001\u518d\u5904\u7406\u7684\u65e0\u6548\u5f80\u8fd4\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 23,
+      "text": "\u62c6\u5355\u63d0\u6548\uff1a\u6839\u636e\u5546\u54c1\u5e38\u6e29\u3001\u51b7\u85cf\u3001\u51b7\u51bb\u6e29\u5c42\u4e00\u952e\u751f\u6210\u62c6\u5206\u65b9\u6848\uff0c\u540c\u65f6\u4fdd\u7559\u81ea\u5b9a\u4e49\u6570\u91cf\u5206\u914d\u80fd\u529b\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 24,
+      "text": "\u591a\u7ea7\u91cd\u7ec4\uff1a\u652f\u6301\u62c6\u5355\u5b50\u5355\u518d\u5408\u5355\u3001\u5408\u5e76\u53d1\u8d27\u5355\u518d\u62c6\u5355\u6216\u8ffd\u52a0\u5408\u5355\uff0c\u5e76\u4fdd\u7559\u5b8c\u6574\u5386\u53f2\u94fe\u8def\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 25,
+      "text": "\u552e\u540e\u95ed\u73af\uff1a\u9000\u6b3e\u3001\u9000\u8d27\u7531\u552e\u540e\u8ba2\u5355\u53d1\u8d77\uff1b\u552e\u540e\u5b8c\u6210\u540e\u5411\u65fa\u5e97\u901a\u5e42\u7b49\u63a8\u90011\u6761\u6570\u636e\uff0c\u540c\u65f6\u4fdd\u7559\u539f\u8ba2\u5355\u4e0e\u5b9e\u9645\u53d1\u8d27\u5355\u7684\u6570\u91cf\u6620\u5c04\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 26,
+      "text": "\u53ef\u63a7\u540c\u6b65\uff1a\u786e\u4fdd\u540c\u4e00\u4e1a\u52a1\u94fe\u4e2d\u53ea\u6709\u5f53\u524d\u6709\u6548\u7684\u53f6\u5b50\u53d1\u8d27\u5355\u53ef\u4ee5\u540c\u6b65\u65fa\u5e97\u901a\uff0c\u907f\u514d\u91cd\u590d\u53d1\u8d27\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 27,
+      "text": "\u7b80\u5355\u95ed\u73af\uff1a\u9a73\u56de\u8ba2\u5355\u4ec5\u533a\u5206\u672a\u5904\u7406\u4e0e\u5df2\u5904\u7406\uff1b\u5904\u7406\u5b8c\u6210\u540e\u7edf\u4e00\u8fdb\u5165\u201c\u62c6/\u5408\u5355\u7ba1\u7406\u201d\uff0c\u901a\u8fc7\u62c6\u5355\u8bb0\u5f55\u3001\u5408\u5355\u8bb0\u5f55Tab\u67e5\u770b\u3002",
+      "style": "List Bullet"
+    },
+    {
+      "para_index": 103,
+      "text": "\u6838\u5fc3\u4ea7\u54c1\u5b9a\u4e49",
+      "style": "Normal"
+    },
+    {
+      "para_index": 105,
+      "text": "\u6210\u529f\u5224\u5b9a",
+      "style": "Normal"
+    },
+    {
+      "para_index": 107,
+      "text": "\u7528\u6237\u89d2\u8272",
+      "style": "Normal"
+    }
+  ],
+  "examples": {
+    "direct_paragraph_formatting": [
+      {
+        "para_index": 1,
+        "text": "PRODUCT REQUIREMENTS DOCUMENT",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "text": "OMS\u53d1\u8d27\u5355\u62c6\u5355\u4e0e\u5408\u5355\u529f\u80fd",
+        "style": "Normal"
+      },
+      {
+        "para_index": 3,
+        "text": "\u8986\u76d6\u672a\u540c\u6b65\u65fa\u5e97\u901a\u3001\u65fa\u5e97\u901a\u5df2\u9a73\u56de\u53ca\u591a\u7ea7\u62c6\u5408\u91cd\u7ec4\u573a\u666f",
+        "style": "Normal"
+      },
+      {
+        "para_index": 4,
+        "text": "\u6587\u6863\u7248\u672c\uff1av1.0",
+        "style": "Normal"
+      },
+      {
+        "para_index": 5,
+        "text": "\u6587\u6863\u72b6\u6001\uff1a\u8bc4\u5ba1\u7a3f",
+        "style": "Normal"
+      }
+    ],
+    "direct_run_formatting": [
+      {
+        "para_index": 1,
+        "run_text": "PRODUCT REQUIREMENTS DOCUMENT",
+        "style": "Normal"
+      },
+      {
+        "para_index": 2,
+        "run_text": "OMS\u53d1\u8d27\u5355\u62c6\u5355\u4e0e\u5408\u5355\u529f\u80fd",
+        "style": "Normal"
+      },
+      {
+        "para_index": 3,
+        "run_text": "\u8986\u76d6\u672a\u540c\u6b65\u65fa\u5e97\u901a\u3001\u65fa\u5e97\u901a\u5df2\u9a73\u56de\u53ca\u591a\u7ea7\u62c6\u5408\u91cd\u7ec4\u573a\u666f",
+        "style": "Normal"
+      },
+      {
+        "para_index": 4,
+        "run_text": "\u6587\u6863\u7248\u672c\uff1a",
+        "style": "Normal"
+      },
+      {
+        "para_index": 4,
+        "run_text": "v1.0",
+        "style": "Normal"
+      }
+    ]
+  },
+  "notes": [
+    "Direct formatting is not always wrong, but it often causes inconsistent output when templates change.",
+    "Heading-like paragraphs not using Heading styles can break TOC and accessibility."
+  ]
+}

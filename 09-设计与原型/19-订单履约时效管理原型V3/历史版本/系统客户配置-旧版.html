@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>系统客户配置</title>
+<style>
+:root{--blue:#409eff;--ink:#303133;--muted:#909399;--line:#dcdfe6;--bg:#f5f7fa;--red:#f56c6c;--green:#67c23a;--amber:#e6a23c}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:14px "Microsoft YaHei","PingFang SC",Arial,sans-serif}a{color:var(--blue);text-decoration:none}button,input,select{font:inherit}button,a,input,select,summary{outline-offset:3px}:focus-visible{outline:2px solid var(--blue)}[hidden]{display:none!important}.topbar{height:60px;position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;padding:0 26px}.brand{display:flex;gap:36px;align-items:center;font-weight:700;font-size:16px}.system{height:59px;display:flex;align-items:center;background:#ecf5ff;padding:0 22px;font-weight:400;font-size:14px}.topbar small{color:#606266}.nav{position:fixed;left:0;top:60px;bottom:0;width:200px;border-right:1px solid var(--line);background:#fff;padding-top:15px}.nav p{padding:12px 24px;margin:0 0 10px}.nav a{display:block;padding:17px 22px;color:#303133}.nav a.active{background:#ecf5ff;color:var(--blue)}main{margin-left:200px;padding:18px 22px 44px}.heading,.card{background:#fff;border:1px solid var(--line);border-radius:3px;margin-bottom:18px}.heading{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px}.heading h1{margin:0 0 7px;font-size:20px}.heading p,.head p{color:#7b8794;line-height:1.8;margin:0;font-size:13px}.btn{border:1px solid var(--line);border-radius:4px;background:#fff;color:#606266;padding:9px 15px;cursor:pointer;white-space:nowrap}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.danger{color:var(--red)}.head{padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}h2{font-size:17px;margin:0 0 6px}h3{font-size:15px;margin:0 0 8px}.body{padding:20px}.policy-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}.policy{border:1px solid var(--line);padding:18px;background:white;border-radius:4px;line-height:1.9}.policy.system-policy{border-color:#b3d8ff;background:#f5faff}.badge{display:inline-block;background:#ecf5ff;border:1px solid #d9ecff;border-radius:3px;color:var(--blue);padding:3px 7px;font-size:12px}.badge.gray{background:#f4f4f5;border-color:#e9e9eb;color:#909399}.badge.red{background:#fef0f0;border-color:#fde2e2;color:#f56c6c}.badge.amber{background:#fdf6ec;border-color:#faecd8;color:#e6a23c}.badge.green{background:#f0f9eb;border-color:#e1f3d8;color:#67c23a}.note{border:1px solid #d9ecff;background:#ecf5ff;border-radius:3px;padding:12px 15px;line-height:1.8;font-size:13px;color:#44627f;margin-bottom:18px}.rules{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}.field label{display:block;font-size:14px;margin-bottom:8px}.field input,.field select{height:39px;border:1px solid var(--line);border-radius:4px;padding:0 10px;width:100%;background:white;color:#303133}.unit{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}.unit input{border:0;min-width:0;border-radius:0}.unit span{display:flex;align-items:center;background:#f5f7fa;padding:0 10px;white-space:nowrap;color:#909399}.sub{font-size:12px;color:#909399;line-height:1.7;margin-top:7px}.line{border-top:1px solid #ebeef5;margin-top:20px;padding-top:20px}.extra{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.fixed{padding:10px 12px;border:1px solid #ebeef5;background:#fafafa;border-radius:3px;line-height:1.8}.fixed b{display:block;margin-bottom:5px}.foot{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:20px}.error{color:var(--red);font-size:14px;line-height:1.8;margin:10px 0 0}.table-wrap{overflow-x:auto}table{width:100%;min-width:1000px;border-collapse:collapse;font-size:14px}th,td{padding:14px 16px;text-align:left;border-bottom:1px solid #ebeef5;vertical-align:top;line-height:1.8}th{color:#909399;font-weight:500;background:#fafafa}tr:last-child td{border:0}.empty{text-align:center;padding:35px;color:#909399;line-height:2}.actions{display:flex;gap:14px}.link{border:0;background:transparent;padding:0;color:var(--blue);cursor:pointer;white-space:nowrap}.link.danger{color:var(--red)}.preview-form{display:grid;grid-template-columns:1.2fr repeat(3,1fr) auto;gap:14px;align-items:end}.preview-result{margin-top:20px}.preview-result p{line-height:1.8}.preview-table{min-width:800px}.status{font-size:13px;color:#909399;margin-top:16px}.editor{padding:24px;border:1px solid var(--line);border-radius:5px;width:min(880px,94vw);max-height:90vh;overflow:auto;color:#303133}.editor::backdrop{background:#0005}.editor .head{padding:0 0 16px;margin-bottom:18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.full{grid-column:1/-1}.editor-footer{display:flex;justify-content:flex-end;gap:10px;margin-top:22px}.editor .rules{grid-template-columns:repeat(2,1fr)}.caption{font-size:13px;line-height:1.8;color:#606266}.toolbar{display:flex;gap:10px}.toolbar input{border:1px solid var(--line);padding:8px;border-radius:4px}.readonly-note{padding:15px;background:#f5f7fa;line-height:1.8}.no-wrap{white-space:nowrap}@media(max-width:1100px){.rules,.extra{grid-template-columns:1fr 1fr}.preview-form{grid-template-columns:1fr 1fr}.toolbar{flex-wrap:wrap}}@media(max-width:800px){.nav{position:static;width:100%;display:flex;overflow-x:auto;border-bottom:1px solid var(--line);padding:0}.nav p{display:none}.nav a{white-space:nowrap;padding:12px}main{margin-left:0;padding:14px}.heading,.head{align-items:flex-start}.policy-grid{grid-template-columns:1fr}.topbar small{display:none}.brand{gap:14px}.system{padding:0 12px}.head{flex-wrap:wrap}}@media(max-width:520px){.rules,.extra,.preview-form,.form-grid,.editor .rules{grid-template-columns:1fr}.heading{flex-direction:column}.full{grid-column:auto}.foot{align-items:flex-start;flex-direction:column}.body{padding:15px}.editor{padding:16px}}
+</style><style>
+/* One sidebar layout for all SLA pages. */
+.sla-sidebar{position:fixed!important;inset:60px auto 0 0;width:200px;padding:18px 12px 24px;background:#fff;border-right:1px solid #e4e7ed;overflow-y:auto;z-index:9;box-sizing:border-box;font-family:"Microsoft YaHei","PingFang SC",Arial,sans-serif}
+.sla-sidebar .sla-nav-group{margin:0 0 20px}.sla-sidebar .sla-nav-group:last-child{margin-bottom:0}
+.sla-sidebar .sla-nav-heading{margin:0 0 7px;padding:0 12px;font-size:12px;line-height:22px;font-weight:400;color:#909399;letter-spacing:1px}
+.sla-sidebar .sla-nav-item{position:relative;display:flex;align-items:center;gap:10px;min-height:44px;padding:11px 12px;margin:3px 0;color:#606266;background:transparent;border:0;border-radius:5px;text-decoration:none;font-size:14px;font-weight:400;line-height:22px;white-space:nowrap;box-sizing:border-box;cursor:pointer}
+.sla-sidebar .sla-nav-item:hover{background:#f5f7fa;color:#303133}
+.sla-sidebar .sla-nav-item.active{background:#ecf5ff;color:#409eff;font-weight:600}
+.sla-sidebar .sla-nav-item.active:before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:2px;background:#409eff}
+.sla-sidebar .sla-nav-item:focus-visible{outline:2px solid #409eff;outline-offset:2px}
+.sla-sidebar .sla-nav-icon{display:block;width:18px;height:18px;flex:0 0 18px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sla-sidebar .sla-nav-item span{display:block;flex:1;min-width:0}
+.sla-sidebar+.page,body>main.page{margin-left:200px}
+@media(max-width:900px) and (min-width:761px){.sla-sidebar{width:200px}.page,body>main.page{margin-left:200px}}
+@media(max-width:760px){.sla-sidebar{position:relative!important;inset:auto;width:100%;display:flex;gap:8px;padding:8px 10px;border-right:0;border-bottom:1px solid #e4e7ed;overflow-x:auto;overflow-y:hidden;z-index:1}.sla-sidebar .sla-nav-group{display:flex;gap:5px;margin:0;padding:0 8px 0 0;border-right:1px solid #ebeef5;flex-shrink:0}.sla-sidebar .sla-nav-group:last-child{border:0}.sla-sidebar .sla-nav-heading{display:none}.sla-sidebar .sla-nav-item{min-height:40px;margin:0;padding:9px 10px;gap:7px}.sla-sidebar .sla-nav-item.active:before{display:none}.sla-sidebar+.page,.page,body>main.page{margin-left:0}}
+</style>
+<style>.simple-fold>summary{cursor:pointer;padding:16px 20px;color:#409eff;font-size:14px}.simple-fold .extra{padding:12px 0}.simple-fold.line>summary{padding:0 0 8px}.rules{gap:20px}.extra{grid-template-columns:repeat(2,minmax(0,1fr))}.field label{line-height:1.6}.preview-form{grid-template-columns:repeat(2,minmax(0,1fr))}.note{font-size:14px}@media(max-width:520px){.extra,.preview-form{grid-template-columns:1fr}}</style><link rel="stylesheet" href="履约界面主题.css?v=1"></head>
+<body class="sla-polished">
+<header class="topbar"><div class="brand"><span>卓希综合管理系统</span><span class="system">OMS订单系统</span></div><small>客户时效方案管理</small></header>
+<nav class="sla-sidebar" aria-label="履约管理导航"><div class="sla-nav-group"><h2 class="sla-nav-heading">订单管理</h2><a class="sla-nav-item" data-group="orders" href="发货时效预警策略.html#orders"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>订单列表</span></a><a id="navAcceptance" class="sla-nav-item" data-group="accept" href="发货时效预警策略.html#accept"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8 8h8M8 12h4m-3 4 2 2 4-4"/></svg><span>订单接单列表</span></a><a id="navFlow" class="sla-nav-item" data-group="flow" href="发货时效预警策略.html#flow"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span>履约总览</span></a></div><div class="sla-nav-group"><h2 class="sla-nav-heading">时效设置</h2><a id="sideProducts" class="sla-nav-item" data-group="products" href="商品发货时效配置.html#products"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5v8l-9 5-9-5V8zM3 8l9 5 9-5M12 13v8M7.5 5.5l9 5"/></svg><span>商品时效配置</span></a><a id="sideNodes" class="sla-nav-item" data-group="nodes" href="履约节点配置.html"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span>履约节点配置</span></a><a id="navCustomers" class="sla-nav-item active" data-group="customers" href="系统客户配置.html" aria-current="page"><svg class="sla-nav-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21h18M5 21V7h8v14M13 11h6v10M7 4h4v3M8 10h2M8 14h2M8 18h2M16 14h1M16 18h1"/></svg><span>系统客户配置</span></a></div></nav>
+<main>
+<header class="heading"><div><h1>系统客户配置</h1><p>先设一套大家通用的时间，有特殊要求的客户再单独改。</p></div><a class="btn" href="发货时效预警策略.html">返回履约总览</a></header>
+<div class="note">这里只管系统客户（大型连锁商超）：下单时填写要求到货日期，系统自动算出各环节最晚完成时间。非系统客户仍用原来的商品时效。</div>
+<section class="card"><header class="head"><div><h2>1. 默认时间设置</h2><p>多数系统客户用这一套。财务审核与工厂接单并行，可分别设置。</p></div><span class="badge">到货时间优先</span></header><form class="body" id="defaultForm">
+<div class="note">举个例子：客户要求周五上午 10 点到货，发货设为提前 48 小时，就是周三上午 10 点前发出。</div>
+<div id="defaultFields"></div><div class="foot"><span class="caption">到货日期在下单时填写，这里不用填日期。</span><button class="btn primary" type="submit">保存默认时间</button></div><p class="error" id="defaultError" role="alert"></p></form></section>
+<section class="card"><header class="head"><div><h2>2. 客户设置 <span id="clientCount" class="badge gray">0 个客户</span></h2><p>添加客户后默认使用上面的时间；只有特殊客户需要单独设置。</p></div><button class="btn primary" onclick="editClient()">＋ 添加客户</button></header><div id="clientList"></div></section>
+<details class="card simple-fold arrival-preview"><summary><span class="preview-heading">到货时效试算</span><span class="preview-description">选择客户和时间，查看各节点截止时间</span></summary><form class="body" id="previewForm"><div class="preview-form">
+<div class="field"><label for="previewClient">客户 / 规则</label><select id="previewClient"></select></div>
+<div class="field"><label for="arrivalTime">订单要求到货时间</label><input id="arrivalTime" type="datetime-local"><div class="sub">系统客户必需；不填可查看缺失提示</div></div>
+<div class="field"><label for="createdTime">下单时间</label><input id="createdTime" type="datetime-local" required></div>
+<div class="field"><label for="signedTime">实际签收时间（可选）</label><input id="signedTime" type="datetime-local"><div class="sub">用于计算回执上传截止时间</div></div>
+</div><div class="preview-actions"><span>仅用于规则试算，不修改订单信息</span><button class="btn primary" type="submit">计算截止时间</button></div><p class="error" id="previewError" role="alert"></p><div class="preview-result" id="previewResult" aria-live="polite"></div></form></details>
+<p class="status" id="storageStatus" role="status">配置仅保存在当前浏览器，尚未接入客户档案和订单系统。保存仅影响新订单；按连续小时计算，通过企业微信群提醒。</p>
+</main>
+<dialog id="clientDialog" class="editor" aria-labelledby="clientTitle"><form id="clientForm"><header class="head"><h2 id="clientTitle">添加客户</h2><button class="btn" type="button" onclick="closeClient()">关闭</button></header><div class="form-grid">
+<div class="field"><label for="clientCode">客户编码</label><input id="clientCode" maxlength="80" required placeholder="填写客户档案中的唯一编码"></div>
+<div class="field"><label for="clientSystem">所属系统名称</label><input id="clientSystem" maxlength="100" placeholder="例如：客户所属连锁商超系统"></div><div class="field"><label for="clientName">客户名称</label><input id="clientName" maxlength="100" required placeholder="填写完整客户名称"></div>
+<div class="field"><label for="clientType">客户类型</label><select id="clientType" onchange="updateClientEditor()"><option value="system">系统客户（连锁商超）</option><option value="standard">非系统客户</option></select></div>
+<div class="field" id="modeField"><label for="clientMode">这个客户的时间</label><select id="clientMode" onchange="updateClientEditor()"><option value="default">跟默认时间一样（推荐）</option><option value="custom">这个客户单独设置</option></select></div>
+<div class="full readonly-note" id="inheritNote"></div><div class="full" id="customFields"></div>
+</div><p class="error" id="clientError" role="alert"></p><footer class="editor-footer"><button class="btn" type="button" onclick="closeClient()">取消</button><button class="btn primary" type="submit">保存客户规则</button></footer></form></dialog>
+<dialog id="deleteDialog" class="editor" aria-labelledby="deleteTitle"><h2 id="deleteTitle">删除客户规则</h2><p id="deleteText" class="caption"></p><footer class="editor-footer"><button class="btn" onclick="document.getElementById('deleteDialog').close()">取消</button><button class="btn danger" onclick="confirmDelete()">确认删除</button></footer></dialog>
+<script>
+const KEY='shipping-customer-arrival-v1', $=id=>document.getElementById(id), clone=x=>JSON.parse(JSON.stringify(x));
+const BASE_RULE={finance:72,accept:60,ship:48,pickup:36,warning:2,escalation:2,receipt:24};
+const stages=[['finance','财务审核'],['accept','工厂接单'],['ship','发货'],['pickup','揽收']];
+let state={version:1,defaultRule:clone(BASE_RULE),clients:[]},snapshot=null,storageReady=true,editingId=null,deletingId=null;
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function normalizeCode(s){return s.trim().toUpperCase()}
+function validateRule(r){
+ for(const key of ['finance','accept','ship','pickup','warning','escalation','receipt'])if(typeof r?.[key]!=='number'||!Number.isFinite(r[key])||r[key]<0||r[key]>8760)throw Error('时长须为 0–8760 小时以内的数字');
+ if(r.receipt<=0||r.escalation<=0)throw Error('回执上传时效和超时升级时长须大于 0');
+ if(!(r.finance>=r.ship&&r.accept>=r.ship&&r.ship>=r.pickup))throw Error('财务审核和工厂接单可各自设置、不分先后；两项计划完成时间应不晚于发货，发货应不晚于出库揽收。');
+ return r;
+}
+function validateState(s){
+ validateRule(s.defaultRule);if(!Array.isArray(s.clients))throw Error('客户规则格式不正确');
+ const codes=new Set(),ids=new Set();
+ for(const c of s.clients){
+  if(typeof c.code!=='string'||!c.code.trim()||typeof c.name!=='string'||!c.name.trim()||!c.id||ids.has(c.id)||!['system','standard'].includes(c.type)||!['default','custom'].includes(c.mode))throw Error('客户资料不完整');
+  const code=normalizeCode(c.code);if(codes.has(code))throw Error('客户编码重复：'+code);codes.add(code);ids.add(c.id);
+  if(c.type==='system'&&c.mode==='custom')validateRule(c.rule);
+ }
+ return s;
+}
+try{snapshot=localStorage.getItem(KEY);if(snapshot)state=validateState(JSON.parse(snapshot));}catch(e){storageReady=false;$('storageStatus').textContent='原配置读取失败，请刷新后重试；当前禁止覆盖原配置。'}
+function fields(prefix,r){
+ const input=(k,label,before)=>'<div class="field"><label for="'+prefix+k+'">'+label+'</label><div class="unit"><span>'+before+'</span><input id="'+prefix+k+'" type="number" min="'+(['receipt','escalation'].includes(k)?0.5:0)+'" max="8760" step="0.5" required value="'+r[k]+'"><span>小时</span></div></div>';
+ return '<div class="rules">'+stages.map(([k,name])=>input(k,name+'要多早完成？','到货前')).join('')+'</div><div class="extra line"><div class="fixed"><b>签收</b>按客户要求到货时间完成</div>'+input('receipt','签收后多久上传回执？','签收后')+'</div><details class="simple-fold line"><summary>提醒设置（一般不用改）</summary><div class="extra">'+input('warning','快到截止时间时，提前多久提醒？','提前')+input('escalation','超时后，多久再次提醒？','超时后')+'</div></details>';
+}
+function collectRule(prefix){return validateRule(Object.fromEntries(Object.keys(BASE_RULE).map(k=>[k,$(prefix+k).value.trim()===''?NaN:Number($(prefix+k).value)])))}
+function saveState(next){
+ if(!storageReady)throw Error('原配置读取失败，请刷新后重试');
+ validateState(next);
+ if(localStorage.getItem(KEY)!==snapshot)throw Error('另一页面已更新客户配置，请刷新后再修改');
+ const json=JSON.stringify(next);localStorage.setItem(KEY,json);snapshot=json;state=next;
+ $('storageStatus').textContent='已保存到当前浏览器 · '+new Date().toLocaleString('zh-CN')+' · 尚未接入业务系统';
+ renderClients();refreshClientOptions();
+ if($('previewResult').innerHTML){$('previewResult').innerHTML='<p class="caption">规则已更新，请重新试算。</p>';}
+}
+function ruleFor(c){return c.type==='standard'?null:c.mode==='custom'?c.rule:state.defaultRule}
+function renderClients(){
+ $('clientCount').textContent=state.clients.length+' 个客户';
+ if(!state.clients.length){$('clientList').innerHTML='<div class="empty">还没有添加客户<br>点击“添加客户”，一般选择“跟默认时间一样”即可。</div>';return;}
+
+ $('clientList').innerHTML='<div class="table-wrap"><table style="min-width:600px"><thead><tr><th>客户名称</th><th>客户类型</th><th>使用哪套时间</th><th>操作</th></tr></thead><tbody>'+state.clients.map((c,i)=>'<tr><td><b>'+escapeHtml(c.name)+'</b><div class="sub">'+escapeHtml(c.systemName||c.code)+'</div></td><td>'+(c.type==='system'?'系统客户':'非系统客户')+'</td><td>'+(c.type==='standard'?'原有商品时效':c.mode==='custom'?'单独设置 · 发货在到货前 '+c.rule.ship+' 小时':'默认时间 · 无需单独设置')+'</td><td><div class="actions"><button class="link" onclick="editClient('+i+')">修改设置</button><button class="link danger" onclick="deleteClient('+i+')">删除</button></div></td></tr>').join('')+'</tbody></table></div>';
+}
+
+function editClient(index){
+ const c=Number.isInteger(index)?state.clients[index]:null;editingId=c?.id||null;
+ $('clientTitle').textContent=c?'编辑客户规则':'添加客户';$('clientCode').value=c?.code||'';$('clientName').value=c?.name||'';
+ $('clientSystem').value=c?.systemName||'';
+ $('clientType').value=c?.type||'system';$('clientMode').value=c?.mode||'default';
+ $('customFields').innerHTML=fields('c_',c?.rule||state.defaultRule);$('clientError').textContent='';
+ updateClientEditor();$('clientDialog').showModal();
+}
+function updateClientEditor(){
+ const standard=$('clientType').value==='standard',custom=!standard&&$('clientMode').value==='custom';
+ $('modeField').hidden=standard;$('customFields').hidden=!custom;
+ $('customFields').querySelectorAll('input').forEach(i=>i.disabled=!custom);
+ $('inheritNote').textContent=standard?'非系统客户继续使用商品及节点配置，不适用订单到货时间倒排。':custom?'此客户使用专属时长；订单要求到货时间仍由每笔订单提供。':'此客户使用系统客户默认时长。修改默认规则后仅新草稿使用新规则；已保存草稿保留规则快照。';
+}
+function closeClient(){$('clientDialog').close()}
+function storeClient(){
+ const code=normalizeCode($('clientCode').value),name=$('clientName').value.trim();
+ if(state.clients.some(c=>c.id!==editingId&&c.name===name))throw Error('客户名称已存在，请使用唯一客户名称');
+ if(!code||!name)throw Error('请填写客户编码和客户名称');
+ const next=clone(state),type=$('clientType').value,mode=type==='standard'?'default':$('clientMode').value;
+ if(next.clients.some(c=>c.id!==editingId&&normalizeCode(c.code)===code))throw Error('客户编码已存在，请编辑原客户');
+ const c={id:editingId||crypto.randomUUID(),code,name,systemName:$('clientSystem').value.trim(),type,mode,rule:type==='system'&&mode==='custom'?collectRule('c_'):null};
+ const index=next.clients.findIndex(c=>c.id===editingId);if(index<0)next.clients.push(c);else next.clients[index]=c;
+ saveState(next);closeClient();
+}
+function deleteClient(index){
+ const c=state.clients[index];deletingId=c.id;
+ $('deleteText').textContent='确认删除“'+c.name+'”的本地分类与规则？删除后该客户将不再可用于此页面试算；不会修改实际客户档案或订单。';$('deleteDialog').showModal();
+}
+function confirmDelete(){try{const next=clone(state);next.clients=next.clients.filter(c=>c.id!==deletingId);saveState(next);$('deleteDialog').close()}catch(e){$('deleteText').textContent=e.message}}
+function refreshClientOptions(){
+ const value=$('previewClient').value;
+ $('previewClient').innerHTML='<option value="example-system">示例系统客户 · 默认规则</option><option value="example-standard">示例非系统客户 · 原有规则</option>'+state.clients.map(c=>'<option value="'+escapeHtml(c.id)+'">'+escapeHtml(c.name)+'（'+(c.type==='system'?'系统客户':'非系统客户')+'）</option>').join('');
+ if([...$('previewClient').options].some(o=>o.value===value))$('previewClient').value=value;
+}
+function parseTime(value){
+ if(!value)return null;
+ if(!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(value))throw Error('日期时间格式不正确');
+ const result=Date.parse(value+':00+08:00');if(!Number.isFinite(result))throw Error('日期时间无效');return result;
+}
+function formatTime(ms){return new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date(ms))}
+function evaluate(c,arrival,created,signed,now=Date.now()){
+ if(c.type==='standard')return {kind:'standard'};
+ const r=ruleFor(c);
+ if(arrival===null)return {kind:'missing'};
+ if(created===null)throw Error('请填写下单时间');
+ if(arrival<=created)throw Error('要求到货时间须晚于下单时间，请核对订单承诺');
+ if(signed!==null&&signed<created)throw Error('实际签收时间不能早于下单时间');
+ if(signed!==null&&signed>now)throw Error('实际签收时间不能晚于当前时间');
+ const candidates=stages.map(([id,name])=>({id,name,deadline:arrival-r[id]*3600000,basis:'要求到货时间前 '+r[id]+' 小时'}));
+ candidates.push({id:'sign',name:'签收',deadline:arrival,basis:'订单要求到货时间'});
+ candidates.push({id:'receipt',name:'回执上传',deadline:signed===null?null:signed+r.receipt*3600000,basis:'实际签收后 '+r.receipt+' 小时'});
+ return {kind:'system',rule:r,rows:candidates.map(row=>({...row,warningAt:row.deadline===null?null:row.deadline-r.warning*3600000,escalationAt:row.deadline===null?null:row.deadline+r.escalation*3600000,tooEarly:row.deadline!==null&&row.deadline<created,signedOnTime:row.id==='sign'&&signed!==null?signed<=arrival:null}))};
+}
+function preview(){
+ const key=$('previewClient').value,c=key==='example-system'?{type:'system',mode:'default'}:key==='example-standard'?{type:'standard'}:state.clients.find(c=>c.id===key);
+ if(!c)throw Error('请选择客户');
+ const result=evaluate(c,parseTime($('arrivalTime').value),parseTime($('createdTime').value),parseTime($('signedTime').value));
+ if(result.kind==='standard'){$('previewResult').innerHTML='<div class="note">非系统客户继续使用现有商品及履约节点规则。<a href="商品发货时效配置.html">查看原有配置 →</a></div>';return}
+ if(result.kind==='missing'){$('previewResult').innerHTML='<div class="note"><span class="badge amber">待补充到货时间</span> 系统客户订单缺少要求到货时间，暂不生成到货截止时间，也不套用普通时效。</div>';return}
+ $('previewResult').innerHTML='<p><b>要求到货：'+formatTime(parseTime($('arrivalTime').value))+'</b>　规则：'+(c.mode==='custom'?'客户专属':'系统客户默认')+'　时区：北京时间</p><p class="caption">以下为各节点计划截止时间；未提供节点完成记录时，不据此认定订单已超时。</p><div class="table-wrap"><table class="preview-table"><thead><tr><th>履约节点</th><th>计算口径</th><th>截止时间</th><th>提前预警时间</th><th>超时再次群提醒</th><th>校验提示</th></tr></thead><tbody>'+result.rows.map(row=>'<tr><td>'+row.name+'</td><td>'+row.basis+'</td><td>'+(row.deadline===null?'等待实际签收':formatTime(row.deadline))+'</td><td>'+(row.warningAt===null?'—':formatTime(row.warningAt))+'</td><td>'+(row.escalationAt===null?'—':formatTime(row.escalationAt))+'</td><td>'+(row.tooEarly?'<span class="badge amber">下单时已过此截止时间</span>':row.signedOnTime===true?'<span class="badge green">已按时签收</span>':row.signedOnTime===false?'<span class="badge red">实际签收晚于要求</span>':row.deadline===null?'<span class="badge gray">待签收后计算</span>':'<span class="badge gray">计划时间</span>')+'</td></tr>').join('')+'</tbody></table></div>';
+}
+document.addEventListener('invalid',e=>{let p=e.target.parentElement;while(p){if(p.tagName==='DETAILS')p.open=true;p=p.parentElement}},true);
+$('defaultFields').innerHTML=fields('d_',state.defaultRule);
+$('defaultForm').addEventListener('submit',e=>{e.preventDefault();$('defaultError').textContent='';try{const next=clone(state);next.defaultRule=collectRule('d_');saveState(next)}catch(err){$('defaultError').textContent=err.message}});
+$('clientForm').addEventListener('submit',e=>{e.preventDefault();$('clientError').textContent='';try{storeClient()}catch(err){$('clientError').textContent=err.message}});
+$('previewForm').addEventListener('submit',e=>{e.preventDefault();$('previewError').textContent='';$('previewResult').innerHTML='';try{preview()}catch(err){$('previewError').textContent=err.message}});
+const nowLocal=new Date(Date.now()+8*3600000).toISOString().slice(0,16);
+$('createdTime').value=nowLocal;$('arrivalTime').value=new Date(Date.now()+8*3600000+4*86400000).toISOString().slice(0,16);
+renderClients();refreshClientOptions();
+</script><script src="侧边栏菜单.js"></script></body></html>

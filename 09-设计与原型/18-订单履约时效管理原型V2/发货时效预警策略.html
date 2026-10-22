@@ -653,6 +653,8 @@ function boardDraft(){
  const base=clone(Object.values(omsProfiles)[0]);
  const rule={finance:72,accept:60,ship:48,pickup:36,receipt:24,warning:4,escalation:2};
  const cases=[
+   {id:'demo-system-standard-001',customer:'盒马集团·华东公司·上海仓',mode:'system',state:'pending',arrival:now+7*DAY,acceptanceMode:'standard'},
+   {id:'demo-system-fast-001',customer:'盒马集团·华东公司·浦东门店',mode:'system',state:'pending',arrival:now+2*DAY,acceptanceMode:'fast'},
   {id:'demo-system-pending',customer:'演示系统客户·待接单',mode:'system',state:'pending',arrival:now+7*DAY},
   {id:'demo-system-accepted',customer:'演示系统客户·已接单',mode:'system',state:'accepted',arrival:now+8*DAY},
   {id:'demo-negotiated-pending',customer:'演示普通客户·待接单',mode:'negotiated',state:'pending',arrival:now+5*DAY},
@@ -662,7 +664,9 @@ function boardDraft(){
  ];
  for(const c of cases){
   const profile=clone(base),system=c.mode==='system';
-  Object.assign(profile,{source:'交互演示数据',createdAt:iso(now-2*H),customerRequiredArrivalAt:iso(c.arrival),ruleSnapshot:{type:system?'system':'standard',timingMode:c.mode,rule:system?clone(rule):clone(config)},customerCategory:system?'系统客户':'普通客户',systemName:system?'演示商超系统':'',arrivalEvidence:system?null:{name:'客户沟通记录.png'}});
+   Object.assign(profile,{source:'交互演示数据',createdAt:iso(now-2*H),customerRequiredArrivalAt:iso(c.arrival),ruleSnapshot:{type:system?'system':'standard',timingMode:c.mode,acceptanceMode:c.acceptanceMode,rule:system?clone(rule):clone(config)},customerCategory:system?'系统客户':'普通客户',systemName:system?'盒马集团':'',acceptanceMode:c.acceptanceMode||null,fastScheme:c.acceptanceMode==='fast'?'FAST-HM-01':null,arrivalEvidence:system?null:{name:'客户沟通记录.png'}});
+   if(c.acceptanceMode==='standard'){profile.due=profile.total=1460;profile.receiver='上海仓收货组';profile.products=[{name:'无骨鸡爪·脱骨侠500克',sku:'4075',price:20,qty:40,giftQty:0,unit:'罐',stock:24,noStock:72,tags:['系统客户','标准接单']},{name:'蒜香微辣鸡爪388克',sku:'2188',price:16.5,qty:40,giftQty:0,unit:'罐',stock:36,noStock:96,tags:['多商品','最长时效96小时']}];}
+   if(c.acceptanceMode==='fast'){profile.due=profile.total=2580;profile.receiver='浦东门店收货组';profile.products=[{name:'盒马定制柠檬鸡爪75克',sku:'HM075',price:12.5,qty:120,giftQty:0,unit:'袋',stock:8,noStock:24,tags:['系统客户','快速接单']},{name:'盒马定制蒜香鸡爪100克',sku:'HM100',price:13.5,qty:80,giftQty:0,unit:'袋',stock:12,noStock:36,tags:['快速方案','FAST-HM-01']}];}
   profile.statuses=(profile.statuses||[]).map(([k,v])=>[k,k.includes('接单状态')?(c.state==='accepted'?'已接单':'待接单'):v]);
   omsProfiles[c.id]=profile;
   const row=[c.id,c.customer,'¥ '+Number(profile.due||0).toFixed(2),iso(now-2*H),0.5,'normal'];

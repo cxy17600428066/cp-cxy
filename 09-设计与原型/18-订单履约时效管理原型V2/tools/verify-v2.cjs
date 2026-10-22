@@ -29,6 +29,7 @@ const path = require('path');
  if(!await page.getByText('剩余 18 分钟').count())throw Error('快速接单演示时限未显示');
  if(await page.getByText('快速接单监控节点（可自定义）').count())throw Error('接单页仍展示跟踪节点配置');
  if(await page.locator('input[name="stockMode"]').count()!==2)throw Error('快速接单未确认有货或无货');
+ await page.screenshot({path:path.resolve(__dirname,'v2-fast-acceptance-preview.png'),fullPage:true});
  await page.keyboard.press('Escape');
  await page.locator('.v2-case').nth(2).click();
  if(await page.getByText('系统默认时效接单').count()<1)throw Error('系统默认时效接单说明未显示');

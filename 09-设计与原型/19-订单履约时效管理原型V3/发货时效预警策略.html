@@ -699,7 +699,7 @@ function boardDraft(){
  if(window.omsSeedTimingDemoOrders){db=window.omsSeedTimingDemoOrders(db);localStorage.setItem(KEY,JSON.stringify(db));}
  function commit(next){if(!ready)throw Error('履约资料读取失败，请刷新后重试');localStorage.setItem(KEY,JSON.stringify(next));db=next;}
   window.commitUnifiedAcceptance=function(input){
-   const now=new Date().toISOString(),rules=clone(config.rules),next=clone(db),p=omsProfiles[input.id]||{};
+   const now=new Date().toISOString(),rules=clone(input.ruleSnapshot?.rules||config.rules),next=clone(db),p=omsProfiles[input.id]||{};
    const lines=input.products.map((v,i)=>({key:String(i),sku:v.sku,qty:v.qty,stock:v.stock,noStock:v.noStock}));
    const o={id:input.id,type:input.system?'system':'standard',timingMode:input.system?'system':input.specified?'negotiated':'default',stock:input.stock,lines,rules,receiptRequired:true,arrival:input.system?input.arrival:null,version:'V3-接单快照',events:{submittedAt:new Date(input.createdAt).toISOString(),factoryAcceptedAt:now},negotiation:{status:'resolved',history:clone(input.audit)},customerRule:input.system?{finance:72,accept:60,ship:48,pickup:36,receipt:24}:null};
    o.plan=Fulfillment.plan(o,now);if(!input.system&&input.ship){const delta=input.ship-o.plan.ship.estimated;for(const id of ['ship','pickup','sign','receipt','receiptReview']){if(o.plan[id]?.deadline)o.plan[id].deadline+=delta;if(o.plan[id]?.estimated)o.plan[id].estimated+=delta;}}

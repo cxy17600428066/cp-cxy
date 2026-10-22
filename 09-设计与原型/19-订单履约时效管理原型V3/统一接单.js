@@ -7,7 +7,7 @@ if(!state){const now=Date.now();state={orders:[
 {id:'demo-system-fast-001',customer:'演示系统客户 / 华东公司 / 浦东门店',system:true,fast:true,specified:true,arrival:now+72*H,ship:now+36*H},
 {id:'demo-negotiated-pending',customer:'演示非系统客户 / 上海门店',system:false,fast:false,specified:true,arrival:now+144*H,ship:now+72*H},
 {id:'demo-dealer-default-v3',customer:'演示非系统客户 / 华东经销商',system:false,fast:false,specified:false,arrival:null,ship:now+72*H}
-].map((o,i)=>({...o,createdAt:now-(i+1)*600000,status:'待接单',stock:'stock',round:0,audit:[],products:[{sku:'4075',name:'演示商品·柠檬鸡爪500克',qty:40,price:20,stock:24,noStock:72},{sku:'2188',name:'演示商品·蒜香鸡爪388克',qty:40,price:16.5,stock:o.fast?12:36,noStock:o.fast?36:96}]}))};save()}
+].map((o,i)=>({...o,createdAt:now-(i+1)*600000,status:'待接单',stock:'stock',round:0,audit:[],ruleSnapshot:JSON.parse(localStorage.getItem('shipping-sla-config')||'null')||JSON.parse(JSON.stringify(config)),schemeSnapshot:JSON.parse(localStorage.getItem('oms-node-scheme-v3')||'null')||{name:'FAST-HM-01',acceptHours:0.5,nodes:['ship','pickup','sign'],owners:{accept:'工厂',ship:'工厂',pickup:'仓储',sign:'物流跟进人',receipt:'客服',receiptReview:'回执审核人'}},products:[{sku:'4075',name:'演示商品·柠檬鸡爪500克',qty:40,price:20,stock:24,noStock:72},{sku:'2188',name:'演示商品·蒜香鸡爪388克',qty:40,price:16.5,stock:o.fast?12:36,noStock:o.fast?36:96}]}))};save()}
 function save(){localStorage.setItem(KEY,JSON.stringify(state))}function audit(o,actor,action){o.audit.push({at:Date.now(),actor,action});save()}
 let tab='待处理',search='',customerFilter='',modeFilter='',active=null;
 function order(){return state.orders.find(o=>o.id===active)}

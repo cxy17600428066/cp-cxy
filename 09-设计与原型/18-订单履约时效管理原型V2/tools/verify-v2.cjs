@@ -48,7 +48,7 @@ const path = require('path');
  if(await page.locator('.v2-result dl>div').count()!==8)throw Error('最终结果摘要不完整');
  await page.locator('#v2Primary').click();
  await page.locator('.v2-demo-steps button').nth(6).click();
- if(!await page.getByText('严总、张勇总').count())throw Error('OA结果回传演示未显示');
+ if(!await page.getByText('OA回传意见').count())throw Error('OA结果回传演示未显示');
  if(!await page.getByText('仅用于模拟 OA 结果回传').count())throw Error('OMS与OA权限边界未显示');
  await page.screenshot({path:path.resolve(__dirname,'v2-negotiation-demo-preview.png'),fullPage:false});
  await page.keyboard.press('Escape');

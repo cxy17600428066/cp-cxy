@@ -16,7 +16,7 @@
   rows.sort(([a],[b])=>timingRank(a)-timingRank(b));
   const body=rows.map(([id,p])=>{
    const o=getOrderAcceptanceContext(id),row=Object.values(nodeOrders).flat().find(v=>v[0]===id),mode=o.timingMode||(o.type==='system'?'system':o.arrival?'negotiated':'default');
-   const label={default:'系统默认时效',system:'系统客户时效',negotiated:'磋商时效'}[mode],state=o.negotiation?.status==='rejected'?'<small class="negotiation-rejected">待线下磋商</small>':o.negotiation?.status==='resolved'?'<small class="negotiation-resolved">已更新到货时间</small>':'';
+   const baseLabel={default:'系统默认时效',system:'系统客户时效',negotiated:'磋商时效'}[mode],label=mode==='system'&&p.acceptanceMode?(p.acceptanceMode==='fast'?'系统客户 · 快速接单':'系统客户 · 标准接单'):baseLabel,state=(p.acceptanceMode?'<small class="negotiation-resolved">'+(p.acceptanceMode==='fast'?'快速方案 '+safe(p.fastScheme||'已配置'):'标准接单流程')+'</small>':'')+(o.negotiation?.status==='rejected'?'<small class="negotiation-rejected">待线下磋商</small>':o.negotiation?.status==='resolved'?'<small class="negotiation-resolved">已更新时间</small>':'');
    let actions='<button class="btn primary" onclick="showAcceptance(\''+safe(id)+'\',\'accept\')">工厂接单</button>';
    if(accepted(id))actions='<button class="btn" onclick="openOrder(\''+safe(id)+'\')">查看节点</button>';
    else if(mode==='negotiated'&&o.negotiation?.status==='rejected')actions='<button class="btn negotiation-upload" onclick="showAcceptance(\''+safe(id)+'\',\'resolve\')">客服上传磋商结果</button>';

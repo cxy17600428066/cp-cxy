@@ -13,7 +13,11 @@ const required = [
   'OMS列表始终保留发货单',
   '以下内容是旺店通处理历史，不会生成新的OMS发货单',
   'OMS主记录</td><td>每张原始发货单在发货管理列表中只保留一条',
-  '发货单仍为1条，拆合记录已刷新',
+  '拆/合单管理',
+  '集中查看旺店通已拆单、已合单的订单数据',
+  '处理前订单',
+  '处理后订单',
+  '发货单仍为1条，拆/合单管理记录已刷新',
 ];
 const missing = required.filter(x => !html.includes(x));
 if (missing.length) throw new Error(`missing: ${missing.join(' | ')}`);
@@ -29,5 +33,6 @@ if (found.length) throw new Error(`forbidden: ${found.join(' | ')}`);
 
 const cardCount = (html.match(/<article class="shipment-card">/g) || []).length;
 if (cardCount !== 1) throw new Error(`shipment card count: ${cardCount}`);
+if (!html.includes('function renderManage()')) throw new Error('missing split/merge management renderer');
 console.log('HTML_SHIPMENT_HISTORY_VALIDATION_OK');
 console.log(`bytes=${Buffer.byteLength(html, 'utf8')} shipmentCards=${cardCount}`);

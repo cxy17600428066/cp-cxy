@@ -23,8 +23,9 @@
 <body>
 <header class="top"><div class="brand">卓希综合管理系统</div><nav class="topnav"><span>⌂　首页</span><span class="on">OMS订单系统</span><span>标准库系统</span><span>CRM系统</span><span>绩效系统</span><span>项目任务系统</span><span>BI报表系统</span></nav><div class="topright"><span>新绩效系统</span><span>其他系统</span><span class="avatar">陈</span><span>陈薪宇</span></div></header>
 <div class="layout">
-  <aside class="side"><div class="side-title">⌂　首页</div><div class="side-title">◉　订单中心</div><div class="side-item">订单列表</div><div class="side-item">订单接单列表</div><div class="side-item">异常订单</div><div class="side-item">售后订单</div><div class="side-sep"></div><div class="side-title">▥　发货管理</div><div class="side-item">订单物流查询</div><div class="side-item active">发货管理</div><div class="side-item">发货物流订单</div><div class="side-sep"></div><div class="side-title">▣　钱包管理</div><div class="side-title">◫　商品管理</div></aside>
-  <main class="main"><div class="crumb">首页　/　<span style="color:#409eff">发货管理</span></div><div class="content">
+  <aside class="side"><div class="side-title">⌂　首页</div><div class="side-title">◉　订单中心</div><div class="side-item">订单列表</div><div class="side-item">订单接单列表</div><div class="side-item">异常订单</div><div class="side-item">售后订单</div><div class="side-sep"></div><div class="side-title">▥　发货管理</div><div class="side-item">订单物流查询</div><div class="side-item active" id="menuShipment" onclick="showPage('shipment')">发货管理</div><div class="side-item" id="menuManage" onclick="showPage('manage')">拆/合单管理</div><div class="side-item">发货物流订单</div><div class="side-sep"></div><div class="side-title">▣　钱包管理</div><div class="side-title">◫　商品管理</div></aside>
+  <main class="main"><div class="crumb" id="crumb">首页　/　<span style="color:#409eff">发货管理</span></div><div class="content">
+    <div id="shipmentPage">
     <section class="page-head"><h1>发货管理</h1><span class="desc">OMS始终保留原始发货单，旺店通拆合结果作为该发货单的只读记录</span><div class="head-actions"><button class="btn" onclick="openRule()">拆合记录规则</button><button class="btn primary" onclick="openPull()">↻　更新旺店通状态</button></div></section>
     <div class="notice"><b>记录口径</b><span>一条OMS发货单只在列表中展示一次。同步至旺店通后，即使旺店通发生拆单或合单，OMS也不生成新的发货单记录，只在原发货单下增加拆合历史和旺店通结果单号。以下均为交互演示数据。</span></div>
     <section class="panel"><div class="filter">
@@ -40,16 +41,26 @@
         <div class="col ops"><div class="col-title">操作</div><button class="btn link" onclick="openShipmentDetail()">查看详情</button><button class="btn link" onclick="openRelation()">查看拆合单记录</button><button class="btn link" onclick="toast('已进入物流预约演示')">物流预约</button><button class="btn link" onclick="toast('已打开发货备注')">发货备注</button></div>
       </div><div class="shipment-note">发货备注：该发货单已同步旺店通；拆合结果只影响旺店通执行关系，不改变OMS发货单编号、商品原始数量及列表记录数。</div></article>
     </div><div class="empty" id="empty" style="display:none"><b>没有符合条件的发货单</b>请调整筛选条件后重新查询。</div></section>
+    </div>
+    <div id="managePage" class="hidden">
+      <section class="page-head"><h1>拆/合单管理</h1><span class="desc">集中查看旺店通已拆单、已合单的订单数据及处理前后数量</span><div class="head-actions"><button class="btn" onclick="openRule()">数据规则</button><button class="btn primary" onclick="openPull()">↻　更新旺店通状态</button></div></section>
+      <div class="notice"><b>页面定位</b><span>本页面展示旺店通返回的拆单、合单业务记录，用于集中查询被处理的订单。这里的处理后单号是旺店通执行单，不是新的OMS发货单；OMS发货管理仍按原始发货单展示。</span></div>
+      <section class="panel"><div class="filter">
+        <div class="field"><label>拆合记录编号</label><input class="input" id="mRecord" placeholder="请输入拆合记录编号"></div><div class="field"><label>原发货单号</label><input class="input" id="mShip" placeholder="请输入OMS发货单号"></div><div class="field"><label>原订单号</label><input class="input" id="mOrder" placeholder="请输入OMS订单号"></div><div class="field"><label>旺店通单号</label><input class="input" id="mWdt" placeholder="处理前或处理后单号"></div><div class="field"><label>拆合类型</label><select class="select" id="mType"><option value="">全部</option><option value="split">拆单</option><option value="merge">合单</option></select></div>
+        <div class="field"><label>旺店通操作时间</label><input class="input" type="date" id="mDate"></div><div class="filter-actions"><button class="btn primary" onclick="applyManageFilter()">⌕　搜索</button><button class="btn" onclick="resetManageFilter()">↻　重置</button><button class="btn success" onclick="toast('已导出当前拆合记录')">↓　导出</button></div>
+      </div></section>
+      <section class="panel"><div class="tabs"><button class="tab on manage-tab" data-tab="all" onclick="setManageTab('all')">全部记录</button><button class="tab manage-tab" data-tab="split" onclick="setManageTab('split')">拆单记录</button><button class="tab manage-tab" data-tab="merge" onclick="setManageTab('merge')">合单记录</button></div><div class="manage-toolbar"><span id="manageCount">共2条拆合记录</span><span class="right">数据来源：旺店通　·　最近更新：<b id="manageLastTime">2026-10-26 10:30:00</b></span></div><div class="manage-list" id="manageList"></div><div class="manage-empty hidden" id="manageEmpty"><b>没有符合条件的拆合记录</b><br>请调整筛选条件或更新旺店通状态。</div></section>
+    </div>
   </div></main>
 </div>
 <div class="modal-mask" id="modalMask" onclick="if(event.target===this)closeModal()"><div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"><div class="modal-head"><span id="modalTitle"></span><button class="close" aria-label="关闭" onclick="closeModal()">×</button></div><div class="modal-body" id="modalBody"></div><div class="modal-foot" id="modalFoot"></div></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script>
 const shipment={ship:'F202608260837471',order:'O202608251429521',customer:'浙江驰骋物流有限公司',source:'CRM',sync:'已同步',created:'2026-08-25',wdt:['WDT260826004891','WDT261026100811','WDT261026100812','WDT260826004702','WDT261026100903']};
 const histories=[
- {id:'WDT-SP-202610260018',type:'拆单',key:'split',time:'2026-10-26 10:18:32',pull:'2026-10-26 10:30:00',source:['WDT260826004891'],result:['WDT261026100811','WDT261026100812'],rows:[['无骨鸡爪-脱骨侠-220克-酸辣柠檬','3盒','1盒','2盒']],note:'旺店通将原单拆为2张结果单；OMS发货单仍为 F202608260837471。'},
- {id:'WDT-MG-202610260009',type:'合单',key:'merge',time:'2026-10-26 10:22:08',pull:'2026-10-26 10:30:00',source:['WDT261026100812','WDT260826004702'],result:['WDT261026100903'],rows:[['当前发货单商品：无骨鸡爪-脱骨侠-220克','2盒','2盒','—'],['其他来源单商品：无骨鸡爪-脱骨侠-500克','1罐','1罐','—']],note:'当前拆单结果与另一旺店通单合并。OMS各自保留原发货单记录，本页面仅展示与当前发货单有关的合单关系。'}
+ {id:'WDT-SP-202610260018',type:'拆单',key:'split',time:'2026-10-26 10:18:32',pull:'2026-10-26 10:30:00',order:'O202608251429521',ship:'F202608260837471',source:['WDT260826004891'],result:['WDT261026100811','WDT261026100812'],rows:[['无骨鸡爪-脱骨侠-220克-酸辣柠檬','3盒','1盒','2盒']],note:'旺店通将原单拆为2张结果单；OMS发货单仍为 F202608260837471。'},
+ {id:'WDT-MG-202610260009',type:'合单',key:'merge',time:'2026-10-26 10:22:08',pull:'2026-10-26 10:30:00',order:'O202608251429521、O202608221504903',ship:'F202608260837471、F202608260804902',source:['WDT261026100812','WDT260826004702'],result:['WDT261026100903'],rows:[['当前发货单商品：无骨鸡爪-脱骨侠-220克','2盒','2盒','—'],['其他来源单商品：无骨鸡爪-脱骨侠-500克','1罐','1罐','—']],note:'当前拆单结果与另一旺店通单合并。OMS各自保留原发货单记录，本页面仅展示与当前发货单有关的合单关系。'}
 ];
-let activeHistory='all';
+let activeHistory='all',activeManage='all';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function tag(t,c){return `<span class="tag ${c}">${esc(t)}</span>`}
 function applyFilter(){const vals={ship:fShip.value.trim().toLowerCase(),order:fOrder.value.trim().toLowerCase(),customer:fCustomer.value.trim().toLowerCase(),wdt:fWdt.value.trim().toLowerCase(),relation:fRelation.value,sync:fSync.value,source:fSource.value,date:fDate.value};const hit=(!vals.ship||shipment.ship.toLowerCase().includes(vals.ship))&&(!vals.order||shipment.order.toLowerCase().includes(vals.order))&&(!vals.customer||shipment.customer.toLowerCase().includes(vals.customer))&&(!vals.wdt||shipment.wdt.join(' ').toLowerCase().includes(vals.wdt))&&(!vals.relation||vals.relation==='有拆合记录')&&(!vals.sync||shipment.sync===vals.sync)&&(!vals.source||shipment.source===vals.source)&&(!vals.date||shipment.created===vals.date);shipmentList.style.display=hit?'block':'none';empty.style.display=hit?'none':'block';count.textContent=hit?'1':'0';toast(hit?'已找到1条发货单':'未找到符合条件的发货单')}

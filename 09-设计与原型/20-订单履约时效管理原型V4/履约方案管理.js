@@ -21,5 +21,20 @@ function draw(){root.innerHTML='<div class="scheme-toolbar"><button class="btn" 
 function persist(next,action){const before=localStorage.getItem(key);localStorage.setItem(key,JSON.stringify(next));try{const history=JSON.parse(localStorage.getItem(key+'-audit')||'[]');history.push({at:new Date().toISOString(),action,before:before?JSON.parse(before):plans,after:next});localStorage.setItem(key+'-audit',JSON.stringify(history))}catch{}plans=next}
 function submit(e){e.preventDefault();const f=e.target,d=f.elements,targets=document.getElementById('targetScope').value==='specific'?[...f.querySelectorAll('[name=target]:checked')].map(x=>x.value):[];try{if(document.getElementById('targetScope').value==='specific'&&!targets.length)throw Error('请至少选择一个适用对象');const p={...edit,id:d.code.value.trim(),name:d.name.value.trim(),type:d.type.value,mode:d.mode.value,cutoff:d.cutoff.value,targets,version:new Date().toISOString(),rules:edit.rules.map((r,i)=>({...r,on:d['on'+i].checked,value:+d['hours'+i].value,warn:+d['warn'+i].value,owner:d['owner'+i].value,leadHours:d['lead'+i]?+d['lead'+i].value:r.leadHours,warningHours:d['warningHours'+i]?+d['warningHours'+i].value:r.warningHours}))};p.timingBasis=p.type==='系统客户'?'arrival-backward':p.type==='全部客户'?'customer-adaptive':'event-forward';validateReverse(p);delete p.originalId;if(!p.name||!p.id)throw Error('请填写方案名称和编号');if(plans.some(x=>x.id===p.id&&x.id!==edit.originalId))throw Error('方案编号已存在，请使用其他编号');if(!p.rules.some(r=>r.on))throw Error('请至少启用一个监控节点');if(plans.some(x=>x.id!==edit.originalId&&x.enabled&&p.enabled&&x.type===p.type&&x.mode===p.mode&&(x.targets.length===0&&p.targets.length===0||x.targets.some(t=>p.targets.includes(t)))))throw Error('存在同优先级适用对象重叠的启用方案，请调整对象、客户类型或接单方式');persist([...plans.filter(x=>x.id!==edit.originalId),p],'保存方案 '+p.id);list()}catch(err){document.getElementById('schemeError').textContent=err.message}}
 window.schemeNew=()=>{edit=withAfterRules(template('','', '系统客户','标准接单',[]));draw()};window.schemeEdit=id=>{edit={...clone(plans.find(p=>p.id===id)),originalId:id};draw()};window.schemeCopy=id=>{edit=clone(plans.find(p=>p.id===id));edit.name+='（副本）';edit.id+='-COPY-'+Date.now().toString().slice(-4);edit.enabled=false;draw()};window.schemeCancel=list;window.schemeToggle=id=>{const p=plans.find(p=>p.id===id);if(!p.enabled&&plans.some(x=>x.id!==id&&x.enabled&&x.type===p.type&&x.mode===p.mode&&(x.targets.length===0&&p.targets.length===0||x.targets.some(t=>p.targets.includes(t))))){alert('存在同优先级适用范围重叠，请先编辑方案范围。');return}try{persist(plans.map(x=>x.id===id?{...x,enabled:!x.enabled}:x),'切换方案状态 '+id);list()}catch(err){alert('保存失败：'+err.message)}};
+const alignStyle=document.createElement('style');alignStyle.textContent=`
+#schemeForm .scheme-table{table-layout:fixed;width:100%}
+#schemeForm .scheme-table th:nth-child(1){width:6%}
+#schemeForm .scheme-table th:nth-child(2){width:28%}
+#schemeForm .scheme-table th:nth-child(3){width:27%}
+#schemeForm .scheme-table th:nth-child(4){width:23%}
+#schemeForm .scheme-table th:nth-child(5){width:16%}
+#schemeForm .scheme-table th[colspan]{width:auto}
+#schemeForm .scheme-table td{vertical-align:top}
+#schemeForm .scheme-table input:not([type=checkbox]):not([type=hidden]),#schemeForm .scheme-table select{height:40px;box-sizing:border-box;line-height:22px}
+#schemeForm .scheme-table td:nth-child(3)>small,#schemeForm .scheme-table td:nth-child(4)>small{line-height:20px;min-height:20px}
+#schemeForm .scheme-table td:nth-child(5){padding-top:34px}
+#schemeForm .scheme-table td:nth-child(1),#schemeForm .scheme-table td:nth-child(2){padding-top:42px}
+@media(max-width:900px){#schemeForm .scheme-table{min-width:880px}}
+`;document.head.append(alignStyle);
 list();
 })();

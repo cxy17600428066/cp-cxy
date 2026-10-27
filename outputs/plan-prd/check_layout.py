@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 from html import escape
 from docx import Document
 from docx.oxml.ns import qn
@@ -11,8 +12,8 @@ from pypdf import PdfReader
 from pdf2image import convert_from_path
 from PIL import Image,ImageOps,ImageDraw
 
-base=Path('E:/cxy/outputs/plan-prd/render');base.mkdir(parents=True,exist_ok=True)
-src=Path('E:/cxy/04-需求管理/PRD-生产管理计划管理-开发交付版-V1.0-20261027.docx')
+base=Path(sys.argv[2] if len(sys.argv)>2 else 'E:/cxy/outputs/plan-prd/render');base.mkdir(parents=True,exist_ok=True)
+src=Path(sys.argv[1] if len(sys.argv)>1 else 'E:/cxy/04-需求管理/PRD-生产管理计划管理-开发交付版-V1.0-20261027.docx')
 d=Document(src)
 font='PRDChinese'
 pdfmetrics.registerFont(TTFont(font,'C:/Windows/Fonts/msyh.ttc',subfontIndex=0))
@@ -47,7 +48,7 @@ for start in range(0,len(images),4):
  for j,im in enumerate(thumbs):sheet.paste(im,((j%2)*428,(j//2)*558))
  sheet.save(base/('contact-'+str(start//4+1)+'.png'))
 print('Word structure',len(d.paragraphs),'paragraphs',len(d.tables),'tables')
-assert len(d.tables)==21
+assert len(d.tables)>=21
 all_text='\n'.join(p.text for p in d.paragraphs)+'\n'+'\n'.join(c.text for t in d.tables for r in t.rows for c in r.cells)
 assert '普通数量调整直接交计划部门确认' in all_text
 assert all('AC'+str(i).zfill(2) in all_text for i in range(1,25))

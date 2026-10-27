@@ -2,6 +2,7 @@ from pathlib import Path
 from copy import deepcopy
 from docx import Document
 from docx.shared import Inches,Pt
+from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 src=Path('E:/cxy/04-需求管理/PRD-生产管理计划管理-开发交付版-V1.0-20261027.docx')
@@ -44,8 +45,11 @@ def table(headers,rows):
  for i,r in enumerate(t.rows):
   if i==0:
    x=OxmlElement('w:tblHeader');r._tr.get_or_add_trPr().append(x)
-  for c in r.cells:
-   c._tc.get_or_add_tcPr().append(deepcopy(sample.rows[min(i,1)].cells[0]._tc.get_or_add_tcPr())) if False else None
+  for j,c in enumerate(r.cells):
+   c.width=Inches([1.25,2.6,3.15][j])
+   c.vertical_alignment=WD_CELL_VERTICAL_ALIGNMENT.CENTER
+   margins=sample.rows[0].cells[0]._tc.get_or_add_tcPr().find(qn('w:tcMar'))
+   if margins is not None:c._tc.get_or_add_tcPr().append(deepcopy(margins))
    border=OxmlElement('w:tcBorders')
    for edge in ['top','bottom','left','right']:
     x=OxmlElement('w:'+edge);x.set(qn('w:val'),'single');x.set(qn('w:sz'),'4');x.set(qn('w:color'),'D9D9D9');border.append(x)
@@ -81,4 +85,9 @@ table(['类别','契约或场景','要求或预期'],[
 h('实现注意事项')
 p('审批修订事件与“审核通过”事件必须区分类型，不能把一次保存误记为本级已审核。历史审批查询不能要求所有下级审批版本都等于最终工作版本，否则会错误显示缺失记录。应按提交批次和节点快照还原各级真实审核情况。')
 p('本次不新增销售重提、不跳过后续销售节点、不赋予计划部门销售改量权限。后续若需开放客户商品更换、跨周期变更或已生效计划由领导直接修改，应另行确认业务流程，不能沿用本次数量修订接口。')
+for t in d.tables:
+ for row in t.rows:
+  for cell in row.cells:
+   for para in cell.paragraphs:
+    for run in para.runs:run.font.size=Pt(9.5)
 d.save(out);print(out);print('tables',len(d.tables))

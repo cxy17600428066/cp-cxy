@@ -12,7 +12,7 @@ window.OfflineEdition={clean(d){
  for(const k of ['submissionBatches','closedLoopExamples','demoScenarios'])if(Array.isArray(d[k]))d[k]=d[k].filter(x=>x.business!=='online'&&!['线上运营','线上领导','丹总'].includes(x.role));
  d.edition='offline-v1';return d;
 },decorate(){
- document.querySelectorAll('[data-business="online"],#role option').forEach(e=>{if(e.dataset.business==='online'||['线上运营','线上领导','丹总'].includes(e.value))e.remove();});
+ document.querySelectorAll('[data-business="online"],option[value="online"],#role option').forEach(e=>{if(e.dataset.business==='online'||e.value==='online'||['线上运营','线上领导','丹总'].includes(e.value))e.remove();});
  document.querySelectorAll('[data-filter="business"],[data-filter="channel"]').forEach(e=>e.closest('label')?.remove());
  document.querySelectorAll('.business-switch').forEach(e=>e.remove());
  document.querySelectorAll('select[name="business"] option').forEach(e=>{if(e.value!=='offline'&&e.textContent!=='线下')e.remove();});
@@ -32,4 +32,7 @@ html=html.replace('M.save(d);storageBaseline','OfflineEdition.clean(d);M.save(d)
 html=html.replaceAll('汇集线上、线下需求计划，为后续生产安排提供已确认的计划依据。线下月、周计划统一按省区、客户、商品填报，线上按渠道填报。','按省区、客户、商品提报月度和周计划，逐级审核后由计划部门确认生效。');
 html=html.replaceAll('交互演示数据 · OMS、旺店通及 OA 未接入真实系统。','线下计划管理 · 使用本地测试数据，OMS 尚未接入。');
 html=html.replaceAll('!d.orderPolicies.offline.version||!d.orderPolicies.online.version','!d.orderPolicies.offline.version');
+html=html.replaceAll('客户/渠道','客户').replaceAll('客户 / 渠道','客户').replaceAll('客户／渠道','客户');
+html=html.replace(/<option value="online">[^<]*<\/option>/g,'').replaceAll("['offline','online']","['offline']").replaceAll("['全部','线上','线下']","['线下']");
+html=html.replaceAll('线下来源OMS，线上来源旺店通。','数据来源 OMS。').replaceAll('线下OMS订单、线上旺店通接口订单','OMS销售订单');
 process.stdout.write(html);

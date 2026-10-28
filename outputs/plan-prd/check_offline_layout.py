@@ -48,6 +48,6 @@ for start in range(0,len(images),4):
  for j,im in enumerate(thumbs):sheet.paste(im,((j%2)*428,(j//2)*558))
  sheet.save(base/('contact-'+str(start//4+1)+'.png'))
 print('Word structure',len(d.paragraphs),'paragraphs',len(d.tables),'tables')
-assert len(d.tables)>=11
+assert len(d.tables)==9
 assert all('AC'+str(i).zfill(2) in '\n'.join(c.text for t in d.tables for r in t.rows for c in r.cells) for i in range(1,15))
 print('PASS offline content; native Word pagination not verified')

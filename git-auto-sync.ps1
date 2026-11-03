@@ -27,14 +27,17 @@ function Invoke-SyncIfNeeded {
 
   Push-Location $repoRoot
   try {
-    $status = git status --porcelain
+    $status = git status --porcelain --ignore-submodules=dirty
     if ([string]::IsNullOrWhiteSpace(($status | Out-String))) {
-      return $false
+      $ahead = git rev-list --count "@{upstream}..HEAD" 2>$null
+      if ($LASTEXITCODE -eq 0 -and [int]$ahead -eq 0) { return $false }
     }
 
     Write-Log ("Detected changes ({0}). Running git quick." -f $Reason)
-    git quick ("Auto sync " + (Get-Date -Format "yyyy-MM-dd HH:mm:ss"))
-    if ($LASTEXITCODE -ne 0) {
+    $output = git quick ("Auto sync " + (Get-Date -Format "yyyy-MM-dd HH:mm:ss")) 2>&1
+    $syncExit = $LASTEXITCODE
+    foreach ($line in $output) { Write-Log ([string]$line) }
+    if ($syncExit -ne 0) {
       throw "git quick failed with exit code $LASTEXITCODE"
     }
     Write-Log "Auto sync completed."
@@ -117,3 +120,4 @@ finally {
   Remove-Item -LiteralPath $pidFile -ErrorAction SilentlyContinue
   Write-Log "Auto sync watcher stopped."
 }
+

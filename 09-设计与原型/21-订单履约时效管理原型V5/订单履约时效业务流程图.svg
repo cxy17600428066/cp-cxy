@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1280" viewBox="0 0 1800 1280">
+<defs><style>
+text{font-family:"Microsoft YaHei","PingFang SC",sans-serif;fill:#263b57}.title{font-size:34px;font-weight:700}.sub{font-size:16px;fill:#7587a0}.h{font-size:19px;font-weight:700}.t{font-size:15px}.s{font-size:13px;fill:#71839c}.box{fill:#fff;stroke:#cdd9e9;stroke-width:2}.blue{fill:#eff5ff;stroke:#4f83ed}.purple{fill:#f7f1ff;stroke:#916bc7}.amber{fill:#fff8e7;stroke:#dc9c35}.green{fill:#effaf5;stroke:#47a77c}.red{fill:#fff3f4;stroke:#dc6673}.gray{fill:#f6f8fb;stroke:#cbd5e2}.arrow{stroke:#7890ad;stroke-width:2.5;fill:none;marker-end:url(#m)}.dash{stroke-dasharray:8 7}.lane{font-size:17px;font-weight:700;fill:#527099}
+</style><marker id="m" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#7890ad"/></marker></defs>
+<rect width="1800" height="1280" fill="#f5f8fc"/>
+<text x="70" y="65" class="title">订单履约时效业务流程</text><text x="70" y="96" class="sub">系统默认时效、系统客户时效、磋商时效与回执审核完整闭环</text>
+<rect x="50" y="125" width="1700" height="210" rx="18" class="box"/><text x="76" y="160" class="lane">订单创建与时效判定</text>
+<rect x="90" y="190" width="210" height="86" rx="12" class="blue"/><text x="195" y="222" text-anchor="middle" class="h">新增订单</text><text x="195" y="250" text-anchor="middle" class="s">选择客户并填写订单资料</text>
+<path d="M300 233H380" class="arrow"/><rect x="380" y="190" width="230" height="86" rx="12" class="gray"/><text x="495" y="222" text-anchor="middle" class="h">判断客户与到货时间</text><text x="495" y="250" text-anchor="middle" class="s">客户类型和要求到货时间</text>
+<path d="M610 233H690" class="arrow"/><rect x="690" y="178" width="280" height="110" rx="12" class="blue"/><text x="830" y="210" text-anchor="middle" class="h">系统默认时效</text><text x="830" y="239" text-anchor="middle" class="t">非系统客户且未填到货时间</text><text x="830" y="266" text-anchor="middle" class="s">按商品和履约节点配置</text>
+<path d="M610 233C650 233 650 158 690 158H1010" class="arrow"/><rect x="1010" y="135" width="300" height="105" rx="12" class="amber"/><text x="1160" y="167" text-anchor="middle" class="h">系统客户时效</text><text x="1160" y="195" text-anchor="middle" class="t">要求到货时间必填，不可拒接</text><text x="1160" y="220" text-anchor="middle" class="s">按客户时间倒排节点</text>
+<path d="M610 233C650 233 650 308 690 308H1370" class="arrow"/><rect x="1370" y="255" width="310" height="105" rx="12" class="purple"/><text x="1525" y="287" text-anchor="middle" class="h">磋商时效</text><text x="1525" y="315" text-anchor="middle" class="t">非系统客户填写到货时间</text><text x="1525" y="340" text-anchor="middle" class="s">聊天记录或其他凭证必填</text>
+
+<rect x="50" y="365" width="1700" height="400" rx="18" class="box"/><text x="76" y="402" class="lane">财务审核与工厂接单</text>
+<rect x="90" y="445" width="220" height="82" rx="12" class="blue"/><text x="200" y="477" text-anchor="middle" class="h">订单提交成功</text><text x="200" y="504" text-anchor="middle" class="s">两个并行任务同时计时</text>
+<path d="M310 486H395" class="arrow"/><path d="M352 486V595H395" class="arrow"/>
+<rect x="395" y="445" width="220" height="82" rx="12" class="green"/><text x="505" y="477" text-anchor="middle" class="h">财务审核</text><text x="505" y="504" text-anchor="middle" class="s">审核通过后停止计时</text>
+<rect x="395" y="555" width="220" height="82" rx="12" class="blue"/><text x="505" y="587" text-anchor="middle" class="h">工厂接单</text><text x="505" y="614" text-anchor="middle" class="s">选择接单方式并确认</text>
+<path d="M615 596H700" class="arrow"/><rect x="700" y="430" width="260" height="92" rx="12" class="green"/><text x="830" y="463" text-anchor="middle" class="h">有货发货</text><text x="830" y="491" text-anchor="middle" class="t">展示有货预测节点时效</text>
+<rect x="700" y="545" width="260" height="92" rx="12" class="amber"/><text x="830" y="578" text-anchor="middle" class="h">无货发货</text><text x="830" y="606" text-anchor="middle" class="t">展示无货预测节点时效</text>
+<rect x="700" y="660" width="260" height="72" rx="12" class="red"/><text x="830" y="692" text-anchor="middle" class="h">拒接</text><text x="830" y="717" text-anchor="middle" class="s">仅磋商时效，理由必填</text>
+<path d="M960 696H1045" class="arrow"/><rect x="1045" y="650" width="270" height="92" rx="12" class="purple"/><text x="1180" y="683" text-anchor="middle" class="h">客服线下磋商</text><text x="1180" y="711" text-anchor="middle" class="t">修改到货时间并上传凭证</text>
+<path d="M1315 696H1410" class="arrow"/><rect x="1410" y="650" width="270" height="92" rx="12" class="purple"/><text x="1545" y="683" text-anchor="middle" class="h">工厂重新确认</text><text x="1545" y="711" text-anchor="middle" class="t">接单或继续拒接</text>
+<path d="M1545 650C1545 590 1320 590 1320 650" class="arrow dash"/><text x="1430" y="579" text-anchor="middle" class="s">继续拒接，进入下一轮磋商</text>
+<path d="M960 476H1670V545" class="arrow"/><path d="M960 591H1670V545" class="arrow"/><path d="M1545 650V590H1670V545" class="arrow"/><rect x="1550" y="510" width="120" height="70" rx="12" class="green"/><text x="1610" y="540" text-anchor="middle" class="h">接单完成</text><text x="1610" y="563" text-anchor="middle" class="s">保存规则快照</text>
+
+<rect x="50" y="795" width="1700" height="420" rx="18" class="box"/><text x="76" y="832" class="lane">履约执行与回执闭环</text>
+<rect x="95" y="900" width="190" height="78" rx="12" class="blue"/><text x="190" y="932" text-anchor="middle" class="h">发货</text><text x="190" y="958" text-anchor="middle" class="s">ERP同步WMS并生成单号</text>
+<path d="M285 939H345" class="arrow"/><rect x="345" y="900" width="180" height="78" rx="12" class="blue"/><text x="435" y="932" text-anchor="middle" class="h">揽收</text><text x="435" y="958" text-anchor="middle" class="s">WMS出库完成</text>
+<path d="M525 939H585" class="arrow"/><rect x="585" y="900" width="180" height="78" rx="12" class="blue"/><text x="675" y="932" text-anchor="middle" class="h">签收</text><text x="675" y="958" text-anchor="middle" class="s">客户实际签收</text>
+<path d="M765 939H825" class="arrow"/><rect x="825" y="900" width="210" height="78" rx="12" class="purple"/><text x="930" y="932" text-anchor="middle" class="h">上传回执单</text><text x="930" y="958" text-anchor="middle" class="s">无需关联发货单</text>
+<path d="M1035 939H1095" class="arrow"/><rect x="1095" y="900" width="210" height="78" rx="12" class="amber"/><text x="1200" y="932" text-anchor="middle" class="h">回执审核</text><text x="1200" y="958" text-anchor="middle" class="s">审核通过或驳回</text>
+<path d="M1305 939H1370" class="arrow"/><rect x="1370" y="865" width="230" height="78" rx="12" class="green"/><text x="1485" y="897" text-anchor="middle" class="h">审核通过</text><text x="1485" y="923" text-anchor="middle" class="s">回执节点完成</text>
+<path d="M1305 939C1340 939 1340 1020 1370 1020" class="arrow"/><rect x="1370" y="985" width="230" height="78" rx="12" class="red"/><text x="1485" y="1017" text-anchor="middle" class="h">审核驳回</text><text x="1485" y="1043" text-anchor="middle" class="s">填写原因，客服重新上传</text>
+<path d="M1370 1024C1220 1115 930 1105 930 978" class="arrow dash"/><text x="1160" y="1124" text-anchor="middle" class="s">保留历史文件和驳回记录，再次进入审核</text>
+<rect x="95" y="1055" width="650" height="90" rx="12" class="gray"/><text x="120" y="1087" class="h">订单内履约计划</text><text x="120" y="1115" class="t">已完成节点标注“实际”，未完成节点标注“预计”；按流程顺序单行展示。</text>
+<text x="70" y="1250" class="sub">版本 V1.1　2026年9月11日　独立OMS订单履约时效管理项目</text>
+</svg>

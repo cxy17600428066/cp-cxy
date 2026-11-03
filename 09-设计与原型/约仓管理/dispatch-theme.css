@@ -1,0 +1,174 @@
+/* 调度中心：统一深蓝底、青蓝操作色、琥珀提醒色。仅作用于调度大屏。 */
+.screen-mode{--surface:#102536;--surface-raised:#162f43;--border:#304d63;--text:#d8e7f0;--secondary:#a1b9ca;--accent:#6bd2ec;--warning:#e9be72;background:#091724;color:var(--text);font-variant-numeric:tabular-nums}
+.screen-mode>header{background:#0d2030;border-color:var(--border)}
+.screen-mode>header strong,.screen-mode .screen-title h1{color:var(--text)}
+.screen-mode .screen-title{background:none;border-color:var(--border);padding:24px 0}
+.screen-mode .screen-title h1{font-size:26px;font-weight:600;letter-spacing:2px;margin:0}
+.screen-mode .screen-title>div,.screen-mode .screen-tabs>span{color:var(--secondary)}
+.screen-mode .screen-title button,.screen-mode>header button,.screen-mode .screen-tabs button{border-radius:6px;border-color:var(--border);background:var(--surface);color:var(--text);min-height:36px}
+.screen-mode .screen-tabs button.on{background:#1b435b;border-color:#558fa8;color:#b6efff}
+.screen-mode .screen-kpis>div{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 24px}
+.screen-mode .screen-kpis span{color:var(--secondary)}
+.screen-mode .screen-kpis strong{color:var(--accent);font-size:32px;font-weight:600}
+.screen-mode .screen-kpis small{color:var(--secondary)}
+.screen-mode .screen-panel{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:20px}
+.screen-mode .screen-panel h2{font-size:15px;font-weight:600;color:var(--text);border-left-color:var(--accent);line-height:24px}
+.screen-mode .screen-panel h2 small{color:var(--secondary);font-size:10px}
+.screen-mode .warehouse-tile,.screen-mode .dispatch-vehicle{background:var(--surface-raised);border:1px solid var(--border);border-radius:6px;padding:16px;color:var(--text)}
+.screen-mode .warehouse-tile.chosen{background:#1b3b50;border-color:#5cabc3;box-shadow:inset 3px 0 var(--accent)}
+.screen-mode .warehouse-tile>b,.screen-mode .dispatch-vehicle b{color:var(--text);font-weight:600}
+.screen-mode .warehouse-tile>span,.screen-mode .dispatch-vehicle p,.screen-mode .queue-index,.screen-mode .screen-hint,.screen-mode .map-caption{color:var(--secondary)!important}
+.screen-mode .warehouse-tile>span,.screen-mode .dispatch-vehicle small,.screen-mode .dispatch-vehicle p{font-size:12px}
+.screen-mode .capacity strong,.screen-mode .type-line b{color:var(--accent)}
+.screen-mode .capacity em,.screen-mode .capacity small{color:var(--secondary);font-size:11px}
+.screen-mode .screen-bar{background:#091d2b;border-radius:4px;height:5px}
+.screen-mode .screen-bar i{background:#56b4ce;border-radius:4px}
+.screen-mode .vehicle-state{color:var(--warning);background:#e9be7212;padding:3px 6px;border-radius:4px;font-size:11px}
+.screen-mode .dispatch-alert{background:#e9be720c;border-left:2px solid var(--warning);color:#e7d1a6;border-radius:0 6px 6px 0;padding:12px;font-size:12px}
+.screen-mode .type-line{font-size:13px;border-bottom:1px solid #304d6380;padding-bottom:12px}
+.screen-mode .screen-hint,.screen-mode .map-caption{font-size:12px!important;line-height:1.8}
+.screen-mode .map-heading>span{color:var(--warning);font-size:11px}
+.screen-mode .yard-map{border:4px solid #304959;border-radius:6px;box-shadow:inset 0 0 0 1px #617480,inset 0 0 48px #0003;background-color:#424f59;background-image:repeating-linear-gradient(15deg,#ffffff03 0,#ffffff03 1px,transparent 1px,transparent 4px),linear-gradient(110deg,#52616b,#364651)}
+.screen-mode .yard-building{filter:saturate(.65)}
+.screen-mode .yard-road,.screen-mode .yard-road b{background:#2c3b47}
+.screen-mode .parking-slots{background:#3d4e59;border-left-color:#526b71;border-right-color:#526b71}
+.screen-mode .yard-footer{background:#304450}
+.screen-mode .yard-slot.has-truck{color:#4b94b8}
+.screen-mode button:hover{background-color:#20475e;border-color:#6aadc5}
+.screen-mode button:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.screen-mode dialog:not(.mobile-dialog){background:#102536;color:var(--text);border:1px solid #46657b;border-radius:12px;box-shadow:0 24px 80px #0008;padding:24px}
+.screen-mode dialog::backdrop{background:#040e19b3}
+.screen-mode dialog h2{color:var(--text);font-size:18px}
+.screen-mode dialog p,.screen-mode dialog .muted,.screen-mode dialog label{color:var(--secondary)}
+.screen-mode dialog .line{padding:8px 0;border-bottom:1px solid #304d6380;margin:4px 0}
+.screen-mode dialog button,.screen-mode dialog input,.screen-mode dialog select,.screen-mode dialog textarea{background:#172f42;border:1px solid #46657b;color:var(--text);border-radius:6px;min-height:40px}
+.screen-mode dialog .primary{background:#287997;border-color:#4595af;color:#fff}
+.screen-mode dialog button:hover{background:#24516a}
+.screen-mode dialog .notice{background:#183d53;color:#bce8f8}
+.screen-mode dialog .badge{background:#23495f;color:#bbecfb}
+.screen-mode dialog .badge.orange{background:#493c27;color:#f6d193}
+.screen-mode dialog .badge.green{background:#214b42;color:#a9e4cf}
+.screen-mode dialog .actions{border-top:1px solid var(--border);padding-top:16px}
+.screen-mode dialog .error{color:#ffb4ab}
+@media(max-width:760px){.screen-mode .screen-title h1{font-size:20px;letter-spacing:1px}.screen-mode .screen-panel{padding:16px}}
+.screen-mode .layout{display:grid;grid-template-columns:216px minmax(0,1fr)}
+.screen-mode aside{display:block;background:#0d2030;border-right:1px solid var(--border);padding:24px 16px}
+.screen-mode aside p{color:var(--secondary)}
+.screen-mode aside button{background:transparent;color:var(--secondary);border:0;border-radius:6px;text-align:left}
+.screen-mode aside button.active{background:#1b435b;color:#b6efff;box-shadow:inset 3px 0 var(--accent)}
+.screen-mode aside button:hover{background:#16364a;color:var(--text)}
+.screen-mode main{margin:0;max-width:none;padding:0 20px 24px}
+.screen-mode .dispatch-grid{grid-template-columns:220px minmax(360px,1fr) 240px}
+.screen-mode .screen-title{flex-wrap:wrap;gap:12px}
+.screen-mode .screen-title h1{font-size:23px}
+@media(max-width:1500px){.screen-mode .dispatch-grid{grid-template-columns:200px minmax(360px,1fr)}.screen-mode .dispatch-grid>section:last-child{grid-column:1/-1}.screen-mode .screen-tabs>span{display:none}}
+@media(max-width:1000px){.screen-mode .layout{grid-template-columns:176px minmax(0,1fr)}.screen-mode .dispatch-grid{display:block}.screen-mode .screen-panel{margin-bottom:16px}.screen-mode .screen-kpis{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){.screen-mode .layout{display:block}.screen-mode aside{display:flex;overflow:auto;padding:8px}.screen-mode aside p{display:none}.screen-mode aside button{white-space:nowrap;width:auto;margin:0}.screen-mode main{padding:0 12px 16px}}
+.screen-mode .dispatch-filter{width:100%;margin-bottom:16px;background:var(--surface-raised);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:10px}.screen-mode .dispatch-filter:focus-visible{outline:3px solid var(--accent)}
+
+/* 桌面调度工作台：按视口分配高度，地图完整展示，长列表在面板内滚动。 */
+@media(min-width:1100px) and (min-height:640px){
+ .screen-mode{height:100dvh;overflow:hidden}
+ .screen-mode #app{height:calc(100dvh - 52px)}
+ .screen-mode .layout{height:100%;min-height:0;grid-template-columns:184px minmax(0,1fr)}
+ .screen-mode aside{overflow:auto;padding:16px 12px}
+ .screen-mode main{height:100%;min-height:0;display:flex;flex-direction:column;padding:0 16px 12px;overflow:auto}
+ .screen-mode .screen-title{flex:none;padding:12px 0;gap:8px;flex-wrap:nowrap}
+ .screen-mode .screen-title h1{font-size:20px;letter-spacing:1px;white-space:nowrap}
+ .screen-mode .screen-title>div{gap:8px}
+ .screen-mode .screen-tabs{flex:none;padding:8px 0}
+ .screen-mode .screen-kpis{flex:none;gap:12px;margin-bottom:12px}
+ .screen-mode .screen-kpis>div{padding:8px 16px}
+ .screen-mode .screen-kpis strong{font-size:26px;line-height:1.3}
+ .screen-mode .dispatch-grid{flex:1;min-height:0;grid-template-columns:200px minmax(0,1fr) 224px;gap:12px}
+ .screen-mode .dispatch-grid>section:last-child{grid-column:auto}
+ .screen-mode .screen-panel{padding:12px;min-height:0;overflow:auto}
+ .screen-mode .screen-panel h2{margin-bottom:12px}
+ .screen-mode .warehouse-tile,.screen-mode .dispatch-vehicle{padding:12px;margin-bottom:8px}
+ .screen-mode .capacity{margin-top:4px}
+ .screen-mode .screen-bar{margin-top:6px}
+ .screen-mode .type-line{margin:8px 0;padding-bottom:4px}
+ .screen-mode .screen-hint{margin:8px 0!important}
+ .screen-mode .dispatch-filter{margin-bottom:8px;padding:8px}
+ .screen-mode .dispatch-vehicle p{margin:4px 0}
+ .screen-mode .dispatch-alert{padding:8px;margin-bottom:8px}
+ .screen-mode .map-panel{display:flex;flex-direction:column;overflow:hidden}
+ .screen-mode .map-heading{flex:none}
+ .screen-mode .map-caption{flex:none;padding-top:4px;font-size:10px!important}
+ .screen-mode .yard-map{flex:1;min-height:0;padding:12px;display:grid;grid-template-rows:minmax(60px,1fr) minmax(140px,2.2fr) 36px 24px minmax(88px,.9fr) 44px;gap:4px}
+ .screen-mode .yard-building{margin:0 12px 12px;padding:4px 12px 12px;border-top-width:6px}
+ .screen-mode .yard-building strong{font-size:18px}
+ .screen-mode .roof-lines{margin:4px auto}
+ .screen-mode .roof-lines i{height:12px}
+ .screen-mode .dock-apron{min-height:0;display:flex;flex-direction:column}
+ .screen-mode .dock-apron>span{margin:0 0 4px;font-size:10px}
+ .screen-mode .dock-slots{flex:1;min-height:0;padding:8px 12px;border-top-width:6px}
+ .screen-mode .yard-slot,.screen-mode .parking-slots .yard-slot{min-height:0;height:100%;padding:2px;width:64px;margin:0}
+ .screen-mode .yard-slot svg,.screen-mode .parking-slots svg{height:calc(100% - 36px);min-height:0;width:36px;flex:1}
+ .screen-mode .yard-slot small{padding:1px 3px}
+ .screen-mode .yard-road{min-height:0;margin:0;padding:2px 12px}
+ .screen-mode .yard-road b{font-size:16px}
+ .screen-mode .parking-label{margin:0;font-size:11px}
+ .screen-mode .parking-slots{min-height:0;grid-template-rows:repeat(2,minmax(0,1fr));padding:4px 8px;row-gap:4px;border-width:4px}
+ .screen-mode .parking-slots .yard-slot{width:100%}
+ .screen-mode .yard-footer{min-height:0;margin:0;padding:2px 8px}
+ .screen-mode .gate-house{padding:0 8px;border-top-width:3px;line-height:1.2}
+ .screen-mode .crosswalk{height:24px}
+ .screen-mode .gate-barrier,.screen-mode .exit-sign{padding:2px 12px}
+}
+@media(min-width:1100px) and (max-width:1350px) and (min-height:640px){
+ .screen-mode .layout{grid-template-columns:160px minmax(0,1fr)}
+ .screen-mode .dispatch-grid{grid-template-columns:176px minmax(0,1fr) 200px}
+ .screen-mode .screen-title>div:first-child{display:none}
+ .screen-mode .screen-title h1{font-size:18px}
+}
+
+
+/* 调度中心滚动条：匹配深色面板，兼容 Chromium 与 Firefox。 */
+.screen-mode{scrollbar-color:#466c82 #0d2030;scrollbar-width:thin}
+.screen-mode *{scrollbar-color:#466c82 #0d2030;scrollbar-width:thin}
+.screen-mode ::-webkit-scrollbar{width:8px;height:8px}
+.screen-mode ::-webkit-scrollbar-track{background:#0d2030;border-radius:8px}
+.screen-mode ::-webkit-scrollbar-thumb{background:#466c82;border:2px solid #0d2030;border-radius:8px;min-height:40px}
+.screen-mode ::-webkit-scrollbar-thumb:hover{background:#639bb4}
+.screen-mode ::-webkit-scrollbar-thumb:active{background:#6bd2ec}
+.screen-mode ::-webkit-scrollbar-button{display:none;width:0;height:0}
+.screen-mode ::-webkit-scrollbar-corner{background:#0d2030}
+.screen-mode .dispatch-grid>.screen-panel:not(.map-panel){scrollbar-gutter:stable;overscroll-behavior:contain}
+@media(forced-colors:active){
+ .screen-mode,.screen-mode *{scrollbar-color:auto;scrollbar-width:auto}
+}
+
+/* 场区图视觉精修：降低纹理噪声，强化作业位置和通行层级。 */
+.screen-mode .yard-map{background:#263b47;background-image:linear-gradient(135deg,#ffffff03,transparent 60%);border-color:#365360;box-shadow:inset 0 0 0 1px #6c8a9733}
+.screen-mode .yard-building{background:repeating-linear-gradient(90deg,#71858f 0,#71858f 3px,#81959e 4px,#81959e 12px);border-color:#8fa5ae;border-top-color:#bacbd2;box-shadow:0 6px 12px #06131d44}
+.screen-mode .yard-building strong{letter-spacing:3px;text-shadow:0 2px 3px #16324088}
+.screen-mode .building-facade{background:#253d4b;border-bottom-color:#a59c70;color:#c3d7df;letter-spacing:4px}
+.screen-mode .dock-apron>span{color:#b6cbd5;letter-spacing:.5px}
+.screen-mode .dock-slots{background:linear-gradient(180deg,#4e626d,#435863);border-top-color:#253e4b;border-bottom-color:#a9a27d;box-shadow:inset 0 4px 8px #071b2940}
+.screen-mode .dock-slots .yard-slot{width:88px;border-color:#a6b3a9;background:#bcd0d308!important;box-shadow:0 -3px 0 #e0b454,inset 0 0 16px #0b23352b}
+.screen-mode .yard-slot.has-truck{border-color:#d5bb72;background:#e4c6740d!important}
+.screen-mode .yard-slot>span{color:#c4d4d9;font-size:10px;letter-spacing:.5px}
+.screen-mode .yard-slot small{background:#102b3ce8;border:1px solid #6c9aab55;border-radius:3px;color:#d0e8f1;font-size:10px;line-height:1.4}
+.screen-mode .yard-slot.has-truck small{border-color:#d5bb7280;color:#fff0bc}
+.screen-mode .yard-slot:hover{outline:2px solid #6bd2ec;outline-offset:-2px;background:#6bd2ec14!important}
+.screen-mode .yard-slot:focus-visible{outline:3px solid #9eeaff;outline-offset:-3px}
+.screen-mode .yard-road{background:#203541;border-color:#a49a6a;color:#c2d1d8}
+.screen-mode .yard-road:after{border-top-color:#b8b99a;opacity:.35}
+.screen-mode .yard-road b{background:#203541;color:#dcd9b5;letter-spacing:12px}
+.screen-mode .parking-label{color:#d2e4eb;font-weight:600;letter-spacing:.5px}
+.screen-mode .parking-label small{font-weight:400;letter-spacing:0;color:#9bb6c5}
+.screen-mode .parking-slots{background:#304955;border-color:#466470}
+.screen-mode .parking-slots .yard-slot{border-color:#8ea6ac;border-top-color:#acc0c4;background:#ffffff03!important}
+.screen-mode .parking-slots .yard-slot.has-truck{background:#62cce815!important;border-color:#6bd2ec}
+.screen-mode .yard-footer{background:#203844;border-top-color:#66838c;color:#bdd5df}
+.screen-mode .gate-house{background:#9db6bf;border-top-color:#d2e0e5;box-shadow:3px 3px 0 #0d202b55;border-radius:2px;color:#173545}
+.screen-mode .crosswalk{opacity:.7}
+.screen-mode .exit-sign{border-color:#668b9b;border-radius:4px;color:#c0e1df;background:#34536055}
+.screen-mode .gate-barrier{color:#d0e2e8}
+.screen-mode .map-caption{color:#94afbe!important}
+@media(min-width:1100px) and (min-height:640px){
+ .screen-mode .dock-slots .yard-slot svg{width:44px;max-height:112px}
+ .screen-mode .parking-slots .yard-slot small{font-size:9px;padding:0 4px}
+ .screen-mode .map-heading h2{letter-spacing:.5px}
+}

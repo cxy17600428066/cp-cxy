@@ -13,18 +13,21 @@ if ($LASTEXITCODE -ne 0) {
   throw "git add failed with exit code $LASTEXITCODE"
 }
 
-$null = git diff --cached --quiet
+$null = git diff --cached --quiet --no-ext-diff --no-textconv
 if ($LASTEXITCODE -eq 0) {
   Write-Host "No changes to commit."
-  exit 0
+
 }
-if ($LASTEXITCODE -ne 1) {
+elseif ($LASTEXITCODE -ne 1) {
   throw "git diff --cached failed with exit code $LASTEXITCODE"
 }
 
+if ($LASTEXITCODE -eq 1) {
 git commit -m $Message
 if ($LASTEXITCODE -ne 0) {
   throw "git commit failed with exit code $LASTEXITCODE"
+}
+
 }
 
 $branch = git rev-parse --abbrev-ref HEAD
@@ -39,3 +42,4 @@ else {
 if ($LASTEXITCODE -ne 0) {
   throw "git push failed with exit code $LASTEXITCODE"
 }
+

@@ -1,0 +1,27 @@
+/* 表头与订单内容使用相同列宽，接单状态允许自然换行。 */
+.acceptance-order-cards{--accept-columns:minmax(240px,1.8fr) 90px 100px minmax(160px,1fr) minmax(160px,1fr) 136px 208px 144px;overflow-x:auto}
+.acceptance-order-cards .acceptance-column-head,.acceptance-order-cards .oms-order-body{grid-template-columns:var(--accept-columns);min-width:1240px}
+.acceptance-order-cards .oms-order{min-width:1240px}
+.acceptance-order-cards .oms-product{grid-template-columns:minmax(240px,1.8fr) 90px}
+.acceptance-order-cards .oms-order-body>div{min-width:0;padding:16px 12px;overflow-wrap:break-word}
+.acceptance-order-cards .oms-order-body .oms-products{padding:0}
+.acceptance-order-cards .oms-status-row{display:block;white-space:normal;line-height:1.7;margin:0 0 8px;width:100%;max-width:100%}
+.acceptance-order-cards .oms-status-row .badge{display:inline-block;white-space:normal;max-width:100%;padding:6px 8px;line-height:1.7;text-align:left;word-break:normal;overflow-wrap:break-word;font-size:12px}
+.acceptance-order-cards .order-sub{white-space:normal;line-height:1.8;word-break:normal;overflow-wrap:break-word;margin:4px 0;font-size:12px}
+.acceptance-order-cards .acceptance-timing-cell .timing-mode{white-space:normal;min-width:0;max-width:100%;line-height:1.7;font-size:12px;text-align:center;padding:6px 8px}
+.acceptance-order-cards .oms-actions{padding:16px 12px;align-items:stretch}
+.acceptance-order-cards .acceptance-row-actions{display:flex;flex-direction:column;gap:8px;width:100%}
+.acceptance-order-cards .acceptance-row-actions .btn{white-space:normal;line-height:1.6;min-height:40px;width:100%;padding:8px 12px}
+.acceptance-toolbar{flex-wrap:wrap;gap:16px;align-items:flex-start}
+.acceptance-toolbar .filter-tabs{display:flex;flex-wrap:wrap;gap:8px;max-width:100%}
+.acceptance-toolbar .filter-tabs button{white-space:nowrap;margin:0}
+.acceptance-toolbar form{display:flex;gap:8px;margin-left:auto}
+@media(min-width:1800px){.acceptance-order-cards{--accept-columns:minmax(260px,1.8fr) 96px 108px minmax(180px,1fr) minmax(180px,1fr) 148px 224px 152px}.acceptance-order-cards .oms-product{grid-template-columns:minmax(260px,1.8fr) 96px}}
+@media(max-width:1400px){.acceptance-order-cards .oms-order-head{gap:8px 16px}.acceptance-toolbar form{margin-left:0}.acceptance-panel{min-width:0}}
+
+/* 时效类型保持完整单行，避免标签最后一个字掉落到边框外。 */
+.acceptance-order-cards{--accept-columns:minmax(240px,1.8fr) 90px 100px minmax(160px,1fr) minmax(160px,1fr) 164px 208px 144px}
+.acceptance-order-cards .acceptance-timing-cell{padding:16px 8px;align-items:center;justify-content:center}
+.acceptance-order-cards .acceptance-timing-cell .timing-mode{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;word-break:keep-all;overflow-wrap:normal;min-width:0;max-width:none;line-height:20px;font-size:12px;font-weight:500;padding:6px 8px;height:auto;box-sizing:border-box;flex-shrink:0}
+@media(min-width:1800px){.acceptance-order-cards{--accept-columns:minmax(260px,1.8fr) 96px 108px minmax(180px,1fr) minmax(180px,1fr) 164px 224px 152px}}
+

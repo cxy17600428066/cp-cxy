@@ -182,7 +182,7 @@
 .screen-mode .yard-slot.off,.screen-mode .parking-slots .yard-slot.off,.screen-mode .dock-slots .yard-slot.off{border-color:#b59b66;background:repeating-linear-gradient(135deg,#e9be7212 0,#e9be7212 6px,#172b3744 6px,#172b3744 12px)!important}
 .screen-mode .yard-slot.off>small{color:#ffe0a4;border-color:#b59b6680;background:#382f24}
 .screen-mode .parking-slots .yard-slot.off>i{display:none}
-.screen-mode .parking-slots .yard-slot.off>small:before{content:'⊘ ';font-size:12px;vertical-align:middle}
+.screen-mode .parking-slots .yard-slot.off>small:before{content:none}
 .screen-mode .yard-slot.off:hover{border-color:#f2d49a;outline-color:#f2d49a}
 .screen-mode .yard-slot:active{box-shadow:inset 0 0 0 2px #6bd2ec55}
 @media(min-width:1100px) and (min-height:640px){
@@ -191,3 +191,14 @@
  .screen-mode .parking-slots .yard-slot>svg{top:14px;bottom:16px;height:calc(100% - 30px);width:30px}
  .screen-mode .parking-slots .yard-slot.has-truck>small{left:auto;right:3px;transform:none;bottom:3px}
 }
+
+.screen-mode .yard-slot.off{overflow:hidden}
+.screen-mode .yard-slot.off>small{top:50%;bottom:auto;left:50%;right:auto;transform:translate(-50%,-50%);line-height:18px;max-width:calc(100% - 8px)}
+
+/* 车辆状态来自预约记录，随叫号、作业、异常处理同步刷新。 */
+.screen-mode .yard-slot>.slot-status{position:absolute;top:19px;left:50%;transform:translateX(-50%);z-index:3;margin:0;padding:1px 6px;border:1px solid #d5bb7270;border-radius:4px;background:#3b3426;color:#ffe0a4;font-size:10px;font-style:normal;line-height:16px;white-space:nowrap;pointer-events:none}
+.screen-mode .yard-slot>.slot-status.is-working{background:#173f3c;color:#b7efda;border-color:#68b8a080}
+.screen-mode .yard-slot>.slot-status.is-alert{background:#4b2c2c;color:#ffd0c7;border-color:#dd8d8180}
+.screen-mode .dock-slots .yard-slot.has-truck>svg{top:42px;height:calc(100% - 68px)}
+.screen-mode .parking-slots .yard-slot>.slot-status{top:2px;left:auto;right:3px;transform:none;font-size:9px;line-height:12px;padding:0 4px}
+@media(max-width:760px){.screen-mode .yard-slot>.slot-status{font-size:9px;padding:0 3px}}

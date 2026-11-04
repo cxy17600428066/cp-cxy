@@ -25,3 +25,5 @@
 .acceptance-order-cards .acceptance-timing-cell .timing-mode{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;word-break:keep-all;overflow-wrap:normal;min-width:0;max-width:none;line-height:20px;font-size:12px;font-weight:500;padding:6px 8px;height:auto;box-sizing:border-box;flex-shrink:0}
 @media(min-width:1800px){.acceptance-order-cards{--accept-columns:minmax(260px,1.8fr) 96px 108px minmax(180px,1fr) minmax(180px,1fr) 164px 224px 152px}}
 
+
+.delay-time-history{border:1px solid #dbe6f5;background:#f8fbff;border-radius:8px;padding:16px;margin-bottom:24px}.delay-time-history h3{margin:0 0 8px}.delay-time-history p{font-size:12px;color:#62758b}.delay-time-scroll{overflow:auto}.delay-time-history table{min-width:780px;width:100%;table-layout:fixed}.delay-time-history th:nth-child(1){width:18%}.delay-time-history th:nth-child(2){width:34%}.delay-time-history th:nth-child(3){width:22%}.delay-time-history td,.delay-time-history th{white-space:normal!important;overflow-wrap:anywhere;vertical-align:top;line-height:1.8;padding:12px!important}.delay-time-history small{color:#657b94}

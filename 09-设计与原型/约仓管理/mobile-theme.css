@@ -1,0 +1,51 @@
+/* 移动端品牌与任务层级：预约为主动作，凭证为次动作。 */
+.mobile-mode{--blue:#174d77;background:#edf2f5;color:#233847}
+.mobile-mode .phone{background:#f3f6f8;border-radius:20px;min-height:0}
+.mobile-mode .mini-head{border-bottom:1px solid #e1e8ed;height:64px;color:#173e59}
+.mobile-mode .mini-head b{font-size:17px;letter-spacing:.5px}
+.mobile-mode .mini-head button{width:44px;color:#174d77}
+.mobile-mode .announcement{background:#eaf2f7;color:#375970;font-size:12px;padding:12px 16px}
+.mobile-mode .brand-banner{margin:16px;border-radius:16px;background:linear-gradient(125deg,#123c59,#246184);color:#fff;padding:24px}
+.mobile-mode .brand-banner>span{font-size:11px;letter-spacing:1px;color:#d0e5f1}
+.mobile-mode .brand-banner h1{font-size:28px;line-height:1.4;margin:16px 0 12px}
+.mobile-mode .brand-banner p{font-size:13px;color:#d0e5f1}
+.mobile-mode .entry{width:calc(100% - 32px);margin:12px 16px;padding:20px;border-radius:12px;gap:4px}
+.mobile-mode .entry strong{font-size:22px}
+.mobile-mode .entry small{display:block;font-size:11px;letter-spacing:0}
+.mobile-mode .entry.blue{background:#174d77;color:white}
+.mobile-mode .entry.blue:hover{background:#123d60}
+.mobile-mode .entry.orange{background:white;color:#174d77;border:1px solid #ccdce6}
+.mobile-mode .entry.orange:hover{background:#eaf2f7}
+.mobile-mode .card,.mobile-mode .service-card{border:1px solid #e0e8ee;border-radius:12px;box-shadow:0 3px 12px #163a5105}
+.mobile-mode .card h2{font-size:18px;margin-bottom:12px}
+.mobile-mode .card p{line-height:1.8;color:#536a79}
+.mobile-mode .bottom-nav{padding-bottom:calc(8px + env(safe-area-inset-bottom));border-color:#dce5ec;z-index:5}
+.mobile-mode .bottom-nav .on{background:#edf4f8;color:#174d77;border-radius:8px}
+.mobile-mode .bottom-nav button{min-height:48px}
+.mobile-mode .yellow,.mobile-mode .mobile-dialog-body .primary{background:#174d77;border-color:#174d77;color:white}
+.mobile-mode .yellow:hover,.mobile-mode .mobile-dialog-body .primary:hover{background:#123d60}
+.mobile-mode button:disabled{opacity:.5;cursor:not-allowed}
+.mobile-mode .date-strip .chosen b{background:#174d77;color:white}
+.mobile-mode .date-strip small{display:block;color:#536a79}
+.mobile-mode .slot-grid button.selected{background:#eaf3f9;border:2px solid #174d77}
+.mobile-mode .service-tabs .on{color:#174d77;box-shadow:inset 0 -3px #174d77}
+.mobile-mode .service-hero,.mobile-mode .phone .top{background:#174d77}
+.mobile-mode .profile{background:#e7f0f6;color:#173e59}
+.mobile-mode .tabs .active{background:#dfedf6;color:#174d77;border-color:#98b7ca}
+.mobile-mode .yellow-notice{background:#fff6e6;color:#75501d;line-height:1.7}
+.mobile-mode .booking-bar{position:sticky;bottom:0;border-top:1px solid #dce5ec;flex-wrap:wrap}
+.mobile-mode .booking-bar button{min-height:48px;flex:1}
+.mobile-mode button:focus-visible,.mobile-mode input:focus-visible,.mobile-mode select:focus-visible{outline:3px solid #387fa8;outline-offset:2px}
+@media(max-width:480px){
+ .mobile-mode>header{padding:8px 12px;gap:8px}
+ .mobile-mode>header strong{font-size:16px}
+ .mobile-mode>header strong small{display:none}
+ .mobile-mode>header button{padding:6px 10px;min-height:40px;font-size:12px}
+ .mobile-mode .phone{margin:0;max-width:none;border:0;border-radius:0;min-height:calc(100dvh - 64px)}
+ .mobile-mode .mobile-content{min-height:0;flex:1}
+ .mobile-mode .phone.reference{display:flex;flex-direction:column}
+ .mobile-mode .bottom-nav{position:sticky;bottom:0}
+ .mobile-mode .slot-grid{gap:8px}
+ .mobile-mode .service-row{gap:8px}
+ .mobile-mode .service-icon{width:56px;flex-shrink:0}
+}

@@ -49,3 +49,11 @@
  .mobile-mode .service-row{gap:8px}
  .mobile-mode .service-icon{width:56px;flex-shrink:0}
 }
+
+/* 美食宣传横幅，与蓝色预约操作形成明确区分。 */
+.mobile-mode .brand-banner{background:#f6e4ce url('boneless-chicken-banner.png') center/cover no-repeat;color:#55301d;min-height:198px;padding:24px 20px;isolation:isolate}
+.mobile-mode .brand-banner:before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#fff1dfed 0%,#fff1dfc9 32%,#fff1df00 68%);z-index:-1}
+.mobile-mode .brand-banner>span{color:#64422e;font-size:11px;letter-spacing:0}
+.mobile-mode .brand-banner h1{font-size:27px;line-height:1.35;color:#58311e;margin:16px 0 12px}
+.mobile-mode .brand-banner p{color:#704d35;font-size:12px}
+.mobile-mode .warehouse-art{display:none}

@@ -1,3 +1,27 @@
+// 调度测试批次：只补充一次，保留用户后续流转结果。
+if(!localStorage.getItem(key+'-dispatch-demo-v2')){
+ const samples=[
+ ['YCTEST201','沪A·59327','郑师傅','排队中','采购入仓'],
+ ['YCTEST202','苏F·82761','吴师傅','排队中','取货入仓'],
+ ['YCTEST203','浙B·21685','孙师傅','待离场','采购入仓'],
+ ['YCTEST204','皖K·63918','马师傅','异常','采购入仓'],
+ ['YCTEST205','沪C·78256','何师傅','待到仓','取货入仓'],
+ ['YCTEST206','苏D·45192','高师傅','已叫号','采购入仓'],
+ ['YCTEST207','浙F·90835','罗师傅','作业中','取货入仓'],
+ ['YCTEST208','皖B·37529','梁师傅','待审核','采购入仓']
+ ];
+ const w=warehouses.find(w=>w.id==='east');
+ samples.forEach(([id,plate,driver,status,type],i)=>{
+  if(rows.some(r=>r.id===id))return;
+  let dock='未分配';
+  if(['已叫号','作业中'].includes(status)){
+   const free=w&&Array.from({length:w.docks},(_,j)=>String(j+1).padStart(2,'0')+'号月台').find(d=>!maintenance['eastD'+d.slice(0,2)]&&!warehouseRows(w).some(r=>r.dock===d&&['已叫号','作业中'].includes(r.status)));
+   if(free)dock=free;else status='排队中';
+  }
+  rows.push({id,plate,driver,type,status,dock,warehouse:'east',company:'调度测试企业（示例）',phone:'',goods:'无骨鸡爪测试货物 · '+(i+2)+'托盘',date:'2026-11-06',slot:i%2?'14:00–15:00':'15:00–16:00',logs:['调度测试数据（非真实预约）','当前状态：'+status,...(status==='异常'?['测试异常：单据信息待核验，可恢复排队']:[])]});
+ });
+ save();localStorage.setItem(key+'-dispatch-demo-v2','1');
+}
 // 一次性补充等候区演示预约，沿用真实调度流程与统计口径。
 if(!localStorage.getItem(key+'-waiting-demo-v1')){
  const demos=[['YCDEMO001','沪F·52683','陈师傅'],['YCDEMO002','苏B·31976','刘师傅'],['YCDEMO003','浙C·85726','周师傅']];

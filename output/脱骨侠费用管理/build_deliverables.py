@@ -144,6 +144,9 @@ p('财务映射参考：财政部 企业会计准则第14号 收入。https://kj
 footer=sec.footer.paragraphs[0];footer.alignment=2
 run=footer.add_run('脱骨侠全费用管理  ·  ');run.font.size=Pt(8)
 fld=OxmlElement('w:fldSimple');fld.set(qn('w:instr'),'PAGE');footer._p.append(fld)
+for element in [doc.styles.element,doc.element]:
+ for border in element.xpath('.//w:pBdr'):
+  border.getparent().remove(border)
 doc.save(ROOT/'脱骨侠全费用管理规则建议稿V1.docx')
 htmlpath=ROOT/'原型.html'
 html=htmlpath.read_text(encoding='utf-8')

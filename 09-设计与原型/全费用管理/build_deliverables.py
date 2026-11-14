@@ -6,6 +6,7 @@ from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 
 ROOT = Path(__file__).parent
+DOCUMENT_PATH = ROOT.parents[1] / '05-产品方案' / '脱骨侠全费用管理规则建议稿V1.docx'
 RULES = [
 {'id':'R01','title':'有效销售与计提节点','lead':'下单测算，签收计提。','items':[
 '订单确认后展示预计贡献、预计返利和预计服务费，不增加正式可用额度。以 OMS 有效签收事件作为费用管理计提节点，部分签收按已签收部分计算。',
@@ -147,7 +148,7 @@ fld=OxmlElement('w:fldSimple');fld.set(qn('w:instr'),'PAGE');footer._p.append(fl
 for element in [doc.styles.element,doc.element]:
  for border in element.xpath('.//w:pBdr'):
   border.getparent().remove(border)
-doc.save(ROOT/'脱骨侠全费用管理规则建议稿V1.docx')
+doc.save(DOCUMENT_PATH)
 htmlpath=ROOT/'原型.html'
 html=htmlpath.read_text(encoding='utf-8')
 if '__RULES__' in html:

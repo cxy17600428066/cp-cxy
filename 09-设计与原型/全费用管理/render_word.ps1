@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $qaPath = Join-Path $PSScriptRoot 'qa'
 New-Item -ItemType Directory -Path $qaPath -Force | Out-Null
-$documentPath = Join-Path $PSScriptRoot '脱骨侠全费用管理规则建议稿V1.docx'
+$documentPath = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Parent) '05-产品方案\脱骨侠全费用管理规则建议稿V1.docx'
 $pdfPath = Join-Path $qaPath 'word-preview.pdf'
 $word = $null
 $document = $null

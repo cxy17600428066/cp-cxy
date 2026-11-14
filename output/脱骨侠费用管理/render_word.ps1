@@ -16,5 +16,5 @@ try {
     Write-Output "Exported Word PDF; pages=$pageCount"
 } finally {
     if ($null -ne $document) { $document.Close(0) }
-    if ($null -ne $word) { $word.Quit() }
+    if ($null -ne $word) { try { $word.Quit() } catch { Write-Output 'Word export completed; application already closed.' } }
 }

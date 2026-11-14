@@ -80,9 +80,9 @@ sec=doc.sections[0]
 sec.page_height=Cm(29.7);sec.page_width=Cm(21);sec.top_margin=Cm(1.8);sec.bottom_margin=Cm(1.7);sec.left_margin=Cm(2);sec.right_margin=Cm(2)
 for name in ['Normal','Title','Subtitle','Heading 1','Heading 2']:
  s=doc.styles[name];s.font.name='Microsoft YaHei';s.font.color.rgb=RGBColor(0,0,0);s.element.rPr.rFonts.set(qn('w:eastAsia'),'Microsoft YaHei')
-normal=doc.styles['Normal'];normal.font.size=Pt(10.5);normal.paragraph_format.space_after=Pt(7);normal.paragraph_format.line_spacing=1.22
+normal=doc.styles['Normal'];normal.font.size=Pt(10.5);normal.paragraph_format.space_after=Pt(5);normal.paragraph_format.line_spacing=1.12
 doc.styles['Title'].font.size=Pt(24);doc.styles['Title'].paragraph_format.space_after=Pt(12)
-doc.styles['Heading 1'].font.size=Pt(15);doc.styles['Heading 1'].paragraph_format.space_before=Pt(12);doc.styles['Heading 1'].paragraph_format.space_after=Pt(8)
+doc.styles['Heading 1'].font.size=Pt(15);doc.styles['Heading 1'].paragraph_format.space_before=Pt(10);doc.styles['Heading 1'].paragraph_format.space_after=Pt(6)
 doc.styles['Heading 2'].font.size=Pt(11.5)
 def p(t,bold=False):
  x=doc.add_paragraph();x.add_run(t).bold=bold;return x

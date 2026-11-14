@@ -1,0 +1,40 @@
+import {createRequire} from 'node:module';
+import fs from 'node:fs';
+import path from 'node:path';
+import vm from 'node:vm';
+const require=createRequire(import.meta.url);
+const {chromium}=require('C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt/dependencies/node/node_modules/playwright');
+const root=path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Z]:)/,'$1');
+const file=decodeURIComponent(root);
+const html=fs.readFileSync(path.join(file,'原型.html'),'utf8');
+const scripts=[...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
+new vm.Script(scripts.at(-1)[1]);
+const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--disable-gpu']});
+const page=await browser.newPage({viewport:{width:1440,height:1100}});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('http://127.0.0.1:8768/'+encodeURIComponent('原型.html'));
+await page.evaluate(()=>{localStorage.removeItem('tgx-expense-prototype-v1')});await page.reload();
+function assert(ok,msg){if(!ok)throw Error(msg);console.log('PASS '+msg)}
+const nav=async id=>page.locator(`[data-nav="${id}"]`).first().click();
+await page.screenshot({path:path.join(file,'qa/01-ledger.png'),fullPage:true});
+for(const id of ['policies','calculator','pools','activities','approval','settlement','exceptions','rules']){await nav(id);await page.screenshot({path:path.join(file,'qa/view-'+id+'.png'),fullPage:true})}
+await nav('calculator');await page.locator('#serviceRate').fill('12');await page.locator('#calcForm button').click();assert((await page.locator('#calcResult').innerText()).includes('超包缺口'),'试算超包提示');
+await page.locator('#returns').fill('200000');await page.locator('#calcForm button').click();assert((await page.locator('#calcError').innerText()).includes('不能超过'),'退货超额校验');
+await nav('policies');await page.locator('#ratio0').fill('11');await page.locator('#policyForm button').click();assert((await page.locator('#policyError').innerText()).includes('100%'),'分配比例校验');
+await nav('activities');await page.locator('#activitySearch').fill('不存在');assert((await page.locator('#activityRows').innerText()).includes('没有符合'),'空结果反馈');await page.locator('[data-action="clear"]').click();
+await page.locator('[data-action="new"]').click();await page.locator('#aname').fill('测试门店试吃');await page.locator('#apurpose').fill('试吃执行，演示合同服务关系及客户受益');await page.locator('#aamount').fill('9999');await page.locator('#activityForm button[type="submit"]').click();assert((await page.locator('#activityError').innerText()).includes('不足'),'超余额申请拦截');assert(await page.locator('#aname').inputValue()==='测试门店试吃','失败保留输入');
+await page.locator('#aamount').fill('800');await page.locator('#activityForm button[type="submit"]').click();
+const state=()=>page.evaluate(()=>JSON.parse(localStorage.getItem('tgx-expense-prototype-v1')));
+let s=await state();const a=s.activities.find(a=>a.name==='测试门店试吃');assert(a.status==='pending','申请待审不占用');
+await page.locator(`[data-detail="${a.id}"]`).click();await page.locator(`[data-approve="${a.id}"]`).click();assert((await page.locator('#reviewError').innerText()).includes('不能审批本人'),'自批拦截');await page.locator('#closeModal').click();
+await page.locator('#role').selectOption('finance');await page.locator(`[data-detail="${a.id}"]`).click();await page.locator(`[data-approve="${a.id}"]`).click();assert((await page.locator('#reviewError').innerText()).includes('当前节点需要'),'越权拦截');await page.locator('#closeModal').click();
+await page.locator('#role').selectOption('pool3');await page.locator(`[data-detail="${a.id}"]`).click();await page.locator(`[data-approve="${a.id}"]`).click();assert((await state()).activities.find(x=>x.id===a.id).status==='approved','审批通过占用');
+await page.locator('#role').selectOption('sales');await nav('activities');await page.locator(`[data-verify="${a.id}"]`).click();await page.locator('#vevidence').fill('2026年11月演示门店试吃执行验收及凭证记录');await page.locator('#vamount').fill('900');await page.locator('#verifyForm button').click();assert((await page.locator('#verifyError').innerText()).includes('超过预算'),'核销超预算拦截');await page.locator('#vamount').fill('600');await page.locator('#verifyForm button').click();
+for(const role of ['business','finance']){await page.locator('#role').selectOption(role);await page.locator(`[data-detail="${a.id}"]`).click();await page.locator(`[data-approve="${a.id}"]`).click()}
+assert((await state()).activities.find(x=>x.id===a.id).status==='closed','业务财务复核后结项');await nav('ledger');assert((await page.locator('#workspace').innerText()).includes('2,400.00'),'核销600后活动可用2400，释放余款200');
+await nav('settlement');await page.locator(`[data-pay="SET-${a.id}"]`).click();await page.locator('#cash').fill('700');await page.locator('#payForm button').click();assert((await page.locator('#payError').innerText()).includes('不能超过'),'清偿超额拦截');await page.locator('#cash').fill('400');await page.locator('#offset').fill('200');await page.locator('#payForm button').click();s=await state();assert(s.payments[0].cash+s.payments[0].offset===60000,'现金抵扣组合清偿');
+await nav('ledger');assert((await page.locator('#workspace').innerText()).includes('2,400.00'),'付款不重复扣池');await page.reload();assert((await state()).payments.length===1,'浏览器持久化');
+await page.setViewportSize({width:390,height:844});await page.screenshot({path:path.join(file,'qa/mobile.png'),fullPage:true});assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'移动端页面无横向溢出');
+assert(errors.length===0,'无浏览器运行错误');
+await page.evaluate(()=>localStorage.removeItem('tgx-expense-prototype-v1'));await page.reload();
+await browser.close();console.log('All checks completed');

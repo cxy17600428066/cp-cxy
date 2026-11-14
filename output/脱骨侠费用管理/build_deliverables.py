@@ -145,4 +145,8 @@ footer=sec.footer.paragraphs[0];footer.alignment=2
 run=footer.add_run('脱骨侠全费用管理  ·  ');run.font.size=Pt(8)
 fld=OxmlElement('w:fldSimple');fld.set(qn('w:instr'),'PAGE');footer._p.append(fld)
 doc.save(ROOT/'脱骨侠全费用管理规则建议稿V1.docx')
+htmlpath=ROOT/'原型.html'
+html=htmlpath.read_text(encoding='utf-8')
+if '__RULES__' in html:
+ htmlpath.write_text(html.replace('__RULES__',json.dumps(RULES,ensure_ascii=False).replace('</','<\\/')),encoding='utf-8')
 print('Created DOCX and rule data')

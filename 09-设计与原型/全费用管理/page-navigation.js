@@ -3,18 +3,18 @@ const baseRender=render,baseShowModal=showModal,baseCloseModal=closeModal;
 const basePolicyEditor=policyEditor,baseNewActivity=newActivity,baseDetail=detail,baseVerify=verify,baseCalcView=calcView;
 let detailPage=null,buildingPage=null,leaveAction=null,routeRestoring=false;
 const listMemory={};
-function formSnapshot(){const form=$('workspace').querySelector('form');if(!form)return null;return Object.fromEntries([...form.querySelectorAll('input,select,textarea')].filter(x=>x.id).map(x=>[x.id,x.type==='checkbox'?x.checked:x.value]))}
+function formSnapshot(){const form=$('workspace').querySelector('form')||$('workspace').querySelector('[data-full-page]');if(!form)return null;return Object.fromEntries([...form.querySelectorAll('input,select,textarea')].filter(x=>x.id).map(x=>[x.id,x.type==='checkbox'?x.checked:x.value]))}
 function capturePage(){if(!detailPage||!$('workspace').querySelector('[data-full-page]'))return;const values=formSnapshot();if(values){detailPage.values=values;detailPage.dirty=JSON.stringify(values)!==detailPage.baseline}}
 function rememberList(){if(!detailPage)listMemory[page]={filter,statusFilter,scroll:window.scrollY}}
 function restoreList(module){page=module;const m=listMemory[module]||{};filter=m.filter||'';statusFilter=m.statusFilter||'all'}
-function routeHash(){if(!detailPage)return '#/'+page;const r=detailPage.route;return '#/'+page+'/'+r.kind+'/'+encodeURIComponent(r.id||'new')+(r.copy?'?copy=1':'')}
+function routeHash(){if(!detailPage)return '#/'+page;const r=detailPage.route,q=new URLSearchParams();if(r.copy)q.set('copy','1');if(r.policyId)q.set('policy',r.policyId);return '#/'+page+'/'+r.kind+'/'+encodeURIComponent(r.id||'new')+(q.size?'?'+q:'')}
 function writeRoute(replace=false){if(routeRestoring)return;history[replace?'replaceState':'pushState']({},'',routeHash())}
 function askLeave(next){capturePage();if(!detailPage?.dirty){next();return}leaveAction=next;baseShowModal('离开未保存页面',`<p>当前页面有未保存的更改。继续离开将放弃本次编辑，已保存的方案和账本不受影响。</p><div class="actions"><button data-keep-editing class="primary">继续编辑</button><button data-discard-page class="danger">放弃更改并离开</button></div>`)}
 function beginPage(spec,title,body){rememberList();detailPage={route:spec,title,body,returnPage:spec.returnPage||page,values:null,baseline:null,dirty:false};page=spec.kind==='policy'?'policies':spec.kind==='trial'?'calculator':spec.returnPage==='approval'?'approval':'activities';render();writeRoute();window.scrollTo(0,0);$('workspace').focus({preventScroll:true})}
 function launchPage(spec,build){askLeave(()=>{buildingPage={...spec,returnPage:detailPage?.returnPage||page};build();buildingPage=null})}
 showModal=function(title,body){if(buildingPage){beginPage(buildingPage,title,body);return}baseShowModal(title,body)};
 closeModal=function(){if($('modal').open){baseCloseModal();return}if(detailPage)finishDetail();else baseCloseModal()};
-function finishDetail(){const back=detailPage?.returnPage||page;detailPage=null;restoreList(back);render();writeRoute();window.scrollTo(0,listMemory[back]?.scroll||0);$('workspace').focus({preventScroll:true})}
+function finishDetail(){const back=detailPage?.returnPage||page;detailPage=null;restoreList(back);render();writeRoute(true);window.scrollTo(0,listMemory[back]?.scroll||0);$('workspace').focus({preventScroll:true})}
 navigate=function(next){askLeave(()=>{rememberList();detailPage=null;restoreList(next);render();writeRoute();window.scrollTo(0,listMemory[next]?.scroll||0);$('workspace').focus({preventScroll:true})})};
 policyEditor=function(id,copy=false){launchPage({kind:'policy',id,copy},()=>basePolicyEditor(id,copy))};
 newActivity=function(existing){launchPage({kind:'activity',id:existing?.id},()=>baseNewActivity(existing))};

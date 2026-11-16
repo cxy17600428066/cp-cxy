@@ -12,7 +12,7 @@ if start in html:
  html = a + start + '\n' + extension + '\n' + end + b
 else:
  html = html.replace('render();save();\n</script>', start + '\n' + extension + '\n' + end + '\nrender();save();\n</script>')
-navigation = (root / 'page-navigation.js').read_text(encoding='utf-8')
+navigation = (root / 'customer-ledger.js').read_text(encoding='utf-8') + '\n' + (root / 'page-navigation.js').read_text(encoding='utf-8')
 nav_start, nav_end = '// PAGE_NAV_START', '// PAGE_NAV_END'
 if nav_start in html:
  a, rest = html.split(nav_start, 1)

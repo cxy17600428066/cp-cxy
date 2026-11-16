@@ -162,7 +162,8 @@ startTrial=function(policyId=null,trialId=null,copy=false){launchPage({kind:'tri
 calcView=function(){const prior=workTrial;workTrial=null;const output=baseCalcView();workTrial=prior;return output};
 render=function(){capturePage();baseRender();if(!detailPage)return;
  const d=detailPage,moduleName=pages.find(p=>p[0]===page)[2];
- $('workspace').innerHTML=`<div data-full-page><div class="flowline" style="margin-bottom:16px"><button class="small" data-return-list>← 返回${moduleName.replace('销售费用试算','试算方案').replace('客户政策','政策方案')}</button><span class="muted">/ ${esc(d.title)}</span></div>${heading('DETAIL & EDIT',esc(d.title),d.route.kind==='trial'?'保存客户与政策参数快照；试算不写入费用账本。':d.route.kind==='review'?'核对单据、来源、额度与审批路线后处理。':'完成当前单据后保存或提交，返回原列表。')}<div id="fullPageBody">${d.route.kind==='trial'?trialEditor():d.body}</div></div>`;
+ const returnName=({calculator:'试算方案列表',policies:'政策方案列表',activities:'活动列表',approval:'审核工作台',ledger:'客户费用总台账'})[d.returnPage]||'列表';
+ $('workspace').innerHTML=`<div data-full-page><div class="flowline" style="margin-bottom:16px"><button class="small" data-return-list>← 返回${returnName}</button><span class="muted">/ ${esc(d.title)}</span></div>${heading('DETAIL & EDIT',esc(d.title),d.route.kind==='trial'?'保存客户与政策参数快照；试算不写入费用账本。':d.route.kind==='review'?'核对单据、来源、额度与审批路线后处理。':'完成当前单据后保存或提交，返回原列表。')}<div id="fullPageBody">${d.route.kind==='trial'?trialEditor():d.body}</div></div>`;
  $('crumb').textContent=moduleName+' / '+d.title;
  const body=$('fullPageBody');
  if(d.route.kind==='trial'){body.querySelector('.heading')?.remove();const section=$('trialEditor');section.style.marginTop='0'}

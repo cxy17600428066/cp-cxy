@@ -12,15 +12,15 @@ new vm.Script(scripts.at(-1)[1]);
 const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--disable-gpu']});
 const page=await browser.newPage({viewport:{width:1440,height:1100}});
 const errors=[];page.on('pageerror',e=>errors.push(e.message));
-await page.goto('http://127.0.0.1:8768/'+encodeURIComponent('原型.html'));
+await page.goto(new URL('./原型.html',import.meta.url).href);
 await page.evaluate(()=>{localStorage.removeItem('tgx-expense-prototype-v1')});await page.reload();
 function assert(ok,msg){if(!ok)throw Error(msg);console.log('PASS '+msg)}
 const nav=async id=>page.locator(`[data-nav="${id}"]`).first().click();
 await page.screenshot({path:path.join(file,'qa/01-ledger.png'),fullPage:true});
 for(const id of ['policies','calculator','pools','activities','approval','settlement','exceptions','rules']){await nav(id);await page.screenshot({path:path.join(file,'qa/view-'+id+'.png'),fullPage:true})}
-await nav('calculator');await page.locator('#serviceRate').fill('12');await page.locator('#calcForm button').click();assert((await page.locator('#calcResult').innerText()).includes('超包缺口'),'试算超包提示');
-await page.locator('#returns').fill('200000');await page.locator('#calcForm button').click();assert((await page.locator('#calcError').innerText()).includes('不能超过'),'退货超额校验');
-await nav('policies');await page.locator('#ratio0').fill('11');await page.locator('#policyForm button').click();assert((await page.locator('#policyError').innerText()).includes('100%'),'分配比例校验');
+await nav('calculator');await page.locator('[data-trial-new]').click();await page.locator('#serviceRate').fill('12');await page.locator('#calcForm button[type="submit"]').click();assert((await page.locator('#calcResult').innerText()).includes('超包缺口'),'试算超包提示');
+await page.locator('#returns').fill('200000');await page.locator('#calcForm button[type="submit"]').click();assert((await page.locator('#calcError').innerText()).includes('不能超过'),'退货超额校验');
+await nav('policies');await page.locator('[data-policy-open="POL-005"]').click();await page.locator('#ratio0').fill('11');await page.locator('#schemePolicyForm button').click();assert((await page.locator('#policyError').innerText()).includes('100%'),'分配比例校验');await page.locator('#closeModal').click();
 await nav('activities');await page.locator('#activitySearch').fill('不存在');assert((await page.locator('#activityRows').innerText()).includes('没有符合'),'空结果反馈');await page.locator('[data-action="clear"]').click();
 await page.locator('[data-action="new"]').click();await page.locator('#aname').fill('测试门店试吃');await page.locator('#apurpose').fill('试吃执行，演示合同服务关系及客户受益');await page.locator('#aamount').fill('9999');await page.locator('#activityForm button[type="submit"]').click();assert((await page.locator('#activityError').innerText()).includes('不足'),'超余额申请拦截');assert(await page.locator('#aname').inputValue()==='测试门店试吃','失败保留输入');
 await page.locator('#aamount').fill('800');await page.locator('#activityForm button[type="submit"]').click();

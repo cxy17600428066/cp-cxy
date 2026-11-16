@@ -2,10 +2,11 @@
 const baseRender=render,baseShowModal=showModal,baseCloseModal=closeModal;
 const basePolicyEditor=policyEditor,baseNewActivity=newActivity,baseDetail=detail,baseVerify=verify,baseCalcView=calcView;
 let detailPage=null,buildingPage=null,leaveAction=null,routeRestoring=false;
-const listMemory={};
+let listMemory={};
+try{const savedContext=JSON.parse(sessionStorage.getItem('tgx-page-context')||'null');if(savedContext){listMemory=savedContext.lists||{};schemeFilters=savedContext.schemes||schemeFilters}}catch{}
 function formSnapshot(){const form=$('workspace').querySelector('form')||$('workspace').querySelector('[data-full-page]');if(!form)return null;return Object.fromEntries([...form.querySelectorAll('input,select,textarea')].filter(x=>x.id).map(x=>[x.id,x.type==='checkbox'?x.checked:x.value]))}
 function capturePage(){if(!detailPage||!$('workspace').querySelector('[data-full-page]'))return;const values=formSnapshot();if(values){detailPage.values=values;detailPage.dirty=JSON.stringify(values)!==detailPage.baseline}}
-function rememberList(){if(!detailPage)listMemory[page]={filter,statusFilter,scroll:window.scrollY}}
+function rememberList(){if(!detailPage&&!routeRestoring){listMemory[page]={filter,statusFilter,scroll:window.scrollY};try{sessionStorage.setItem('tgx-page-context',JSON.stringify({lists:listMemory,schemes:schemeFilters}))}catch{}}}
 function restoreList(module){page=module;const m=listMemory[module]||{};filter=m.filter||'';statusFilter=m.statusFilter||'all'}
 function routeHash(){if(!detailPage)return '#/'+page;const r=detailPage.route,q=new URLSearchParams();if(r.copy)q.set('copy','1');if(r.policyId)q.set('policy',r.policyId);return '#/'+page+'/'+r.kind+'/'+encodeURIComponent(r.id||'new')+(q.size?'?'+q:'')}
 function writeRoute(replace=false){if(routeRestoring)return;history[replace?'replaceState':'pushState']({},'',routeHash())}

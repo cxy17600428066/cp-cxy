@@ -15,7 +15,7 @@ else:
 controller=(root / 'page-navigation.js').read_text(encoding='utf-8')
 boot='if(location.hash)restorePageHash();else writeRoute(true);'
 controller=controller.replace(boot,'')
-navigation = '\n'.join([(root/'dealer-catalog.js').read_text(encoding='utf-8'),(root/'customer-ledger.js').read_text(encoding='utf-8'),controller,(root/'dealer-integration.js').read_text(encoding='utf-8'),boot])
+navigation = '\n'.join([(root/'dealer-catalog.js').read_text(encoding='utf-8'),(root/'customer-ledger.js').read_text(encoding='utf-8'),controller,(root/'dealer-integration.js').read_text(encoding='utf-8'),(root/'fund-flow.js').read_text(encoding='utf-8'),boot])
 html=html.replace('ensureSchemes();\n','ensureSchemes();\n ensurePrograms();\n') if ' ensurePrograms();' not in html else html
 html=html.replace('ledger:ledgerView,policies:policyView,','ledger:ledgerView,policies:policyView,programs:programListView,')
 nav_start, nav_end = '// PAGE_NAV_START', '// PAGE_NAV_END'

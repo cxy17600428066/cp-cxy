@@ -12,5 +12,13 @@ if start in html:
  html = a + start + '\n' + extension + '\n' + end + b
 else:
  html = html.replace('render();save();\n</script>', start + '\n' + extension + '\n' + end + '\nrender();save();\n</script>')
+navigation = (root / 'page-navigation.js').read_text(encoding='utf-8')
+nav_start, nav_end = '// PAGE_NAV_START', '// PAGE_NAV_END'
+if nav_start in html:
+ a, rest = html.split(nav_start, 1)
+ _, b = rest.split(nav_end, 1)
+ html = a + nav_start + '\n' + navigation + '\n' + nav_end + b
+else:
+ html = html.replace('render();save();\n</script>', nav_start+'\n'+navigation+'\n'+nav_end+'\nrender();save();\n</script>')
 file.write_text(html, encoding='utf-8')
 print('Packed customer scheme lists into standalone HTML')

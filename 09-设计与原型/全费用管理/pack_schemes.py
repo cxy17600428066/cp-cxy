@@ -12,7 +12,12 @@ if start in html:
  html = a + start + '\n' + extension + '\n' + end + b
 else:
  html = html.replace('render();save();\n</script>', start + '\n' + extension + '\n' + end + '\nrender();save();\n</script>')
-navigation = (root / 'customer-ledger.js').read_text(encoding='utf-8') + '\n' + (root / 'page-navigation.js').read_text(encoding='utf-8')
+controller=(root / 'page-navigation.js').read_text(encoding='utf-8')
+boot='if(location.hash)restorePageHash();else writeRoute(true);'
+controller=controller.replace(boot,'')
+navigation = '\n'.join([(root/'dealer-catalog.js').read_text(encoding='utf-8'),(root/'customer-ledger.js').read_text(encoding='utf-8'),controller,(root/'dealer-integration.js').read_text(encoding='utf-8'),boot])
+html=html.replace('ensureSchemes();\n','ensureSchemes();\n ensurePrograms();\n') if ' ensurePrograms();' not in html else html
+html=html.replace('ledger:ledgerView,policies:policyView,','ledger:ledgerView,policies:policyView,programs:programListView,')
 nav_start, nav_end = '// PAGE_NAV_START', '// PAGE_NAV_END'
 if nav_start in html:
  a, rest = html.split(nav_start, 1)

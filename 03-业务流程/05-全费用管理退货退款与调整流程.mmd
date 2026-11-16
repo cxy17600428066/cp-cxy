@@ -1,0 +1,27 @@
+flowchart LR
+  change(["发生退货 费用撤销或政策变更"])
+  category{"调整类型"}
+  original["引用原销售 原单据及政策版本"]
+  recalculate["重算贡献及累计应预留"]
+  releaseReserve["只释放合同允许的未确认预留"]
+  deficit{"调整后是否存在缺口"}
+  retain["保留已用及合同义务 登记缺口"]
+  funding["批准补足或调拨 暂停新增释放"]
+  reconcile(["更新调整链并重新对平"])
+  cancelFee["确认撤销费用及冲销依据"]
+  paid{"费用是否已支付"}
+  recover["追偿或退款到账"]
+  suspense["登记已收回待冲销 不直接恢复预算"]
+  reverse["审批通过后冲销费用"]
+  restore["恢复可用额度或优先减少缺口"]
+  version["新政策版本审批生效"]
+  history["存量沿用原版本 追溯变化用差额单"]
+  change --> category
+  category -->|"退货或累计档位变化"| original --> recalculate --> releaseReserve --> deficit
+  deficit -->|"有缺口"| retain --> funding --> reconcile
+  deficit -->|"无缺口"| reconcile
+  category -->|"已确认费用撤销"| cancelFee --> paid
+  paid -->|"尚未支付"| reverse
+  paid -->|"已经支付"| recover --> suspense --> reverse
+  reverse --> restore --> reconcile
+  category -->|"政策变更或跨期调整"| version --> history --> reconcile

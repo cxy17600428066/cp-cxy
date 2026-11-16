@@ -1,0 +1,55 @@
+flowchart LR
+  subgraph sourceStage ["一 政策与额度来源"]
+    policy(["客户政策与活动方案已批准"])
+    pricing["确定成交价及价格优惠"]
+    sales["有效签收形成销售记录"]
+    contribution["逐销售行计算费用总贡献"]
+    policy --> pricing --> sales --> contribution
+  end
+  subgraph budgetStage ["二 客户预留与组织分池"]
+    reserve["返利 服务等客户费用先预留"]
+    shortage{"预留后是否超包"}
+    gap["保留合同义务并登记缺口"]
+    replenish["批准专项补足或调拨"]
+    pool["按条件解锁并分配四级活动池"]
+    achieved{"返利达成或服务履约"}
+    reserveConfirm["预留转已确认费用"]
+    reserve --> shortage
+    shortage -->|"是"| gap --> replenish --> shortage
+    shortage -->|"否"| pool
+    reserve -.-> achieved
+    achieved -->|"满足条件并审核"| reserveConfirm
+  end
+  subgraph executionStage ["三 活动及实物执行"]
+    application["发起活动或实物申请"]
+    budgetCheck{"额度 上限及授权通过"}
+    revise["调整申请或申请补足"]
+    hold["审批占用 可用转占用"]
+    businessType{"执行类型"}
+    activity["活动执行及凭证验收"]
+    physical["实物出库及验收 按成本"]
+    verification["核销确认 占用转已用"]
+    closeProject["结项释放未使用差额"]
+    application --> budgetCheck
+    budgetCheck -->|"不通过"| revise --> application
+    budgetCheck -->|"通过"| hold --> businessType
+    businessType -->|"市场活动"| activity --> verification
+    businessType -->|"赠品物料"| physical --> verification
+    verification --> closeProject
+  end
+  subgraph paymentStage ["四 确认结算与清偿"]
+    confirmed["已确认费用"]
+    settlement["结算审核形成有效应付"]
+    payment["现金 抵扣及合同扣点按方向清偿"]
+    ledger(["更新客户台账及清偿记录"])
+    confirmed --> settlement --> payment --> ledger
+  end
+  contribution --> reserve
+  pool --> application
+  reserveConfirm --> confirmed
+  closeProject --> confirmed
+  closeProject -.->|"仅释放余款"| pool
+  style sourceStage fill:#E8F4F1,stroke:#6A9990
+  style budgetStage fill:#EDF2FC,stroke:#7C94BC
+  style executionStage fill:#FFF5E5,stroke:#BA9A60
+  style paymentStage fill:#EDF5EE,stroke:#7BA483

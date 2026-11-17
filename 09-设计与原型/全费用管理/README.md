@@ -15,7 +15,7 @@
 
 原演示期初仅迁移一次，不重复增加来源；原有活动、政策、试算与清偿记录保留。相同销售行拦截重复；退货继承原快照；规则改版不重算历史；待审明细变化拦截批准但可驳回重报；年返来源不足保留应享；转池后应享减少暂停继续发放，待冲销/追偿，不自动抹账。共享来源余额不能跨客户汇总。
 
-实现：`funding-engine.js`、`funding-ui.js`、`funding-events.js`、`funding-links.js`，由 `pack_schemes.py` 嵌入 HTML。验证：`qa_funding.mjs`、`qa_funding_edges.mjs` 及原有7组回归脚本。当前是浏览器本地持久账本，未连接OMS、ERP、银行、库存或真实OA，未自动执行关账、追偿冲销及全部19类策略资格判断。模拟业务日只用于评审演示。
+实现：`funding-engine.js`、`funding-ui.js`、`funding-events.js`、`funding-links.js`，由 `pack_schemes.py` 嵌入 HTML。验证：`qa_funding.mjs`、`qa_funding_edges.mjs`、`qa_funding_ui.mjs` 及原有7组回归脚本。当前是浏览器本地持久账本，未连接OMS、ERP、银行、库存或真实OA，未自动执行关账、追偿冲销及全部19类策略资格判断。模拟业务日只用于评审演示。
 
 ## 策略资金池流转设计
 

@@ -1,26 +1,58 @@
-/* Complex customer activity plans use the available workspace, with readable field widths. */
+/* Shared layout for every list, detail, editor and approval page. */
 .detail-surface {
   width: 100%;
+  max-width: none;
 }
 
-.detail-surface #fullPageBody,
-.detail-surface[data-detail-kind="program"] .field {
+#fullPageBody,
+.fields,
+.field,
+.fields > *,
+.toolbar > *,
+.topbar > * {
   min-width: 0;
 }
 
-.detail-surface[data-detail-kind="program"] #programForm .fields {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+/* Fit the actual container, including forms inside split panels and dialogs.
+   Keep at most three columns, with a preferred minimum field width of 280px. */
+.fields {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, max(280px, calc((100% - 32px) / 3))), 1fr));
 }
 
-.detail-surface[data-detail-kind="program"] input,
-.detail-surface[data-detail-kind="program"] select,
-.detail-surface[data-detail-kind="program"] textarea {
+/* Keep the four related allocation ratios together on desktop. */
+#schemePolicyForm .fields:has(> .field > #ratio0) {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.field input,
+.field select,
+.field textarea {
   min-width: 0;
+  max-width: 100%;
 }
 
-.detail-surface[data-detail-kind="program"] .rule-item summary,
-.detail-surface[data-detail-kind="program"] .note,
-.detail-surface[data-detail-kind="program"] .banner {
+.banner,
+.note,
+.heading,
+.flowline,
+.keyval,
+.rule-item summary,
+.topbar > * {
+  overflow-wrap: anywhere;
+}
+
+.table-wrap {
+  min-width: 0;
+  max-width: 100%;
+  overscroll-behavior-inline: contain;
+}
+
+/* Preserve readable strategy columns; scroll the table rather than the page. */
+#fundMatrix table {
+  min-width: 1000px;
+}
+
+.stat .number {
   overflow-wrap: anywhere;
 }
 
@@ -29,18 +61,37 @@
   overflow-y: auto;
 }
 
-@media (min-width: 1440px) {
-  .detail-surface[data-detail-kind="program"] #programForm .fields {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+@media (max-width: 1100px) {
+  #schemePolicyForm .fields:has(> .field > #ratio0) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 900px) {
-  .detail-surface[data-detail-kind="program"] #programForm .fields {
+@media (max-width: 700px) {
+  .fields,
+  #schemePolicyForm .fields:has(> .field > #ratio0) {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .detail-surface[data-detail-kind="program"] .rule-item .tag {
+  .toolbar > * {
+    max-width: 100%;
+  }
+
+  .activity {
+    flex-wrap: wrap;
+  }
+
+  .keyval > * {
+    min-width: 0;
+  }
+
+  .rule-item .tag {
     white-space: normal;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

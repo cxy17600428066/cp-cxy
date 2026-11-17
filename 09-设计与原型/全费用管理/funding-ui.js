@@ -1,4 +1,5 @@
-const fundingTiming={instant:'即时入池',month:'月末核验',quarter:'季末核验',year:'年末核验'};let fundingTab='pools';
+const fundingTiming={instant:'即时入池',month:'月末核验',quarter:'季末核验',year:'年末核验'};let fundingTab='pools';try{const saved=sessionStorage.getItem('tgx-funding-tab');if(['pools','rules','bindings','sales','period','flows'].includes(saved))fundingTab=saved}catch{}
+function rememberFundingTab(){try{sessionStorage.setItem('tgx-funding-tab',fundingTab)}catch{}}
 if(!pages.some(p=>p[0]==='funding')){pages.splice(1,0,['funding','02','资金池与获取']);pages.forEach((p,i)=>p[1]=String(i+1).padStart(2,'0'))}
 const ff=(id,label,value,type='text',extra='')=>`<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" value="${esc(value??'')}" ${extra}></div>`;
 const fs=(id,label,options,current,extra='')=>`<div class="field"><label for="${id}">${label}</label><select id="${id}" ${extra}>${options.map(([v,n])=>`<option value="${esc(v)}" ${v===current?'selected':''}>${esc(n)}</option>`).join('')}</select></div>`;

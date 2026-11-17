@@ -31,7 +31,7 @@ render=function(){capturePage();baseRender();if(!detailPage)return;
  $('crumb').textContent=moduleName+' / '+d.title;
  const body=$('fullPageBody');
  if(d.route.kind==='trial'){body.querySelector('.heading')?.remove();const section=$('trialEditor');section.style.marginTop='0'}
- else if(d.route.kind!=='customer'){const wrapper=document.createElement('section');wrapper.className='card';body.parentNode.insertBefore(wrapper,body);wrapper.append(body);wrapper.style.maxWidth=d.route.kind==='review'?'1100px':'980px'}
+ else if(d.route.kind!=='customer'){const wrapper=document.createElement('section');wrapper.className='card detail-surface';wrapper.dataset.detailKind=d.route.kind;body.parentNode.insertBefore(wrapper,body);wrapper.append(body);wrapper.style.maxWidth=d.route.kind==='program'?'none':d.route.kind==='review'?'1100px':'980px'}
  if(d.values){for(const [id,value]of Object.entries(d.values)){const input=$(id);if(input){if(input.type==='checkbox')input.checked=value;else input.value=value}}}
  if(d.route.kind==='trial'&&$('calcForm'))calculate();
  if(d.baseline===null)d.baseline=JSON.stringify(formSnapshot());

@@ -1,0 +1,46 @@
+/* Complex customer activity plans use the available workspace, with readable field widths. */
+.detail-surface {
+  width: 100%;
+}
+
+.detail-surface #fullPageBody,
+.detail-surface[data-detail-kind="program"] .field {
+  min-width: 0;
+}
+
+.detail-surface[data-detail-kind="program"] #programForm .fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detail-surface[data-detail-kind="program"] input,
+.detail-surface[data-detail-kind="program"] select,
+.detail-surface[data-detail-kind="program"] textarea {
+  min-width: 0;
+}
+
+.detail-surface[data-detail-kind="program"] .rule-item summary,
+.detail-surface[data-detail-kind="program"] .note,
+.detail-surface[data-detail-kind="program"] .banner {
+  overflow-wrap: anywhere;
+}
+
+/* Keep the complete navigation reachable on shorter laptop viewports. */
+.sidebar {
+  overflow-y: auto;
+}
+
+@media (min-width: 1440px) {
+  .detail-surface[data-detail-kind="program"] #programForm .fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .detail-surface[data-detail-kind="program"] #programForm .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail-surface[data-detail-kind="program"] .rule-item .tag {
+    white-space: normal;
+  }
+}

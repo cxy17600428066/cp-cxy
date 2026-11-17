@@ -2,6 +2,14 @@ from pathlib import Path
 root = Path(__file__).parent
 file = root / '原型.html'
 html = file.read_text(encoding='utf-8')
+layout_start, layout_end = '/* PAGE_LAYOUT_START */', '/* PAGE_LAYOUT_END */'
+layout = (root / 'page-layout.css').read_text(encoding='utf-8')
+if layout_start in html:
+ a, rest = html.split(layout_start, 1)
+ _, b = rest.split(layout_end, 1)
+ html = a + layout_start + '\n' + layout + '\n' + layout_end + b
+else:
+ html = html.replace('</style>', layout_start + '\n' + layout + '\n' + layout_end + '\n</style>', 1)
 html = html.replace("if(page==='calculator')calculate();", "if(page==='calculator'&&$('calcForm'))calculate();")
 html = html.replace("function render(){\n", "function render(){\n ensureSchemes();\n", 1) if ' ensureSchemes();' not in html else html
 extension = (root / 'customer-schemes.js').read_text(encoding='utf-8')

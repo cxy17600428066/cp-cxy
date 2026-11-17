@@ -5,6 +5,55 @@
 .grid>*{min-width:0}.card{min-width:0}
 #programForm summary input[type=checkbox]{width:16px;height:16px;min-height:16px;padding:0;vertical-align:middle;margin:0 8px 0 0}#programForm .rule-item summary{font-size:14px;min-height:40px;line-height:24px;padding:8px 0}
 #fundMatrix table{table-layout:fixed;white-space:normal}#fundMatrix td,#fundMatrix th{white-space:normal;overflow-wrap:anywhere;vertical-align:top}#fundMatrix th:nth-child(1){width:15%}#fundMatrix th:nth-child(2){width:19%}#fundMatrix th:nth-child(3){width:29%}#fundMatrix th:nth-child(4){width:29%}#fundMatrix th:nth-child(5){width:8%}#fundMatrix .table-wrap{min-width:0}
+/* PAGE_LAYOUT_START */
+/* Complex customer activity plans use the available workspace, with readable field widths. */
+.detail-surface {
+  width: 100%;
+}
+
+.detail-surface #fullPageBody,
+.detail-surface[data-detail-kind="program"] .field {
+  min-width: 0;
+}
+
+.detail-surface[data-detail-kind="program"] #programForm .fields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detail-surface[data-detail-kind="program"] input,
+.detail-surface[data-detail-kind="program"] select,
+.detail-surface[data-detail-kind="program"] textarea {
+  min-width: 0;
+}
+
+.detail-surface[data-detail-kind="program"] .rule-item summary,
+.detail-surface[data-detail-kind="program"] .note,
+.detail-surface[data-detail-kind="program"] .banner {
+  overflow-wrap: anywhere;
+}
+
+/* Keep the complete navigation reachable on shorter laptop viewports. */
+.sidebar {
+  overflow-y: auto;
+}
+
+@media (min-width: 1440px) {
+  .detail-surface[data-detail-kind="program"] #programForm .fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .detail-surface[data-detail-kind="program"] #programForm .fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .detail-surface[data-detail-kind="program"] .rule-item .tag {
+    white-space: normal;
+  }
+}
+
+/* PAGE_LAYOUT_END */
 </style></head><body>
 <a class="skip" href="#workspace">跳到主要内容</a><div class="shell"><aside class="sidebar"><div class="brand">脱骨侠<small>客户策略 · 全费用管理</small></div><div class="nav-label">费用管理</div><nav class="nav" aria-label="主要导航" id="nav"></nav><div class="side-foot"><strong>统一规则 · 同一账本</strong>试点评审版 V1.1<br>2026 年 11 月 17 日</div></aside><main class="main"><header class="topbar"><div><strong>费用管理</strong><small>　/　<span id="crumb">客户费用总台账</span></small></div><div class="actions"><label for="role" style="margin:0">模拟操作角色</label><select id="role"><option value="sales">销售 · 周敏（申请人）</option><option value="pool3">省区池负责人 · 李岚</option><option value="pool2">大区池负责人 · 陈宇</option><option value="pool1">中心池负责人 · 赵宁</option><option value="pool0">总部池负责人 · 许然</option><option value="center">中心授权负责人 · 郑青</option><option value="hq">总部授权负责人 · 吴昊</option><option value="business">业务核销复核 · 孙悦</option><option value="finance">财务复核 · 林珊</option></select></div></header><div class="demo">交互原型 · 全部为演示数据，浏览器内保存模拟操作。政策参数尚未正式批准。<span id="storageWarning"></span></div><div class="content" id="workspace" tabindex="-1"></div></main></div>
 <dialog id="modal" aria-labelledby="modalTitle"><div class="dialog-head"><h2 id="modalTitle"></h2><button id="closeModal" aria-label="关闭弹窗">关闭</button></div><div id="modalBody" class="dialog-body"></div></dialog><div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
@@ -1627,7 +1676,7 @@ render=function(){capturePage();baseRender();if(!detailPage)return;
  $('crumb').textContent=moduleName+' / '+d.title;
  const body=$('fullPageBody');
  if(d.route.kind==='trial'){body.querySelector('.heading')?.remove();const section=$('trialEditor');section.style.marginTop='0'}
- else if(d.route.kind!=='customer'){const wrapper=document.createElement('section');wrapper.className='card';body.parentNode.insertBefore(wrapper,body);wrapper.append(body);wrapper.style.maxWidth=d.route.kind==='review'?'1100px':'980px'}
+ else if(d.route.kind!=='customer'){const wrapper=document.createElement('section');wrapper.className='card detail-surface';wrapper.dataset.detailKind=d.route.kind;body.parentNode.insertBefore(wrapper,body);wrapper.append(body);wrapper.style.maxWidth=d.route.kind==='program'?'none':d.route.kind==='review'?'1100px':'980px'}
  if(d.values){for(const [id,value]of Object.entries(d.values)){const input=$(id);if(input){if(input.type==='checkbox')input.checked=value;else input.value=value}}}
  if(d.route.kind==='trial'&&$('calcForm'))calculate();
  if(d.baseline===null)d.baseline=JSON.stringify(formSnapshot());

@@ -90,6 +90,21 @@ function setFundingEpochs(old, next, choice) {
   }
 }
 
+function applyCurrentRebateTerms(group, f) {
+  const cutoff = group.period.end < f.date ? group.period.end : f.date;
+  const epoch = group.link.accumulationVersion || group.link.version;
+  for (const config of [...(f.bindingVersions || []), ...f.bindings]) {
+    if (config.version <= group.version || config.customer !== group.customer || config.from > cutoff ||
+        fundPeriod(config.to, group.link.rebateTiming).end < group.period.end) continue;
+    const next = fundingStrategyLinks({link:config}).find(x => x.id === group.link.id &&
+      x.policyId === group.link.policyId && (x.accumulationVersion || x.version) === epoch);
+    if (next) {
+      group.link = next;
+      group.version = next.version;
+    }
+  }
+}
+
 function batchBalance(b, groups = fundingGroups()) {
   const f = state.funding;
   const ledger = f.transfers.filter(t => t.batch === b.id);

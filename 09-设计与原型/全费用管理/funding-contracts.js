@@ -49,7 +49,7 @@ function trialFundingSummary(t, v) {
   t.fundingSnapshot = q.snapshot;
   const gap = v.total - q.amount;
   return `<h3>销售资金获取预测</h3><div class="keyval"><span>按获取规则预计${q.rule.timing==='instant'?'即时入池':'期间核验入池'}</span><strong>${money(q.amount)}</strong></div>
-    <p class="note">${esc(q.rule.name)} · ${esc(q.rule.id)} / V${q.rule.version} · ${esc(q.rule.pool)}。${gap ? '合同测算额'+(gap>0?'高于':'低于')+'预计获取额 '+money(Math.abs(gap))+'。' : '合同测算额与预计获取额一致。'}实际入池仍需校验资金池上限。</p>`;
+    <p class="note">${esc(q.rule.name)} · ${esc(q.rule.id)} / V${q.rule.version} · ${esc(q.rule.pool)}。${gap ? '合同测算额'+(gap>0?'高于':'低于')+'预计获取额 '+money(Math.abs(gap))+'。' : '合同测算额与预计获取额一致。'}实际入池仍需校验资金池上限。</p><button type="button" data-trial-funding-refresh>按当前生效规则重新匹配</button>`;
 }
 
 function validateReceipt(input, match) {
@@ -82,7 +82,7 @@ function strategyEpoch(old, next, choice) {
 }
 
 function setFundingEpochs(old, next, choice) {
-  const previous = old.policyId === next.policyId ? old : null;
+  const previous = old.policyId === next.policyId ? old : null; if (!choice && ![...state.funding.sales,...(state.funding.openingRights||[])].some(s=>s.link.id===old.id)) choice='split';
   next.accumulationVersion = strategyEpoch(previous, next, choice);
   for (const x of next.strategies) {
     const before = previous?.strategies?.find(p => p.id === x.id);

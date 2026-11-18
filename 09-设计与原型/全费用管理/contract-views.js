@@ -54,7 +54,7 @@ function saleContracts(cid,date) {
 }
 
 function saleReceiptFields() {
-  const options=saleContracts('A',state.funding.date).map(policyOption);
+  const options=saleContracts('A',state.funding.date).map(policyOption); if(options.length!==1)options.unshift(['','请选择归属合同项目']);
   return fs('salePolicy','归属合同项目',options,options[0]?.[0],'required')+
     ff('saleReceipt','签收单号（分批签收必填）','','text','maxlength="60"')+
     ff('saleReceiptLine','签收行号','1','text','maxlength="30"')+
@@ -115,7 +115,7 @@ function contractTrace(p) {
   const transfers=f.transfers.filter(t=>batchIds.has(t.batch)).map(t=>[t.id,t.amount<0?'返利冲回':'返利转池',t.batch,t.source+' / '+t.target,money(t.amount)]);
   const payments=f.payouts.filter(t=>batchIds.has(t.batch)).map(t=>[esc(t.ref),t.amount<0?'追回款项':'返利清偿',t.batch,t.pool,money(t.amount)]);
   const bindings=f.bindings.filter(l=>l.customer===p.customer&&l.policyId===p.id);
-  const programs=state.dealerPrograms.filter(x=>x.customer===p.customer&&programInfo(x)?.policyId===p.id);
+  const programs=state.dealerPrograms.filter(x=>x.customer===p.customer&&x.policyId===p.id);
   const strategies=bindings.flatMap(l=>fundingStrategyLinks({link:l}).map(x=>[esc(x.strategyName||'主返利'),esc(x.sourcePool),
     fundingTiming[x.rebateTiming],x.lockEarly?'先预留':'到期划拨',`<button data-funding-binding="${esc(l.id)}">配置策略</button>`]));
   return `<section class="card"><h2>${esc(p.contract)} · ${esc(p.mode)}</h2><p>${esc(p.name)} / V${p.version}　${esc(p.from)} 至 ${esc(p.to)}</p>
@@ -182,7 +182,7 @@ function refreshCorrection(id) {
 document.addEventListener('click',e=>{
   const b=e.target.closest('button');if(!b)return;
   try{
-    if(b.hasAttribute('data-admit-contract'))return openContractAdmission();
+    if(b.hasAttribute('data-trial-funding-refresh')){delete workTrial.fundingSnapshot;calculate();return} if(b.hasAttribute('data-admit-contract'))return openContractAdmission();
     const id=b.dataset.correctionConfirm||b.dataset.correctionReject;
     if(!id)return;
     requireFundingFinance();

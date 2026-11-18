@@ -1916,7 +1916,7 @@ function trialFundingSummary(t, v) {
 }
 
 function validateReceipt(input, match) {
-  const receipt = (input.receipt || '').trim(), receiptLine = (input.receiptLine || '1').trim();
+  const receipt = (input.receipt || '').trim(), receiptLine = (input.receiptLine ?? '1').trim();
   const rows = state.funding.sales.filter(s => s.kind === 'sale');
   const sameOrder = rows.filter(s => s.doc === input.doc && s.line === input.line);
   if (!receipt) {
@@ -1953,6 +1953,21 @@ function setFundingEpochs(old, next, choice) {
   }
 }
 
+function applyCurrentRebateTerms(group, f) {
+  const cutoff = group.period.end < f.date ? group.period.end : f.date;
+  const epoch = group.link.accumulationVersion || group.link.version;
+  for (const config of [...(f.bindingVersions || []), ...f.bindings]) {
+    if (config.version <= group.version || config.customer !== group.customer || config.from > cutoff ||
+        fundPeriod(config.to, group.link.rebateTiming).end < group.period.end) continue;
+    const next = fundingStrategyLinks({link:config}).find(x => x.id === group.link.id &&
+      x.policyId === group.link.policyId && (x.accumulationVersion || x.version) === epoch);
+    if (next) {
+      group.link = next;
+      group.version = next.version;
+    }
+  }
+}
+
 function batchBalance(b, groups = fundingGroups()) {
   const f = state.funding;
   const ledger = f.transfers.filter(t => t.batch === b.id);
@@ -1985,7 +2000,6 @@ function correctRebateBatch(id, amount, ref, recovery) {
     amount:-amount,ref,method:'recovery',date:f.date});
   f.transfers.push(reversal);
   b.logs.push({who:'finance',action:recovery?'已追回并冲回来源池':'未付返利冲回来源池',note:ref+' / '+money(amount),date:f.date});
-  save();
 }
 
 function migrateFundingEpochs() {
@@ -2086,6 +2100,14 @@ function negativeBatchLink(g) {
   return batches.filter(b=>batchBalance(b).remaining||batchBalance(b).paid).map(b=>`<button data-funding-batch="${esc(b.id)}">处理 ${esc(b.id)}</button>`).join(' ');
 }
 
+function pendingCorrectionView() {
+  const pending=(state.funding.corrections || []).filter(r=>r.status==='pending');
+  if (!pending.length) return '';
+  return `<section class="card" style="margin-top:16px"><h2>返利调整待财务确认</h2>${table(['原批次','申请凭证','方式','金额','操作'],
+    pending.map(r=>[esc(r.batch),esc(r.ref),r.recovery?'追回并冲回':'冲销未付',money(r.amount),
+      `<button data-funding-batch="${esc(r.batch)}">核对调整</button>`]))}</section>`;
+}
+
 function settlementBatchRow(b) {
   const v=batchBalance(b);
   return [esc(b.id)+' / '+esc(customer(b.customer).name),esc(b.targetPool),money(b.amount),money(v.paid),money(v.remaining),
@@ -2156,7 +2178,8 @@ document.addEventListener('submit',e=>{
     if(!ref||amount<=0||amount>limit)throw Error('请核对凭证与金额。先冲销本期未付余额，已付款项须在实际收回后登记。');
     f.corrections||=[];
     if(f.corrections.some(x=>x.status==='pending'&&x.batch===b.id||x.status!=='rejected'&&x.ref===ref)||f.payouts.some(p=>p.ref===ref))throw Error('已有待审申请或该凭证已使用。');
-    f.corrections.push({batch:b.id,amount,ref,recovery,status:'pending',date:f.date});
+    const signature=fundingGroups().find(g=>g.key===b.key).signature;
+    f.corrections.push({batch:b.id,amount,ref,recovery,signature,status:'pending',date:f.date});
     b.logs.push({who:'business',action:'提交返利调整',note:ref+' / '+money(amount),date:f.date});
     save();refreshCorrection(b.id);
   }catch(error){fundingFail(error)}
@@ -2178,7 +2201,12 @@ document.addEventListener('click',e=>{
     requireFundingFinance();
     const f=state.funding, req=f.corrections?.find(x=>x.batch===id&&x.status==='pending');
     if(!req)throw Error('该申请已处理。');
-    if(b.dataset.correctionConfirm)correctRebateBatch(id,req.amount,req.ref,req.recovery);
+    if(b.dataset.correctionConfirm){
+      const batch=f.batches.find(x=>x.id===id);
+      const group=fundingGroups().find(g=>g.key===batch.key);
+      if(req.signature&&req.signature!==group?.signature)throw Error('期间销售已变化，请退回后按最新明细重新申请。');
+      correctRebateBatch(id,req.amount,req.ref,req.recovery);
+    }
     else f.batches.find(x=>x.id===id).logs.push({who:'finance',action:'退回调整申请',note:req.ref,date:f.date});
     req.status=b.dataset.correctionConfirm?'approved':'rejected';save();refreshCorrection(id);
   }catch(error){fundingFail(error)}
@@ -2198,7 +2226,7 @@ function fundingStrategyLinks(s){return[s.link,...(s.link.strategies||[]).map(x=
 function fundingGroups(){ensureFunding();const f=state.funding,map=new Map();for(const o of f.openingRights||[]){const key='rebate|'+o.link.id+'@'+(o.link.accumulationVersion||o.link.version)+'|'+o.customer+'|'+o.period.key;map.set(key,{key,kind:'rebate',customer:o.customer,pool:o.link.sourcePool,period:o.period,version:o.link.version,name:(o.link.strategyName||'年返')+' · '+o.policy.name,rows:[o.id],basis:o.base,target:0,openingReserve:o.reserve,link:o.link})}for(const s of f.sales){const rk=s.rule.id+'@'+s.rule.version,lk=s.link.id+'@'+s.link.version;
  if(s.rule.timing!=='instant'){const key=earningGroupKey(s);if(!map.has(key))map.set(key,{key,kind:'earn',customer:s.customer,pool:s.rule.pool,period:s.period,version:s.rule.version,name:s.rule.name,policyId:s.policy.id,rows:[],target:0,basis:0,service:0,rebate:0});const g=map.get(key);g.rows.push(s.id);g.target+=s.earning;g.basis+=s.base;g.service+=s.service;g.rebate+=s.instantRebate}
  for(const link of fundingStrategyLinks(s)){const period=s.strategyPeriods?.[link.id]||s.rebatePeriod||fundPeriod(s.date,link.rebateTiming);const key='rebate|'+link.id+'@'+(link.accumulationVersion||link.version)+'|'+s.customer+'|'+period.key;if(!map.has(key))map.set(key,{key,kind:'rebate',customer:s.customer,pool:link.sourcePool,period,version:link.version,name:(link.strategyName||'年返')+' · '+s.policy.name,rows:[],basis:0,target:0,link});const g=map.get(key);if(link.version>=g.version){g.link=link;g.version=link.version;g.name=(link.strategyName||'年返')+' · '+s.policy.name}g.rows.push(s.id);g.basis+=s.base;}
- }for(const g of map.values()){g.target=Math.max(0,g.kind==='rebate'?annualEntitlement(g.link,Math.max(0,g.basis)):g.target);g.released=g.kind==='earn'?sum(f.credits.filter(c=>c.group===g.key).map(c=>c.amount)):sum(f.transfers.filter(t=>t.group===g.key).map(t=>t.amount));g.delta=g.target-g.released;g.signature=JSON.stringify([g.rows,g.target,g.basis,g.service,g.rebate]);g.ready=f.date>=g.period.end;g.pending=f.batches.find(b=>b.key===g.key&&b.status==='pending');}return[...map.values()].filter(g=>g.target||g.released||g.basis&&g.link?.rebateMethod==='tier'||g.kind==='earn')}
+ }for(const g of map.values()){if(g.kind==='rebate')applyCurrentRebateTerms(g,f);g.target=Math.max(0,g.kind==='rebate'?annualEntitlement(g.link,Math.max(0,g.basis)):g.target);g.released=g.kind==='earn'?sum(f.credits.filter(c=>c.group===g.key).map(c=>c.amount)):sum(f.transfers.filter(t=>t.group===g.key).map(t=>t.amount));g.delta=g.target-g.released;g.signature=JSON.stringify([g.rows,g.target,g.basis,g.service,g.rebate]);g.ready=f.date>=g.period.end;g.pending=f.batches.find(b=>b.key===g.key&&b.status==='pending');}return[...map.values()].filter(g=>g.target||g.released||g.basis&&g.link?.rebateMethod==='tier'||g.kind==='earn')}
 function fundingActivityBalance(poolId){const used=[0,0,0,0],occupied=[0,0,0,0];for(const a of state.activities){if((a.fundingPoolId||MAIN_POOL)!==poolId)continue;if(a.status==='closed'){splitAmount(a.actual,a.shares.map(n=>n/a.amount*100)).forEach((n,i)=>used[i]+=n)}else if(['approved','review'].includes(a.status))a.shares.forEach((n,i)=>occupied[i]+=n)}return{used,occupied}}
 function fundingPoolTotals(id){ensureFunding();const f=state.funding,p=f.pools.find(p=>p.id===id);if(!p)return null;const credits=f.credits.filter(c=>c.pool===id),earned=sum(credits.map(c=>c.amount)),incoming=sum(f.transfers.filter(t=>t.target===id).map(t=>t.amount)),outgoing=sum(f.transfers.filter(t=>t.source===id).map(t=>t.amount)),paid=sum(f.payouts.filter(x=>x.pool===id).map(x=>x.amount));
  if(p.kind==='rebate'){return{pool:p,initial:p.initial,earned:0,incoming,outgoing:0,reserve:0,used:paid,occupied:0,source:p.initial+incoming,bookBalance:p.initial+incoming-paid,available:Math.min(Math.max(0,p.initial+incoming-paid),sum(f.batches.filter(b=>b.targetPool===id&&b.status==='approved').map(b=>batchBalance(b).payable))),gap:Math.max(0,paid-p.initial-incoming),paid}}
@@ -2273,7 +2301,7 @@ let activityFundingContext=null;const beforeFundingBalances=balances,beforeFundi
 balances=function(){ensureFunding();return fundingOrgBalances(activityFundingContext||MAIN_POOL)};
 poolTable=function(){const b=balances();return table(['承担组织','分配比例','可支配总额','已核销','未核销占用','可用 / 缺口'],poolNames.map((n,i)=>[n,state.funding.pools.find(p=>p.id===(activityFundingContext||MAIN_POOL)).ratios[i]+'%',money(b.gross[i]),money(b.used[i]),money(b.occupied[i]),money(b.available[i])+' / '+money(b.gap[i])]))};
 poolsView=function(){return `<div class="actions" style="margin-bottom:16px"><button class="primary" data-funding-go="pools">配置总资金池与获取方式</button><button data-funding-go="sales">销售完成入池</button><button data-funding-go="period">期间入池与返利核验</button></div>`+beforeFundingPools()};
-function customerFundingPanel(cid){const d=fundingCustomerData(cid);return`<section class="card" style="margin-top:24px"><h2>销售获取与客户策略资金同步</h2><div class="grid stats">${stat('切换后净销售',money(d.sales),'签收减关联退货')}${stat('已获取资金',money(d.earned),'只统计实际信用流水')}${stat('待核验返利权益',money(d.pending),'未增加客户返利池余额')}${stat('客户返利池可结算',money(d.rebateAvailable),'已排除退货待调整期间',true)}</div><div class="keyval"><span>客户返利池账面余额</span><strong>${money(d.rebateBalance)}</strong></div><div class="keyval"><span>退货待调减</span><strong>${money(d.deficit)}</strong></div><div class="keyval"><span>累计净转入返利池</span><strong>${money(d.released)}</strong></div><div class="keyval"><span>累计已发放或抵扣</span><strong>${money(d.paid)}</strong></div><div class="actions"><button data-funding-client-config="${cid}">客户资金策略与时点</button><button data-funding-go="sales">销售入池流水</button><button data-funding-go="period">期间核验与返利释放</button><button data-funding-go="flows">资金及返利发放记录</button></div><p class="note">旧期初来源不重复入池；已知客户A年返权益按期初10万元及预留2000元承接，其他新增统计从 ${FUND_CUTOVER} 起算。返利入池、客户应付及付款分开记录。</p></section>`}
+function customerFundingPanel(cid){const d=fundingCustomerData(cid);return`<section class="card" style="margin-top:24px"><h2>销售获取与客户策略资金同步</h2><div class="grid stats">${stat('切换后净销售',money(d.sales),'签收减关联退货')}${stat('已获取资金',money(d.earned),'只统计实际信用流水')}${stat('待核验返利权益',money(d.pending),'未增加客户返利池余额')}${stat('客户返利池可结算',money(d.rebateAvailable),'已排除退货待调整期间',true)}</div><div class="keyval"><span>客户返利池账面余额</span><strong>${money(d.rebateBalance)}</strong></div><div class="keyval"><span>退货待调减</span><strong>${money(d.deficit)}</strong></div><div class="keyval"><span>累计净转入返利池</span><strong>${money(d.released)}</strong></div><div class="keyval"><span>累计净发放或抵扣（扣除已追回）</span><strong>${money(d.paid)}</strong></div><div class="actions"><button data-funding-client-config="${cid}">客户资金策略与时点</button><button data-funding-go="sales">销售入池流水</button><button data-funding-go="period">期间核验与返利释放</button><button data-funding-go="flows">资金及返利发放记录</button></div><p class="note">旧期初来源不重复入池；已知客户A年返权益按期初10万元及预留2000元承接，其他新增统计从 ${FUND_CUTOVER} 起算。返利入池、客户应付及付款分开记录。</p></section>`}
 customerLedgerData=function(c){ensureFunding();const old=beforeFundingCustomerData(c),d=fundingCustomerData(c.id),has=state.funding.sales.some(s=>s.customer===c.id);return{...old,ready:old.ready||has,sales:(c.id==='A'?10000000:0)+d.sales,contribution:(c.id==='A'?1000000:0)+d.earned,reserve:(c.id==='A'?300000-sum(state.funding.transfers.map(t=>t.openingConsumed||0)):0)+d.service+d.instantR,confirmed:(old.confirmed||0)+d.released,benefit:old.benefit+d.released,available:has||c.id==='A'?sum([...new Set(state.funding.bindings.filter(l=>l.customer===c.id).map(l=>l.sourcePool))].map(id=>fundingPoolTotals(id).available)):null}}
 customerLedgerBody=function(id){ensureFunding();const has=state.funding.sales.some(s=>s.customer===id);if(!has&&!(id==='A'&&(state.funding.sales.length||state.funding.transfers.length||state.funding.payouts.length)))return beforeFundingCustomerBody(id)+customerContractIndex(id)+customerFundingPanel(id);const c=customer(id),d=customerLedgerData(c);return heading('CUSTOMER LEDGER',c.name+' · 费用总台账','销售、资金获取、客户返利权益及实际清偿同步展示。')+`<section class="card"><h2>${c.name} ${tag('销售已接入','ok')}</h2><p>${c.center} / ${c.mode}，来源与客户返利专属池分别记账。</p></section><div class="grid stats">${stat('净销售含期初',money(d.sales),'期初不重复计提')}${stat('有效销售贡献',money(d.contribution),'总池信用流水，不含内部划拨')}${stat('来源池统筹可用',money(d.available),'共享余额，不可按客户重复相加')}${stat('确认受益投入',money(d.benefit),'含已核验客户返利，付款单列')}</div>`+customerContractIndex(id)+customerFundingPanel(id)+contextPanel(id)};
 const originalFundingCustomerRows=ledgerCustomerRows;
@@ -2281,7 +2309,7 @@ ledgerCustomerRows=function(){return originalFundingCustomerRows().replace('活�
 newActivity=function(existing){beforeFundingActivity(existing);if(!$('activityForm'))return;const selected=existing?.fundingPoolId||MAIN_POOL;const block=`<div class="field"><label for="activitySourcePool">承担来源资金池</label><select id="activitySourcePool">${state.funding.pools.filter(p=>p.kind==='operating'&&p.status==='active').map(p=>`<option value="${p.id}" ${p.id===selected?'selected':''}>${esc(p.name)} · 可用 ${money(fundingPoolTotals(p.id).available)}</option>`).join('')}</select><small>客户返利专属池不允许申请普通活动；待期末入池资金也不可使用。</small></div>`;$('activityForm').insertAdjacentHTML('afterbegin',block);detailPage.body=$('fullPageBody').innerHTML;detailPage.baseline=JSON.stringify(formSnapshot())};
 submitActivity=function(form){const id=$('activitySourcePool')?.value||state.activities.find(a=>a.id===form.dataset.edit)?.fundingPoolId||MAIN_POOL,pool=fundingPoolTotals(id);if(!pool||pool.pool.kind!=='operating'||pool.pool.status!=='active')return $('activityError').textContent='该资金池不能用于活动。';if(pool.gap)return $('activityError').textContent='来源池已有缺口，请先补足。';const before=new Set(state.activities.map(a=>a.id));activityFundingContext=id;try{beforeFundingSubmit(form)}finally{activityFundingContext=null}const a=state.activities.find(a=>!before.has(a.id))||state.activities.find(a=>a.id===form.dataset.edit);if(a&&!$('activityForm')){a.fundingPoolId=id;save();render()}};
 approve=function(id,reject=false){const a=state.activities.find(a=>a.id===id);activityFundingContext=a.fundingPoolId||MAIN_POOL;try{return beforeFundingApprove(id,reject)}finally{activityFundingContext=null;if(!detailPage)render()}};
-approvalView=function(){ensureFunding();return beforeFundingApprovalView()+`<section class="card" style="margin-top:24px"><h2>资金入池与客户返利期间核验</h2>${table(['批次 / 期间','客户','类型及金额','节点','操作'],state.funding.batches.filter(b=>b.status==='pending').map(b=>[b.id+' / '+b.period.key,customer(b.customer).name,(b.kind==='earn'?'销售获取':'客户返利')+' '+money(b.amount),roles[['business','finance'][b.step]],`<button data-funding-batch="${b.id}">进入核验</button>`]))}</section>`};
+approvalView=function(){ensureFunding();return beforeFundingApprovalView()+pendingCorrectionView()+`<section class="card" style="margin-top:24px"><h2>资金入池与客户返利期间核验</h2>${table(['批次 / 期间','客户','类型及金额','节点','操作'],state.funding.batches.filter(b=>b.status==='pending').map(b=>[b.id+' / '+b.period.key,customer(b.customer).name,(b.kind==='earn'?'销售获取':'客户返利')+' '+money(b.amount),roles[['business','finance'][b.step]],`<button data-funding-batch="${b.id}">进入核验</button>`]))}</section>`};
 settlementView=function(){ensureFunding();return beforeFundingSettlement()+`<section class="card" style="margin-top:24px"><h2>客户返利应付与发放</h2>${table(['批次 / 客户','客户专属池','已确认应付','净发放','账面待付','当前可发放','操作'],state.funding.batches.filter(b=>b.kind==='rebate'&&b.status==='approved').map(settlementBatchRow))}</section>`};
 render=function(){ensureFunding();beforeFundingRender();syncFundingConfigVisibility();syncFundingReturnFields(false);if(detailPage?.route.kind==='policy'&&$('fullPageBody')){const p=state.policySchemes.find(p=>p.id===detailPage.route.id);if(p)$('fullPageBody').insertAdjacentHTML('beforeend',contractTrace(p))}};
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;if(b.dataset.contractLink){baseCloseModal();openFundingBinding(b.dataset.contractLink)}if(b.dataset.fundingGo){fundingTab=b.dataset.fundingGo;rememberFundingTab();navigate('funding')}if(b.dataset.fundingClientConfig){const links=state.funding.bindings.filter(l=>l.customer===b.dataset.fundingClientConfig);if(links.length===1)openFundingBinding(links[0].id);else showModal('选择合同项目',links.map(l=>`<button data-contract-link="${esc(l.id)}">${esc(state.policySchemes.find(p=>p.id===l.policyId).contract)}</button>`).join(' '))}});

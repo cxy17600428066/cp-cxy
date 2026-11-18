@@ -53,7 +53,7 @@ function trialFundingSummary(t, v) {
 }
 
 function validateReceipt(input, match) {
-  const receipt = (input.receipt || '').trim(), receiptLine = (input.receiptLine || '1').trim();
+  const receipt = (input.receipt || '').trim(), receiptLine = (input.receiptLine ?? '1').trim();
   const rows = state.funding.sales.filter(s => s.kind === 'sale');
   const sameOrder = rows.filter(s => s.doc === input.doc && s.line === input.line);
   if (!receipt) {
@@ -137,5 +137,4 @@ function correctRebateBatch(id, amount, ref, recovery) {
     amount:-amount,ref,method:'recovery',date:f.date});
   f.transfers.push(reversal);
   b.logs.push({who:'finance',action:recovery?'已追回并冲回来源池':'未付返利冲回来源池',note:ref+' / '+money(amount),date:f.date});
-  save();
 }

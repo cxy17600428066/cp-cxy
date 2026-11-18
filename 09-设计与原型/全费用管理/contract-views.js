@@ -96,6 +96,14 @@ function negativeBatchLink(g) {
   return batches.filter(b=>batchBalance(b).remaining||batchBalance(b).paid).map(b=>`<button data-funding-batch="${esc(b.id)}">处理 ${esc(b.id)}</button>`).join(' ');
 }
 
+function pendingCorrectionView() {
+  const pending=(state.funding.corrections || []).filter(r=>r.status==='pending');
+  if (!pending.length) return '';
+  return `<section class="card" style="margin-top:16px"><h2>返利调整待财务确认</h2>${table(['原批次','申请凭证','方式','金额','操作'],
+    pending.map(r=>[esc(r.batch),esc(r.ref),r.recovery?'追回并冲回':'冲销未付',money(r.amount),
+      `<button data-funding-batch="${esc(r.batch)}">核对调整</button>`]))}</section>`;
+}
+
 function settlementBatchRow(b) {
   const v=batchBalance(b);
   return [esc(b.id)+' / '+esc(customer(b.customer).name),esc(b.targetPool),money(b.amount),money(v.paid),money(v.remaining),
@@ -166,7 +174,8 @@ document.addEventListener('submit',e=>{
     if(!ref||amount<=0||amount>limit)throw Error('请核对凭证与金额。先冲销本期未付余额，已付款项须在实际收回后登记。');
     f.corrections||=[];
     if(f.corrections.some(x=>x.status==='pending'&&x.batch===b.id||x.status!=='rejected'&&x.ref===ref)||f.payouts.some(p=>p.ref===ref))throw Error('已有待审申请或该凭证已使用。');
-    f.corrections.push({batch:b.id,amount,ref,recovery,status:'pending',date:f.date});
+    const signature=fundingGroups().find(g=>g.key===b.key).signature;
+    f.corrections.push({batch:b.id,amount,ref,recovery,signature,status:'pending',date:f.date});
     b.logs.push({who:'business',action:'提交返利调整',note:ref+' / '+money(amount),date:f.date});
     save();refreshCorrection(b.id);
   }catch(error){fundingFail(error)}
@@ -188,7 +197,12 @@ document.addEventListener('click',e=>{
     requireFundingFinance();
     const f=state.funding, req=f.corrections?.find(x=>x.batch===id&&x.status==='pending');
     if(!req)throw Error('该申请已处理。');
-    if(b.dataset.correctionConfirm)correctRebateBatch(id,req.amount,req.ref,req.recovery);
+    if(b.dataset.correctionConfirm){
+      const batch=f.batches.find(x=>x.id===id);
+      const group=fundingGroups().find(g=>g.key===batch.key);
+      if(req.signature&&req.signature!==group?.signature)throw Error('期间销售已变化，请退回后按最新明细重新申请。');
+      correctRebateBatch(id,req.amount,req.ref,req.recovery);
+    }
     else f.batches.find(x=>x.id===id).logs.push({who:'finance',action:'退回调整申请',note:req.ref,date:f.date});
     req.status=b.dataset.correctionConfirm?'approved':'rejected';save();refreshCorrection(id);
   }catch(error){fundingFail(error)}

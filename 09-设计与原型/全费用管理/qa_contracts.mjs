@@ -92,6 +92,63 @@ try {
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.reload();
   assert.match(await ui('#fullPageBody').innerText(),/ORDER-SECOND/);
+  const edge=await browser.newPage();
+  edge.on('pageerror',error=>errors.push(error.message));
+  await edge.goto(new URL('./原型.html',import.meta.url).href);
+  const recovery=await edge.evaluate(()=>{
+    const f=state.funding;
+    const invoice=postFundingSale({kind:'sale',customer:'A',doc:'R-ORDER',line:'1',sku:'S',base:10000000,qty:100,date:f.date});
+    f.date='2026-12-31';
+    const g=fundingGroups().find(g=>g.customer==='A'&&g.kind==='rebate');
+    const batch=prepareFundingBatch(g.key);
+    for(const role of ['business','finance']){$('role').value=role;approveFundingBatch(batch.id,false,'核对');}
+    f.payouts.push({id:'PAID-1',batch:batch.id,pool:batch.targetPool,customer:'A',amount:400000,ref:'PAID',method:'cash',date:f.date});
+    postFundingSale({kind:'return',doc:'RETURN-02',line:'1',original:invoice.id,base:5000000,qty:50,date:f.date});
+    navigate('settlement');openFundingBatch(batch.id);
+    return {remaining:batchBalance(batch).remaining,deficit:batchBalance(batch).deficit};
+  });
+  assert.deepEqual(recovery,{remaining:0,deficit:100000});
+  await edge.locator('#role').selectOption('business');
+  await edge.locator('#correctionRef').fill('BANK-RECEIPT-1');
+  await edge.locator('#correctionForm button').click();
+  await edge.locator('#role').selectOption('finance');
+  await edge.locator('[data-nav="approval"]').first().click();
+  await edge.locator('[data-funding-batch="BATCH-001"]').first().click();
+  await edge.locator('[data-correction-confirm]').click();
+  assert.deepEqual(await edge.evaluate(()=>[fundingCustomerData('A').paid,fundingCustomerData('A').deficit,
+    state.funding.payouts.length,state.funding.transfers.length]),[300000,0,2,2]);
+  await edge.close();
+  const migration=await page.evaluate(()=>{
+    const f=state.funding, annual=fundingGroups().find(g=>g.customer==='B'&&g.link.id==='LINK-002'&&g.period.key==='2026');
+    const snapshot=clone(f);
+    const binding=f.bindings.find(l=>l.id==='LINK-002');
+    const revised={...clone(binding),version:binding.version+1,tiers:binding.tiers.map(t=>({...t,rate:t.rate+1}))};
+    let required=false;
+    try{setFundingEpochs(binding,revised,'')}catch{required=true}
+    setFundingEpochs(binding,revised,'split');
+    const split=revised.accumulationVersion===revised.version;
+    setFundingEpochs(binding,revised,'carry');
+    f.bindingVersions.push(clone(binding));
+    f.bindings[f.bindings.indexOf(binding)]=revised;
+    const repriced=fundingGroups().find(g=>g.key===annual.key).target;
+    state.funding=snapshot;
+    const legacy=state.funding;
+    for(const l of [...legacy.bindings,...legacy.bindingVersions,...legacy.sales.map(s=>s.link)]) {
+      delete l.accumulationVersion;
+      for(const x of l.strategies||[])delete x.accumulationVersion;
+    }
+    legacy.version=1;
+    const sold=legacy.sales.filter(s=>s.doc==='ORDER-B');
+    const historical='rebate|LINK-002@'+sold.at(-1).link.version+'|B|2026';
+    legacy.transfers.push({id:'legacy-transfer',batch:'legacy',source:MAIN_POOL,target:'REBATE-B',customer:'B',group:historical,amount:10000});
+    legacy.batches.push({id:'legacy',key:historical,status:'approved',kind:'rebate',customer:'B',targetPool:'REBATE-B',amount:10000});
+    ensureFunding();
+    const regrouped=fundingGroups().filter(g=>g.link?.id==='LINK-002'&&g.period.key==='2026');
+    ensureFunding();
+    return [required,split,repriced,regrouped.length,regrouped[0].released,regrouped[0].target,
+      legacy.transfers.filter(t=>t.id==='legacy-transfer').length];
+  });
+  assert.deepEqual(migration,[true,true,3600000,1,10000,2400000,1]);
   assert.deepEqual(errors,[]);
   console.log('PASS 试算与入池规则、签收行去重及订单数量、年返跨配置版本累计、新合同接入与资金明细隔离、窄屏及刷新');
 } finally {await browser.close();}

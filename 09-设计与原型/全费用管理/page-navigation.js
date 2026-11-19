@@ -36,7 +36,7 @@ startTrial=function(policyId=null,trialId=null,copy=false){launchPage({kind:'tri
 calcView=function(){const prior=workTrial;workTrial=null;const output=baseCalcView();workTrial=prior;return output};
 render=function(){capturePage();baseRender();if(!detailPage)return;
  const d=detailPage,moduleName=workspaceBreadcrumb(page);
- const returnName=({calculator:'试算方案列表',policies:'政策方案列表',activities:'活动列表',approval:'审核工作台',ledger:'客户列表',programs:'活动方案与策略列表',funding:'资金池与获取列表'})[d.returnPage]||'列表';
+ const returnName=({calculator:'试算方案列表',policies:'政策方案列表',activities:'活动列表',approval:'待审单据',ledger:'客户列表',programs:'活动方案与策略列表',funding:'资金管理',settlement:'结算清单',exceptions:'异常与对账'})[d.returnPage]||'列表';
  $('workspace').innerHTML=`<div data-full-page><div class="flowline" style="margin-bottom:16px"><button class="small" data-return-list>← 返回${returnName}</button><span class="muted">/ ${esc(d.title)}</span></div>${d.route.kind==='customer'?'':heading('DETAIL & EDIT',esc(d.title),d.route.kind==='trial'?'保存客户与政策参数快照；试算不写入费用账本。':d.route.kind==='review'?'核对单据、来源、额度与审批路线后处理。':d.route.kind==='policy'&&state.policySchemes.some(p=>p.id===d.route.id&&p.status==='active')&&!d.route.copy?'查看合同条款、适用客户及关联资金记录。':'查看或处理当前单据。')}<div id="fullPageBody">${d.route.kind==='customer'?customerLedgerBody(d.route.id):d.route.kind==='trial'?trialEditor():d.body}</div></div>`;
  $('crumb').textContent=moduleName+' / '+d.title;
  const body=$('fullPageBody');

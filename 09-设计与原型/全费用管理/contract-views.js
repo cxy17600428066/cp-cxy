@@ -96,14 +96,6 @@ function negativeBatchLink(g) {
   return batches.filter(b=>batchBalance(b).remaining||batchBalance(b).paid).map(b=>`<button data-funding-batch="${esc(b.id)}">处理 ${esc(b.id)}</button>`).join(' ');
 }
 
-function pendingCorrectionView() {
-  const pending=(state.funding.corrections || []).filter(r=>r.status==='pending');
-  if (!pending.length) return '';
-  return `<section class="card" style="margin-top:16px"><h2>返利调整待财务确认</h2>${table(['原批次','申请凭证','方式','金额','操作'],
-    pending.map(r=>[esc(r.batch),esc(r.ref),r.recovery?'追回并冲回':'冲销未付',money(r.amount),
-      `<button data-funding-batch="${esc(r.batch)}">核对调整</button>`]))}</section>`;
-}
-
 function settlementBatchRow(b) {
   const v=batchBalance(b);
   return [esc(b.id)+' / '+esc(customer(b.customer).name),esc(b.targetPool),money(b.amount),money(v.paid),money(v.remaining),

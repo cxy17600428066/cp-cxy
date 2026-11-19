@@ -11,7 +11,7 @@ try {
  if(a.status!=='approved')throw Error('四池审批完成未占用');
  await p.locator('#role').selectOption('sales');await p.locator('[data-nav="activities"]').first().click();await p.locator(`[data-verify="${a.id}"]`).click();await p.locator('#vamount').fill('600.01');await p.locator('#vevidence').fill('四池联合活动执行和验收记录');await p.locator('#verifyForm button').click();
  for(const role of ['business','finance']){await p.locator('#role').selectOption(role);await p.locator(`[data-detail="${a.id}"]`).click();await p.locator(`[data-approve="${a.id}"]`).click()}
- await p.locator('[data-nav="ledger"]').first().click();if(!(await p.locator('#workspace').innerText()).includes('2,399.99'))throw Error('多池核销未对平');
+ await p.locator('#nav [data-nav="funding"]').click();await p.locator('[data-funding-tab="pools"]').click();if(!(await p.locator('#workspace').innerText()).includes('2,399.99'))throw Error('多池核销未对平');
  console.log('PASS 四池独立授权、尾差分摊、跨客户受益、核销和结项对平');
  await p.goto(new URL('./原型.html',import.meta.url).href);if(!(await p.locator('h1').innerText()).includes('客户费用总台账'))throw Error('离线文件不能打开');console.log('PASS 独立HTML本地直接打开');
 } finally { await browser.close() }

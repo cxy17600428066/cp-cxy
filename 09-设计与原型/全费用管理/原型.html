@@ -2457,7 +2457,10 @@ const sectorDefaults = [
 ];
 
 function initSectorFunds(f,fresh=false) {
-  if(f.sectorRevision) return;
+  if(f.sectorRevision){
+    if(!f.groupLedgerId){f.groupLedgerId=crypto.randomUUID();save()}
+    return;
+  }
   const main = f.pools.find(p=>p.id===MAIN_POOL);
   const mixed = f.sales.some(s=>s.customer!=='A'&&s.rule.pool===MAIN_POOL);
   for(const def of sectorDefaults){
@@ -2472,6 +2475,7 @@ function initSectorFunds(f,fresh=false) {
   }
   if(mixed&&main?.name==='全费用总资金池')main.name='历史共用经营池';
   f.groupJournal=[];
+  f.groupLedgerId=crypto.randomUUID();
   const rule=f.rules.find(r=>r.id==='GET-001'&&r.pool===MAIN_POOL&&r.method==='policy'&&r.version===2);
   if(rule && (fresh || f.date<=rule.to)){
     if(!fresh){f.ruleVersions||=[];f.ruleVersions.push(clone(rule));rule.version++;rule.from=rule.from>f.date?rule.from:f.date}
@@ -2519,7 +2523,7 @@ function availableTargets(){
 function transferTargetName(p,level){
   return [p.sector,...(level>=2?[p.area+'大区']:[]),...(level===3?[p.province+'省区']:[])].join(' / ')+' · '+p.name;
 }
-function postGroupEntry({kind,amount,ref,pool,level}){
+function buildGroupEntry({kind,amount,ref,pool,level}){
   requireFundingFinance();
   const f=state.funding, journal=f.groupJournal;
   ref=String(ref||'').trim();
@@ -2537,25 +2541,61 @@ function postGroupEntry({kind,amount,ref,pool,level}){
     if(amount>target.cap-totals.source)throw Error('调拨后将超过经营池预算上限，请调低金额或调整上限。');
     Object.assign(entry,{pool,level,target:transferTargetName(target,level),sector:target.sector,area:target.area,province:target.province});
   }else if(!Number.isSafeInteger(balance+amount))throw Error('入账后余额超出有效精度范围。');
-  journal.push(entry);
-  try{localStorage.setItem(key,JSON.stringify(state))}
-  catch{journal.pop();throw Error('浏览器未能保存本次入账，请检查本地存储后重试。')}
   return entry;
 }
-// 同一份本地账本同时打开时，串行复核余额和凭证。
+
+// IndexedDB 的读写事务保证多个窗口按同一份已提交账本检查余额和凭证。
+// localStorage 同步保存显示用的快照，以便沿用原有经营池、活动及导出逻辑。
+let groupDatabase;
+function openGroupDatabase(){
+  if(!groupDatabase)groupDatabase=new Promise((resolve,reject)=>{
+    const request=indexedDB.open('tgx-expense-group-ledgers',1);
+    request.onupgradeneeded=()=>request.result.createObjectStore('journals');
+    request.onerror=()=>{groupDatabase=null;reject(Error('无法打开集团账本，请检查浏览器本地存储权限。'))};
+    request.onsuccess=()=>resolve(request.result);
+  });
+  return groupDatabase;
+}
 async function commitGroupEntry(input){
-  const commit=()=>{
+  requireFundingFinance();
+  const db=await openGroupDatabase();
+  return new Promise((resolve,reject)=>{
+    const tx=db.transaction('journals','readwrite'),store=tx.objectStore('journals');
     const persisted=JSON.parse(localStorage.getItem(key)||'null');
-    if(persisted?.funding?.sectorRevision)state=persisted;
-    return postGroupEntry(input);
-  };
-  return navigator.locks ? navigator.locks.request(key+'-group',commit) : commit();
+    if(persisted?.funding?.groupLedgerId)state=persisted;
+    const f=state.funding,request=store.get(f.groupLedgerId);
+    let entry,next,failure;
+    request.onsuccess=()=>{
+      try{
+        if(request.result)f.groupJournal=request.result;
+        entry=buildGroupEntry(input);next=[...f.groupJournal,entry];
+        store.put(next,f.groupLedgerId);
+      }catch(error){failure=error;tx.abort()}
+    };
+    tx.onabort=()=>reject(failure||Error('集团账本保存失败，请检查本地存储后重试。'));
+    tx.oncomplete=()=>{f.groupJournal=next;save();resolve(entry)};
+  });
 }
 function preserveGroupJournal(){
-  if(!state.funding?.sectorRevision)return;
-  const stored=JSON.parse(localStorage.getItem(key)||'null')?.funding?.groupJournal;
-  if(stored?.length>state.funding.groupJournal.length)state.funding.groupJournal=stored;
+  const f=state.funding;
+  if(!f?.groupLedgerId)return;
+  const stored=JSON.parse(localStorage.getItem(key)||'null')?.funding;
+  if(stored?.groupLedgerId===f.groupLedgerId&&stored.groupJournal.length>f.groupJournal.length)f.groupJournal=stored.groupJournal;
 }
+async function restoreGroupJournal(){
+  const f=state.funding;
+  if(!f?.groupLedgerId||!window.indexedDB)return;
+  try{
+    const db=await openGroupDatabase(),request=db.transaction('journals').objectStore('journals').get(f.groupLedgerId);
+    request.onsuccess=()=>{
+      if(f===state.funding&&request.result?.length>f.groupJournal.length){
+        f.groupJournal=request.result;save();render();
+      }
+    };
+  }catch{/* 已保存的快照仍可查看，提交时会说明存储状态。 */}
+}
+window.addEventListener('load',restoreGroupJournal);
+window.addEventListener('focus',restoreGroupJournal);
 function groupLedgerView(){
   const journal=state.funding.groupJournal;
   let balance=0;

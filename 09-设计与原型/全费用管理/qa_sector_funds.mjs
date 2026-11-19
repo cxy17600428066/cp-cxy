@@ -8,7 +8,7 @@ try{
   const context=await browser.newContext(),p=await context.newPage(),errors=[];
   p.setDefaultTimeout(4500);p.on('pageerror',e=>errors.push(e.message));
   await p.goto(url);await visitFunding(p,'pools');
-  assert.deepEqual(await p.locator('.sector-row summary span:first-child').allTextContents(),['休食','餐饮','大客','私域']);
+  assert.deepEqual(await p.locator('.sector-row summary > .sector-name').allTextContents(),['休食','餐饮','大客','私域']);
   assert.equal(await p.evaluate(()=>groupBalance()),0);
   await p.locator('[data-group-account=overview]').click();
   await p.locator('[data-group-account=deposit]').click();

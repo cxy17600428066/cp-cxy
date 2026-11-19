@@ -124,7 +124,8 @@
 .sector-row summary > strong { font-size:clamp(20px,2vw,27px); font-variant-numeric:tabular-nums }
 .sector-name,.sector-metrics { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px }
 .sector-name { font-weight:700; font-size:16px; margin-bottom:6px }
-.sector-row[open] .sector-name span { rotate:180deg }
+.sector-name::after { content:"+"; color:#075650 }
+.sector-row[open] .sector-name::after { content:"−" }
 .sector-metrics { font-size:12px; color:#365754; border-top:1px solid #cfdbdd; padding-top:10px; margin-top:6px }
 .sector-metrics b { display:block; color:#183334 }
 .sector-link { color:#075650; font-size:13px; font-weight:700; margin-top:8px }

@@ -89,8 +89,23 @@ function postGroupEntry({kind,amount,ref,pool,level}){
     Object.assign(entry,{pool,level,target:transferTargetName(target,level),sector:target.sector,area:target.area,province:target.province});
   }else if(!Number.isSafeInteger(balance+amount))throw Error('入账后余额超出有效精度范围。');
   journal.push(entry);
-  save();
+  try{localStorage.setItem(key,JSON.stringify(state))}
+  catch{journal.pop();throw Error('浏览器未能保存本次入账，请检查本地存储后重试。')}
   return entry;
+}
+// 同一份本地账本同时打开时，串行复核余额和凭证。
+async function commitGroupEntry(input){
+  const commit=()=>{
+    const persisted=JSON.parse(localStorage.getItem(key)||'null');
+    if(persisted?.funding?.sectorRevision)state=persisted;
+    return postGroupEntry(input);
+  };
+  return navigator.locks ? navigator.locks.request(key+'-group',commit) : commit();
+}
+function preserveGroupJournal(){
+  if(!state.funding?.sectorRevision)return;
+  const stored=JSON.parse(localStorage.getItem(key)||'null')?.funding?.groupJournal;
+  if(stored?.length>state.funding.groupJournal.length)state.funding.groupJournal=stored;
 }
 function groupLedgerView(){
   const journal=state.funding.groupJournal;
@@ -118,10 +133,10 @@ function sectorOverview(){
       }
     }
     const orgRows=[...['总部留存','板块本级'].map((name,i)=>[name,money(at(rows,'available',i)),money(at(rows,'occupied',i)),money(at(rows,'gap',i))]),...parts];
-    return `<details class="sector-row"><summary><span>${sector}</span><span>${money(total(rows,'earned'))}</span><span>${money(total(rows,'incoming'))}</span><strong>${money(total(rows,'available'))}</strong></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
+    return `<details class="sector-row"><summary aria-label="${sector}，本期销售贡献 ${money(total(rows,'earned'))}，集团调入 ${money(total(rows,'incoming'))}，活动可用 ${money(total(rows,'available'))}"><span>${sector}</span><span>${money(total(rows,'earned'))}</span><span>${money(total(rows,'incoming'))}</span><strong>${money(total(rows,'available'))}</strong></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
   }).join('');
   const unknown=all.filter(x=>!x.p.sector);
-  return `<section class="card sector-overview"><div class="group-heading"><div><h2>总资金池</h2><p class="note">经营池可用合计 <strong>${money(total(all,'available'))}</strong>。展开板块可查看所属大区、省区及各级可用额度。</p></div><button class="primary" data-group-account="overview">集团账户 · ${money(groupBalance())} →</button></div><div class="sector-head" aria-hidden="true"><span>业务板块</span><span>销售贡献</span><span>集团调入</span><span>活动可用</span></div>${tree}${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
+  return `<section class="card sector-overview"><div class="group-heading"><div><h2>总资金池</h2><p class="note">经营池可用合计 <strong>${money(total(all,'available'))}</strong>。展开板块可查看所属大区、省区及各级可用额度。</p></div><button class="primary" data-group-account="overview">集团账户 · ${money(groupBalance())} →</button></div><div class="sector-head" aria-hidden="true"><span>业务板块</span><span>本期销售贡献</span><span>集团调入</span><span>活动可用</span></div>${tree}${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
 }
 function openGroupAccount(action='overview'){
   const transfer=action==='transfer',entry=transfer||action==='deposit',f=state.funding;
@@ -170,12 +185,12 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('input',e=>{if(e.target.closest('#groupEntryForm'))updateGroupPreview()});
 document.addEventListener('change',e=>{if(e.target.id==='activitySourcePool')syncActivityPool()});
-document.addEventListener('submit',e=>{
+document.addEventListener('submit',async e=>{
   if(e.target.id!=='groupEntryForm')return;
   e.preventDefault();
   try{
     const kind=e.target.dataset.kind;
-    const r=postGroupEntry({kind,amount:cents($('groupAmount').value),ref:$('groupRef').value,pool:$('groupTarget')?.value,level:Number($('groupLevel')?.value)});
+    const r=await commitGroupEntry({kind,amount:cents($('groupAmount').value),ref:$('groupRef').value,pool:$('groupTarget')?.value,level:Number($('groupLevel')?.value)});
     finishDetail();openGroupAccount();toast((kind==='transfer'?'已调拨入池':'集团资金已入账')+' · '+r.id);
   }catch(error){fundingFail(error)}
 });

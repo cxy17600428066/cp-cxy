@@ -9,9 +9,10 @@ function activeFundingVersions(history, current, date) {
 
 function matchSaleFunding(input) {
   const f = state.funding;
-  const rules = activeFundingVersions(f.ruleVersions, f.rules, input.date)
+  let rules = activeFundingVersions(f.ruleVersions, f.rules, input.date)
     .filter(r => (r.customer === '*' || r.customer === input.customer) &&
       (r.sku === '*' || r.sku === input.sku));
+  const exact=rules.filter(r=>r.sku===input.sku);if(exact.length)rules=exact;
   if (rules.length !== 1) throw Error(rules.length ? '资金获取规则冲突，请保证唯一匹配。' : '未匹配有效资金获取规则，请检查业务日期、客户及 SKU。');
   const links = activeFundingVersions(f.bindingVersions, f.bindings, input.date)
     .filter(l => l.customer === input.customer && (!input.policyId || l.policyId === input.policyId));
@@ -22,7 +23,7 @@ function matchSaleFunding(input) {
   if (!policy || link.sourcePool !== rule.pool) throw Error('客户政策、来源池与获取规则不一致，请核对。');
   const pool = f.pools.find(p => p.id === rule.pool);
   if (pool?.status !== 'active' || pool.kind !== 'operating' || pool.from > input.date || pool.to < input.date) throw Error('目标资金池在业务日不可用于销售获取。');
-  return clone({rule, link, policy});
+  return clone({rule:rule.method==='policy'?{...rule,rate:policy.total}:rule, link:salePackageLink(link), policy});
 }
 
 function fundingTrialQuote(t, net) {
@@ -75,7 +76,7 @@ function rebateTerms(l) {
 }
 
 function strategyEpoch(old, next, choice) {
-  if (!old || old.sourcePool !== next.sourcePool || old.rebateTiming !== next.rebateTiming) return next.version;
+  if (!old || (old.redeemMode||'direct')!==(next.redeemMode||'direct') || old.sourcePool !== next.sourcePool || old.rebateTiming !== next.rebateTiming) return next.version;
   if (rebateTerms(old) === rebateTerms(next)) return old.accumulationVersion || old.version;
   if (!choice) throw Error('返利计算口径有变化，请选择本期承接或分段累计。');
   return choice === 'carry' ? old.accumulationVersion || old.version : next.version;
@@ -98,7 +99,8 @@ function applyCurrentRebateTerms(group, f) {
         fundPeriod(config.to, group.link.rebateTiming).end < group.period.end) continue;
     const next = fundingStrategyLinks({link:config}).find(x => x.id === group.link.id &&
       x.policyId === group.link.policyId && (x.accumulationVersion || x.version) === epoch);
-    if (next) {
+    if (next && (!group.link.packageTerms||group.link.redeemMode===(next.redeemMode||'direct'))) {
+      if(group.link.packageTerms){next.packageTerms=true;next.lockEarly=true;next.redeemMode=group.link.redeemMode}else if(next.redeemMode){continue}
       group.link = next;
       group.version = next.version;
     }

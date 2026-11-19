@@ -125,9 +125,9 @@ function contractTrace(p) {
   const bindings=f.bindings.filter(l=>l.customer===p.customer&&l.policyId===p.id);
   const programs=state.dealerPrograms.filter(x=>x.customer===p.customer&&x.policyId===p.id);
   const strategies=bindings.flatMap(l=>fundingStrategyLinks({link:l}).map(x=>[esc(x.strategyName||'主返利'),esc(x.sourcePool),
-    fundingTiming[x.rebateTiming],x.lockEarly?'先预留':'到期划拨',`<button data-funding-binding="${esc(l.id)}">配置策略</button>`]));
+    fundingTiming[x.rebateTiming],x.lockEarly?'先预留':'到期划拨']));
   return `<section class="card"><h2>${esc(p.contract)} · ${esc(p.mode)}</h2><p>${esc(p.name)} / V${p.version}　${esc(p.from)} 至 ${esc(p.to)}</p>
-    <h3>合同返利策略</h3>${strategies.length?table(['策略','来源池','核验时点','来源处理','操作'],strategies):'<p>此合同尚未接入资金策略。</p>'}
+    <h3>合同返利策略</h3>${bindings.map(l=>`<button data-funding-binding="${esc(l.id)}">配置合同资金策略</button>`).join(' ')}${strategies.length?table(['策略','来源池','核验时点','来源处理'],strategies):'<p>此合同尚未接入资金策略。</p>'}
     <h3>关联活动方案</h3>${programs.length?programs.map(x=>`<button data-program-open="${esc(x.id)}">${esc(programInfo(x).name)}</button>`).join(' '):'<p>暂无关联活动方案。</p>'}
     <h3>签收与退货</h3>${sales.length?table(['事件','订单行 / 退货单行','签收行 / 关联原销售','净销售','规则版本'],sales.map(s=>[s.id,esc(s.doc)+' / '+esc(s.line),s.kind==='return'?esc(s.original):esc(s.receipt?s.receipt+' / '+s.receiptLine:'整行签收'),money(s.base),s.rule.id+' V'+s.rule.version])):'<p>暂无销售事件。</p>'}
     <h3>资金流水</h3>${sourceRows.length||transfers.length||payments.length?table(['流水','业务','关联单据','资金池','金额'],[...sourceRows,...transfers,...payments]):'<p>暂无入池、划拨或清偿流水。</p>'}

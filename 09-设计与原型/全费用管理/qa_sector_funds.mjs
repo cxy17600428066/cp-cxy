@@ -33,14 +33,14 @@ try{
       state.funding.credits.length,state.funding.transfers.length,state.funding.groupJournal.length];
   });
   assert.deepEqual(position,[700000,300001,0,0,[0,0,0,300001],0,300000,0,0,2]);
-  const invalid=await p.evaluate(()=>{
+  const invalid=await p.evaluate(async()=>{
     $('role').value='finance';const f=state.funding,id=defaultSectorPool('C');
     const request={kind:'transfer',amount:111,ref:'G-001',pool:id,level:1};
-    const rejects=opts=>{try{postGroupEntry({...request,...opts});return false}catch{return true}};
+    const rejects=opts=>{try{buildGroupEntry({...request,...opts});return false}catch{return true}};
     const t=f.pools.find(x=>x.id===id);const cap=t.cap;t.cap=300001;
     const results=[rejects({}),rejects({ref:'CAP'}),rejects({ref:'WRONG',pool:'REBATE-X'}),rejects({ref:'LEVEL',level:0})];t.cap=cap;
-    postGroupEntry({...request,ref:'G-002',level:2});postGroupEntry({...request,ref:'G-003',level:1});
-    return [results,fundingOrgBalances(id).available,groupBalance(),f.groupJournal.length];
+    await commitGroupEntry({...request,ref:'G-002',level:2});await commitGroupEntry({...request,ref:'G-003',level:1});
+    return [results,fundingOrgBalances(id).available,groupBalance(),state.funding.groupJournal.length];
   });
   assert.deepEqual(invalid,[[true,true,true,true],[0,111,111,300001],699778,4]);
   await visitFunding(p,'pools');await p.locator('.sector-row summary').filter({hasText:'餐饮'}).click();

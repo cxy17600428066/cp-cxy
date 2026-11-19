@@ -15,7 +15,7 @@ try{for(const mode of ['direct','balance']){
  // Changing future terms cannot redirect this batch; a forged attempt to use both paths is rejected.
  const blocked=await page.evaluate(({batch,mode})=>{state.funding.bindings.find(x=>x.customer==='C').redeemMode=mode==='balance'?'direct':'balance';try{recordRedemption(batch,100,mode==='balance'?'cash':'use','WRONG','REF')}catch{return true}return false},{batch,mode});assert.ok(blocked);
  await visit(page,'settlement');await q('[data-funding-payout="'+batch.id+'"]').click();assert.equal(await q('#rebatePayMethod option').count(),1);assert.equal(await page.locator('#rebatePayMethod option').count(),mode==='direct'?2:1);
- if(mode==='balance')await q('#rebateUseOrder').fill('C-抵单-001');else await q('#rebatePayMethod').selectOption('offset');
+ if(mode==='balance')await q('#rebateUseOrder').selectOption('ORDER-C');else await q('#rebatePayMethod').selectOption('offset');
  await q('#rebatePayAmount').fill('500');await q('#rebatePayRef').fill('C-001');await q('#fundingPayoutForm button').click();await page.reload();
  const end=await page.evaluate(()=>[fundingPoolTotals(MAIN_POOL).available,redeemedCustomer('C'),state.funding.payouts[0].method,redeemedCustomer('B').balance]);assert.equal(end[0],unlocked);assert.equal(end[3],0);assert.equal(end[1][mode==='balance'?'balance':'direct'],150000);assert.equal(end[1][mode==='balance'?'used':'paid'],50000);
  assert.equal(end[2],mode==='balance'?'use':'offset');

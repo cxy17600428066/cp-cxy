@@ -1,7 +1,7 @@
 // 策略流转口径在策略库维护；方案展示保存时的快照。
 const fundPolicies={
 price:{source:'成交价格',trigger:'有效销售计提 / 价格调整',flow:'先减少成交基数，再重算总贡献和按合同可调整的预留；不按优惠额再扣活动池',reverse:'取消 / 退货引用原销售与政策版本冲回；已成立义务不自动取消',actions:['price','return']},
-rebate:{source:'SKU总包',trigger:'有效销售或期间累计复核',flow:'按合同选择即时或按期累计，可选先预留。核验通过后从来源池划入客户返利池并确认应付，发放冲减应付；跨档只补差额',reverse:'仅释放未确认预留；已确认或已付差额进入冲销 / 追偿',actions:['target','reserve','reserve_release','confirm_rebate','settle','pay','reverse_fee','refund','reverse_refunded']},
+rebate:{source:'SKU总包',trigger:'有效销售或期间累计复核',flow:'签收后按合同预留，期末核验。直接兑现形成应付；转余额则供该客户后续按单使用。两条路径互斥，跨档只补差额',reverse:'仅释放未确认预留；已确认或已付差额进入冲销 / 追偿',actions:['target','reserve','reserve_release','confirm_rebate','settle','pay','reverse_fee','refund','reverse_refunded']},
 activity:{source:'SKU总包',trigger:'申请最终审批通过',flow:'可用转占用 → 履约核销转已用 → 结项释放余款 → 结算清偿',reverse:'撤回 / 驳回未占用；取消释放剩余占用，已核销走批准冲销',actions:['hold','use','release','settle','pay','reverse_fee','refund','reverse_refunded']},
 physical:{source:'SKU总包',trigger:'领用审批按成本占用',flow:'批准成本占用 → 出库记录数量 → 验收成本核销 → 差额释放；不按零售价计费',reverse:'未核销退库释放成本占用；已核销退库凭证经批准冲销',actions:['physical_hold','use','release','reverse_fee','refund','reverse_refunded']},
 deduction:{source:'合同结算',trigger:'合同及结算审核',flow:'默认只改变清偿或扣款方向，不自动增加预算；真实费用冲减须单独批准',reverse:'扣款撤销恢复原应付；预算恢复与清偿撤销分别审核',actions:['deduct','settle','pay','reverse_fee','refund','reverse_refunded']}

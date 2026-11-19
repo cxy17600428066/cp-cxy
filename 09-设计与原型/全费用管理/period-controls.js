@@ -13,10 +13,11 @@ function validateClauses(l,old){
  const history=[...(state.funding.bindingVersions||[]),old].filter(v=>v.id===old.id).flatMap(clauseList);
  for(const x of clauseList(l)){
   if(history.some(h=>h.id!==x.id&&h.clauseCode===x.clauseCode))throw Error('条款编号已用于本合同另一策略行，请沿用原行或使用独立条款编号。');
-  const committed=history.find(h=>h.id===x.id&&h.clauseCode!==x.clauseCode&&
-    (h.clauseCode!==normClause(h.id.replace('/','-')+(h.stackMode==='primary'?'-MAIN':''))||
-    [...state.funding.sales,...(state.funding.openingRights||[])].some(s=>s.link.id===old.id&&clauseList(s.link).some(a=>a.id===x.id&&a.clauseCode===h.clauseCode))));
-  if(committed)throw Error('已有条款引用或累计记录，不能替换编号；请保留原条款并新增独立义务。');
+  const previous=clauseList(old).find(h=>h.id===x.id);
+  const referenced=previous&&(old.clauseCode&&x.id===old.id||(old.strategies||[]).some(h=>h.clauseCode&&x.id===old.id+'/'+h.id)||
+    [...state.funding.sales,...(state.funding.openingRights||[])].some(s=>s.link.id===old.id&&clauseList(s.link).some(a=>a.id===x.id))||
+    (state.dealerPrograms||[]).some(p=>[p.live,p.draft,p.oa?.candidate].some(v=>v?.items?.some(i=>i.clauseRef?.code===previous.clauseCode&&i.clauseRef.policyId===old.policyId))));
+  if(previous&&previous.clauseCode!==x.clauseCode&&referenced)throw Error('已有条款引用或累计记录，不能替换编号；请保留原条款并新增独立义务。');
  }
 }
 function appliedClauses(s){const rows=clauseList(s.link),selected=s.selectedClause||rows[0].clauseCode;
@@ -52,6 +53,7 @@ function earnReturnPlan(batch){
 function earnOrigins(g){return g.kind==='earn'?state.funding.batches.filter(b=>b.key===g.key&&earnReturnPlan(b)):[]}
 function requestEarnReturn(id){
  const f=state.funding,b=f.batches.find(x=>x.id===id),plan=earnReturnPlan(b);
+ if(plan&&f.sales.some(s=>plan.ids.includes(s.id)&&s.date>f.date))throw Error('业务日不能早于关联退货日期。');
  if(!plan||!plan.originalCredit)throw Error('没有可冲回的已入池退货，或找不到原入池流水。');
  if($('role').value!=='sales')throw Error('请由销售发起经营池冲回申请。');
  if(f.batches.some(x=>x.key===b.key&&x.status==='pending'))throw Error('该期间已有待审单据，请先处理。');
@@ -69,7 +71,7 @@ function earnReturnView(b){
 function batchStatusLabel(b){return b.status==='pending'?'待'+roles[['business','finance'][b.step]]:b.status==='rejected'?'已驳回':b.reversesBatch?'已冲回':'已入池'}
 function periodProgress(g){
  const f=state.funding,batches=f.batches.filter(b=>b.key===g.key&&b.status==='approved'),ids=new Set(batches.map(b=>b.id)),paid=sum(f.payouts.filter(p=>ids.has(p.batch)).map(p=>p.amount));
- let status=g.pending?'待'+roles[['business','finance'][g.pending.step]]:g.kind==='earn'&&earnOrigins(g).length?'待销售申请冲回':g.delta<0?'待业务申请调整':g.delta>0?(g.ready?'已到期 · 待销售申请':'累计中 · 未到期'):g.kind==='rebate'&&g.released>paid?'已转池 · 待财务发放':g.kind==='rebate'&&paid>0?'已发放':g.released?'已入池':'无待办';
+ let status=g.pending?'待'+roles[['business','finance'][g.pending.step]]:g.kind==='earn'&&earnOrigins(g).length?'待销售申请冲回':g.delta<0?'待业务申请调整':g.delta>0?(g.ready?'已到期 · 待销售申请':'累计中 · 未到期'):g.kind==='rebate'&&g.released>paid?(paid>0?'部分已发放 · 待财务付余款':'已转池 · 待财务发放'):g.kind==='rebate'&&paid>0?'已发放':g.released?'已入池':'无待办';
  if(g.kind==='rebate'&&g.delta<0&&(f.corrections||[]).some(c=>ids.has(c.batch)&&c.status==='pending'))status='待财务确认调整';
  return {status,paid};
 }

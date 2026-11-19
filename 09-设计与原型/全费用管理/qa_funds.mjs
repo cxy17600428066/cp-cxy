@@ -7,7 +7,7 @@ const p=await browser.newPage(), errors=[];p.setDefaultTimeout(4200);p.on('pagee
 const root=new URL('./原型.html',import.meta.url).href;
 try{await p.goto(root);assert.deepEqual(await p.locator('#nav button span:last-child').allTextContents(),['客户台账','策略与方案','资金管理','活动与审批','结算与对账']);
  assert.equal(await p.locator('#ledgerCustomerRows [data-customer-ledger]').count(),await p.locator('#ledgerCustomerRows tbody tr').count());
- await p.goto(root+'#/pools');await p.waitForSelector('[data-funding-pool-new]');assert.match(p.url(),/funding\?tab=pools/);await p.getByText('按组织查看分配与占用',{exact:true}).click();assert.equal(await p.locator('details table tbody tr').count(),4);
+ await p.goto(root+'#/pools');await p.waitForSelector('[data-funding-pool-new]');assert.match(p.url(),/funding\?tab=pools/);await p.getByText('按组织查看分配与占用',{exact:true}).click();assert.equal(await p.locator('details.inline-disclosure table tbody tr').count(),16);
  await p.goto(root+'#/pools/fundStrategy/STR-001');await p.waitForSelector('#dealerRuleForm');assert.match(p.url(),/programs\/strategy\/STR-001/);assert.equal(await p.locator('#ruleFundSource').count(),1);await p.reload();assert.equal(await p.locator('#ruleFundSource').count(),1);
  await p.goto(root+'#/funding?tab=bindings');await p.waitForSelector('#policyRows');assert.equal(await p.locator('[data-funding-binding="LINK-002"]').count(),1);
  // 通过实际销售、核验与审批生成 A 的应付，以测试 B 的结算范围。

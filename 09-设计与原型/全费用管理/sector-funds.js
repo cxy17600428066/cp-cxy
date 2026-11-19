@@ -159,8 +159,9 @@ function syncActivityPool(existing){
   $('apool').value=mode;
   const sourceCustomers=[...new Set(state.funding.bindings.filter(l=>l.sourcePool===p.id).map(l=>l.customer))];
   $('acustomer').value=existing?.customer||(sourceCustomers.length===1&&!groupReceipts(p.id)?customer(sourceCustomers[0]).name:p.name+'（组织统筹）');
-  const recipient=existing?.recipient||$('arecipient').value;
-  $('arecipient').innerHTML=customers.map(c=>`<option>${esc(c.name)}</option>`).join('');
+  const linked=state.dealerPrograms.find(x=>x.id===$('executionProgram')?.value);
+  const recipient=linked?customer(linked.customer).name:existing?.recipient||$('arecipient').value;
+  $('arecipient').innerHTML=(linked?[customer(linked.customer)]:customers).map(c=>`<option>${esc(c.name)}</option>`).join('');
   $('arecipient').value=recipient;
 }
 document.addEventListener('click',e=>{

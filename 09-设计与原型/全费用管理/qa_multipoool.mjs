@@ -1,6 +1,6 @@
 import {createRequire} from 'node:module';
 const require=createRequire(import.meta.url);
-const {chromium}=require('C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt/dependencies/node/node_modules/playwright');
+const {chromium}=require(createRequire(process.execPath).resolve('playwright'));
 const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
 try {
  const p=await browser.newPage();await p.goto(new URL('./原型.html',import.meta.url).href);await p.locator('[data-nav="activities"]').first().click();

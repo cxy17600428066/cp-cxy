@@ -1,12 +1,13 @@
+import {visit,visitFunding} from './qa-workspace.mjs';
 async function returnFromPage(){if(await p.locator('#modal').isVisible())await p.locator('#closeModal').click();else {await p.locator('[data-return-list]').click();if(await p.locator('[data-discard-page]').isVisible())await p.locator('[data-discard-page]').click()}}
 import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import vm from 'node:vm';
-const require=createRequire(import.meta.url),{chromium}=require('C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt/dependencies/node/node_modules/playwright');
+const require=createRequire(import.meta.url),{chromium}=require(createRequire(process.execPath).resolve('playwright'));
 const html=fs.readFileSync(new URL('./原型.html',import.meta.url),'utf8');new vm.Script([...html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)].at(-1)[1]);
 const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
 const p=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));
-const check=(yes,n)=>{if(!yes)throw Error(n);console.log('PASS '+n)},nav=async id=>{await p.locator(`[data-nav="${id}"]`).first().click();if(await p.locator('[data-discard-page]').isVisible())await p.locator('[data-discard-page]').click()},state=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('tgx-expense-prototype-v1')));
+const check=(yes,n)=>{if(!yes)throw Error(n);console.log('PASS '+n)},nav=async id=>{await visit(p,id);if(await p.locator('[data-discard-page]').isVisible())await p.locator('[data-discard-page]').click()},state=()=>p.evaluate(()=>JSON.parse(localStorage.getItem('tgx-expense-prototype-v1')));
 try{
  await p.goto(new URL('./原型.html',import.meta.url).href);await nav('policies');check(await p.locator('#policyRows tbody tr').count()===5,'政策列表包含4客户及迁移草稿');await p.screenshot({path:decodeURIComponent(new URL('./qa/schemes-policies.png',import.meta.url).pathname).replace(/^\/([A-Z]:)/,'$1')});
  await p.locator('#policyCustomerFilter').selectOption('B');check(await p.locator('#policyRows tbody tr').count()===1,'按客户筛选政策');await p.locator('[data-policy-open="POL-002"]').click();check(await p.locator('#pt').isDisabled(),'已生效政策只读');await returnFromPage();await p.locator('[data-policy-copy="POL-002"]').click();await p.locator('#pt').fill('14');await p.locator('#schemePolicyForm button[type="submit"]').click();let s=await state();let draft=s.policySchemes.find(x=>x.id==='POL-006');check(draft?.customer==='B'&&draft.version===2&&draft.total===14&&draft.status==='draft','复制新版本绑定客户与费率');check(s.policySchemes.find(x=>x.id==='POL-002').total===12,'原生效政策未改变');

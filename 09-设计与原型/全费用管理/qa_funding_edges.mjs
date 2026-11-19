@@ -1,5 +1,5 @@
 import{createRequire}from'node:module';
-const req=createRequire(import.meta.url),{chromium}=req('C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt/dependencies/node/node_modules/playwright');
+const req=createRequire(import.meta.url),{chromium}=req(createRequire(process.execPath).resolve('playwright'));
 const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
 const failures=[];async function test(name,fn){const ctx=await browser.newContext(),p=await ctx.newPage();p.on('pageerror',e=>failures.push(e.message));try{await p.goto(new URL('./原型.html',import.meta.url).href);const result=await p.evaluate(fn);if(!result.every(Boolean))throw Error(JSON.stringify(result));console.log('PASS '+name)}finally{await ctx.close()}}
 try{

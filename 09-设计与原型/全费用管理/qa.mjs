@@ -1,10 +1,11 @@
+import {visit,visitFunding} from './qa-workspace.mjs';
 async function returnFromPage(){if(await page.locator('#modal').isVisible())await page.locator('#closeModal').click();else {await page.locator('[data-return-list]').click();if(await page.locator('[data-discard-page]').isVisible())await page.locator('[data-discard-page]').click()}}
 import {createRequire} from 'node:module';
 import fs from 'node:fs';
 import path from 'node:path';
 import vm from 'node:vm';
 const require=createRequire(import.meta.url);
-const {chromium}=require('C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt/dependencies/node/node_modules/playwright');
+const {chromium}=require(createRequire(process.execPath).resolve('playwright'));
 const root=path.dirname(new URL(import.meta.url).pathname).replace(/^\/([A-Z]:)/,'$1');
 const file=decodeURIComponent(root);
 const html=fs.readFileSync(path.join(file,'原型.html'),'utf8');
@@ -16,7 +17,7 @@ const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.goto(new URL('./原型.html',import.meta.url).href);
 await page.evaluate(()=>{localStorage.removeItem('tgx-expense-prototype-v1')});await page.reload();
 function assert(ok,msg){if(!ok)throw Error(msg);console.log('PASS '+msg)}
-const nav=async id=>{await page.locator(`[data-nav="${id}"]`).first().click();if(await page.locator('[data-discard-page]').isVisible())await page.locator('[data-discard-page]').click()};
+const nav=async id=>{await visit(page,id);if(await page.locator('[data-discard-page]').isVisible())await page.locator('[data-discard-page]').click()};
 await page.screenshot({path:path.join(file,'qa/01-ledger.png'),fullPage:true});
 for(const id of ['policies','calculator','pools','activities','approval','settlement','exceptions','rules']){await nav(id);await page.screenshot({path:path.join(file,'qa/view-'+id+'.png'),fullPage:true})}
 await nav('calculator');await page.locator('[data-trial-new]').click();await page.locator('#serviceRate').fill('12');await page.locator('#calcForm button[type="submit"]').click();assert((await page.locator('#calcResult').innerText()).includes('超包缺口'),'试算超包提示');

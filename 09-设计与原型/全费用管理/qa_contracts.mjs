@@ -1,15 +1,16 @@
+import {visit,visitFunding} from './qa-workspace.mjs';
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
 const require = createRequire(import.meta.url);
-const {chromium} = require('C:/Program Files/WindowsApps/OpenAI.CodexPrimaryRuntime.v26-1112-611-0_26.1112.611.0_x64__3k8sg7r9htsxt/dependencies/node/node_modules/playwright');
+const {chromium} = require(createRequire(process.execPath).resolve('playwright'));
 const browser = await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
 const page = await browser.newPage();
 const errors = [];
 page.on('pageerror',error=>errors.push(error.message));
 const ui = selector=>page.locator(selector).first();
 const role = value=>ui('#role').selectOption(value);
-const nav = id=>ui('[data-nav="'+id+'"]').click();
-const tab = id=>ui('[data-funding-tab="'+id+'"]').click();
+const nav = id=>visit(page,id);
+const tab = id=>visitFunding(page,id);
 async function receipt(no, qty, amount) {
   await ui('[data-funding-sale-new]').click();
   await ui('#saleCustomer').selectOption('B');
@@ -112,7 +113,7 @@ try {
   await edge.locator('#correctionRef').fill('BANK-RECEIPT-1');
   await edge.locator('#correctionForm button').click();
   await edge.locator('#role').selectOption('finance');
-  await edge.locator('[data-nav="approval"]').first().click();
+  await visit(edge,'approval');
   await edge.locator('[data-funding-batch="BATCH-001"]').first().click();
   await edge.locator('[data-correction-confirm]').click();
   assert.deepEqual(await edge.evaluate(()=>[fundingCustomerData('A').paid,fundingCustomerData('A').deficit,

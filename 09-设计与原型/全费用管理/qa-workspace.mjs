@@ -1,0 +1,4 @@
+// 像用户一样，先进入工作区，再进入它的列表或页签。
+export async function visit(p,id){const parent={programs:'policies',calculator:'policies',approval:'activities',exceptions:'settlement'}[id];if(id==='pools')return visitFunding(p,'pools');if(parent&&!await p.locator(`.module-nav [data-nav="${id}"]`).isVisible()){await p.locator(`#nav [data-nav="${parent}"]`).click();await discard(p)}await p.locator(parent?`.module-nav [data-nav="${id}"]`:`[data-nav="${id}"]`).first().click();await discard(p)}
+async function discard(p){if(await p.locator('[data-discard-page]').isVisible())await p.locator('[data-discard-page]').click()}
+export async function visitFunding(p,id){if(id==='bindings')return visit(p,'policies');if(!await p.locator(`[data-funding-tab="${id}"]`).isVisible())await visit(p,'funding');await p.locator(`[data-funding-tab="${id}"]`).click()}

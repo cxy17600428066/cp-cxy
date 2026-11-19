@@ -33,7 +33,7 @@ function migrateFundingEpochs() {
 }
 
 function earningGroupKey(s) {
-  const suffix = s.link.separateContract ? '|'+s.policy.id : '';
+  const suffix = (s.link.separateContract ? '|'+s.policy.id : '') + (s.rule.byContract ? '|'+s.rule.pool : '');
   return 'earn|'+s.rule.id+'@'+s.rule.version+'|'+s.customer+'|'+s.period.key+suffix;
 }
 
@@ -155,7 +155,7 @@ document.addEventListener('submit',e=>{
       const p=state.policySchemes.find(x=>x.id===$('admitPolicy').value),ref=$('admitRef').value.trim();
       if(!ref||f.bindings.some(l=>l.policyId===p.id||l.approvalRef===ref))throw Error('合同已接入或凭证号为空或重复。');
       if(state.policySchemes.some(x=>x.id!==p.id&&x.status==='active'&&x.customer===p.customer&&x.contract===p.contract&&x.from<=p.to&&x.to>=p.from))throw Error('该合同已有同期生效政策。');
-      const link={id:nextId('LINK-',f.bindings),version:1,customer:p.customer,policyId:p.id,sourcePool:MAIN_POOL,
+      const link={id:nextId('LINK-',f.bindings),version:1,customer:p.customer,policyId:p.id,sourcePool:defaultSectorPool(p.customer),
         strategyName:'合同返利',rebateTiming:'year',rebateMethod:'rate',rebateRate:p.rebate,tiers:clone(f.bindings[0].tiers),
         tierMode:'whole',serviceRate:p.service,lockEarly:false,strategies:[],from:p.from,to:p.to,status:'active',separateContract:true,approvalRef:ref};
       p.status='active';p.approvalRef=ref;f.bindings.push(link);save();closeModal();render();toast('合同已接入，可配置资金策略与时点。');return;

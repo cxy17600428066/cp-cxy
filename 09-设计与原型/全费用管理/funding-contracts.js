@@ -17,7 +17,8 @@ function matchSaleFunding(input) {
   const links = activeFundingVersions(f.bindingVersions, f.bindings, input.date)
     .filter(l => l.customer === input.customer && (!input.policyId || l.policyId === input.policyId));
   if (links.length !== 1) throw Error('客户资金策略缺失或冲突，请选择销售所属的有效合同项目。');
-  const link = links[0], rule = rules[0];
+  const link = links[0], configured = rules[0];
+  const rule = configured.pool === CONTRACT_POOL ? {...configured,pool:link.sourcePool,byContract:true} : configured;
   const policy = state.policySchemes.find(p => p.id === link.policyId && p.status === 'active' &&
     p.customer === input.customer && p.from <= input.date && p.to >= input.date);
   if (!policy || link.sourcePool !== rule.pool) throw Error('客户政策、来源池与获取规则不一致，请核对。');

@@ -68,11 +68,12 @@ function earnReturnView(b){
  const pending=state.funding.batches.find(x=>x.key===b.key&&x.status==='pending');
  return `<section><h3>跨期退货冲回</h3>${p?`<p>关联退货 ${p.ids.map(esc).join('、')}；经营池来源调整 ${money(p.amount)}，服务预留调整 ${money(p.service)}。原批次及已核销活动保留。</p>${pending?`<button data-funding-batch="${pending.id}">查看本期待审单</button>`:`<button class="primary" data-earn-return="${b.id}">申请冲回经营池</button>`}`:''}${requests.length?'<p>冲回记录：'+requests.map(x=>`<button data-funding-batch="${x.id}">${x.id} · ${batchStatusLabel(x)}</button>`).join(' ')+'</p>':''}</section>`;
 }
-function batchStatusLabel(b){return b.status==='pending'?'待'+roles[['business','finance'][b.step]]:b.status==='rejected'?'已驳回':b.reversesBatch?'已冲回':'已入池'}
+function batchStatusLabel(b){return b.status==='pending'?'待'+roles[['business','finance'][b.step]]:b.status==='rejected'?'已驳回':b.reversesBatch?'已冲回':b.redeemMode==='direct'?'已确认应付':b.redeemMode==='balance'?'已转客户余额':'已入池'}
 function periodProgress(g){
  const f=state.funding,batches=f.batches.filter(b=>b.key===g.key&&b.status==='approved'),ids=new Set(batches.map(b=>b.id)),paid=sum(f.payouts.filter(p=>ids.has(p.batch)).map(p=>p.amount));
  let status=g.pending?'待'+roles[['business','finance'][g.pending.step]]:g.kind==='earn'&&earnOrigins(g).length?'待销售申请冲回':g.delta<0?'待业务申请调整':g.delta>0?(g.ready?'已到期 · 待销售申请':'累计中 · 未到期'):g.kind==='rebate'&&g.released>paid?(paid>0?'部分已发放 · 待财务付余款':'已转池 · 待财务发放'):g.kind==='rebate'&&paid>0?'已发放':g.released?'已入池':'无待办';
  if(g.kind==='rebate'&&g.delta<0&&(f.corrections||[]).some(c=>ids.has(c.batch)&&c.status==='pending'))status='待财务确认调整';
+ if(g.kind==='rebate'&&g.link.packageTerms&&!g.pending&&g.delta===0&&g.released>0){status=g.link.redeemMode==='balance'?(paid===0?'已转余额 · 待使用':paid<g.released?'余额部分已用':'余额已用完'):(paid===0?'已确认应付 · 待财务兑现':paid<g.released?'部分已兑现':'已兑现')}
  return {status,paid};
 }
 function unreservedAnnual(pool){return sum(fundingGroups().filter(g=>g.kind==='rebate'&&g.pool===pool&&g.link.rebateTiming==='year'&&!g.link.lockEarly).map(g=>Math.max(0,g.delta-Math.max(0,(g.openingReserve||0)-g.released))))}

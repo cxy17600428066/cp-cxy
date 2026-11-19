@@ -100,10 +100,10 @@ function negativeBatchLink(g) {
 
 function settlementBatchRow(b) {
   const v=batchBalance(b);
-  return [esc(b.id)+' / '+esc(customer(b.customer).name),esc(b.targetPool),money(b.amount),money(v.paid),money(v.remaining),
+  return [esc(b.id)+' / '+esc(customer(b.customer).name),esc(redemptionName(b.redeemMode)),money(b.amount),money(v.paid),money(v.remaining),
     money(v.payable)+(v.deficit?'<br>'+tag('退货待调整','warn'):''),
     `<button data-funding-batch="${esc(b.id)}">${v.deficit?'核对并调整':'批次详情'}</button> `+
-    (v.payable?`<button data-funding-payout="${esc(b.id)}">登记客户返利发放</button>`:'')];
+    (v.payable?`<button data-funding-payout="${esc(b.id)}">${b.redeemMode==='balance'?'使用客户余额':'登记直接兑现'}</button>`:'')];
 }
 
 function contractTrace(p) {
@@ -114,14 +114,14 @@ function contractTrace(p) {
   const keys=new Set(groups.map(g=>g.key));
   const batches=f.batches.filter(b=>keys.has(b.key)), batchIds=new Set(batches.map(b=>b.id));
   const sourceRows=f.credits.filter(c=>saleIds.has(c.sale)||batchIds.has(c.batch)).map(c=>[c.id,c.reverses?'经营池冲回':'销售获取',esc(c.sale||c.batch)+(c.reverses?' / 原流水 '+esc(c.reverses):''),c.pool,money(c.amount)]);
-  const transfers=f.transfers.filter(t=>batchIds.has(t.batch)).map(t=>[t.id,t.amount<0?'返利冲回':'返利转池',t.batch,t.source+' / '+t.target,money(t.amount)]);
-  const payments=f.payouts.filter(t=>batchIds.has(t.batch)).map(t=>[esc(t.ref),t.amount<0?'追回款项':'返利清偿',t.batch,t.pool,money(t.amount)]);
+  const transfers=f.transfers.filter(t=>batchIds.has(t.batch)).map(t=>[t.id,t.amount<0?'返利冲回':t.target?'转入客户余额':'预留转应付',t.batch,t.source+' / '+(t.target||'直接返利应付'),money(t.amount)]);
+  const payments=f.payouts.filter(t=>batchIds.has(t.batch)).map(t=>[esc(t.ref),t.amount<0?'追回款项':t.method==='use'?'客户余额使用':'返利清偿',t.batch,t.pool||'直接返利应付',money(t.amount)]);
   const bindings=f.bindings.filter(l=>l.customer===p.customer&&l.policyId===p.id);
   const programs=state.dealerPrograms.filter(x=>x.customer===p.customer&&x.policyId===p.id);
   const strategies=bindings.flatMap(l=>fundingStrategyLinks({link:l}).map(x=>[esc(x.strategyName||'主返利')+'<br><small>'+esc(x.clauseCode)+' · '+({primary:'主条款',stack:'可叠加',choice:'签收择一'})[x.stackMode]+'</small>',esc(x.sourcePool),
-    fundingTiming[x.rebateTiming],x.lockEarly?'先预留':'到期划拨']));
+    fundingTiming[x.rebateTiming],redemptionName(x.redeemMode||l.redeemMode||'direct')]));
   return `<section class="card"><h2>${esc(p.contract)} · ${esc(p.mode)}</h2><p>${esc(p.name)} / V${p.version}　${esc(p.from)} 至 ${esc(p.to)}</p>
-    <h3>合同返利策略</h3>${bindings.map(l=>`<button data-funding-binding="${esc(l.id)}">配置合同资金策略</button>`).join(' ')}${strategies.length?table(['策略','来源池','核验时点','来源处理'],strategies):'<p>此合同尚未接入资金策略。</p>'}
+    <h3>合同返利策略</h3>${bindings.map(l=>`<button data-funding-binding="${esc(l.id)}">配置合同资金策略</button>`).join(' ')}${strategies.length?table(['策略','来源池','核验时点','核定后去向'],strategies):'<p>此合同尚未接入资金策略。</p>'}
     <h3>关联活动方案</h3>${programs.length?programs.map(x=>`<button data-program-open="${esc(x.id)}">${esc(programInfo(x).name)}</button>`).join(' '):'<p>暂无关联活动方案。</p>'}
     <h3>签收与退货</h3>${sales.length?table(['事件','订单行 / 退货单行','签收行 / 关联原销售','净销售','规则版本'],sales.map(s=>[s.id,esc(s.doc)+' / '+esc(s.line),s.kind==='return'?esc(s.original):esc(s.receipt?s.receipt+' / '+s.receiptLine:'整行签收'),money(s.base),s.rule.id+' V'+s.rule.version])):'<p>暂无销售事件。</p>'}
     <h3>资金流水</h3>${sourceRows.length||transfers.length||payments.length?table(['流水','业务','关联单据','资金池','金额'],[...sourceRows,...transfers,...payments]):'<p>暂无入池、划拨或清偿流水。</p>'}

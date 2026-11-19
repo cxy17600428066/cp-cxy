@@ -49,8 +49,8 @@ function trialFundingSummary(t, v) {
   if (q.error) return `<div class="banner warn">预计资金获取待确认 · ${esc(q.error)}</div>`;
   t.fundingSnapshot = q.snapshot;
   const gap = v.total - q.amount;
-  return `<h3>销售资金获取预测</h3><div class="keyval"><span>按获取规则预计${q.rule.timing==='instant'?'即时入池':'期间核验入池'}</span><strong>${money(q.amount)}</strong></div>
-    <p class="note">${esc(q.rule.name)} · ${esc(q.rule.id)} / V${q.rule.version} · ${esc(q.rule.pool)}。${gap ? '合同测算额'+(gap>0?'高于':'低于')+'预计获取额 '+money(Math.abs(gap))+'。' : '合同测算额与预计获取额一致。'}实际入池仍需校验资金池上限。</p><p class="note">合同返利条款快照：${clauseList(q.snapshot.match.link).map(x=>esc(x.clauseCode)+'（'+({primary:'主条款',stack:'可叠加',choice:'签收择一'})[x.stackMode]+'）').join('、')}。试算不累计权益。</p><button type="button" data-trial-funding-refresh>按当前生效规则重新匹配</button>`;
+  return `<h3>签收行总贡献预测</h3><div class="keyval"><span>按获取规则预计${q.rule.timing==='instant'?'即时入池':'期间核验入池'}</span><strong>${money(q.amount)}</strong></div>
+    <p class="note">${esc(q.rule.name)} · ${esc(q.rule.id)} / V${q.rule.version} · ${esc(q.rule.pool)}。${gap ? '合同测算额'+(gap>0?'高于':'低于')+'预计获取额 '+money(Math.abs(gap))+'。' : '合同测算额与预计获取额一致。'}计提后先预留客户费用，剩余金额满足合同条件时才可用于活动。</p><p class="note">合同返利条款快照：${clauseList(q.snapshot.match.link).map(x=>esc(x.clauseCode)+'（'+({primary:'主条款',stack:'可叠加',choice:'签收择一'})[x.stackMode]+'）').join('、')}。试算不累计权益。</p><button type="button" data-trial-funding-refresh>按当前生效规则重新匹配</button>`;
 }
 
 function validateReceipt(input, match) {

@@ -34,7 +34,7 @@ function syncSaleClause(){
  sel.dataset.contract=key;sel.value=orig?(orig.selectedClause||opts[0]?.clauseCode):opts.length===1?opts[0].clauseCode:current;sel.disabled=ret;sel.required=!ret&&opts.length>1;
  $('saleClauseTip').textContent=all.some(x=>x.stackMode==='stack')?'同时适用：'+all.filter(x=>x.stackMode==='stack').map(x=>x.clauseCode).join('、'):'同一签收对同一条款仅累计一次。';
 }
-function programClauseOptions(policyId,ref){const l=state.funding.bindings.find(l=>l.policyId===policyId),rows=l?clauseList(l):[];return '<option value="">仅作方案测算，不关联返利入账</option>'+rows.map(x=>`<option value="${esc(x.clauseCode)}" ${ref?.policyId===policyId&&ref.code===x.clauseCode?'selected':''}>${esc(x.clauseCode+' · '+(x.strategyName||'主返利'))}</option>`).join('')}
+function programClauseOptions(policyId,ref){const l=state.funding.bindings.find(l=>l.policyId===policyId),rows=l?clauseList(l):[];return '<option value="">仅作方案测算，不关联返利入账</option>'+(ref?.policyId===policyId&&!rows.some(x=>x.clauseCode===ref.code)?`<option value="${esc(ref.code)}" selected>${esc(ref.code)} · 历史方案快照</option>`:'')+rows.map(x=>`<option value="${esc(x.clauseCode)}" ${ref?.policyId===policyId&&ref.code===x.clauseCode?'selected':''}>${esc(x.clauseCode+' · '+(x.strategyName||'主返利'))}</option>`).join('')}
 function programClauseField(r,policyId){return r.route==='rebate'?`<div class="field"><label for="clause_${r.id}">引用合同返利条款</label><select data-program-clause id="clause_${r.id}">${programClauseOptions(policyId,r.clauseRef)}</select></div>`:''}
 document.addEventListener('change',e=>{if(e.target.id==='salePolicy')syncSaleClause();if(['gPolicy','gCustomer'].includes(e.target.id))document.querySelectorAll('[data-program-clause]').forEach(sel=>{sel.innerHTML=programClauseOptions($('gPolicy').value,null)})});
 
@@ -77,3 +77,13 @@ function periodProgress(g){
 }
 function unreservedAnnual(pool){return sum(fundingGroups().filter(g=>g.kind==='rebate'&&g.pool===pool&&g.link.rebateTiming==='year'&&!g.link.lockEarly).map(g=>Math.max(0,g.delta-Math.max(0,(g.openingReserve||0)-g.released))))}
 document.addEventListener('click',e=>{const btn=e.target.closest('[data-earn-return]');if(!btn)return;try{openFundingBatch(requestEarnReturn(btn.dataset.earnReturn).id)}catch(err){fundingFail(err)}});
+
+function periodSaleTag(s){
+ const batches=state.funding.batches.filter(b=>b.kind==='earn'&&b.key===earningGroupKey(s)&&b.status!=='rejected');
+ const includes=(b,id)=>b.reversesBatch?b.returnIds.includes(id):JSON.parse(b.signature)[0].includes(id);
+ const posted=batches.find(b=>b.status==='approved'&&includes(b,s.id));
+ if(posted)return tag(posted.reversesBatch?'已冲回经营池':'已按期入池','ok');
+ const review=batches.find(b=>b.status==='pending'&&includes(b,s.id));
+ if(review)return tag('待'+roles[['business','finance'][review.step]],'warn');
+ return s.kind==='return'&&batches.some(b=>b.status==='approved'&&includes(b,s.original))?tag('待申请经营池冲回','warn'):tag('待期间入池','warn');
+}

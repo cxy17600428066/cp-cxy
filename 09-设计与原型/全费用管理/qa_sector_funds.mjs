@@ -5,7 +5,7 @@ const {chromium}=createRequire(process.execPath)('playwright');
 const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
 const url=new URL('./原型.html',import.meta.url).href;
 try{
-  const p=await browser.newPage(),errors=[];
+  const context=await browser.newContext(),p=await context.newPage(),errors=[];
   p.setDefaultTimeout(4500);p.on('pageerror',e=>errors.push(e.message));
   await p.goto(url);await visitFunding(p,'pools');
   assert.deepEqual(await p.locator('.sector-row summary span:first-child').allTextContents(),['休食','餐饮','大客','私域']);

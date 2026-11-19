@@ -2637,11 +2637,17 @@ document.addEventListener('change',e=>{if(e.target.id==='activitySourcePool')syn
 document.addEventListener('submit',async e=>{
   if(e.target.id!=='groupEntryForm')return;
   e.preventDefault();
+  const submit=e.target.querySelector('button[type=submit],button.primary');
+  if(submit.disabled)return;
   try{
+    requireFundingFinance();
+    submit.disabled=true;e.target.setAttribute('aria-busy','true');
+    $('fundingError').textContent='';
     const kind=e.target.dataset.kind;
     const r=await commitGroupEntry({kind,amount:cents($('groupAmount').value),ref:$('groupRef').value,pool:$('groupTarget')?.value,level:Number($('groupLevel')?.value)});
     finishDetail();openGroupAccount();toast((kind==='transfer'?'已调拨入池':'集团资金已入账')+' · '+r.id);
   }catch(error){fundingFail(error)}
+  finally{submit.disabled=false;e.target.removeAttribute('aria-busy')}
 });
 
 if(location.hash)restorePageHash();else writeRoute(true);

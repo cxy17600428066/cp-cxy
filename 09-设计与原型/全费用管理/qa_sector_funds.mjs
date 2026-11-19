@@ -16,14 +16,15 @@ try{
   await p.locator('#groupEntryForm button').click();
   assert.match(await p.locator('#fundingError').innerText(),/财务/);
   await p.locator('#role').selectOption('finance');await p.locator('#groupEntryForm button').click();
+  await p.locator('[data-group-account=transfer]').waitFor();
   assert.equal(await p.evaluate(()=>groupBalance()),1000001);
   await p.locator('[data-group-account=transfer]').click();
   await p.locator('#groupTarget').selectOption('POOL-CATER');
   await p.locator('#groupLevel').selectOption('3');await p.locator('#groupAmount').fill('10001');
   await p.locator('#groupRef').fill('G-001');await p.locator('#groupEntryForm button').click();
-  assert.match(await p.locator('#fundingError').innerText(),/余额不足/);
+  await p.getByRole('alert').filter({hasText:'集团余额不足'}).waitFor();
   await p.locator('#groupAmount').fill('3000.01');await p.locator('#groupEntryForm button').click();
-  await p.reload();
+  await p.locator('[data-group-account=transfer]').waitFor();await p.reload();
   assert.match(await p.locator('#workspace').innerText(),/江苏省区/);
   const position=await p.evaluate(()=>{
     const id=defaultSectorPool('C'),tot=fundingPoolTotals(id);

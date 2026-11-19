@@ -95,3 +95,5 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+.module-nav{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #cfdbdd;margin:0 0 24px;padding:0 0 12px}.module-nav button[aria-current="page"]{background:#e6f4f1;color:#075650;border-color:#4a827d;font-weight:700}.inline-disclosure{margin:16px 0}.inline-disclosure summary{font-weight:700;cursor:pointer;padding:8px 0}.inline-disclosure summary:focus-visible{outline:3px solid #397b83;outline-offset:3px}.topbar .actions{flex-wrap:wrap}.inline-disclosure[open]>summary{margin-bottom:12px}

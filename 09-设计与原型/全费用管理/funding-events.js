@@ -2,7 +2,7 @@ function fundingFail(error){const node=$('fundingError');if(node)node.textConten
 function readFundingTiers(prefix){const t=[0,1,2].map(i=>({min:cents($(prefix+'Min'+i).value),rate:Number($(prefix+'Rate'+i).value)}));if(!(t[0].min<t[1].min&&t[1].min<t[2].min))throw Error('阶梯门槛必须严格递增。');return t}
 function requireFundingFinance(){if($('role').value!=='finance')throw Error('资金配置由财务角色保存生效，请切换为财务复核。')}
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;try{
- if(b.dataset.fundingTab){fundingTab=b.dataset.fundingTab;rememberFundingTab();render()}if(b.hasAttribute('data-funding-pool-new'))openFundingPool();if(b.dataset.fundingPool)openFundingPool(b.dataset.fundingPool);
+ if(b.dataset.fundingTab){if(fundingTab!==b.dataset.fundingTab)navigate('funding',{tab:b.dataset.fundingTab})}if(b.hasAttribute('data-funding-pool-new'))openFundingPool();if(b.dataset.fundingPool)openFundingPool(b.dataset.fundingPool);
  if(b.dataset.fundingActivate){requireFundingFinance();const p=state.funding.pools.find(p=>p.id===b.dataset.fundingActivate);if(p.status!=='draft')throw Error('资金池已启用，不能重复注入初始来源。');p.status='active';save();render();toast('已启用，初始来源只计入一次。')}
  if(b.hasAttribute('data-funding-rule-new'))openFundingRule();if(b.dataset.fundingRule)openFundingRule(b.dataset.fundingRule);if(b.dataset.fundingBinding)openFundingBinding(b.dataset.fundingBinding);if(b.hasAttribute('data-funding-sale-new'))openFundingSale();
  if(b.dataset.fundingRetry){requireFundingFinance();retryFundingSale(b.dataset.fundingRetry);render();toast('已完成入池重试，没有重复信用流水。')}

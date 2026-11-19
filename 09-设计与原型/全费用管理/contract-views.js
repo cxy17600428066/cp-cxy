@@ -73,6 +73,7 @@ function syncSaleContractFields() {
     $(id).disabled=isReturn;
     if(id!=='salePolicy') $(id).closest('.field').hidden=isReturn;
   }
+  syncSaleClause();
 }
 
 function correctionView(b) {
@@ -92,6 +93,7 @@ function correctionView(b) {
 }
 
 function negativeBatchLink(g) {
+  if(g.kind==='earn')return earnOrigins(g).map(b=>`<button data-funding-batch="${esc(b.id)}">查看原入池批次 ${esc(b.id)}</button>`).join(' ');
   const batches=state.funding.batches.filter(b=>b.key===g.key&&b.status==='approved'&&b.kind==='rebate');
   return batches.filter(b=>batchBalance(b).remaining||batchBalance(b).paid).map(b=>`<button data-funding-batch="${esc(b.id)}">处理 ${esc(b.id)}</button>`).join(' ');
 }
@@ -111,12 +113,12 @@ function contractTrace(p) {
   const groups=fundingGroups().filter(g=>g.customer===p.customer&&(g.link?.policyId===p.id||g.policyId===p.id));
   const keys=new Set(groups.map(g=>g.key));
   const batches=f.batches.filter(b=>keys.has(b.key)), batchIds=new Set(batches.map(b=>b.id));
-  const sourceRows=f.credits.filter(c=>saleIds.has(c.sale)||batchIds.has(c.batch)).map(c=>[c.id,'销售获取',c.sale||c.batch,c.pool,money(c.amount)]);
+  const sourceRows=f.credits.filter(c=>saleIds.has(c.sale)||batchIds.has(c.batch)).map(c=>[c.id,c.reverses?'经营池冲回':'销售获取',esc(c.sale||c.batch)+(c.reverses?' / 原流水 '+esc(c.reverses):''),c.pool,money(c.amount)]);
   const transfers=f.transfers.filter(t=>batchIds.has(t.batch)).map(t=>[t.id,t.amount<0?'返利冲回':'返利转池',t.batch,t.source+' / '+t.target,money(t.amount)]);
   const payments=f.payouts.filter(t=>batchIds.has(t.batch)).map(t=>[esc(t.ref),t.amount<0?'追回款项':'返利清偿',t.batch,t.pool,money(t.amount)]);
   const bindings=f.bindings.filter(l=>l.customer===p.customer&&l.policyId===p.id);
   const programs=state.dealerPrograms.filter(x=>x.customer===p.customer&&x.policyId===p.id);
-  const strategies=bindings.flatMap(l=>fundingStrategyLinks({link:l}).map(x=>[esc(x.strategyName||'主返利'),esc(x.sourcePool),
+  const strategies=bindings.flatMap(l=>fundingStrategyLinks({link:l}).map(x=>[esc(x.strategyName||'主返利')+'<br><small>'+esc(x.clauseCode)+' · '+({primary:'主条款',stack:'可叠加',choice:'签收择一'})[x.stackMode]+'</small>',esc(x.sourcePool),
     fundingTiming[x.rebateTiming],x.lockEarly?'先预留':'到期划拨']));
   return `<section class="card"><h2>${esc(p.contract)} · ${esc(p.mode)}</h2><p>${esc(p.name)} / V${p.version}　${esc(p.from)} 至 ${esc(p.to)}</p>
     <h3>合同返利策略</h3>${bindings.map(l=>`<button data-funding-binding="${esc(l.id)}">配置合同资金策略</button>`).join(' ')}${strategies.length?table(['策略','来源池','核验时点','来源处理'],strategies):'<p>此合同尚未接入资金策略。</p>'}

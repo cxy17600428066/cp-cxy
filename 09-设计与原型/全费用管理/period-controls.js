@@ -21,6 +21,7 @@ function validateClauses(l,old){
 }
 function appliedClauses(s){const rows=clauseList(s.link),selected=s.selectedClause||rows[0].clauseCode;
  return rows.filter(x=>x.stackMode==='stack'||x.clauseCode===selected)}
+function immediateClauseAmount(s,base){return sum(appliedClauses(s).filter(l=>l.rebateTiming==='instant').map(l=>annualEntitlement(l,base)))}
 function chooseSaleClause(link,choice){validateClauses(link);const alternatives=clauseList(link).filter(x=>x.stackMode!=='stack');
  if(alternatives.length>1&&!choice)throw Error('合同有互斥返利条款，请为本次签收选择一项。');
  const selected=choice||alternatives[0].clauseCode;if(!alternatives.some(x=>x.clauseCode===selected))throw Error('所选返利条款不属于当前合同，请重新选择。');return selected}

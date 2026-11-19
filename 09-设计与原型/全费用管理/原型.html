@@ -2229,7 +2229,7 @@ function rememberFundingTab(){try{sessionStorage.setItem('tgx-funding-tab',fundi
 if(!pages.some(p=>p[0]==='funding')){pages.splice(1,0,['funding','02','资金池与获取']);pages.forEach((p,i)=>p[1]=String(i+1).padStart(2,'0'))}
 const ff=(id,label,value,type='text',extra='')=>`<div class="field"><label for="${id}">${label}</label><input id="${id}" type="${type}" value="${esc(value??'')}" ${extra}></div>`;
 const fs=(id,label,options,current,extra='')=>`<div class="field"><label for="${id}">${label}</label><select id="${id}" ${extra}>${options.map(([v,n])=>`<option value="${esc(v)}" ${v===current?'selected':''}>${esc(n)}</option>`).join('')}</select></div>`;
-function fundingView(){ensureFunding();const f=state.funding;return heading('POOL ACQUISITION & RELEASE','资金池与获取','先按签收行计算费用贡献，再预留客户费用；只有已解锁的剩余额度可用于活动。')+`<div class="banner">本地业务原型：提交销售会更新演示账本；真实 OMS、银行及 ERP 尚未连接。期初承接截至 ${FUND_CUTOVER} 前的演示数据，新增销售从切换日起算，不重复计提历史。</div><div class="toolbar"><div><label for="fundingDate">模拟业务日（用于期间核验）</label><input type="date" id="fundingDate" value="${f.date}"></div><small>浏览器当前日期为 ${new Date().toLocaleDateString('zh-CN')}。可切换到年末演示结算，生产系统须使用受控业务日期。</small></div><div class="tabs">${[['pools','总资金池'],['rules','SKU 贡献规则'],['sales','销售入池'],['period','期间结算'],['flows','入池与划拨流水']].map(([id,n])=>`<button data-funding-tab="${id}" aria-selected="${fundingTab===id}">${n}</button>`).join('')}</div>${({pools:fundingPoolsView,rules:fundingRulesView,sales:fundingSalesView,period:fundingPeriodView,flows:fundingFlowsView})[fundingTab]()}`}
+function fundingView(){ensureFunding();const f=state.funding;return heading('POOL ACQUISITION & RELEASE','资金池与获取','按板块查看经营资金。签收贡献先预留客户费用，集团调拨按指定组织入池。')+`<div class="banner">本地业务原型：提交销售会更新演示账本；真实 OMS、银行及 ERP 尚未连接。期初承接截至 ${FUND_CUTOVER} 前的演示数据，新增销售从切换日起算，不重复计提历史。</div><div class="toolbar"><div><label for="fundingDate">模拟业务日（用于期间核验）</label><input type="date" id="fundingDate" value="${f.date}"></div><small>浏览器当前日期为 ${new Date().toLocaleDateString('zh-CN')}。可切换到年末演示结算，生产系统须使用受控业务日期。</small></div><div class="tabs">${[['pools','总资金池'],['rules','SKU 贡献规则'],['sales','销售入池'],['period','期间结算'],['flows','入池与划拨流水']].map(([id,n])=>`<button data-funding-tab="${id}" aria-selected="${fundingTab===id}">${n}</button>`).join('')}</div>${({pools:fundingPoolsView,rules:fundingRulesView,sales:fundingSalesView,period:fundingPeriodView,flows:fundingFlowsView})[fundingTab]()}`}
 function organizationDistribution(){return `<details class="card inline-disclosure"><summary>按组织查看分配与占用</summary><p class="note">新签收行按合同组织比例分配；期初及未指定比例部分使用池默认比例。各组织金额已含在总池内。</p>${state.funding.pools.filter(p=>p.kind==='operating'&&p.status==='active').map(p=>{const b=fundingOrgBalances(p.id);return `<h3>${esc(p.name)}</h3>${table(['承担组织','池默认比例','分配额度','已核销','占用','可用','缺口'],poolLevelNames(p).map((n,i)=>[esc(n),p.ratios[i]+'%',money(b.gross[i]),money(b.used[i]),money(b.occupied[i]),money(b.available[i]),money(b.gap[i])]))}${p.id===MAIN_POOL?'<button data-action="export">导出主池组织台账 CSV</button>':''}`}).join('')}</details>`}
 function fundingPoolsView(){return sectorOverview()+`<h2>资金池明细</h2><div class="actions" style="margin-bottom:16px"><button data-funding-pool-new>新建资金池</button></div><section class="card">${table(['资金池 / 用途','预算上限','期初来源 / 销售贡献','划入 / 划出','客户预留 / 未解锁','已用 / 占用','可用 / 缺口','操作'],state.funding.pools.map(p=>{const t=fundingPoolTotals(p.id);return[`${esc(p.name)}<br><small>${esc(poolPath(p))} · ${p.id} · ${p.kind==='rebate'?'客户余额，仅本客户可用':'经营池'} · ${p.status==='active'?'已启用':'草稿'}</small>`,p.kind==='rebate'?'按批准返利批次':money(p.cap),money(t.initial)+' / '+money(t.earned),money(t.incoming)+' / '+money(t.outgoing),money(t.reserve)+(p.kind==='operating'?'<br><small>未解锁 '+money(t.held||0)+'</small>':''),money(t.used)+' / '+money(t.occupied),`<strong>${money(t.available)}</strong> / ${money(t.gap)}${p.kind==='operating'?'<br><small>历史未预留年返 '+money(unreservedAnnual(p.id))+'（不扣可用）</small>':''}`,`<button class="small" data-funding-pool="${p.id}">配置</button>${p.status==='draft'?`<button class="small" data-funding-activate="${p.id}">财务启用</button>`:''}`]}))}</section>${packageLedgerView()}${organizationDistribution()}<p class="note">返利、服务及其他包内费用先预留。直接兑现及转客户余额都消耗原预留，不重复占用活动额度。预算上限不是销售贡献。</p>`}
 function fundingRulesView(){return`<div class="actions" style="margin-bottom:16px"><button class="primary" data-funding-rule-new>新建 SKU 贡献规则</button></div><section class="card">${table(['获取规则 / 版本','目标池 / 客户 / SKU','获取方式','入池时点','有效期','操作'],state.funding.rules.map(r=>[esc(r.name)+'<br><small>'+r.id+' / V'+r.version+'</small>',esc(r.pool===CONTRACT_POOL?'随客户合同归属':r.pool)+'<br><small>'+(r.customer==='*'?'全部客户':customer(r.customer).name)+' / '+esc(r.sku)+'</small>',r.method==='policy'?'按有效合同的 SKU 总费率':r.method==='quantity'?money(r.unit)+' / 数量':r.method==='tier'?'单笔金额阶梯，达档全额':r.rate+'% × 不含税净销售额',fundingTiming[r.timing],r.from+' 至 '+r.to,`<button class="small" data-funding-rule="${r.id}">新版本配置</button>`]))}</section><p class="note">逐行优先匹配具体 SKU；无专属规则时按通用规则，命中同级多条时拦截；保存新版本后，新销售使用新版本，原销售和退货继续引用原快照。</p>`}
@@ -2538,8 +2538,23 @@ function postGroupEntry({kind,amount,ref,pool,level}){
     Object.assign(entry,{pool,level,target:transferTargetName(target,level),sector:target.sector,area:target.area,province:target.province});
   }else if(!Number.isSafeInteger(balance+amount))throw Error('入账后余额超出有效精度范围。');
   journal.push(entry);
-  save();
+  try{localStorage.setItem(key,JSON.stringify(state))}
+  catch{journal.pop();throw Error('浏览器未能保存本次入账，请检查本地存储后重试。')}
   return entry;
+}
+// 同一份本地账本同时打开时，串行复核余额和凭证。
+async function commitGroupEntry(input){
+  const commit=()=>{
+    const persisted=JSON.parse(localStorage.getItem(key)||'null');
+    if(persisted?.funding?.sectorRevision)state=persisted;
+    return postGroupEntry(input);
+  };
+  return navigator.locks ? navigator.locks.request(key+'-group',commit) : commit();
+}
+function preserveGroupJournal(){
+  if(!state.funding?.sectorRevision)return;
+  const stored=JSON.parse(localStorage.getItem(key)||'null')?.funding?.groupJournal;
+  if(stored?.length>state.funding.groupJournal.length)state.funding.groupJournal=stored;
 }
 function groupLedgerView(){
   const journal=state.funding.groupJournal;
@@ -2567,10 +2582,10 @@ function sectorOverview(){
       }
     }
     const orgRows=[...['总部留存','板块本级'].map((name,i)=>[name,money(at(rows,'available',i)),money(at(rows,'occupied',i)),money(at(rows,'gap',i))]),...parts];
-    return `<details class="sector-row"><summary><span>${sector}</span><span>${money(total(rows,'earned'))}</span><span>${money(total(rows,'incoming'))}</span><strong>${money(total(rows,'available'))}</strong></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
+    return `<details class="sector-row"><summary aria-label="${sector}，本期销售贡献 ${money(total(rows,'earned'))}，集团调入 ${money(total(rows,'incoming'))}，活动可用 ${money(total(rows,'available'))}"><span>${sector}</span><span>${money(total(rows,'earned'))}</span><span>${money(total(rows,'incoming'))}</span><strong>${money(total(rows,'available'))}</strong></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
   }).join('');
   const unknown=all.filter(x=>!x.p.sector);
-  return `<section class="card sector-overview"><div class="group-heading"><div><h2>总资金池</h2><p class="note">经营池可用合计 <strong>${money(total(all,'available'))}</strong>。展开板块可查看所属大区、省区及各级可用额度。</p></div><button class="primary" data-group-account="overview">集团账户 · ${money(groupBalance())} →</button></div><div class="sector-head" aria-hidden="true"><span>业务板块</span><span>销售贡献</span><span>集团调入</span><span>活动可用</span></div>${tree}${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
+  return `<section class="card sector-overview"><div class="group-heading"><div><h2>总资金池</h2><p class="note">经营池可用合计 <strong>${money(total(all,'available'))}</strong>。展开板块可查看所属大区、省区及各级可用额度。</p></div><button class="primary" data-group-account="overview">集团账户 · ${money(groupBalance())} →</button></div><div class="sector-head" aria-hidden="true"><span>业务板块</span><span>本期销售贡献</span><span>集团调入</span><span>活动可用</span></div>${tree}${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
 }
 function openGroupAccount(action='overview'){
   const transfer=action==='transfer',entry=transfer||action==='deposit',f=state.funding;
@@ -2619,12 +2634,12 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('input',e=>{if(e.target.closest('#groupEntryForm'))updateGroupPreview()});
 document.addEventListener('change',e=>{if(e.target.id==='activitySourcePool')syncActivityPool()});
-document.addEventListener('submit',e=>{
+document.addEventListener('submit',async e=>{
   if(e.target.id!=='groupEntryForm')return;
   e.preventDefault();
   try{
     const kind=e.target.dataset.kind;
-    const r=postGroupEntry({kind,amount:cents($('groupAmount').value),ref:$('groupRef').value,pool:$('groupTarget')?.value,level:Number($('groupLevel')?.value)});
+    const r=await commitGroupEntry({kind,amount:cents($('groupAmount').value),ref:$('groupRef').value,pool:$('groupTarget')?.value,level:Number($('groupLevel')?.value)});
     finishDetail();openGroupAccount();toast((kind==='transfer'?'已调拨入池':'集团资金已入账')+' · '+r.id);
   }catch(error){fundingFail(error)}
 });

@@ -67,6 +67,13 @@ try{
   for(const hash of ['#/funding?tab=pools','#/funding/groupAccount/overview','#/funding/groupAccount/transfer','#/funding?tab=flows']){
     await p.goto(url+hash);await p.waitForTimeout(80);assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),hash);
   }
+  const other=await p.context().newPage();await other.goto(url);
+  const simultaneous=await Promise.all([p,other].map(tab=>tab.evaluate(async()=>{
+    $('role').value='finance';
+    try{await commitGroupEntry({kind:'transfer',pool:'POOL-PRIVATE',amount:550000,level:1,ref:'SIMULTANEOUS'});return true}catch{return false}
+  })));
+  assert.equal(simultaneous.filter(Boolean).length,1);await other.reload();
+  assert.equal(await other.evaluate(()=>fundingPoolTotals('POOL-PRIVATE').incoming),550000);await other.close();
   const old=await browser.newPage();await old.goto(url);
   const migration=await old.evaluate(()=>{
     const f=state.funding,main=f.pools.find(p=>p.id===MAIN_POOL);

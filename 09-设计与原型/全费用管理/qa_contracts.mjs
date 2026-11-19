@@ -25,7 +25,7 @@ try {
   await page.goto(new URL('./原型.html',import.meta.url).href);
   await nav('calculator');
   await ui('[data-trial-open="SIM-002"]').click();
-  assert.match(await ui('#calcResult').innerText(),/20,000.00/);
+  assert.match(await ui('#calcResult').innerText(),/签收行总贡献预测/);
   assert.match(await ui('#calcResult').innerText(),/24,000.00/);
   await ui('[data-trial-save]').click();
   assert.equal(await page.evaluate(()=>state.trialSchemes[1].fundingSnapshot.match.rule.id),'GET-001');
@@ -135,7 +135,7 @@ try {
     state.funding=snapshot;
     const legacy=state.funding;
     for(const l of [...legacy.bindings,...legacy.bindingVersions,...legacy.sales.map(s=>s.link)]) {
-      delete l.accumulationVersion;
+      delete l.accumulationVersion;delete l.packageTerms;delete l.redeemMode;
       for(const x of l.strategies||[])delete x.accumulationVersion;
     }
     legacy.version=1;

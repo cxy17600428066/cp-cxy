@@ -36,5 +36,17 @@ try{
  await visitFunding(p,'period');assert.match(await p.locator('#workspace').innerText(),/已发放/);assert.deepEqual(await p.evaluate(()=>periodProgress(fundingGroups().find(x=>x.customer==='A'&&x.kind==='rebate'))),{status:'已发放',paid:400000});
  await p.setViewportSize({width:390,height:844});assert.ok(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
  console.log('PASS 年返待办、转池与实付分列，期初预留不重复提示，提示不改变余额，手机布局');
+ const edge=await browser.newPage();edge.on('pageerror',e=>errors.push(e.message));await edge.goto(entry);
+ const audit=await edge.evaluate(()=>{
+  const f=state.funding;f.rules[0].timing='month';const inp={kind:'sale',customer:'B',doc:'NOV',line:'1',sku:'S',qty:100,base:1000000,date:f.date};const sale=postFundingSale(inp);f.date='2026-11-30';
+  const b=prepareFundingBatch(fundingGroups().find(g=>g.kind==='earn').key);for(const role of ['business','finance']){$('role').value=role;approveFundingBatch(b.id,false,'OK')}
+  const shares=fundingOrgBalances(MAIN_POOL).available;state.activities.push({id:'TEST-RESERVED',status:'approved',shares:clone(shares),amount:sum(shares)});
+  f.date='2026-12-08';const ret=(doc,qty)=>postFundingSale({...inp,kind:'return',doc,qty,base:qty*10000,date:f.date,original:sale.id});ret('R1',20);$('role').value='sales';const stale=requestEarnReturn(b.id);
+  $('role').value='business';approveFundingBatch(stale.id,false,'');ret('R2',10);$('role').value='finance';let blocked=false;try{approveFundingBatch(stale.id,false,'')}catch{blocked=true}
+  if(f.credits.length!==1)throw Error('stale attempt posted');approveFundingBatch(stale.id,true,'退货明细已更新');$('role').value='sales';const next=requestEarnReturn(b.id);
+  for(const role of ['business','finance']){$('role').value=role;approveFundingBatch(next.id,false,'')}
+  let duplicate=false;try{requestEarnReturn(b.id)}catch{duplicate=true}
+  return [blocked,duplicate,next.returnIds.length,f.credits.length,f.credits[1].amount,f.credits[1].service,fundingPoolTotals(MAIN_POOL).gap,JSON.stringify(state.activities.at(-1).shares)===JSON.stringify(shares)];
+ });assert.deepEqual(audit,[true,true,2,2,-30000,-15000,15000,true]);await edge.close();console.log('PASS 核验中新增退货拦截旧金额，驳回重报，已占用不改写，来源缺口150元，禁止重复冲回');
  assert.deepEqual(errors,[]);
 }finally{await browser.close()}

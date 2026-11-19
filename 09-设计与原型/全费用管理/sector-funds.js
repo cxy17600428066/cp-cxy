@@ -173,10 +173,10 @@ function sectorOverview(){
       }
     }
     const orgRows=[...['总部留存','板块本级'].map((name,i)=>[name,money(at(rows,'available',i)),money(at(rows,'occupied',i)),money(at(rows,'gap',i))]),...parts];
-    return `<details class="sector-row"><summary aria-label="${sector}，本期销售贡献 ${money(total(rows,'earned'))}，集团调入 ${money(total(rows,'incoming'))}，活动可用 ${money(total(rows,'available'))}"><span>${sector}</span><span>${money(total(rows,'earned'))}</span><span>${money(total(rows,'incoming'))}</span><strong>${money(total(rows,'available'))}</strong></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
+    return `<details class="sector-row"><summary aria-label="${sector}，本期销售贡献 ${money(total(rows,'earned'))}，集团调入 ${money(total(rows,'incoming'))}，活动可用 ${money(total(rows,'available'))}"><span class="sector-name">${sector}</span><small>活动可用</small><strong>${money(total(rows,'available'))}</strong><span class="sector-metrics"><span>销售贡献<b>${money(total(rows,'earned'))}</b></span><span>集团调入<b>${money(total(rows,'incoming'))}</b></span></span><span class="sector-link" aria-hidden="true">组织明细</span></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
   }).join('');
   const unknown=all.filter(x=>!x.p.sector);
-  return `<section class="card sector-overview"><div class="group-heading"><div><h2>总资金池</h2><p class="note">经营池可用合计 <strong>${money(total(all,'available'))}</strong>。展开板块可查看所属大区、省区及各级可用额度。</p></div><button class="primary" data-group-account="overview">集团账户 · ${money(groupBalance())} →</button></div><div class="sector-head" aria-hidden="true"><span>业务板块</span><span>本期销售贡献</span><span>集团调入</span><span>活动可用</span></div>${tree}${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
+  return `<section class="card sector-overview"><div class="fund-summary"><div><h2>经营池可用合计</h2><strong>${money(total(all,'available'))}</strong></div><div><h2>集团可调拨余额</h2><strong>${money(groupBalance())}</strong><button data-group-account="overview">进入集团账户 <span aria-hidden="true">→</span></button></div></div><h2 class="sector-title">板块资金</h2><div class="sector-grid">${tree}</div>${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
 }
 function openGroupAccount(action='overview'){
   const transfer=action==='transfer',entry=transfer||action==='deposit',f=state.funding;
@@ -184,7 +184,7 @@ function openGroupAccount(action='overview'){
   launchPage({kind:'groupAccount',id:entry?action:'overview'},()=>{
     if(!entry){
       const received=sum(f.groupJournal.filter(e=>e.kind==='deposit').map(e=>e.amount));
-      showModal(title,`<div class="grid stats">${stat('集团可调拨余额',money(groupBalance()),'可分配给四大板块',true)}${stat('累计集团入账',money(received),'财务凭证入账合计')}${stat('累计调拨入池',money(received-groupBalance()),'按接收组织定向入池')}</div><div class="actions group-actions"><button class="primary" data-group-account="transfer">调拨入池</button><button data-group-account="deposit">登记集团资金</button></div><p class="note">由财务复核角色办理。调拨到账后，接收组织可用于活动；签收贡献与客户返利仍按合同计算。</p>${groupLedgerView()}`);
+      showModal(title,`<div class="fund-summary group-summary"><div><h2>集团可调拨余额</h2><strong>${money(groupBalance())}</strong></div><div><h2>累计入账</h2><strong>${money(received)}</strong></div><div><h2>累计调拨</h2><strong>${money(received-groupBalance())}</strong></div></div><div class="actions group-actions"><button class="primary" data-group-account="transfer">调拨入池</button><button data-group-account="deposit">登记集团资金</button></div><p class="note">由财务复核角色办理。调拨到账后，接收组织可用于活动；签收贡献与客户返利仍按合同计算。</p>${groupLedgerView()}`);
       return;
     }
     const targets=availableTargets();

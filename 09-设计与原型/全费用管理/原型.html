@@ -106,25 +106,38 @@
 
 .module-nav{display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid #cfdbdd;margin:0 0 24px;padding:0 0 12px}.module-nav button[aria-current="page"]{background:#e6f4f1;color:#075650;border-color:#4a827d;font-weight:700}.inline-disclosure{margin:16px 0}.inline-disclosure summary{font-weight:700;cursor:pointer;padding:8px 0}.inline-disclosure summary:focus-visible{outline:3px solid #397b83;outline-offset:3px}.topbar .actions{flex-wrap:wrap}.inline-disclosure[open]>summary{margin-bottom:12px}
 
+
 .sector-overview { margin-bottom:24px }
-.group-heading, .group-actions { display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap }
-.group-actions { justify-content:flex-start; margin:24px 0 12px }
+.fund-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; padding:20px 24px; border-radius:12px; background:#eff5f4 }
+.fund-summary h2 { color:#365754; font-size:14px; margin:0 0 6px }
+.fund-summary strong { display:block; font-size:clamp(20px,3vw,32px); font-variant-numeric:tabular-nums; overflow-wrap:anywhere }
+.fund-summary button { margin-top:12px; min-height:44px }
+.group-summary { grid-template-columns:repeat(3,minmax(0,1fr)) }
+.group-actions { margin:24px 0 12px }
 .group-ledger { margin:16px 0 }
-.sector-head, .sector-row summary { display:grid; grid-template-columns:minmax(88px,1.2fr) repeat(3,minmax(0,1fr)); align-items:center; gap:12px; padding:12px 16px; text-align:right }
-.sector-head { background:#f4f7f8; font-size:.86em; font-weight:600 }
-.sector-head span:first-child, .sector-row summary span:first-child { text-align:left }
-.sector-row { border-bottom:1px solid #d5e1e5 }
-.sector-row summary { cursor:pointer; min-height:48px; font-variant-numeric:tabular-nums; overflow-wrap:anywhere }
-.sector-row summary:hover, .sector-row[open] summary { background:#edf7f5 }
-.sector-row summary span:first-child { font-weight:700 }
-.sector-row summary span:first-child::before { content:'▸'; display:inline-block; width:1.3em }
-.sector-row[open] summary span:first-child::before { content:'▾' }
-.sector-body { padding:4px 12px 12px; min-width:0 }
-.sector-row summary:focus-visible { outline:2px solid #006a66; outline-offset:-2px }
-@media (max-width:640px) {
- .sector-head, .sector-row summary { grid-template-columns:minmax(45px,.8fr) repeat(3,minmax(0,1fr)); padding:12px 4px; gap:4px; font-size:12px }
- .sector-body { padding:4px 0 8px }
- .sector-body table { min-width:340px }
+.sector-title { margin:24px 0 12px }
+.sector-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; align-items:start }
+.sector-row { border:1px solid #cfdbdd; border-radius:12px; min-width:0 }
+.sector-row summary { display:grid; cursor:pointer; padding:16px; gap:6px; border-radius:11px; overflow-wrap:anywhere }
+.sector-row summary:hover,.sector-row[open] summary { background:#edf7f5 }
+.sector-row summary:focus-visible { outline:2px solid #006a66; outline-offset:2px }
+.sector-row summary > strong { font-size:clamp(20px,2vw,27px); font-variant-numeric:tabular-nums }
+.sector-name,.sector-metrics { display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px }
+.sector-name { font-weight:700; font-size:16px; margin-bottom:6px }
+.sector-row[open] .sector-name span { rotate:180deg }
+.sector-metrics { font-size:12px; color:#365754; border-top:1px solid #cfdbdd; padding-top:10px; margin-top:6px }
+.sector-metrics b { display:block; color:#183334 }
+.sector-link { color:#075650; font-size:13px; font-weight:700; margin-top:8px }
+.sector-row[open] { grid-column:1/-1 }
+.sector-row[open] summary { grid-template-columns:minmax(0,1fr) minmax(0,1fr); align-items:center }
+.sector-row[open] .sector-name { grid-column:1/-1 }
+.sector-body { padding:12px }
+@media (max-width:900px) { .sector-grid { grid-template-columns:repeat(2,minmax(0,1fr)) } }
+@media (max-width:520px) {
+ .fund-summary { gap:12px; padding:14px }
+ .group-summary { grid-template-columns:repeat(2,minmax(0,1fr)) }
+ .group-summary > :first-child { grid-column:1/-1 }
+ .sector-row summary { padding:12px }
 }
 
 /* PAGE_LAYOUT_END */
@@ -2622,10 +2635,10 @@ function sectorOverview(){
       }
     }
     const orgRows=[...['总部留存','板块本级'].map((name,i)=>[name,money(at(rows,'available',i)),money(at(rows,'occupied',i)),money(at(rows,'gap',i))]),...parts];
-    return `<details class="sector-row"><summary aria-label="${sector}，本期销售贡献 ${money(total(rows,'earned'))}，集团调入 ${money(total(rows,'incoming'))}，活动可用 ${money(total(rows,'available'))}"><span>${sector}</span><span>${money(total(rows,'earned'))}</span><span>${money(total(rows,'incoming'))}</span><strong>${money(total(rows,'available'))}</strong></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
+    return `<details class="sector-row"><summary aria-label="${sector}，本期销售贡献 ${money(total(rows,'earned'))}，集团调入 ${money(total(rows,'incoming'))}，活动可用 ${money(total(rows,'available'))}"><span class="sector-name">${sector}</span><small>活动可用</small><strong>${money(total(rows,'available'))}</strong><span class="sector-metrics"><span>销售贡献<b>${money(total(rows,'earned'))}</b></span><span>集团调入<b>${money(total(rows,'incoming'))}</b></span></span><span class="sector-link" aria-hidden="true">组织明细</span></summary><div class="sector-body">${table(['组织归属','本级可用','本级占用','本级缺口'],orgRows)}</div></details>`;
   }).join('');
   const unknown=all.filter(x=>!x.p.sector);
-  return `<section class="card sector-overview"><div class="group-heading"><div><h2>总资金池</h2><p class="note">经营池可用合计 <strong>${money(total(all,'available'))}</strong>。展开板块可查看所属大区、省区及各级可用额度。</p></div><button class="primary" data-group-account="overview">集团账户 · ${money(groupBalance())} →</button></div><div class="sector-head" aria-hidden="true"><span>业务板块</span><span>本期销售贡献</span><span>集团调入</span><span>活动可用</span></div>${tree}${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
+  return `<section class="card sector-overview"><div class="fund-summary"><div><h2>经营池可用合计</h2><strong>${money(total(all,'available'))}</strong></div><div><h2>集团可调拨余额</h2><strong>${money(groupBalance())}</strong><button data-group-account="overview">进入集团账户 <span aria-hidden="true">→</span></button></div></div><h2 class="sector-title">板块资金</h2><div class="sector-grid">${tree}</div>${unknown.length?`<p class="banner warn">另有 ${unknown.length} 个历史经营池待确认组织，可用合计 ${money(total(unknown,'available'))}，已计入总额。请在资金池配置中确认归属。</p>`:''}</section>`;
 }
 function openGroupAccount(action='overview'){
   const transfer=action==='transfer',entry=transfer||action==='deposit',f=state.funding;
@@ -2633,7 +2646,7 @@ function openGroupAccount(action='overview'){
   launchPage({kind:'groupAccount',id:entry?action:'overview'},()=>{
     if(!entry){
       const received=sum(f.groupJournal.filter(e=>e.kind==='deposit').map(e=>e.amount));
-      showModal(title,`<div class="grid stats">${stat('集团可调拨余额',money(groupBalance()),'可分配给四大板块',true)}${stat('累计集团入账',money(received),'财务凭证入账合计')}${stat('累计调拨入池',money(received-groupBalance()),'按接收组织定向入池')}</div><div class="actions group-actions"><button class="primary" data-group-account="transfer">调拨入池</button><button data-group-account="deposit">登记集团资金</button></div><p class="note">由财务复核角色办理。调拨到账后，接收组织可用于活动；签收贡献与客户返利仍按合同计算。</p>${groupLedgerView()}`);
+      showModal(title,`<div class="fund-summary group-summary"><div><h2>集团可调拨余额</h2><strong>${money(groupBalance())}</strong></div><div><h2>累计入账</h2><strong>${money(received)}</strong></div><div><h2>累计调拨</h2><strong>${money(received-groupBalance())}</strong></div></div><div class="actions group-actions"><button class="primary" data-group-account="transfer">调拨入池</button><button data-group-account="deposit">登记集团资金</button></div><p class="note">由财务复核角色办理。调拨到账后，接收组织可用于活动；签收贡献与客户返利仍按合同计算。</p>${groupLedgerView()}`);
       return;
     }
     const targets=availableTargets();

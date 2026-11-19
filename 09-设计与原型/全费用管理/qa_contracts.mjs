@@ -42,7 +42,7 @@ try {
   await role('finance');
   await ui('[data-funding-binding="LINK-002"]').click();
   await ui('[data-funding-strategy-add]').click();
-  await ui('[data-st="strategyName"]').fill('月度返利');
+  await ui('[data-st="strategyName"]').fill('月度返利');await ui('[data-st=clauseCode]').fill('M-01');await ui('[data-st=stackMode]').selectOption('stack');
   await ui('[data-st="rebateRate"]').fill('1');
   await ui('#fundingBindingForm button[type=submit]').click();
   await tab('sales');

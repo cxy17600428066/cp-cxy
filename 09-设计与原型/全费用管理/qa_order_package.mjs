@@ -8,9 +8,10 @@ try{for(const mode of ['direct','balance']){
  const snap=await page.evaluate(()=>{
  const f=state.funding;f.rules.push({...clone(f.rules[0]),id:'GET-SKU-X',name:'SKU-X 10%',sku:'X',method:'rate',rate:10});const before=fundingPoolTotals(MAIN_POOL);
  const s=postFundingSale({kind:'sale',customer:'C',sku:'X',doc:'ORDER-C',line:'1',base:10000000,qty:100,date:f.date});const row=packageLines()[0];return {id:s.id,before:before.available,after:fundingPoolTotals(MAIN_POOL).available,values:[row.total,row.rebate,row.service,row.held,row.available]};
- });assert.deepEqual(snap.values,[1000000,200000,300000,500000,0]);assert.equal(snap.before,snap.after);
- await visitFunding(page,'pools');await q('[data-order-unlock]').click();await q('#releasePackageRef').fill('客户验收-001');await q('#releasePackageForm button').click();const unlocked=await page.evaluate(()=>fundingPoolTotals(MAIN_POOL).available);assert.equal(unlocked-snap.before,500000);
+ });assert.deepEqual(snap.values,[1000000,200000,300000,500000,0]);assert.equal(snap.before,snap.after);const orgBefore=await page.evaluate(()=>fundingOrgBalances(MAIN_POOL).available);
+ await visitFunding(page,'pools');await q('[data-order-unlock]').click();await q('#releasePackageRef').fill('客户验收-001');await q('#releasePackageForm button').click();const unlocked=await page.evaluate(()=>fundingPoolTotals(MAIN_POOL).available);assert.equal(unlocked-snap.before,500000);const orgAfter=await page.evaluate(()=>fundingOrgBalances(MAIN_POOL).available);assert.deepEqual(orgAfter.map((n,i)=>n-orgBefore[i]),[50000,100000,150000,200000]);
  const batch=await page.evaluate(()=>{const f=state.funding;f.date='2026-12-31';$('role').value='sales';const g=fundingGroups().find(g=>g.customer==='C'&&g.kind==='rebate'),b=prepareFundingBatch(g.key);for(const role of ['business','finance']){$('role').value=role;approveFundingBatch(b.id,false,'核对完成')}return b});
+ if(mode==='balance'){const wrong=await page.evaluate(b=>{try{recordRedemption(b,100,'use','INVALID','OTHER-CUSTOMER-ORDER');return false}catch{return true}},batch);assert.ok(wrong)}
  assert.equal(batch.redeemMode,mode);assert.equal(await page.evaluate(()=>fundingPoolTotals(MAIN_POOL).available),unlocked);assert.equal(await page.evaluate(()=>state.funding.pools.some(p=>p.id==='REBATE-C')),mode==='balance');assert.equal(await page.evaluate(()=>state.funding.payouts.length),0);
  // Changing future terms cannot redirect this batch; a forged attempt to use both paths is rejected.
  const blocked=await page.evaluate(({batch,mode})=>{state.funding.bindings.find(x=>x.customer==='C').redeemMode=mode==='balance'?'direct':'balance';try{recordRedemption(batch,100,mode==='balance'?'cash':'use','WRONG','REF')}catch{return true}return false},{batch,mode});assert.ok(blocked);
@@ -21,4 +22,14 @@ try{for(const mode of ['direct','balance']){
  assert.equal(end[2],mode==='balance'?'use':'offset');
  const limits=await page.evaluate(id=>{const b=state.funding.batches.find(x=>x.id===id),method=b.redeemMode==='balance'?'use':'cash';$('role').value='finance';return [[1,'C-001'],[160000,'OVER']].map(([amount,ref])=>{try{recordRedemption(b,amount,method,ref,'ORDER')}catch{return true}return false})},batch.id);assert.deepEqual(limits,[true,true]);
  await visitFunding(page,'pools');await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));await page.close();console.log('PASS '+mode+'：按行计提、条件解锁、核定分流、限额与凭证、实际办理及刷新');
-}assert.deepEqual(errors,[])}finally{await browser.close()}
+}
+ const mixed=await browser.newPage();await mixed.goto(new URL('./原型.html',import.meta.url).href);
+ const audit=await mixed.evaluate(()=>{
+ const f=state.funding, b0=fundingOrgBalances(MAIN_POOL).available;
+ const x={kind:'sale',customer:'A',sku:'NORMAL',doc:'MIX',line:'1',base:10000000,qty:10,date:f.date};
+ const a=postFundingSale(x),first=fundingOrgBalances(MAIN_POOL).available.map((n,i)=>n-b0[i]);
+ f.rules.push({...clone(f.rules[0]),id:'LOW',sku:'LOW',method:'rate',rate:3});postFundingSale({...x,sku:'LOW',line:'2',base:1000000});
+ const rows=packageLines();return {first,nums:rows.map(r=>[r.total,r.rebate,r.service,r.held,r.gap,r.available]),gap:fundingPoolTotals(MAIN_POOL).packageGap};
+ });
+ assert.deepEqual(audit,{first:[50000,100000,100000,250000],nums:[[1000000,200000,300000,500000,0,0],[30000,20000,30000,0,20000,0]],gap:20000});await mixed.close();console.log('PASS 截图四级分配、不同SKU逐行超包与同单暂停释放');
+ assert.deepEqual(errors,[])}finally{await browser.close()}

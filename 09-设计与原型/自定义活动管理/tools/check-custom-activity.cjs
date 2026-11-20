@@ -4,7 +4,7 @@ const { chromium } = require('C:/Users/admin/.cache/codex-runtimes/codex-primary
  const browser=await chromium.launch({headless:true,channel:'msedge'});
  const page=await browser.newPage({viewport:{width:1024,height:900}});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.setContent(fs.readFileSync('C:/Users/admin/.codex/visualizations/2026/10/07/01a113f3-1f33-7d40-bf39-7aaed264b0b9/custom-activity.html','utf8'));
+ await page.setContent(fs.readFileSync('E:/cxy/09-设计与原型/自定义活动管理/custom-activity.html','utf8'));
  if(await page.locator('#total').innerText()!=='1,746.88')throw Error('total');
  await page.locator('#sales').fill('10000');
  await page.locator('#choose-stores').click();
@@ -19,7 +19,7 @@ const { chromium } = require('C:/Users/admin/.cache/codex-runtimes/codex-primary
  await page.locator('#add').click();if(await page.locator('#cost-rows tr').count()!==4)throw Error('add');
  await page.setViewportSize({width:360,height:900});
  if(await page.evaluate(()=>document.documentElement.scrollWidth>360))throw Error('page overflow');
- await page.screenshot({path:'E:/cxy/work/custom-activity-mobile.png',fullPage:true});
+ await page.screenshot({path:'E:/cxy/09-设计与原型/自定义活动管理/tools/custom-activity-mobile.png',fullPage:true});
  if(errors.length)throw Error(errors.join(','));
  console.log('Verified: totals, sales ratio, cap validation, submit, add row, 360px layout.');
  await browser.close();

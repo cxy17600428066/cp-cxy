@@ -1,5 +1,5 @@
 from pathlib import Path
-p=Path('E:/cxy/活动执行填报.html')
+p=Path('E:/cxy/09-设计与原型/自定义活动管理/活动执行填报.html')
 s=p.read_text(encoding='utf-8')
 script='''<style>
 #execution-layout{display:grid;grid-template-columns:240px minmax(0,1fr);gap:20px;padding:16px;background:#f4f6f9}#execution-sidebar{background:white;padding:20px;box-shadow:0 2px 8px #0001;font:14px/1.8 "Microsoft YaHei",sans-serif;color:#263445}#execution-sidebar p{margin:0 0 20px;overflow-wrap:anywhere}#execution-layout main{padding:0}#execution-layout details{margin:0 0 20px;background:white;border:1px solid #dce3ec;border-radius:4px}#execution-layout summary{padding:20px;color:#263445;cursor:pointer;font-weight:600}#execution-layout summary span{color:#176bc5;margin-left:16px}#application-snapshot{padding:16px}#application-snapshot section{margin-top:12px}#application-snapshot input:disabled,#application-snapshot select:disabled,#application-snapshot textarea:disabled{opacity:1;color:#586779;-webkit-text-fill-color:#586779;background:#f4f6f9}#execution-layout .collapse-hint{display:block;padding:16px;text-align:center;color:#586779;background:#f7f9fb;border:1px dashed #dce3ec;margin:0 16px 16px}#execution-layout details[open]+.collapse-hint{display:none}@media(max-width:850px){#execution-layout{grid-template-columns:1fr}#execution-sidebar{display:none}}
@@ -10,7 +10,7 @@ function sync(){let source;try{source=parent.document.getElementById('applicatio
 s=s.replace('</body>',script+'</body>')
 p.write_text(s,encoding='utf-8')
 # Resync the application snapshot when selecting execution in the combined page.
-m=Path('E:/cxy/work/merge-activity-pages.py')
+m=Path('E:/cxy/09-设计与原型/自定义活动管理/tools/merge-activity-pages.py')
 t=m.read_text(encoding='utf-8')
 t=t.replace("document.title=button.textContent+' · 活动管理'","document.title=button.textContent+' · 活动管理';if(button.dataset.page==='execution'){const win=document.getElementById('execution').contentWindow;if(win.syncApplicationSnapshot)win.syncApplicationSnapshot()}")
 m.write_text(t,encoding='utf-8')

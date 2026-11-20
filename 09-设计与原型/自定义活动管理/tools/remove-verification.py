@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-p=Path('C:/Users/admin/.codex/visualizations/2026/10/07/01a113f3-1f33-7d40-bf39-7aaed264b0b9/custom-activity.html')
+p=Path('E:/cxy/09-设计与原型/自定义活动管理/custom-activity.html')
 s=p.read_text(encoding='utf-8')
 s,n=re.subn(r'<section><h2>核销与凭证</h2>.*?</section>','',s,flags=re.S)
 assert n==1

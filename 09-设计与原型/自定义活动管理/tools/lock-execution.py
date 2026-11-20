@@ -1,5 +1,5 @@
 from pathlib import Path
-p=Path('E:/cxy/活动执行填报.html')
+p=Path('E:/cxy/09-设计与原型/自定义活动管理/活动执行填报.html')
 s=p.read_text(encoding='utf-8')
 s=s.replace('<h2>关联活动申请</h2>','<h2>申请信息（自动带入，不可修改）</h2>')
 s=s.replace('<label>活动名称<input readonly value="连锁系统团购专项支持"></label>','<label>活动类型<input readonly value="自定义活动"></label>')

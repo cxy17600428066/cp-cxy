@@ -1,6 +1,6 @@
 from pathlib import Path
 from html import escape
-root=Path('E:/cxy')
+root=Path('E:/cxy/09-设计与原型/自定义活动管理')
 application=(root/'自定义活动申请.html').read_text(encoding='utf-8')
 execution=(root/'活动执行填报.html').read_text(encoding='utf-8')
 writeoff=(root/'活动核销.html').read_text(encoding='utf-8')
@@ -14,7 +14,7 @@ document.querySelectorAll('nav button').forEach(button=>button.addEventListener(
 cleanup='''<script>window.addEventListener('load',()=>{const app=document.getElementById('custom-activity');if(app){const header=app.querySelector('header');if(header)header.remove();const aside=app.querySelector('aside');if(aside)aside.remove();const shell=app.querySelector('.shell');if(shell)shell.style.gridTemplateColumns='minmax(0,1fr)'}});</script>'''
 application=application.replace('</body>',cleanup+'</body>')
 # Exported application uses an internal srcdoc frame; inject cleanup in its fragment instead.
-source=Path('C:/Users/admin/.codex/visualizations/2026/10/07/01a113f3-1f33-7d40-bf39-7aaed264b0b9/custom-activity.html').read_text(encoding='utf-8')
+source=Path('E:/cxy/09-设计与原型/自定义活动管理/custom-activity.html').read_text(encoding='utf-8')
 application='<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><body style="margin:0">'+source+cleanup+'</body></html>'
 execution=execution.replace('</body>',cleanup+'</body>').replace('body style="margin:16px"','body style="margin:0"')
 shell=shell.replace('APPLICATION',escape(application,quote=True)).replace('EXECUTION',escape(execution,quote=True)).replace('WRITEOFF',escape(writeoff,quote=True))

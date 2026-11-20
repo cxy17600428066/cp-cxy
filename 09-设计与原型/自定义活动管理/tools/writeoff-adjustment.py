@@ -1,5 +1,5 @@
 from pathlib import Path
-p=Path('E:/cxy/活动核销.html')
+p=Path('E:/cxy/09-设计与原型/自定义活动管理/活动核销.html')
 s=p.read_text(encoding='utf-8')
 s=s.replace('<th>支付方式</th></tr>','<th>支付方式</th><th>调整费用（元）</th><th>最终核销费用（元）</th></tr>')
 s=s.replace('执行费用和附件只读，需修改时返回“活动执行填报”。','实际费用和附件只读。调整费用默认0，正数调增、负数调减；最终核销费用＝实际费用＋调整费用，不得小于0。')

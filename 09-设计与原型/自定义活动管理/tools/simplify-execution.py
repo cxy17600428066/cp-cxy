@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-p=Path('E:/cxy/活动执行填报.html')
+p=Path('E:/cxy/09-设计与原型/自定义活动管理/活动执行填报.html')
 s=p.read_text(encoding='utf-8')
 s=re.sub(r'<section><h2>实际执行情况（需要填写）</h2>.*?</section>','',s,flags=re.S)
 s=re.sub(r'<section><h2>门店执行数据</h2>.*?</section>','',s,flags=re.S)

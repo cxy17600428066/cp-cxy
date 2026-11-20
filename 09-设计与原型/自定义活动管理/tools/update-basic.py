@@ -1,6 +1,6 @@
 from pathlib import Path
 import re
-p=Path('C:/Users/admin/.codex/visualizations/2026/10/07/01a113f3-1f33-7d40-bf39-7aaed264b0b9/custom-activity.html')
+p=Path('E:/cxy/09-设计与原型/自定义活动管理/custom-activity.html')
 s=p.read_text(encoding='utf-8')
 def field(label,content):return '<div class="basic-field"><span>'+label+'</span><div>'+content+'</div></div>'
 def radio(name,items):return '<div class="row">'+''.join('<label class="check"><input type="radio" name="'+name+'" value="'+v+'" '+('checked' if i==0 else '')+'>'+v+'</label>' for i,v in enumerate(items))+'</div>'
@@ -16,4 +16,4 @@ s=s.replace('</style>',css+'</style>',1)
 s=s.replace('return {total,company}',"q('#basic-total').textContent=fmt(total);q('#basic-company').textContent=fmt(company);const sale=Number(q('#forecast-sales').value);q('#basic-ratio').textContent=sale>0?(company/sale*100).toFixed(2)+'%':'不适用';return {total,company}")
 s=s.replace("q('#add').onclick=","q('#forecast-sales').oninput=calc;q('#add').onclick=")
 p.write_text(s,encoding='utf-8')
-Path('E:/cxy/自定义活动申请.html').write_text('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自定义活动申请</title><body style="margin:16px">'+s+'</body></html>',encoding='utf-8')
+Path('E:/cxy/09-设计与原型/自定义活动管理/自定义活动申请.html').write_text('<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>自定义活动申请</title><body style="margin:16px">'+s+'</body></html>',encoding='utf-8')

@@ -1,0 +1,13 @@
+// Add isolated examples once; preserve existing user edits and confirmation results.
+const demoCustomers=['上海鲜食供应链有限公司','杭州优选食品商行','南京惠民商贸有限公司'];
+const demoFixtures=[];
+['订单支付','钱包充值','账单还款'].forEach((type,t)=>{['自动关联','待人工处理','已确认'].forEach((scenario,i)=>{const id=(t===0?'XS-DEMO-':t===1?'CZ-DEMO-':'ZD-DEMO-')+(i+1),amount=[120000,350000,640000][t]+i*10000;demoFixtures.push({id,amount,type,customer:demoCustomers[t],date:'2026-11-12',goods:t===0?'无骨鸡爪500g × 20盒':t===1?'客户钱包充值单':'授信客户11月账单',status:i===2?'财务已确认':'待财务确认',owner:['王会计','李会计','陈会计'][t],scenario,fixture:'STATUS-'+t+'-'+i});})});
+demoFixtures.forEach(o=>{if(!orders.some(x=>x.id===o.id))orders.push(o)});
+if(state.demoStatusesVersion!==1){
+ const next=structuredClone(state);
+ demoFixtures.forEach((o,i)=>{const id='BK-DEMO-STATUS-'+String(i+1).padStart(3,'0');if(next.rows.some(r=>r.id===id))return;const confirmed=o.scenario==='已确认',linked=o.scenario!=='待人工处理',difference=confirmed&&o.type==='订单支付'?-2000:0;next.rows.push({id,date:i%2?'2026-11-12':'2026-11-13',name:o.customer,customer:o.customer,account:'6222****'+String(8000+i),amount:o.amount+difference,summary:o.scenario==='待人工处理'?(o.type==='订单支付'?'客户货款，摘要缺失订单号':o.type==='钱包充值'?'充值款，待核实充值单':'账单回款，待客户确认账单号'):o.type+' '+o.id,links:linked?[o.id]:[],bizType:o.type,source:confirmed?'手动关联':linked?'自动关联':'',confirmed,by:confirmed?['王会计','李会计','陈会计'][i%3]:'',at:confirmed?'2026-11-13 10:'+String(10+i)+':00':'',orderAmount:linked?o.amount:null,difference,reason:difference?'客户少付款20元，经核实按差异备注确认（演示）':confirmed?'收款与业务单据核对一致（演示）':linked?'':'业务类型已识别，单据号缺失，需人工关联（演示）'});log(next,id,'导入演示流水',o.type+'；'+o.scenario,'系统（演示）');if(confirmed)log(next,id,'人工财务审核通过并核销',o.id+'；'+(difference?'差额 -20.00 元，备注已保留':'金额一致'),'演示财务人员');});
+ for(let i=0;i<3;i++){const id='BK-DEMO-UNKNOWN-'+(i+1);if(next.rows.some(r=>r.id===id))continue;next.rows.push({id,date:'2026-11-'+(11+i),name:['上海新客商贸有限公司','杭州新鲜供应链有限公司','南京餐饮采购中心'][i],account:'6222****'+(9100+i),amount:[98000,220000,560000][i],summary:['往来款，未注明用途','客户付款，业务用途待核实','银行入账，摘要信息不全'][i],links:[],bizType:'待识别',confirmed:false,source:'',by:'',at:'',reason:'尚未确定是订单支付、钱包充值或账单还款（演示）'});log(next,id,'导入演示流水','无法自动识别，进入待识别分类','系统（演示）')}
+ const revoked='BK-DEMO-REVOKED-001';if(!next.rows.some(r=>r.id===revoked)){next.rows.push({id:revoked,date:'2026-11-12',name:demoCustomers[0],customer:demoCustomers[0],account:'6222****9012',amount:128000,summary:'原关联单据错误，已撤销确认',links:[],bizType:'订单支付',confirmed:false,source:'手动关联',by:'',at:'',reason:'已撤销财务确认：原关联订单有误，请重新核实（演示）'});log(next,revoked,'撤销财务确认','原关联订单错误；订单恢复待财务确认','王会计（演示）')}
+ next.demoStatusesVersion=1;
+ try{localStorage.setItem('bank-demo-v1',JSON.stringify(next));state=next}catch{state=next}
+}
